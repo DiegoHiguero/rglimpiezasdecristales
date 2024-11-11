@@ -1,0 +1,412 @@
+<template>
+  <div class="container bg-white">
+    <h1 class="text-center mt-4 mb-4 ">Mis clientes</h1>
+    <h2 class="text-center pb-3"> <font-awesome-icon :icon="['fas', 'calendar-days']" class="me-2 fa-lg"
+      style="color: #37b650" />{{ diaActual }}</h2>
+    <div v-if="databaseStore.loadingDoc" class="spinner-border" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <div class="container-fluid p-0" v-else>
+      <div class="row">
+        <div class="accordion" id="accordionExample">
+          <div class="accordion-item" v-for="(item, index) in databaseStore.documents" :key="item.id">
+            <button class="accordion-button" type="button" data-bs-toggle="collapse"
+              :data-bs-target="'#' + item.nombreUsuario" aria-expanded="false" aria-controls="collapseOne">
+              <div class="container row d-flex justify-content-around">
+                <div class="col-6">{{ item.nombre }}</div>
+              </div>
+            </button>
+            <div :id="item.nombreUsuario" class="accordion-collapse collapse pb-4" aria-labelledby="headingOne"
+              data-bs-parent="#accordionExample">
+              <div class=" mt-5 mb-3 d-flex justify-content-center">
+                <div class="accordion-body nuevaLimpieza mt-5 p-2 col-md-10">
+                  <h1 class="text-center pt-2">Anadir Limpieza</h1>
+                  <div class="form-group mt-5">
+                    <label for="startDate">Fecha</label>
+                    <input id="startDate" v-model="fecha" class="form-control" type="date" />
+                  </div>
+                  <div class="form-check mt-1 text-center">
+                    <button class="btn " :class="[databaseStore.exterior ? 'btn-success' : 'btn-danger']"
+                      @click="limpiezaExt()">
+                      EXTERIOR
+                    </button>
+                    <button class="btn  m-3" :class="[databaseStore.interior ? 'btn-success' : 'btn-danger']"
+                      @click="limpiezaInt()">
+                      INTERIOR
+                    </button>
+                  </div>
+                  <div class="form-group ">
+                    <label for="exampleFormControlTextarea1">Mensaje</label>
+                    <textarea v-model="mensage" class="form-control" id="exampleFormControlTextarea1"
+                      rows="3"></textarea>
+                  </div>
+                  <div class=" mt-3">
+                    <h2>Firma</h2>
+                    <Vue3Signature  ref="signature1" :w="'auto'" :h="'40vh'"
+                 class="example"></Vue3Signature>
+
+                  </div>
+                  <div class="text-center p-2 mt-2 alert alert-success d-flex justify-content-evenly "  role="alert" v-if="userStore.timeOut !== false">
+                    <font-awesome-icon :icon="['fas', 'bell']" shake class="fa-xl" /> <h5>{{ userStore.mensaje }} </h5> <font-awesome-icon :icon="['fas', 'bell']" shake class="fa-xl"  />
+                  </div>
+                  <button class="btn btn-success col-12 mt-3 mb-3" @click="passage(item.id,'image/jpeg',index,item)">ENVIAR
+                  </button>
+                  <div class=" row p-0 mt-4"
+                    style="background-color: #f8f5f5;border-radius: 19px;    box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;">
+                    <h4 class="text-center mt-2 pt-2">REGISTRO LIMPIEZAS</h4>
+                    <div class="container col-md-11" id="accordionPassage">
+                      <div class="container mt-3 p-1">
+                        <select name="status" class="form-select col-4" v-model="mes">
+                          <option value='enero'>enero</option>
+                          <option value='febrero'>febrero</option>
+                          <option value='marzo'>marzo</option>
+                          <option value='abril'>abril</option>
+                          <option value='mayo'>mayo</option>
+                          <option value='junio'>junio</option>
+                          <option value='julio'>julio</option>
+                          <option value='agosto'>agosto</option>
+                          <option value='septiembre'>septiembre</option>
+                          <option value='octubre'>octubre</option>
+                          <option value='noviembre'>noviembre</option>
+                          <option value='diciembre'>diciembre</option>
+                        </select>
+                        <table class="table table-striped table-hover mt-4 pt-4">
+                          <thead>
+                            <tr class="text-center">
+                              <th scope="col">J</th>
+                              <th scope="col">EXT</th>
+                              <th scope="col">INT</th>
+                              <th scope="col">COM</th>
+                              <th scope="col">FIR</th>
+                            </tr>
+                          </thead>
+                          <tbody v-for=" (day, index) in item.registro">
+                            <tr class="text-center " v-if="day.nombreMes === mes">
+                              <th scope="row" cl>{{ day.fechaLimp }}</th>
+                              <td v-if="day.exterior">
+                                <font-awesome-icon :icon="['fas', 'check']" class="me-2 fa" style="color: #51f772" />
+                              </td>
+                              <td v-else>
+                                <font-awesome-icon :icon="['fas', 'xmark']" class="me-2 fa" style="color: red" />
+                              </td>
+                              <td v-if="day.interior">
+                                <font-awesome-icon :icon="['fas', 'check']" class="me-2 fa" style="color: #51f772" />
+                              </td>
+                              <td v-else>
+                                <font-awesome-icon :icon="['fas', 'xmark']" class="me-2 fa" style="color: red" />
+                              </td>
+                              <td>{{ day.comentarios }} </td>
+                              <td>
+                                <img :src=day.imagen alt="firma del cliente" style="max-width: 120px;">
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                  aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">
+                          Quiere borrar el cliente?
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                        <button class="btn btn-danger " @click="databaseStore.deleteUser(item.id)">
+                          Si Borrar
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- <button class="btn btn-warning col-6"
+                                @click="router.push(`/editar/${item.id}`)"> Editar
+                           </button> -->
+              </div>
+              <div class="accordion-body row justify-content-around">
+                <div class="col-md-3 p-2   tarjeta text-white p-4">
+                  <h4 class="text-center m-3">Details Client</h4>
+                  <p>Nombre : <b>{{ item.nombre }}</b></p>
+                  <p>Apellido:<b>{{ item.apellido }}</b> </p>
+                  <p>Direccion : <b>{{ item.direccion }}</b> </p>
+                  <p>Telephone : <b>{{ item.telephone }}</b> </p>
+                  <p>Ciudad : <b>{{ item.ciudad }}</b> </p>
+                  <p>Provincia : <b>{{ item.provincia }}</b> </p>
+                  <p>Codigo Postal : <b>{{ item.codigoPostal }}</b> </p>
+                  <p>Precio : <b>{{ item.precio }} €</b> </p>
+                  <p>Cliente desde : <b>{{ item.creacion }}</b> </p>
+                </div>
+                <div class="col-md-3 p-2  tarjeta text-white p-4">
+                  <h4 class="text-center m-3">Dias de limpieza</h4>
+                  <div class="d-flex flex-row">
+                    <div class="card text-white bg-primary m-3" v-for="(item, index) in item.diasLimpieza" :key="index"
+                      style="max-width: 18rem">
+                      <div class="card-body">
+                        <h5 class="card-title">{{ item }}</h5>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-3 p-2   tarjeta text-white p-4">
+                  <h4 class="text-center m-3">Facturas :</h4>
+                  <div class="row">
+                    <p style="text-indent: 3%" id="cliente" v-for="item in item.factura" :key="item">
+                      {{ item.nombre }}
+
+                      <span class="btn btn-sm btn-warning"
+                        @click="databaseStore.deleteFactura(item.id)"><font-awesome-icon
+                          :icon="['fas', 'trash-can']" />Eliminar</span>
+                      <a :href="item.referencia" target="_blank" class="btn btn-sm m-2 btn-primary"><font-awesome-icon
+                          :icon="['fas', 'magnifying-glass']" />Ver</a>
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <!-- <div class="container row">
+                <div class="col-md-6">
+                  <label for="formFileMultiple" class="form-label">Elige la Factura</label>
+                  <input type="file" ref="file" :file="factura" class="form-control" id="formFileMultiple" multiple />
+                </div>
+                <div class="col-md-6">
+                  <label for="validationServer01" class="form-label">Nombre Factura</label>
+                  <input type="text" class="form-control" id="validationServer01" v-model="nombreFactura" required />
+                </div>
+              </div>
+              <div class=" row my-2">
+                <form class="form-inline">
+                  <h1>{{ fecha }}</h1>
+                  <button class="btn btn-success col-12" @click="enviar(item.id, item.nombre, index, item.email)">
+                    Enviar Factura
+                    <font-awesome-icon :icon="['fas', 'arrow-up-right-from-square']" />
+                  </button>
+                </form>
+              </div> -->
+            </div>
+          </div>
+        </div>
+        <div class="container bg-white mt-4 mb-4 p-3 mapa">
+          <div class="col-12 ">
+            <h3 class=""> Total Bruto: {{ databaseStore.totalGanancias }}€</h3>
+          </div>
+          <div class="col-12 ">
+            <h3 class=""> Total Neto: {{ databaseStore.totalNeto }}€</h3>
+          </div>
+          <div class="col-12 ">
+            <h3 class=""> Cotizacion: {{ databaseStore.cotizacion }}€</h3>
+          </div>
+          <div class="col-12 ">
+            <h3 class=""> Total Clientes: {{ databaseStore.numeroClientes }}</h3>
+          </div>
+        </div>
+        <div class="row col-12 mb-4  mapa bg-white">
+          <Mapa />
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script setup>
+import { useUserStore } from "../stores/user";
+import { useDatabaseStore } from "../stores/database";
+import { useRouter } from "vue-router";
+import { reactive, ref } from 'vue'
+import {
+  addDoc,
+  arrayUnion,
+  collection,
+  doc,
+  query,
+  where,
+  getDocs,
+  setDoc,
+  updateDoc,
+} from "firebase/firestore/lite";
+import { db } from "../firebaseConfig";
+import emailjs from "@emailjs/browser";
+import {
+  getDownloadURL,
+  uploadString,
+  getStorage,
+  ref as refStorage,
+
+} from "firebase/storage";
+import Mapa from "../components/Mapa.vue";
+import dayjs from "dayjs";
+import { es } from "dayjs/locale/es";
+import localeData from "dayjs/plugin/localeData";
+dayjs.locale("es");
+
+//userStore tendra toda la info de useUserStore
+const userStore = useUserStore();
+const databaseStore = useDatabaseStore();
+
+databaseStore.getClientes();
+databaseStore.getInfoCliente();
+
+const file = ref(null);
+const fecha = ref();
+const fechaDataPicker = ref();
+const mes = ref();
+const mensage = ref("");
+const nombreFactura = ref("");
+const month = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
+const date = dayjs();
+
+const d = new Date();
+const mesActual = month[d.getMonth()];
+const diaActual = date.format('dddd DD MMMM YYYY');
+const anoActual = d.getFullYear();
+
+const signature1 = ref(null)
+const limpiezaExt = () => {
+  databaseStore.exterior = !databaseStore.exterior
+}
+const limpiezaInt = () => {
+  databaseStore.interior = !databaseStore.interior
+}
+
+// const enviar = async (idCliente, cliente, index, email) => {
+//   const factura = file.value[index].files;
+//   const facturaNombre = factura[0].name;
+//   userStore.enviarFactura(factura, cliente);
+
+//   const clienteRef = doc(db, "clientes", idCliente);
+//   try {
+//     const facturaRef = `/${cliente}/${facturaNombre}`;
+//     const storage = getStorage();
+//     const referenciaUrl = storageRef(storage, facturaRef);
+//     const urlCliente = await getDownloadURL(referenciaUrl).then((url) => {
+//       return url;
+//     });
+//     await updateDoc(clienteRef, {
+//       factura: arrayUnion({
+//         referencia: urlCliente,
+//         nombre: nombreFactura.value,
+//       }),
+//     });
+//     const contactParams = {
+//       clienteEmail: email,
+//       to_name: cliente,
+//       nombre: nombreFactura.value,
+//       referencia: urlCliente,
+//     };
+
+//     emailjs
+//       .send(
+//         "service_emqkbc7",
+//         "template_e1objeh",
+//         contactParams,
+//         "rFNGy51A07Q9Pt33i"
+//       )
+//       .then(
+//         (result) => {
+//           // console.log("SUCCESS!", result.text);
+//         },
+//         (error) => {
+//           // console.log("FAILED...", error.text);
+//         }
+//       );
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
+
+const passage = async (idCliente,t,index,nombreCliente) => {
+  signature1.value[index].addWaterMark({
+    text: `${nombreCliente.nombre} ${fecha.value}`,          // watermark text, > default ''
+    font: "15px Arial",         // mark font, > default '20px sans-serif'
+    style: 'all',               // fillText and strokeText,  'all'/'stroke'/'fill', > default 'fill
+    fillStyle: "black",           // fillcolor, > default '#333'
+    strokeStyle: "black",	       // strokecolor, > default '#333'
+    x: 20,                     // fill positionX, > default 20
+    y: 20,                     // fill positionY, > default 20
+    sx: 20,                    // stroke positionX, > default 40
+    sy: 20                     // stroke positionY, > default 40
+  });
+  const imagenDatos = signature1.value[index].save(t)
+  const mes = new Date(fecha.value)
+  const mesCalendario = month[mes.getMonth()];
+
+  try {
+    const clienteRef = collection(db, "clientes");
+    const q = query(clienteRef, where("registro", "array-contains", "nombreMes"));
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+      // doc.data() is never undefined for query doc snapshots
+    })
+    const storage = getStorage();
+    const imageRef = refStorage(storage,`${nombreCliente.nombre}-${fecha.value}`);
+   uploadString(imageRef, imagenDatos, 'data_url').then((snapshot) => {
+  console.log('Uploaded a data_url string!');
+  
+});
+const urlImagen = await getDownloadURL(imageRef).then((url) => {
+       return url;
+    });
+
+    const date = dayjs(fecha.value);
+    const fechaEs = date.format('dddd DD-MM-YYYY');
+    await updateDoc(doc(clienteRef, idCliente,), {
+
+      registro: arrayUnion({
+        year: anoActual,
+        nombreMes: mesCalendario,
+        fechaLimp: fechaEs,
+        interior: databaseStore.interior,
+        exterior: databaseStore.exterior,
+        comentarios: mensage.value,
+        imagen:urlImagen
+      })
+    }, { merge: true })
+    userStore.mensajeAlerta("Tu fecha se envio correctamente")
+  } catch (error) {
+    console.log(error);
+    userStore.mensajeAlerta("UPS! Algo no funciono")
+  } finally {
+    databaseStore.interior = false;
+    databaseStore.exterior = false;
+    mensage.value = "";
+    fecha.value = "";
+    signature1.value[index].clear()
+    
+  }
+}
+</script>
+
+<style >
+
+.tarjeta {
+  border-radius: 20px;
+  background: rgb(0, 0, 0);
+  background: linear-gradient(90deg, rgba(0, 0, 0, 1) 80%, rgb(2, 28, 31) 185%);
+}
+
+#dia {
+  padding: 2.75rem 2.75rem;
+}
+
+.mapa {
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+
+}
+
+li {
+  list-style: none;
+}
+
+label {
+  color: black;
+  font-weight: bold;
+}
+
+.nuevaLimpieza {
+  background-color: rgba(192, 189, 189, 0.527);
+}
+</style>
