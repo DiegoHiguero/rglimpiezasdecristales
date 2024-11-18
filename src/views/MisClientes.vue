@@ -102,6 +102,7 @@
                             </tr>
                           </tbody>
                         </table>
+                        <button class="btn btn-danger " @click="userStore.crearPDF">Crear PDF</button>
                       </div>
                     </div>
                   </div>
@@ -347,12 +348,12 @@ const passage = async (idCliente,t,index,nombreCliente) => {
   console.log('Uploaded a data_url string!');
   
 });
+
+const date = dayjs(fecha.value);
+const fechaEs = date.format('dddd DD-MM-YYYY');
 const urlImagen = await getDownloadURL(imageRef).then((url) => {
        return url;
     });
-
-    const date = dayjs(fecha.value);
-    const fechaEs = date.format('dddd DD-MM-YYYY');
     await updateDoc(doc(clienteRef, idCliente,), {
 
       registro: arrayUnion({

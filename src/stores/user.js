@@ -152,6 +152,16 @@ export const useUserStore = defineStore('userStore', {
             await uploadBytes(storageRef, factura)
 
         },
+        crearPDF() {
+            var doc = new jsPDF();
+            doc.setFontSize(30);
+            doc.text("Limpiezas mes de noviembre 2024", 20, 25);
+            doc.addImage("src/assets/img/appartements.png", "JPEG", 15, 40, 80, 55);
+            doc.addImage("src/assets/img/appartements.png", "JPEG", 110, 40, 80, 55);
+            doc.addImage("src/assets/img/appartements.png", "JPEG", 15, 110, 80, 55);
+            doc.addImage("src/assets/img/appartements.png", "JPEG", 110, 110, 80, 55);
+            doc.save("pdfName" + '.pdf');
+        }
     },
 
 })
