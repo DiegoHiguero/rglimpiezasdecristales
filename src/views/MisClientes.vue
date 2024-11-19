@@ -97,12 +97,17 @@
                               </td>
                               <td>{{ day.comentarios }} </td>
                               <td>
-                                <img :src=day.imagen alt="firma del cliente" style="max-width: 120px;">
+                                <div class="form-check">
+                                <input class="form-check-input" type="checkbox" :value=day.imagen id="flexCheckChecked"
+                                    v-model="firmasSeleccionadas">
+                                    <img :src=day.imagen alt="firma del cliente"  style="max-width: 120px;">
+                            </div>
+                               <p>{{ firmasSeleccionadas }}</p>
                               </td>
                             </tr>
                           </tbody>
                         </table>
-                        <button class="btn btn-danger " @click="userStore.crearPDF">Crear PDF</button>
+                        <button class="btn btn-danger " @click="userStore.crearPDF(firmasSeleccionadas,item)">Crear PDF</button>
                       </div>
                     </div>
                   </div>
@@ -259,7 +264,7 @@ const mensage = ref("");
 const nombreFactura = ref("");
 const month = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
 const date = dayjs();
-
+const firmasSeleccionadas = ref([]);
 const d = new Date();
 const mesActual = month[d.getMonth()];
 const diaActual = date.format('dddd DD MMMM YYYY');

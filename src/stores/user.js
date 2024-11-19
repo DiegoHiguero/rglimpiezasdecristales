@@ -11,6 +11,7 @@ import dayjs from "dayjs";
 import router from "../router";
 import { useDatabaseStore } from "./database";
 import { computed } from "@vue/reactivity"
+import jsPDF from 'jspdf'
 
 //importamos la tienda, definimos la tienda poninedole un nombre, 
 //ponemos export (nombrado) para poder usarlo
@@ -152,15 +153,15 @@ export const useUserStore = defineStore('userStore', {
             await uploadBytes(storageRef, factura)
 
         },
-        crearPDF() {
+        crearPDF(firmas,cliente) {
+            const clienteNombre = cliente.nombre
             var doc = new jsPDF();
-            doc.setFontSize(30);
-            doc.text("Limpiezas mes de noviembre 2024", 20, 25);
-            doc.addImage("src/assets/img/appartements.png", "JPEG", 15, 40, 80, 55);
-            doc.addImage("src/assets/img/appartements.png", "JPEG", 110, 40, 80, 55);
-            doc.addImage("src/assets/img/appartements.png", "JPEG", 15, 110, 80, 55);
-            doc.addImage("src/assets/img/appartements.png", "JPEG", 110, 110, 80, 55);
-            doc.save("pdfName" + '.pdf');
+            doc.setFontSize(20);
+            doc.text("Limpiezas mes de noviembre 2024 " + clienteNombre, 20, 25);
+            firmas.forEach((firma) => doc.addImage(firma, "JPEG", 15, 40, 80, 55));
+          doc.addImage("https://firebasestorage.googleapis.com/v0/b/roys-web-page.appspot.com/o/QUATRO-2024-11-20?alt=media&token=e30c404f-138b-4fc8-860c-3cd7ddffe0e7", "JPEG", 15, 40, 80, 55);
+           
+            doc.save(clienteNombre + '.pdf');
         }
     },
 
