@@ -36,7 +36,7 @@
                 ><font-awesome-icon
                   :icon="['fas', 'rectangle-list']"
                   class="me-2"
-                />Mis Clientes</router-link
+                />Clientes</router-link
               >
             </li>
             <li class="nav-item">
