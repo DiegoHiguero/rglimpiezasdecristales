@@ -1,5 +1,5 @@
 <template>
-  <nav class="navbar navbar-expand-lg py-0  bg-danger">
+  <nav class="navbar navbar-expand-lg py-0  bg-white">
     <div class="container fluid p-0">
           <router-link class="navbar-brand" to="/">
             <img
@@ -93,6 +93,9 @@ const userStore = useUserStore();
 .navbar .navbar-toggler-icon {
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='green' stroke-linecap='round' stroke-miterlimit='10' stroke-width='4' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
   
+}
+.colorfondo{
+  background-color: green;
 }
 .navbar-toggler:focus {
     color: green;

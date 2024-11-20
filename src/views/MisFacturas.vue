@@ -1,5 +1,5 @@
 <template>
-  <h1 class="text-center mt-4 mb-4 text-white">Mes Factures</h1>
+  <h1 class="text-center mt-4 mb-4">Mis Facturas</h1>
   <div
     class="container-fluid row d-flex justify-content-center pt-4"
     v-for="item in databaseStore.documents"

@@ -44,7 +44,7 @@
             <span class="logo-parts">E</span>
             <span class="logo-parts">T</span>
           </h1>
-          <h2 class="text-center bold">Nettoyage des vitres</h2>
+          <h2 class="text-center bold">Limpieza de cristales</h2>
         </div>
       </div>
     </section>
