@@ -11,12 +11,12 @@
         <div class="accordion" id="accordionExample">
           <div class="accordion-item" v-for="(item, index) in databaseStore.documents" :key="item.id">
             <button class="accordion-button" type="button" data-bs-toggle="collapse"
-              :data-bs-target="'#' + item.nombreUsuario" aria-expanded="false" aria-controls="collapseOne">
+              :data-bs-target="'#' + index" aria-expanded="false" aria-controls="collapseOne">
               <div class="container row d-flex justify-content-around">
                 <div class="col-6">{{ item.nombre }}</div>
               </div>
             </button>
-            <div :id="item.nombreUsuario" class="accordion-collapse collapse pb-4" aria-labelledby="headingOne"
+            <div :id="index" class="accordion-collapse collapse pb-4" aria-labelledby="headingOne"
               data-bs-parent="#accordionExample">
               <div class=" mt-5 mb-3 d-flex justify-content-center">
                 <div class="accordion-body nuevaLimpieza mt-5 p-2 col-md-10">
