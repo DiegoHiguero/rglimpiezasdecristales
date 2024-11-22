@@ -107,7 +107,7 @@
                             </tr>
                           </tbody>
                         </table>
-                        <button class="btn btn-danger " @click="userStore.crearPDF(firmasSeleccionadas,item)">Crear PDF</button>
+                        <button class="btn btn-danger " @click="userStore.crearPDF(item)">Crear FACTURA PDF</button>
                       </div>
                     </div>
                   </div>
