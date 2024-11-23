@@ -2,7 +2,7 @@
   <div class="container bg-white">
     <h1 class="text-center mt-4 mb-4 ">Mis clientes</h1>
     <h2 class="text-center pb-3"> <font-awesome-icon :icon="['fas', 'calendar-days']" class="me-2 fa-lg"
-      style="color: #37b650" />{{ diaActual }}</h2>
+        style="color: #37b650" />{{ diaActual }}</h2>
     <div v-if="databaseStore.loadingDoc" class="spinner-border" role="status">
       <span class="visually-hidden">Loading...</span>
     </div>
@@ -10,8 +10,8 @@
       <div class="row">
         <div class="accordion" id="accordionExample">
           <div class="accordion-item" v-for="(item, index) in databaseStore.documents" :key="item.id">
-            <button class="accordion-button" type="button" data-bs-toggle="collapse"
-              :data-bs-target="'#' + index" aria-expanded="false" aria-controls="collapseOne">
+            <button class="accordion-button" type="button" data-bs-toggle="collapse" :data-bs-target="'#' + index"
+              aria-expanded="false" aria-controls="collapseOne">
               <div class="container row d-flex justify-content-around">
                 <div class="col-6">{{ item.nombre }}</div>
               </div>
@@ -42,14 +42,16 @@
                   </div>
                   <div class=" mt-3">
                     <h2>Firma</h2>
-                    <Vue3Signature  ref="signature1" :w="'auto'" :h="'40vh'"
-                 class="example"></Vue3Signature>
+                    <Vue3Signature ref="signature1" :w="'auto'" :h="'40vh'" class="example"></Vue3Signature>
 
                   </div>
-                  <div class="text-center p-2 mt-2 alert alert-success d-flex justify-content-evenly "  role="alert" v-if="userStore.timeOut !== false">
-                    <font-awesome-icon :icon="['fas', 'bell']" shake class="fa-xl" /> <h5>{{ userStore.mensaje }} </h5> <font-awesome-icon :icon="['fas', 'bell']" shake class="fa-xl"  />
+                  <div class="text-center p-2 mt-2 alert alert-success d-flex justify-content-evenly " role="alert"
+                    v-if="userStore.timeOut !== false">
+                    <font-awesome-icon :icon="['fas', 'bell']" shake class="fa-xl" />
+                    <h5>{{ userStore.mensaje }} </h5> <font-awesome-icon :icon="['fas', 'bell']" shake class="fa-xl" />
                   </div>
-                  <button class="btn btn-success col-12 mt-3 mb-3" @click="passage(item.id,'image/jpeg',index,item)">ENVIAR
+                  <button class="btn btn-success col-12 mt-3 mb-3"
+                    @click="passage(item.id, 'image/jpeg', index, item)">ENVIAR
                   </button>
                   <div class=" row p-0 mt-4"
                     style="background-color: #f8f5f5;border-radius: 19px;    box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;">
@@ -98,16 +100,56 @@
                               <td>{{ day.comentarios }} </td>
                               <td>
                                 <div class="form-check">
-                                <input class="form-check-input" type="checkbox" :value=day.imagen id="flexCheckChecked"
-                                    v-model="firmasSeleccionadas">
-                                    <img :src=day.imagen alt="firma del cliente"  style="max-width: 120px;">
-                            </div>
-                               <p>{{ firmasSeleccionadas }}</p>
+                                  <input class="form-check-input" type="checkbox" :value=day.imagen
+                                    id="flexCheckChecked" v-model="firmasSeleccionadas">
+                                  <img :src=day.imagen alt="firma del cliente" style="max-width: 120px;">
+                                </div>
                               </td>
                             </tr>
                           </tbody>
                         </table>
-                        <button class="btn btn-danger " @click="userStore.crearPDF(item)">Crear FACTURA PDF</button>
+                        <form>
+                          <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                              <span class="input-group-text" id="basic-addon1">Numero Factura</span>
+                            </div>
+                            <input type="text" class="form-control" placeholder="Numero Factura" aria-label="Username"
+                              aria-describedby="basic-addon1" v-model="numFactura">
+                          </div>
+                          <div class="form-group mb-3">
+                            <label for="startDate">Fecha</label>
+                            <input id="startDate" v-model="fecha" class="form-control" type="date" />
+                          </div>
+                          <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                              <span class="input-group-text" id="basic-addon1">Descripcion 1</span>
+                            </div>
+                            <input type="text" class="form-control" placeholder="Descripcion 1" aria-label="Username"
+                              aria-describedby="basic-addon1" v-model="descripcion1">
+                          </div>
+                          <div class="input-group mb-3 ">
+                            <div class="input-group-prepend">
+                              <span class="input-group-text" id="basic-addon1">Cant 1</span>
+                            </div>
+                            <input type="number" class="form-control" placeholder="Cant 1" aria-label="Username"
+                              aria-describedby="basic-addon1" v-model="cant1">
+                          </div>
+                          <div class="input-group mb-3 ">
+                            <div class="input-group-prepend">
+                              <span class="input-group-text" id="basic-addon1">Precio u.1</span>
+                            </div>
+                            <input type="number" class="form-control" placeholder="Precio u.1" aria-label="Username"
+                              aria-describedby="basic-addon1" v-model="preciou1">
+                          </div>
+                          <div class="input-group mb-3 ">
+                            <div class="input-group-prepend">
+                              <span class="input-group-text" id="basic-addon1">Importe 1</span>
+                            </div>
+                            <input type="number" class="form-control" placeholder="Importe 1" aria-label="Username"
+                              aria-describedby="basic-addon1" v-model="importe1">
+                          </div>
+                        </form>
+                        <button class="btn btn-danger " @click="userStore.crearPDF(item,descripcion1,cant1,preciou1,importe1,fecha,numFactura)">Crear FACTURA PDF</button>
                       </div>
                     </div>
                   </div>
@@ -252,6 +294,10 @@ dayjs.locale("es");
 //userStore tendra toda la info de useUserStore
 const userStore = useUserStore();
 const databaseStore = useDatabaseStore();
+const descripcion1 = ref("")
+const cant1 = ref("")
+const preciou1 = ref("")
+const importe1 = ref("")
 
 databaseStore.getClientes();
 databaseStore.getInfoCliente();
@@ -261,7 +307,7 @@ const fecha = ref();
 const fechaDataPicker = ref();
 const mes = ref();
 const mensage = ref("");
-const nombreFactura = ref("");
+const numFactura = ref("");
 const month = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
 const date = dayjs();
 const firmasSeleccionadas = ref([]);
@@ -324,7 +370,7 @@ const limpiezaInt = () => {
 //   }
 // };
 
-const passage = async (idCliente,t,index,nombreCliente) => {
+const passage = async (idCliente, t, index, nombreCliente,fecha,numfactura) => {
   signature1.value[index].addWaterMark({
     text: `${nombreCliente.nombre} ${fecha.value}`,          // watermark text, > default ''
     font: "15px Arial",         // mark font, > default '20px sans-serif'
@@ -348,16 +394,16 @@ const passage = async (idCliente,t,index,nombreCliente) => {
       // doc.data() is never undefined for query doc snapshots
     })
     const storage = getStorage();
-    const imageRef = refStorage(storage,`${nombreCliente.nombre}-${fecha.value}`);
-   uploadString(imageRef, imagenDatos, 'data_url').then((snapshot) => {
-  console.log('Uploaded a data_url string!');
-  
-});
+    const imageRef = refStorage(storage, `${nombreCliente.nombre}-${fecha.value}`);
+    uploadString(imageRef, imagenDatos, 'data_url').then((snapshot) => {
+      console.log('Uploaded a data_url string!');
 
-const date = dayjs(fecha.value);
-const fechaEs = date.format('dddd DD-MM-YYYY');
-const urlImagen = await getDownloadURL(imageRef).then((url) => {
-       return url;
+    });
+
+    const date = dayjs(fecha.value);
+    const fechaEs = date.format('dddd DD-MM-YYYY');
+    const urlImagen = await getDownloadURL(imageRef).then((url) => {
+      return url;
     });
     await updateDoc(doc(clienteRef, idCliente,), {
 
@@ -368,7 +414,7 @@ const urlImagen = await getDownloadURL(imageRef).then((url) => {
         interior: databaseStore.interior,
         exterior: databaseStore.exterior,
         comentarios: mensage.value,
-        imagen:urlImagen
+        imagen: urlImagen
       })
     }, { merge: true })
     userStore.mensajeAlerta("Tu fecha se envio correctamente")
@@ -381,13 +427,12 @@ const urlImagen = await getDownloadURL(imageRef).then((url) => {
     mensage.value = "";
     fecha.value = "";
     signature1.value[index].clear()
-    
+
   }
 }
 </script>
 
-<style >
-
+<style>
 .tarjeta {
   border-radius: 20px;
   background: rgb(0, 0, 0);
