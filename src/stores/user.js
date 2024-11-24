@@ -27,6 +27,14 @@ export const useUserStore = defineStore('userStore', {
             uid: null,
         },
         facturas: [],
+        descripciones: [
+            {
+                descripcion: "",
+                cant: "",
+                preciou: "",
+                importe: "",
+            },
+        ],
         isActive: false,
         modalActive: true,
         cookie: false,
@@ -36,6 +44,7 @@ export const useUserStore = defineStore('userStore', {
         timeOut: false,
         selectedDate: dayjs(),
         currentDate: 0,
+        contador:0,
         ano: "",
         mes: "",
         dia: "",
@@ -153,8 +162,8 @@ export const useUserStore = defineStore('userStore', {
             await uploadBytes(storageRef, factura)
 
         },
-        crearPDF(cliente, descripcion1, cant1, preciou1, importe1, fecha, numfactura) {
-            console.log(descripcion1, cant1, preciou1, importe1, fecha);
+        crearPDF(cliente, descripcion, cant, preciou, importe, fecha, numfactura) {
+            console.log(descripcion, cant, preciou, importe, fecha);
             const date = dayjs(fecha.value);
             const fechaEs = date.format('DD-MM-YYYY');
             const clienteNombre = cliente.nombre
@@ -163,7 +172,10 @@ export const useUserStore = defineStore('userStore', {
             const clienteCodigoPostal = cliente.codigoPostal
             const prixun1 = cliente.precio
             const totalht1 = cliente.precio
-
+            var parrafoDescripcion = 116
+            var parrafoCant = 116
+            var parrafoPreciou = 116
+            var parrafoImporte = 116
 
             var doc = new jsPDF();
 
@@ -204,11 +216,30 @@ export const useUserStore = defineStore('userStore', {
             doc.text("Precio u.", 140, 106);
             doc.text("Importe", 170, 106);
             doc.setTextColor("black");
-            doc.text(descripcion1, 35, 115);
-            doc.text(cant1.toString(), 110, 115);
-            doc.text(preciou1.toString() + " €", 140, 115);
-            doc.text(importe1.toString() + " €", 170, 115);
-            doc.text("Descripción 2 ", 35, 131);
+            descripcion.forEach(desc => {
+                
+                    doc.text(desc, 35, parrafoDescripcion);
+                    parrafoDescripcion= parrafoDescripcion+15
+                
+                });
+            cant.forEach(desc => {
+                
+                    doc.text(desc.toString(), 110, parrafoCant);
+                    parrafoCant= parrafoCant+15
+                
+                });
+                preciou.forEach(desc => {
+                
+                    doc.text(desc.toString() + " €", 140, parrafoPreciou);
+                    parrafoPreciou= parrafoPreciou+15
+                
+                });
+                importe.forEach(desc => {
+                
+                    doc.text(desc.toString() + " €", 170, parrafoImporte);
+                    parrafoImporte= parrafoImporte+15
+                
+                });
 
             //DATOS DE PAGO
             doc.setTextColor("green");
@@ -221,7 +252,7 @@ export const useUserStore = defineStore('userStore', {
             doc.text("N/C: ROYS GREGORY ABREU REINOSO", 25, 205);
             doc.text("DNI: 50349726-N", 25, 210);
 
-            doc.save(clienteNombre +fechaEs+ '.pdf');
+            doc.save(clienteNombre + fechaEs + '.pdf');
         }
     },
 

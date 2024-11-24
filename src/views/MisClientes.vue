@@ -120,36 +120,32 @@
                             <label for="startDate">Fecha</label>
                             <input id="startDate" v-model="fecha" class="form-control" type="date" />
                           </div>
-                          <div class="input-group mb-3">
-                            <div class="input-group-prepend">
-                              <span class="input-group-text" id="basic-addon1">Descripcion 1</span>
+                          <p>{{ descripcion }} -{{ cant }}-{{ preciou }}- {{ importe }}</p>
+                          <p>{{  userStore.descripciones }}</p>
+                          
+                          <div v-for=" (item, index) in userStore.descripciones" class="d-flex row ">
+                            <div class=" mb-3 col-md-12">
+                              <input type="text" class="form-control" :placeholder=item.descripcion :aria-label=item.descripcion 
+                                aria-describedby="basic-addon1" v-model=descripcion[index]>
                             </div>
-                            <input type="text" class="form-control" placeholder="Descripcion 1" aria-label="Username"
-                              aria-describedby="basic-addon1" v-model="descripcion1">
-                          </div>
-                          <div class="input-group mb-3 ">
-                            <div class="input-group-prepend">
-                              <span class="input-group-text" id="basic-addon1">Cant 1</span>
+                            <div class=" mb-3 col-md-3">
+                              <input type="number" class="form-control" :placeholder=item.cant :aria-label=item.cant
+                                aria-describedby="basic-addon1" v-model=cant[index]>
                             </div>
-                            <input type="number" class="form-control" placeholder="Cant 1" aria-label="Username"
-                              aria-describedby="basic-addon1" v-model="cant1">
-                          </div>
-                          <div class="input-group mb-3 ">
-                            <div class="input-group-prepend">
-                              <span class="input-group-text" id="basic-addon1">Precio u.1</span>
+                            <div class="mb-3 col-md-3">
+                              <input type="number" class="form-control" :placeholder=item.preciou :aria-label=item.preciou
+                                aria-describedby="basic-addon1" v-model=preciou[index]>
                             </div>
-                            <input type="number" class="form-control" placeholder="Precio u.1" aria-label="Username"
-                              aria-describedby="basic-addon1" v-model="preciou1">
-                          </div>
-                          <div class="input-group mb-3 ">
-                            <div class="input-group-prepend">
-                              <span class="input-group-text" id="basic-addon1">Importe 1</span>
+                            <div class="mb-3 col-md-3">
+                              <input type="number" class="form-control" :placeholder=item.importe  :aria-label=item.importe1
+                                aria-describedby="basic-addon1" v-model=importe[index]>
                             </div>
-                            <input type="number" class="form-control" placeholder="Importe 1" aria-label="Username"
-                              aria-describedby="basic-addon1" v-model="importe1">
                           </div>
+                          <button class="btn btn-warning mb-2 p-2" @click.prevent="nuevaDescripcion()"> +</button>
                         </form>
-                        <button class="btn btn-danger " @click="userStore.crearPDF(item,descripcion1,cant1,preciou1,importe1,fecha,numFactura)">Crear FACTURA PDF</button>
+                        <button class="btn btn-danger "
+                          @click="userStore.crearPDF(item, descripcion, cant, preciou, importe, fecha, numFactura)">Crear
+                          FACTURA PDF</button>
                       </div>
                     </div>
                   </div>
@@ -294,10 +290,10 @@ dayjs.locale("es");
 //userStore tendra toda la info de useUserStore
 const userStore = useUserStore();
 const databaseStore = useDatabaseStore();
-const descripcion1 = ref("")
-const cant1 = ref("")
-const preciou1 = ref("")
-const importe1 = ref("")
+const descripcion = ref([])
+const cant = ref([])
+const preciou = ref([])
+const importe = ref([])
 
 databaseStore.getClientes();
 databaseStore.getInfoCliente();
@@ -323,7 +319,16 @@ const limpiezaExt = () => {
 const limpiezaInt = () => {
   databaseStore.interior = !databaseStore.interior
 }
-
+const nuevaDescripcion = ()=>{
+  userStore.contador++
+  userStore.descripciones.push( {
+                descripcion: "Descripcion ",
+                cant: "cantidad2",
+                preciou: "",
+                importe: "",
+            })
+ 
+}
 // const enviar = async (idCliente, cliente, index, email) => {
 //   const factura = file.value[index].files;
 //   const facturaNombre = factura[0].name;
@@ -370,7 +375,7 @@ const limpiezaInt = () => {
 //   }
 // };
 
-const passage = async (idCliente, t, index, nombreCliente,fecha,numfactura) => {
+const passage = async (idCliente, t, index, nombreCliente, fecha, numfactura) => {
   signature1.value[index].addWaterMark({
     text: `${nombreCliente.nombre} ${fecha.value}`,          // watermark text, > default ''
     font: "15px Arial",         // mark font, > default '20px sans-serif'
@@ -460,4 +465,5 @@ label {
 .nuevaLimpieza {
   background-color: rgba(192, 189, 189, 0.527);
 }
+
 </style>
