@@ -116,36 +116,41 @@
                             <input type="text" class="form-control" placeholder="Numero Factura" aria-label="Username"
                               aria-describedby="basic-addon1" v-model="numFactura">
                           </div>
-                          <div class="form-group mb-3">
+                          <div class="form-group mb-5">
                             <label for="startDate">Fecha</label>
                             <input id="startDate" v-model="fecha" class="form-control" type="date" />
                           </div>
-                          <p>{{ descripcion }} -{{ cant }}-{{ preciou }}- {{ importe }}</p>
-                          <p>{{  userStore.descripciones }}</p>
-                          
-                          <div v-for=" (item, index) in userStore.descripciones" class="d-flex row ">
+                          <div v-for=" (item, index) in userStore.descripciones" class="d-flex row mb-3">
                             <div class=" mb-3 col-md-12">
-                              <input type="text" class="form-control" :placeholder=item.descripcion :aria-label=item.descripcion 
+                              <input type="text" class="form-control" placeholder="descripcion" :aria-label=item.descripcion 
                                 aria-describedby="basic-addon1" v-model=descripcion[index]>
                             </div>
                             <div class=" mb-3 col-md-3">
-                              <input type="number" class="form-control" :placeholder=item.cant :aria-label=item.cant
+                              <input type="number" class="form-control" placeholder="cant" :aria-label=item.cant
                                 aria-describedby="basic-addon1" v-model=cant[index]>
                             </div>
                             <div class="mb-3 col-md-3">
-                              <input type="number" class="form-control" :placeholder=item.preciou :aria-label=item.preciou
+                              <input type="number" class="form-control" placeholder="preciou" :aria-label=item.preciou
                                 aria-describedby="basic-addon1" v-model=preciou[index]>
                             </div>
                             <div class="mb-3 col-md-3">
-                              <input type="number" class="form-control" :placeholder=item.importe  :aria-label=item.importe1
+                              <input type="number" class="form-control" placeholder="importe"  :aria-label=item.importe
                                 aria-describedby="basic-addon1" v-model=importe[index]>
                             </div>
+                            <hr class="hr mb-3" />
                           </div>
-                          <button class="btn btn-warning mb-2 p-2" @click.prevent="nuevaDescripcion()"> +</button>
+                          <div class="row">
+                            <div class="col-6">
+                            <button class="btn btn-warning mb-2 p-2 " @click.prevent="nuevaDescripcion()"> 
+                              <font-awesome-icon :icon="['fas', 'plus']" class="me-2 fa-lg" style="padding-left: .5rem;" />
+                            </button>
+                          </div>
+                          </div>
                         </form>
                         <button class="btn btn-danger "
-                          @click="userStore.crearPDF(item, descripcion, cant, preciou, importe, fecha, numFactura)">Crear
-                          FACTURA PDF</button>
+                              @click="userStore.crearPDF(item, descripcion, cant, preciou, importe, fecha, numFactura)">Crear
+                              FACTURA PDF
+                            </button>
                       </div>
                     </div>
                   </div>

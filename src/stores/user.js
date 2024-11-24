@@ -163,7 +163,6 @@ export const useUserStore = defineStore('userStore', {
 
         },
         crearPDF(cliente, descripcion, cant, preciou, importe, fecha, numfactura) {
-            console.log(descripcion, cant, preciou, importe, fecha);
             const date = dayjs(fecha.value);
             const fechaEs = date.format('DD-MM-YYYY');
             const clienteNombre = cliente.nombre
@@ -178,10 +177,10 @@ export const useUserStore = defineStore('userStore', {
             var parrafoImporte = 116
 
             var doc = new jsPDF();
-
+            doc.addImage("src/assets/img/logorglimpiezas.png", "JPEG", 20, 30, 65, 17);
             doc.setFont("helvetica", "bold");
             doc.setFontSize(20);
-            doc.text("FACTURA", 150, 40);
+            doc.text("FACTURA", 150, 37);
             doc.setFontSize(15);
             doc.setTextColor("green");
             doc.setFont("helvetica", "bold");
@@ -195,9 +194,9 @@ export const useUserStore = defineStore('userStore', {
             doc.setFont("helvetica", "normal");
             doc.setTextColor("black");
             doc.setFontSize(10);
-            doc.text(clienteNombre, 30, 80);
-            doc.text("Nombrecliente ", 30, 86);
-            doc.text(clienteDireccion, 30, 92);
+            doc.text(clienteNombre, 20, 80);
+            doc.text("Nombrecliente ", 20, 86);
+            doc.text(clienteDireccion, 20, 92);
 
             //DESCRIPCION
             doc.setDrawColor(93, 204, 71);

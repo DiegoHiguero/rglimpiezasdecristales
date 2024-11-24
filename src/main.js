@@ -34,6 +34,8 @@ import {
     faSolarPanel,
     faCalendarDays,
     faBell,
+    faSquarePlus,
+    faPlus,
 } from "@fortawesome/free-solid-svg-icons"
 
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
@@ -59,12 +61,14 @@ library.add(faTrashCan,
     faPumpSoap,
     faComments,
     faBroom,
-    faHandHoldingDollar, 
+    faHandHoldingDollar,
     faChevronDown,
-   faArrowDown,
-   faSolarPanel,
-   faCalendarDays,faBell
-
+    faArrowDown,
+    faSolarPanel,
+    faCalendarDays,
+    faBell,
+    faSquarePlus,
+    faPlus
 
 );
 
