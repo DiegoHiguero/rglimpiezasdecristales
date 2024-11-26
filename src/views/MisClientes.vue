@@ -122,7 +122,7 @@
                           </div>
                           <div v-for=" (item, index) in userStore.descripciones" class="d-flex row mb-3">
                             <div class=" mb-3 col-md-12">
-                              <input type="text" class="form-control" placeholder="descripcion" :aria-label=item.descripcion 
+                              <input type="text" maxlength="55" class="form-control" placeholder="descripcion" :aria-label=item.descripcion 
                                 aria-describedby="basic-addon1" v-model=descripcion[index]>
                             </div>
                             <div class=" mb-3 col-md-3">

@@ -44,7 +44,7 @@ export const useUserStore = defineStore('userStore', {
         timeOut: false,
         selectedDate: dayjs(),
         currentDate: 0,
-        contador:0,
+        contador: 0,
         ano: "",
         mes: "",
         dia: "",
@@ -175,9 +175,12 @@ export const useUserStore = defineStore('userStore', {
             var parrafoCant = 116
             var parrafoPreciou = 116
             var parrafoImporte = 116
+            var subTotal=0
+            var iva = 0
+            var total = 0
 
             var doc = new jsPDF();
-            doc.addImage("src/assets/img/logorglimpiezas.png", "JPEG", 20, 30, 65, 17);
+            doc.addImage("https://roysabreulimpiezas.web.app/assets/logorglimpiezas-a2c3e8a5.png","PNG", 20, 30, 65, 17);
             doc.setFont("helvetica", "bold");
             doc.setFontSize(20);
             doc.text("FACTURA", 150, 37);
@@ -208,37 +211,41 @@ export const useUserStore = defineStore('userStore', {
             doc.setFillColor(55, 120, 42)
             doc.rect(20, 100, 170, 9, "F")
             doc.setTextColor("white");
-            doc.setFont("helvetica", "bold");
+            doc.setFont("helvetica", "normal");
             doc.setFontSize(12);
             doc.text("Descripción de servicio  ", 35, 106);
             doc.text("Cant.", 110, 106);
             doc.text("Precio u.", 140, 106);
             doc.text("Importe", 170, 106);
             doc.setTextColor("black");
+            doc.setFont("helvetica", "normal");
+            doc.setFontSize(10);
             descripcion.forEach(desc => {
-                
-                    doc.text(desc, 35, parrafoDescripcion);
-                    parrafoDescripcion= parrafoDescripcion+15
-                
-                });
-            cant.forEach(desc => {
-                
-                    doc.text(desc.toString(), 110, parrafoCant);
-                    parrafoCant= parrafoCant+15
-                
-                });
-                preciou.forEach(desc => {
-                
-                    doc.text(desc.toString() + " €", 140, parrafoPreciou);
-                    parrafoPreciou= parrafoPreciou+15
-                
-                });
-                importe.forEach(desc => {
-                
-                    doc.text(desc.toString() + " €", 170, parrafoImporte);
-                    parrafoImporte= parrafoImporte+15
-                
-                });
+
+                doc.text(desc, 25, parrafoDescripcion);
+                parrafoDescripcion = parrafoDescripcion + 15
+
+            });
+            cant.forEach(cantidad => {
+
+                doc.text(cantidad.toString(), 115, parrafoCant);
+                parrafoCant = parrafoCant + 15
+
+            });
+            preciou.forEach(precioUni => {
+
+                doc.text(precioUni.toString() + " €", 145, parrafoPreciou);
+                parrafoPreciou = parrafoPreciou + 15
+
+            });
+            importe.forEach(impor => {
+
+                doc.text(impor.toString() + " €", 175, parrafoImporte);
+                parrafoImporte = parrafoImporte + 15
+                subTotal = subTotal + impor
+                iva = (subTotal*21)/100
+                total = subTotal+iva
+            });
 
             //DATOS DE PAGO
             doc.setTextColor("green");
@@ -247,9 +254,42 @@ export const useUserStore = defineStore('userStore', {
             doc.setFontSize(10);
             doc.setTextColor("black");
             doc.setFont("helvetica", "normal");
-            doc.text("DNI: 50349726-N", 25, 200);
-            doc.text("N/C: ROYS GREGORY ABREU REINOSO", 25, 205);
-            doc.text("DNI: 50349726-N", 25, 210);
+            doc.text("DNI: 50349726-N", 25, 195);
+            doc.text("N/C: ROYS GREGORY ABREU REINOSO", 25, 200);
+            doc.text("DNI: 50349726-N", 25, 205);
+            //TOTAL
+
+            doc.text("IVA", 130, 195);
+            doc.text(subTotal.toString()+ " €", 177, 185);
+            doc.text(iva.toString()+ " €", 177, 195);
+            doc.setFont("helvetica", "bold");
+            doc.text(total.toString()+ " €", 177, 205);
+            doc.setDrawColor(93, 204, 71);
+            doc.setFillColor(55, 120, 42)
+            doc.rect(140, 179, 25, 9, "F")
+            doc.rect(140, 189, 50, 9, "D")
+            doc.rect(140, 189, 25, 9, "F")
+            doc.rect(140, 199, 50, 9, "D")
+            doc.rect(140, 199, 25, 9, "F")
+            doc.setFontSize(12);
+            doc.setTextColor("white");
+            doc.text("Subtotal", 145, 185);
+            doc.text("21,00%", 146, 195);
+            doc.text("TOTAL", 145, 205);
+
+            //CONTACTO
+            doc.setFontSize(10);
+            doc.setTextColor("black");
+            doc.setFont("helvetica", "normal");
+            doc.text("696 16 94 35", 25, 230);
+            doc.text("roys.abreu@hotmail.com", 25, 235);
+            doc.text("www.rglimpiezaprofesional.com", 25, 240);
+            doc.text("Av. segunda republica,17 1d 28905 (Madrid)", 25, 245);
+            doc.setFontSize(7);
+            doc.setTextColor("gray");
+            doc.setFont("helvetica", "italic");
+            doc.text("Nota: todas las facturas se emiten con fecha 28 de cada mes,independientemente del dia de pago.", 80, 255);
+            doc.text("Agradecemos su confianza. Atentamente,Un servidor. ", 130, 260);
 
             doc.save(clienteNombre + fechaEs + '.pdf');
         }

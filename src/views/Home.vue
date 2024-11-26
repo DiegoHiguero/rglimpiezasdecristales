@@ -31,7 +31,7 @@
     </div>
     <section class="intro row d-flex justify-content-center">
       <div class="text-center " style="margin-top: 8vh;">
-        <img class="zoom navbar-brand-item d-inline mt-4 p-4" src="../assets/img/logo.png" alt="Toucanet logo"
+        <img class="zoom navbar-brand-item d-inline mt-4 p-4" src="../assets/img/logorglimpiezas.png" alt="RGLImpiezas logo"
           style="max-width: 250px" />
         <div class="row">
           <h1 class="text-center">
