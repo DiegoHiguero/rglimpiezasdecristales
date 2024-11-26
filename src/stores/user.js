@@ -180,7 +180,7 @@ export const useUserStore = defineStore('userStore', {
             var total = 0
 
             var doc = new jsPDF();
-            doc.addImage("../src/assets/img/logorglimpiezas.png","JPG", 20, 30, 65, 17);
+            doc.addImage("https://roysabreulimpiezas.web.app/assets/logorglimpiezas-a2c3e8a5.png","PNG", 20, 30, 65, 17);
             doc.setFont("helvetica", "bold");
             doc.setFontSize(20);
             doc.text("FACTURA", 150, 37);

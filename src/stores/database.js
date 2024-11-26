@@ -46,12 +46,17 @@ export const useDatabaseStore = defineStore('database', {
                 querySnapshot.forEach(doc => {
                     //accedemos ala ifo del id y a ladata de ese id
                     this.totalGanancias = this.totalGanancias + doc.data().precio;
-                    
-                    this.documents.push({
+                    const cliente = {
                         id: doc.id,
                         //destructuracion del objeto
                         ...doc.data()
-                    })
+                    };
+                    this.documents=[...new Set(cliente)]
+                    // this.documents.push({
+                    //     id: doc.id,
+                    //     //destructuracion del objeto
+                    //     ...doc.data()
+                    // })
                    
                 })
                 const querySnapshot2 = await getCount(q)
