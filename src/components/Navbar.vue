@@ -1,5 +1,5 @@
 <template>
-  <nav class="navbar navbar-expand-lg py-0  bg-white">
+  <nav class="navbar navbar-expand-lg py-0  ">
     <div class="container fluid p-0">
           <router-link class="navbar-brand" to="/">
             <img
@@ -11,7 +11,7 @@
           <button class="navbar-toggler col-2 " type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
               <span class="navbar-toggler-icon"></span>
           </button>
-          <div class="col-8 row align-items-center justify-content-between collapse navbar-collapse" id="navbarNavAltMarkup">
+          <div class="col-8 bg-white menu row align-items-center justify-content-between collapse navbar-collapse" id="navbarNavAltMarkup">
           <ul class="nav col-5 justify-content-center">
           </ul>
           <ul class="nav col-7 justify-content-end">
@@ -50,6 +50,42 @@
                   class="me-2"
                 />Facturas</router-link
               >
+            </li>
+            <li class="nav-item">
+              <router-link
+                to="/"
+                v-if="!userStore.userData.email"
+                class="me-4  btn-sm btn-secondary"
+                id="boton-session"
+              >INICIO
+              </router-link>
+            </li>
+            <li class="nav-item">
+              <router-link
+                to="/"
+                v-if="!userStore.userData.email"
+                class="me-4  btn-sm btn-secondary"
+                id="boton-session"
+              >NOSOTROS
+              </router-link>
+            </li>
+            <li class="nav-item">
+              <router-link
+                to="/"
+                v-if="!userStore.userData.email"
+                class="me-4  btn-sm btn-secondary"
+                id="boton-session"
+              >SERVICIOS
+              </router-link>
+            </li>
+            <li class="nav-item">
+              <router-link
+                to="/"
+                v-if="!userStore.userData.email"
+                class="me-4  btn-sm btn-secondary"
+                id="boton-session"
+              >TRABAJOS
+              </router-link>
             </li>
             <li class="nav-item">
               <router-link
@@ -100,14 +136,17 @@ const userStore = useUserStore();
 .navbar-toggler:focus {
     color: green;
 }
-
+.menu{
+height: 100px;
+border-radius: 0px 0px 15px 15px;
+}
 .btn {
   font-family: "Baloo 2";
   border: 0px;
   font-size: 1.1rem;
 }
 .navbar {
-  background-color: transparent;
+  background-color: #323131;
    top: 0px;
     width: 100%;
     z-index: 2;
@@ -115,7 +154,7 @@ const userStore = useUserStore();
 }
 .logo {
   width: 100%;
-  max-width: 200px;
+  max-width: 300px;
 }
 
 img,
