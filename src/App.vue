@@ -37,10 +37,9 @@ export default {
 body {
   font-family: "Baloo 2", cursive;
   font-size: 16px;
-background: repeating-linear-gradient( -45deg, #d8d8da, #d8d8da 3px, #ffffff 3px, #ffffff 15px );
   text-rendering: optimizeLegibility;
   font-weight: initial;
-  background-color: #ffffff;
+  background-color: #323131;
 
 }
 h1,
