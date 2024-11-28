@@ -1,20 +1,17 @@
 <template>
   <nav class="navbar navbar-expand-lg py-0  ">
-    <div class="container fluid p-0">
-          <router-link class="navbar-brand" to="/">
+          <router-link class="navbar-brand col-4 text-center" to="/">
             <img
               class="logo zoom navbar-brand-item d-inline "
               src="../assets/img/logorglimpiezas.png"
               alt="RG Limpieza de cristales logo"
             />
           </router-link>
-          <button class="navbar-toggler col-2 " type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+          <button class="navbar-toggler col-4 " type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
               <span class="navbar-toggler-icon"></span>
           </button>
-          <div class="col-8 bg-white menu row align-items-center justify-content-between collapse navbar-collapse" id="navbarNavAltMarkup">
-          <ul class="nav col-5 justify-content-center">
-          </ul>
-          <ul class="nav col-7 justify-content-end">
+          <div class=" menu row collapse navbar-collapse" id="navbarNavAltMarkup">
+          <ul class="nav justify-content-space-evenly d-flex">
             <li class="nav-item">
               <router-link
                 to="/register"
@@ -114,7 +111,6 @@
             </li>
           </ul>
           </div>
-     </div>
   </nav>
 </template>
 
@@ -125,11 +121,13 @@ import { useUserStore } from "../stores/user";
 const userStore = useUserStore();
 </script>
 
-<style>
+<style scoped>
 .navbar .navbar-toggler-icon {
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='green' stroke-linecap='round' stroke-miterlimit='10' stroke-width='4' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
   
 }
+a{
+  text-decoration: none;}
 .colorfondo{
   background-color: green;
 }
@@ -139,6 +137,7 @@ const userStore = useUserStore();
 .menu{
 height: 100px;
 border-radius: 0px 0px 15px 15px;
+background-color: white;
 }
 .btn {
   font-family: "Baloo 2";
@@ -225,4 +224,15 @@ img {
   background: #12421c;
   color: #f7f8fa;
 }
+ul{
+  justify-content: space-evenly;
+  display: flex;
+}
+@media (max-width: 768px) {
+  .menu{
+height: 100px;
+border-radius: 0px 0px 15px 15px;
+background-color: #323131;
+}
+  }
 </style>
