@@ -2,13 +2,13 @@
   <div class="container">
     <div class="row">
      <div class="offset-lg-3 col-lg-6 col-12">
-      <h2 class="mb-4 d-flex justify-content-center text-white">Conexion</h2>
+      <h2 class="mb-4 d-flex justify-content-center ">Conexion</h2>
       <div class="p-4 my-4 p-lg-8 form" style="border-radius: 0.75rem;">
         <div class="text-center p-2 mt-2 alert alert-danger " v-if="userStore.timeOut !== false" >
                {{ userStore.mensaje }}
          </div>
         <form @submit.prevent="handleSubmit" class=" mt-4 row g-3">
-          <h1 class="mb-2 text-white">Bienvenue</h1>
+          <h1 class="mb-2 text-white">Bienvenido</h1>
            <div class="mb-3">
               <label for="exampleFormControlInput1" class="col-sm-2 col-form-label">Email</label>
               <input type="email" 

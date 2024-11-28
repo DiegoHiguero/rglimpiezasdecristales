@@ -5,8 +5,7 @@
         <h3 class="  m-4 d-flex justify-content-center">
           Nous Contacter
         </h3>
-        <div class="p-4 pt-1 p-lg-8 form"  style="border-radius: 0.75rem">
-          
+        <div class="p-4 pt-1 p-lg-8 form"  style="border-radius: 0.75rem">  
           <form @submit.prevent="handleSubmit" class="mt-1 row g-3">
             <div class="row mt-3 col-12 d-flex justify-content-around">
               <div class="col-md-4 d-flex justify-content-center row">

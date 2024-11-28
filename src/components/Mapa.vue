@@ -20,9 +20,9 @@ const mapContainer = ref<HTMLElement>();
 onMounted(() => {
   const map = new mapboxgl.Map({
     container: mapContainer.value!, // container ID
-    style: 'mapbox://styles/mapbox/satellite-v9', // sty
-    center: [-1.52558, 43.486685], // starting position [lng, lat]
-    zoom: 12.2, // starting zoom,
+    style: 'mapbox://styles/higuerodiego/clolwjys2009k01qm73bf7jct', // sty
+    center: [-3.7031979, 40.4170335], // starting position [lng, lat]
+    zoom: 10.2, // starting zoom,
   });
   map.on("load", () => {
     var layers: any = map.getStyle().layers;
@@ -34,7 +34,11 @@ onMounted(() => {
         break;
       }
     }
-
+    const el = document.createElement('div');
+    el.className = 'marker';
+    new mapboxgl.Marker(el)
+      .setLngLat([-3.7291771, 40.3099457,])
+      .addTo(map);
     const geocoder = new MapboxGeocoder({
       accessToken: mapboxgl.accessToken,
       mapboxgl: mapboxgl,
@@ -71,7 +75,7 @@ onMounted(() => {
   }).setLngLat(feature.center).setPopup(
                 new mapboxgl.Popup({ offset: 25 }) // add popups
                   .setHTML(
-                    `<h5 class="p-2 text-center">${doc.data().nombre}</h5>
+                    `<h5 class="p-2 text-center fw-bold">${doc.data().nombre}</h5>
                     <p class="text-center">${doc.data().direccion}<p/>
                     <p class="text-center">${doc.data().codigoPostal} ${doc.data().ciudad}<p/>`
                   )
@@ -84,7 +88,17 @@ onMounted(() => {
       }
     };
     getInfo();
-
+  map.addControl(
+        new mapboxgl.GeolocateControl({
+            positionOptions: {
+                enableHighAccuracy: true
+            },
+            // When active the map will receive updates to the device's location as it changes.
+            trackUserLocation: true,
+            // Draw an arrow next to the location dot to indicate which direction the device is heading.
+            showUserHeading: true
+        })
+    );
     map.addSource("edificiosHechos", {
       type: "geojson",
       data: {
@@ -97,17 +111,31 @@ onMounted(() => {
 });
 </script>
 
-<style scoped>
+<style >
 .map-container {
   width: 100vw;
   height: 100vh;
 }
-
+.mapboxgl-popup-close-button {
+  font-size: 1.5rem!important;
+  padding: 10px!important;
+}
 .marker {
+  background-image: url('../assets/img/storeLogo.png');
   background-size: cover;
-  width: 50px;
-  height: 50px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   cursor: pointer;
+}
+.mapboxgl-popup-content {
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+    
+    padding: 20px 10px 10px 20px;
+    pointer-events: auto;
+    position: relative;
+    width: max-content!important;
 }
 </style>

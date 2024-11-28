@@ -11,7 +11,8 @@ import {
     faCheck,
     faMagnifyingGlass,
     faArrowUpRightFromSquare,
-    faUser, faRightFromBracket,
+    faUser, 
+    faRightFromBracket,
     faFileInvoice,
     faAddressCard,
     faRectangleList,
@@ -34,8 +35,10 @@ import {
     faSolarPanel,
     faCalendarDays,
     faBell,
+    faSquarePlus,
+    faPlus,
 } from "@fortawesome/free-solid-svg-icons"
-
+import { faFacebook, faFacebookF, faInstagram, faLinkedin, faLinkedinIn, faTwitter }from "@fortawesome/free-brands-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import Vue3Signature from "vue3-signature"
 library.add(faTrashCan,
@@ -59,12 +62,18 @@ library.add(faTrashCan,
     faPumpSoap,
     faComments,
     faBroom,
-    faHandHoldingDollar, 
+    faHandHoldingDollar,
     faChevronDown,
-   faArrowDown,
-   faSolarPanel,
-   faCalendarDays,faBell
-
+    faArrowDown,
+    faSolarPanel,
+    faCalendarDays,
+    faBell,
+    faSquarePlus,
+    faPlus,
+    faInstagram,
+   faFacebookF,
+   faLinkedinIn,
+    faTwitter
 
 );
 
