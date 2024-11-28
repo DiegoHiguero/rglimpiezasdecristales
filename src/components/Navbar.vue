@@ -7,7 +7,7 @@
               alt="RG Limpieza de cristales logo"
             />
           </router-link>
-          <button class="navbar-toggler col-4 " type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+          <button class="navbar-toggler text-end col-2 " type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
               <span class="navbar-toggler-icon"></span>
           </button>
           <div class=" menu row collapse navbar-collapse" id="navbarNavAltMarkup">
@@ -152,8 +152,7 @@ background-color: white;
    
 }
 .logo {
-  width: 100%;
-  max-width: 300px;
+  max-width: 18rem;
 }
 
 img,

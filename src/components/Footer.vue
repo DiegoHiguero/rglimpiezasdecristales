@@ -1,13 +1,13 @@
 <template>
   <footer class="row mt-3" style="  background-color: #323131;">
     <div class="d-flex justify-content-evenly col-md-9 pt-2 legal">
-      <ul class="d-flex justify-content-evenly col-md-9 p-2 ">
-        <li>
+      <ul class="row d-flex justify-content-evenly col-md-9 p-2 ">
+        <li class="col-md-6 text-center">
           <router-link to="/confidentialite"  
                 >Politica de cookies y de privacidad
               </router-link>
         </li>
-        <li>
+        <li class="col-md-6 text-center">
           <router-link to="/mentionslegales"  
                 >Aviso legal
               </router-link>
@@ -42,6 +42,7 @@ li{
 }
 a:hover{
   color: #f24e29;
+  font-size: 1rem;
 }
 footer {
   background-color: #000000;
