@@ -11,7 +11,9 @@
               <span class="navbar-toggler-icon"></span>
           </button>
           <div class=" menu row collapse navbar-collapse" id="navbarNavAltMarkup">
+          
           <ul class="nav  d-flex flex-row">
+
             <li class="nav-item">
               <router-link
                 to="/register"
@@ -63,25 +65,30 @@
                 v-if="!userStore.userData.email"
                 class="me-4  btn-sm btn-outline-light"
                 id="boton-session"
-              ><i class="fas fa-briefcase"></i> NOSOTROS
+              ><i class="fas fa-briefcase"></i>NOSOTROS
+
               </router-link>
             </li>
             <li class="nav-item">
               <router-link
                 to="/"
                 v-if="!userStore.userData.email"
+
                 class="me-4  btn-sm btn-outline-light"
                 id="boton-session"
               ><i class="fas fa-concierge-bell"> </i> SERVICIOS
+
               </router-link>
             </li>
             <li class="nav-item">
               <router-link
                 to="/"
                 v-if="!userStore.userData.email"
+
                 class="me-4  btn-sm btn-outline-light"
                 id="boton-session"
               ><i class="fas fa-mobile-alt"></i> TRABAJOS
+
               </router-link>
             </li>
             <li class="nav-item">
@@ -153,7 +160,9 @@ background-color: white;
    
 }
 .logo {
+
   max-width: 20rem;
+
 }
 
 img,
@@ -237,5 +246,6 @@ height: 100px;
 border-radius: 0px 0px 15px 15px;
 background-color: #323131;
 }
+
   }
 </style>
