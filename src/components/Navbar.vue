@@ -11,7 +11,9 @@
               <span class="navbar-toggler-icon"></span>
           </button>
           <div class=" menu row collapse navbar-collapse" id="navbarNavAltMarkup">
-          <ul class="nav justify-content-space-evenly d-flex">
+          
+          <ul class="nav  d-flex flex-row">
+
             <li class="nav-item">
               <router-link
                 to="/register"
@@ -52,43 +54,48 @@
               <router-link
                 to="/"
                 v-if="!userStore.userData.email"
-                class="me-4  btn-sm btn-secondary"
+                class="me-4  btn-sm btn-outline-light"
                 id="boton-session"
-              >INICIO
+              ><i class="fas fa-home"></i> INICIO
               </router-link>
             </li>
             <li class="nav-item">
               <router-link
                 to="/"
                 v-if="!userStore.userData.email"
-                class="me-4  btn-sm btn-secondary"
+                class="me-4  btn-sm btn-outline-light"
                 id="boton-session"
-              >NOSOTROS
+              ><i class="fas fa-briefcase"></i>NOSOTROS
+
               </router-link>
             </li>
             <li class="nav-item">
               <router-link
                 to="/"
                 v-if="!userStore.userData.email"
-                class="me-4  btn-sm btn-secondary"
+
+                class="me-4  btn-sm btn-outline-light"
                 id="boton-session"
-              >SERVICIOS
+              ><i class="fas fa-concierge-bell"> </i> SERVICIOS
+
               </router-link>
             </li>
             <li class="nav-item">
               <router-link
                 to="/"
                 v-if="!userStore.userData.email"
-                class="me-4  btn-sm btn-secondary"
+
+                class="me-4  btn-sm btn-outline-light"
                 id="boton-session"
-              >TRABAJOS
+              ><i class="fas fa-mobile-alt"></i> TRABAJOS
+
               </router-link>
             </li>
             <li class="nav-item">
               <router-link
                 to="/login"
                 v-if="!userStore.userData.email"
-                class="me-4  btn-sm btn-secondary"
+                class="me-4  btn-sm btn-outline-light"
                 id="boton-session"
               >
                 <font-awesome-icon
@@ -140,9 +147,10 @@ border-radius: 0px 0px 15px 15px;
 background-color: white;
 }
 .btn {
-  font-family: "Baloo 2";
+  font-family: 'Anton', sans-serif;
   border: 0px;
   font-size: 1.1rem;
+  padding-top: 27px;
 }
 .navbar {
   background-color: #323131;
@@ -152,12 +160,14 @@ background-color: white;
    
 }
 .logo {
-  max-width: 18rem;
+
+  max-width: 20rem;
+
 }
 
 img,
 svg {
-  vertical-align: middle;
+  vertical-align:bottom;
 }
 *,
 *::before,
@@ -172,60 +182,63 @@ img {
 #boton-accueil {
   background: transparent;
   color: #B7B335;
-  font-family: "Baloo 2";
+  font-family: 'Anton', sans-serif;
   transition: all 0.2s ease-in-out;
-  font-weight: bold;
+  font-weight:400;
+  
 }
 
 #boton-accueil:hover {
   background: #B7B335;
-  color: #eaebf1;
-  font-family: "Baloo 2";
+  color: green;
+  font-family: 'Anton', sans-serif;
 }
 #boton-contact {
   background: transparent;
   color: #1A5F28;
-  font-family: "Baloo 2";
+  font-family: 'Anton', sans-serif;
   transition: all 0.2s ease-in-out;
-  font-weight: bold;
+  font-weight: 400;
 }
 #boton-contact:hover {
-  background: #1A5F28;
-  color: #eaebf1;
+  
+  color: green;
 }
 #boton-services {
   background: transparent;
   color: #8f199e;
   transition: all 0.2s ease-in-out;
-  font-weight: bold;
+  font-weight: 400;
 }
 #boton-services:hover {
   background: #8f199e;
-  color: #eaebf1;
+  color: green;
 }
 #boton-master {
-  background: #1A5F28;
-  font-family: "Baloo 2";
-  font-weight: bold;
+  
+  font-family: 'Anton', sans-serif;
+  font-weight: 400;
 }
 #boton-master:hover {
-  background: #12421c;
-  font-family: "Baloo 2";
+  color: #218d38;
+  font-family: 'Anton', sans-serif;
 }
 #boton-session {
-  background: #1A5F28;
-  color: #f7f8fa;
+  
+  color: #218d38;
   transition: all 0.2s ease-in-out;
-  font-family: "Baloo 2";
-  font-weight: bold;
+  font-family: 'Anton', sans-serif;
+  font-weight: 400;
+  font-size: large;
 }
 #boton-session:hover {
-  background: #12421c;
-  color: #f7f8fa;
+   /*background: #12421c;*/
+  color: #104a1d;
 }
 ul{
-  justify-content: space-evenly;
-  display: flex;
+  padding: 37px 0px 0px 20px;
+  display: flex ;
+  flex-direction: row;
 }
 @media (max-width: 768px) {
   .menu{
@@ -233,5 +246,6 @@ height: 100px;
 border-radius: 0px 0px 15px 15px;
 background-color: #323131;
 }
+
   }
 </style>

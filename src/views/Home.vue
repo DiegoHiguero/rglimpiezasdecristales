@@ -32,10 +32,10 @@
     <section class="row d-flex justify-content-center py-3 my-2 bg-image">
       <div class="row col-md-6 m-2 p-2">
         <h1 class="display-2 mx-2 px-2 mt-4 pt-4">
-          Redonnez de <span class="textAnimation">l'éclat</span> à vos vitres !
+          Profesionales en Limpieza de Cristales <span class="textAnimation">Con más de 8 años de experiencia en el sector!</span> 
         </h1>
         <h1 class="m-3 p-2">
-          <span style="color: #26873a; font-weight: bold">Toucanet </span> est
+          <span style="color: #26873a; font-weight: bold">RG Limpieza de cristales </span> est
           un service de nettoyage des vitres pour les particuliers et
           professionnels.
         </h1>
@@ -317,11 +317,11 @@ ul li {
 }
 
 .textAnimation {
-  background: rgb(227, 230, 176);
+  background: rgb(50, 52, 33);
   background: linear-gradient(90deg,
-      rgb(243, 244, 240) 0%,
-      rgb(250, 244, 80) 51%,
-      rgb(239, 240, 228) 100%);
+      rgb(141, 152, 110) 0%,
+      rgb(88, 86, 28) 51%,
+      rgb(163, 163, 116) 100%);
   background-size: auto auto;
   background-clip: border-box;
   background-size: 200% auto;
