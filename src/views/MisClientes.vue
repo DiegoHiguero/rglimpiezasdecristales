@@ -21,6 +21,7 @@
               <div class=" mt-5 mb-3 d-flex justify-content-center">
                 <div class="accordion-body nuevaLimpieza mt-5 p-2 col-md-10">
                   <h1 class="text-center pt-2">Anadir Limpieza</h1>
+                  <h1>{{ fecha }}</h1>
                   <div class="form-group mt-5">
                     <label for="startDate">Fecha</label>
                     <input id="startDate" v-model="fecha" class="form-control" type="date" />
@@ -50,6 +51,9 @@
                     <font-awesome-icon :icon="['fas', 'bell']" shake class="fa-xl" />
                     <h5>{{ userStore.mensaje }} </h5> <font-awesome-icon :icon="['fas', 'bell']" shake class="fa-xl" />
                   </div>
+                  <button class="btn btn-primary col-12 mt-3 mb-3"
+                    @click="clear(index)">LIMPIAR
+                  </button>
                   <button class="btn btn-success col-12 mt-3 mb-3"
                     @click="passage(item.id, 'image/jpeg', index, item)">ENVIAR
                   </button>
@@ -108,6 +112,13 @@
                             </tr>
                           </tbody>
                         </table>
+                        <div>
+                          <button class="btn btn-success"
+                           @click="userStore.firmasPDF(firmasSeleccionadas,item)"
+                          >
+                            Crear PDF Firmas
+                          </button>
+                        </div>
                         <form>
                           <div class="input-group mb-3">
                             <div class="input-group-prepend">
@@ -120,6 +131,7 @@
                             <label for="startDate">Fecha</label>
                             <input id="startDate" v-model="fecha" class="form-control" type="date" />
                           </div>
+                          
                           <div v-for=" (item, index) in userStore.descripciones" class="d-flex row mb-3">
                             <div class=" mb-3 col-md-12">
                               <input type="text" maxlength="55" class="form-control" placeholder="descripcion" :aria-label=item.descripcion 
@@ -379,8 +391,11 @@ const nuevaDescripcion = ()=>{
 //     console.log(error);
 //   }
 // };
-
-const passage = async (idCliente, t, index, nombreCliente, fecha, numfactura) => {
+const clear = (index) => {
+  signature1.value[index].clear()
+}
+const passage = async (idCliente, t, index, nombreCliente, numfactura) => {
+  
   signature1.value[index].addWaterMark({
     text: `${nombreCliente.nombre} ${fecha.value}`,          // watermark text, > default ''
     font: "15px Arial",         // mark font, > default '20px sans-serif'
