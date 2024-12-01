@@ -180,7 +180,7 @@ export const useUserStore = defineStore('userStore', {
             var total = 0
 
             var doc = new jsPDF();
-            doc.addImage("https://roysabreulimpiezas.web.app/assets/logorglimpiezas-a2c3e8a5.png","PNG", 20, 30, 65, 17);
+            doc.addImage("	https://roysabreulimpiezas.web.app/assets/logorglimpiezas-886c377f.png","PNG", 20, 30, 65, 17);
             doc.setFont("helvetica", "bold");
             doc.setFontSize(20);
             doc.text("FACTURA", 150, 37);
@@ -292,7 +292,22 @@ export const useUserStore = defineStore('userStore', {
             doc.text("Agradecemos su confianza. Atentamente,Un servidor. ", 130, 260);
 
             doc.save(clienteNombre + fechaEs + '.pdf');
-        }
+        },
+       firmasPDF(imagenFirma,cliente){
+            
+
+            var doc = new jsPDF();
+            const clienteNombre = cliente.nombre
+            doc.setFontSize(30);
+            doc.text("Limpiezas "+ clienteNombre, 55, 25);
+            doc.addImage(imagenFirma[0],"JPEG", 40, 45, 85, 55);
+            doc.addImage(imagenFirma[1],"JPEG",  130, 45, 85, 55);
+            doc.addImage(imagenFirma[2],"JPEG", 40, 105, 85, 55);
+            doc.addImage(imagenFirma[3],"JPEG",  130, 105, 85, 55);
+
+
+            doc.save('firmas.pdf');
+        },
     },
 
 })
