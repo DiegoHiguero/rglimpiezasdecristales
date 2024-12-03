@@ -7,23 +7,73 @@
       <span class="visually-hidden">Loading...</span>
     </div>
     <div class="container-fluid p-0" v-else>
+      <div class="col-md-4 bg-white rounded mt-4 mb-4 p-3">
+          <div class="col-12 ">
+            <h3 class=""> Total Bruto: {{ databaseStore.totalGanancias }}€</h3>
+          </div>
+          <div class="col-12 ">
+            <h3 class=""> Total Neto: {{ databaseStore.totalNeto }}€</h3>
+          </div>
+          <div class="col-12 ">
+            <h3 class=""> Cotizacion: {{ databaseStore.cotizacion }}€</h3>
+          </div>
+          <div class="col-12 ">
+            <h3 class=""> Total Clientes: {{ databaseStore.numeroClientes }}</h3>
+          </div>
+      </div>
       <div class="row">
-        <div class="accordion" id="accordionExample">
-          <div class="accordion-item" v-for="(item, index) in databaseStore.documents" :key="item.id">
-            <button class="accordion-button" type="button" data-bs-toggle="collapse" :data-bs-target="'#' + index"
-              aria-expanded="false" aria-controls="collapseOne">
-              <div class="container row d-flex justify-content-around">
-                <div class="col-6">{{ item.nombre }}</div>
+        <div>
+          <select name="status" class="form-select col-4" aria-label="Default select example"
+            v-model="clienteSeleccionado">
+            <option selected v-for="(item, index) in databaseStore.documents" :key="item.id" :value=item>{{
+              item.nombreUsuario }}</option>
+          </select>
+          <div v-if="clienteSeleccionado === undefined">
+            <p>Por favor selecciona un cliente</p>
+          </div>
+          <div class="row justify-content-around mt-5" v-else>
+            <div class="row justify-content-around  mt-2">
+              <div class="col-md-4 p-2 mb-3   tarjeta text-white p-4">
+                <h4 class="d-flex justify-content-between"><b>{{ clienteSeleccionado.nombre }}</b><span class="badge bg-success" style="font-size: 1.5rem;">{{ clienteSeleccionado.precio }} €</span></h4>
+                <ul>
+                  <li><p>{{ clienteSeleccionado.direccion }}</p></li>
+                  <li><p>{{ clienteSeleccionado.codigoPostal }} {{ clienteSeleccionado.ciudad }}</p></li>
+                  <li><p>{{ clienteSeleccionado.telephone }}</p></li>
+                </ul>
+                
               </div>
-            </button>
-            <div :id="index" class="accordion-collapse collapse pb-4" aria-labelledby="headingOne"
-              data-bs-parent="#accordionExample">
-              <div class=" mt-5 mb-3 d-flex justify-content-center">
-                <div class="accordion-body nuevaLimpieza mt-5 p-2 col-md-10">
-                  <h1 class="text-center pt-2">Anadir Limpieza</h1>
-                  <h1>{{ fecha }}</h1>
+              <div class="col-md-4 p-2 mb-3 tarjeta text-white p-4">
+                <h4 class="text-center m-3">Dias de limpieza</h4>
+                <div class="d-flex flex-row">
+                  <div class="card text-white bg-primary m-3" v-for="(item, index) in clienteSeleccionado.diasLimpieza"
+                    :key="index" style="max-width: 18rem">
+                    <div class="card-body">
+                      <h5 class="card-title">{{ item }}</h5>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- <div class="col-md-3 p-2   tarjeta text-white p-4">
+                  <h4 class="text-center m-3">Facturas :</h4>
+                  <div class="row">
+                    <p style="text-indent: 3%" id="cliente" v-for="item in clienteSeleccionado.factura" :key="item">
+                      {{ item.nombre }}
+
+                      <span class="btn btn-sm btn-warning"
+                        @click="databaseStore.deleteFactura(item.id)"><font-awesome-icon
+                          :icon="['fas', 'trash-can']" />Eliminar</span>
+                      <a :href="item.referencia" target="_blank" class="btn btn-sm m-2 btn-primary"><font-awesome-icon
+                          :icon="['fas', 'magnifying-glass']" />Ver</a>
+                    </p>
+                  </div>
+                </div> -->
+            </div>
+            <div class="row  justify-content-around mt-2">
+              <div class="col-md-5 m-2 p-3 limpiezas">
+                  <h2 class="text-center pt-2">Anadir Limpieza</h2>
                   <div class="form-group mt-5">
                     <label for="startDate">Fecha</label>
+                    <h1>{{ fecha }}</h1>
                     <input id="startDate" v-model="fecha" class="form-control" type="date" />
                   </div>
                   <div class="form-check mt-1 text-center">
@@ -44,7 +94,6 @@
                   <div class=" mt-3">
                     <h2>Firma</h2>
                     <Vue3Signature ref="signature1" :w="'auto'" :h="'40vh'" class="example"></Vue3Signature>
-
                   </div>
                   <div class="text-center p-2 mt-2 alert alert-success d-flex justify-content-evenly " role="alert"
                     v-if="userStore.timeOut !== false">
@@ -54,54 +103,54 @@
                   <button class="btn btn-primary col-12 mt-3 mb-3"
                     @click="clear(index)">LIMPIAR
                   </button>
-                  <button class="btn btn-success col-12 mt-3 mb-3"
-                    @click="passage(item.id, 'image/jpeg', index, item)">ENVIAR
+                  <button class="btn btn-success col-12 mt-3 mb-3" @click="passage(clienteSeleccionado, 'image/jpeg', index)">ENVIAR
                   </button>
-                  <div class=" row p-0 mt-4"
-                    style="background-color: #f8f5f5;border-radius: 19px;    box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;">
-                    <h4 class="text-center mt-2 pt-2">REGISTRO LIMPIEZAS</h4>
-                    <div class="container col-md-11" id="accordionPassage">
-                      <div class="container mt-3 p-1">
-                        <select name="status" class="form-select col-4" v-model="mes">
-                          <option value='enero'>enero</option>
-                          <option value='febrero'>febrero</option>
-                          <option value='marzo'>marzo</option>
-                          <option value='abril'>abril</option>
-                          <option value='mayo'>mayo</option>
-                          <option value='junio'>junio</option>
-                          <option value='julio'>julio</option>
-                          <option value='agosto'>agosto</option>
-                          <option value='septiembre'>septiembre</option>
-                          <option value='octubre'>octubre</option>
-                          <option value='noviembre'>noviembre</option>
-                          <option value='diciembre'>diciembre</option>
-                        </select>
-                        <table class="table table-striped table-hover mt-4 pt-4">
-                          <thead>
-                            <tr class="text-center">
-                              <th scope="col">J</th>
-                              <th scope="col">EXT</th>
-                              <th scope="col">INT</th>
-                              <th scope="col">COM</th>
-                              <th scope="col">FIR</th>
-                            </tr>
-                          </thead>
-                          <tbody v-for=" (day, index) in item.registro">
-                            <tr class="text-center " v-if="day.nombreMes === mes">
-                              <th scope="row" cl>{{ day.fechaLimp }}</th>
-                              <td v-if="day.exterior">
-                                <font-awesome-icon :icon="['fas', 'check']" class="me-2 fa" style="color: #51f772" />
-                              </td>
-                              <td v-else>
-                                <font-awesome-icon :icon="['fas', 'xmark']" class="me-2 fa" style="color: red" />
-                              </td>
-                              <td v-if="day.interior">
-                                <font-awesome-icon :icon="['fas', 'check']" class="me-2 fa" style="color: #51f772" />
-                              </td>
-                              <td v-else>
-                                <font-awesome-icon :icon="['fas', 'xmark']" class="me-2 fa" style="color: red" />
-                              </td>
-                              <td>{{ day.comentarios }} </td>
+                  
+              </div>
+              <div class="row col-md-5  m-2 p-3  limpiezas">
+                <div class="container col-md-11" id="accordionPassage">
+                    <h2 class="text-center pt-2">Registro Limpiezas</h2>
+                    <div class="container mt-3 p-1">
+                      <select name="status" class="form-select col-4" v-model="mes">
+                        <option value='enero'>enero</option>
+                        <option value='febrero'>febrero</option>
+                        <option value='marzo'>marzo</option>
+                        <option value='abril'>abril</option>
+                        <option value='mayo'>mayo</option>
+                        <option value='junio'>junio</option>
+                        <option value='julio'>julio</option>
+                        <option value='agosto'>agosto</option>
+                        <option value='septiembre'>septiembre</option>
+                        <option value='octubre'>octubre</option>
+                        <option value='noviembre'>noviembre</option>
+                        <option value='diciembre'>diciembre</option>
+                      </select>
+                      <table class="table table-striped table-hover mt-4 pt-4">
+                        <thead>
+                          <tr class="text-center">
+                            <th scope="col">J</th>
+                            <th scope="col">EXT</th>
+                            <th scope="col">INT</th>
+                            <th scope="col">COM</th>
+                          </tr>
+                        </thead>
+                        <tbody v-for=" (day, index) in clienteSeleccionado.registro">
+                          <tr class="text-center" v-if="day.nombreMes === mes">
+                            <th scope="row" v-if="day.fechaLimp === undefined">Aun no hay fecha</th>
+                            <th scope="row" v-else>{{ day.diaLimp }} {{ day.fechaLimp }}</th>
+                            <td v-if="day.exterior">
+                              <font-awesome-icon :icon="['fas', 'check']" class="me-2 fa" style="color: #51f772" />
+                            </td>
+                            <td v-else>
+                              <font-awesome-icon :icon="['fas', 'xmark']" class="me-2 fa" style="color: red" />
+                            </td>
+                            <td v-if="day.interior">
+                              <font-awesome-icon :icon="['fas', 'check']" class="me-2 fa" style="color: #51f772" />
+                            </td>
+                            <td v-else>
+                              <font-awesome-icon :icon="['fas', 'xmark']" class="me-2 fa" style="color: red" />
+                            </td>
+                            <td>{{ day.comentarios }} </td>
                               <td>
                                 <div class="form-check">
                                   <input class="form-check-input" type="checkbox" :value=day.imagen
@@ -109,17 +158,17 @@
                                   <img :src=day.imagen alt="firma del cliente" style="max-width: 120px;">
                                 </div>
                               </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                        <div>
+                          </tr>
+                        </tbody>
+                      </table>
+                      <div>
                           <button class="btn btn-success"
-                           @click="userStore.firmasPDF(firmasSeleccionadas,item)"
+                           @click="userStore.firmasPDF(firmasSeleccionadas,clienteSeleccionado)"
                           >
                             Crear PDF Firmas
                           </button>
                         </div>
-                        <form>
+                       <form>
                           <div class="input-group mb-3">
                             <div class="input-group-prepend">
                               <span class="input-group-text" id="basic-addon1">Numero Factura</span>
@@ -160,112 +209,16 @@
                           </div>
                         </form>
                         <button class="btn btn-danger "
-                              @click="userStore.crearPDF(item, descripcion, cant, preciou, importe, fecha, numFactura)">Crear
+                              @click="userStore.crearPDF(clienteSeleccionado, descripcion, cant, preciou, importe, fecha, numFactura)">Crear
                               FACTURA PDF
-                            </button>
-                      </div>
+                          </button>
                     </div>
                   </div>
-
-                </div>
-                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-                  aria-hidden="true">
-                  <div class="modal-dialog">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">
-                          Quiere borrar el cliente?
-                        </h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                      </div>
-                      <div class="modal-body">
-                        <button class="btn btn-danger " @click="databaseStore.deleteUser(item.id)">
-                          Si Borrar
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <!-- <button class="btn btn-warning col-6"
-                                @click="router.push(`/editar/${item.id}`)"> Editar
-                           </button> -->
               </div>
-              <div class="accordion-body row justify-content-around">
-                <div class="col-md-3 p-2   tarjeta text-white p-4">
-                  <h4 class="text-center m-3">Details Client</h4>
-                  <p>Nombre : <b>{{ item.nombre }}</b></p>
-                  <p>Apellido:<b>{{ item.apellido }}</b> </p>
-                  <p>Direccion : <b>{{ item.direccion }}</b> </p>
-                  <p>Telephone : <b>{{ item.telephone }}</b> </p>
-                  <p>Ciudad : <b>{{ item.ciudad }}</b> </p>
-                  <p>Provincia : <b>{{ item.provincia }}</b> </p>
-                  <p>Codigo Postal : <b>{{ item.codigoPostal }}</b> </p>
-                  <p>Precio : <b>{{ item.precio }} €</b> </p>
-                  <p>Cliente desde : <b>{{ item.creacion }}</b> </p>
-                </div>
-                <div class="col-md-3 p-2  tarjeta text-white p-4">
-                  <h4 class="text-center m-3">Dias de limpieza</h4>
-                  <div class="d-flex flex-row">
-                    <div class="card text-white bg-primary m-3" v-for="(item, index) in item.diasLimpieza" :key="index"
-                      style="max-width: 18rem">
-                      <div class="card-body">
-                        <h5 class="card-title">{{ item }}</h5>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-3 p-2   tarjeta text-white p-4">
-                  <h4 class="text-center m-3">Facturas :</h4>
-                  <div class="row">
-                    <p style="text-indent: 3%" id="cliente" v-for="item in item.factura" :key="item">
-                      {{ item.nombre }}
-
-                      <span class="btn btn-sm btn-warning"
-                        @click="databaseStore.deleteFactura(item.id)"><font-awesome-icon
-                          :icon="['fas', 'trash-can']" />Eliminar</span>
-                      <a :href="item.referencia" target="_blank" class="btn btn-sm m-2 btn-primary"><font-awesome-icon
-                          :icon="['fas', 'magnifying-glass']" />Ver</a>
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <!-- <div class="container row">
-                <div class="col-md-6">
-                  <label for="formFileMultiple" class="form-label">Elige la Factura</label>
-                  <input type="file" ref="file" :file="factura" class="form-control" id="formFileMultiple" multiple />
-                </div>
-                <div class="col-md-6">
-                  <label for="validationServer01" class="form-label">Nombre Factura</label>
-                  <input type="text" class="form-control" id="validationServer01" v-model="nombreFactura" required />
-                </div>
-              </div>
-              <div class=" row my-2">
-                <form class="form-inline">
-                  <h1>{{ fecha }}</h1>
-                  <button class="btn btn-success col-12" @click="enviar(item.id, item.nombre, index, item.email)">
-                    Enviar Factura
-                    <font-awesome-icon :icon="['fas', 'arrow-up-right-from-square']" />
-                  </button>
-                </form>
-              </div> -->
             </div>
           </div>
         </div>
-        <div class="container bg-white mt-4 mb-4 p-3 mapa">
-          <div class="col-12 ">
-            <h3 class=""> Total Bruto: {{ databaseStore.totalGanancias }}€</h3>
-          </div>
-          <div class="col-12 ">
-            <h3 class=""> Total Neto: {{ databaseStore.totalNeto }}€</h3>
-          </div>
-          <div class="col-12 ">
-            <h3 class=""> Cotizacion: {{ databaseStore.cotizacion }}€</h3>
-          </div>
-          <div class="col-12 ">
-            <h3 class=""> Total Clientes: {{ databaseStore.numeroClientes }}</h3>
-          </div>
-        </div>
-        <div class="row col-12 mb-4  mapa bg-white">
+        <div class="row col-12 mb-4 p-2 mapa bg-white">
           <Mapa />
         </div>
       </div>
@@ -314,7 +267,7 @@ const importe = ref([])
 
 databaseStore.getClientes();
 databaseStore.getInfoCliente();
-
+const clienteSeleccionado = ref();
 const file = ref(null);
 const fecha = ref();
 const fechaDataPicker = ref();
@@ -391,13 +344,13 @@ const nuevaDescripcion = ()=>{
 //     console.log(error);
 //   }
 // };
-const clear = (index) => {
-  signature1.value[index].clear()
+const clear = () => {
+  signature1.value.clear()
 }
-const passage = async (idCliente, t, index, nombreCliente, numfactura) => {
+const passage = async (cliente, t, index, nombreCliente, numfactura) => {
   
-  signature1.value[index].addWaterMark({
-    text: `${nombreCliente.nombre} ${fecha.value}`,          // watermark text, > default ''
+  signature1.value.addWaterMark({
+    text: `${cliente.nombre} ${fecha.value}`,          // watermark text, > default ''
     font: "15px Arial",         // mark font, > default '20px sans-serif'
     style: 'all',               // fillText and strokeText,  'all'/'stroke'/'fill', > default 'fill
     fillStyle: "black",           // fillcolor, > default '#333'
@@ -407,7 +360,7 @@ const passage = async (idCliente, t, index, nombreCliente, numfactura) => {
     sx: 20,                    // stroke positionX, > default 40
     sy: 20                     // stroke positionY, > default 40
   });
-  const imagenDatos = signature1.value[index].save(t)
+  const imagenDatos = signature1.value.save(t)
   const mes = new Date(fecha.value)
   const mesCalendario = month[mes.getMonth()];
 
@@ -419,7 +372,7 @@ const passage = async (idCliente, t, index, nombreCliente, numfactura) => {
       // doc.data() is never undefined for query doc snapshots
     })
     const storage = getStorage();
-    const imageRef = refStorage(storage, `${nombreCliente.nombre}-${fecha.value}`);
+    const imageRef = refStorage(storage, `${cliente.nombre}-${fecha.value}`);
     uploadString(imageRef, imagenDatos, 'data_url').then((snapshot) => {
       console.log('Uploaded a data_url string!');
 
@@ -430,7 +383,7 @@ const passage = async (idCliente, t, index, nombreCliente, numfactura) => {
     const urlImagen = await getDownloadURL(imageRef).then((url) => {
       return url;
     });
-    await updateDoc(doc(clienteRef, idCliente,), {
+    await updateDoc(doc(clienteRef, cliente.id,), {
 
       registro: arrayUnion({
         year: anoActual,
@@ -451,7 +404,7 @@ const passage = async (idCliente, t, index, nombreCliente, numfactura) => {
     databaseStore.exterior = false;
     mensage.value = "";
     fecha.value = "";
-    signature1.value[index].clear()
+    signature1.value.clear()
 
   }
 }
@@ -463,7 +416,11 @@ const passage = async (idCliente, t, index, nombreCliente, numfactura) => {
   background: rgb(0, 0, 0);
   background: linear-gradient(90deg, rgba(0, 0, 0, 1) 80%, rgb(2, 28, 31) 185%);
 }
-
+.limpiezas{
+  background-color: #f8f5f5;
+  border-radius: 19px;    
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+}
 #dia {
   padding: 2.75rem 2.75rem;
 }

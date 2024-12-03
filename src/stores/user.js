@@ -295,6 +295,7 @@ export const useUserStore = defineStore('userStore', {
         },
        firmasPDF(imagenFirma,cliente){
             
+console.log(cliente);
 
             var doc = new jsPDF();
             const clienteNombre = cliente.nombre
