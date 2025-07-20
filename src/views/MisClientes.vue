@@ -29,9 +29,9 @@
               item.nombreUsuario }}</option>
           </select>
           <div v-if="clienteSeleccionado === undefined">
-            <h4 class="mt-2"><b>Por favor selecciona un cliente <font-awesome-icon :icon="['fas', 'hand-point-up']" class="me-2 fa-lg" style="color: #37b650;" /></b></h4>
+            <h4 class="mt-2"><b>Por favor selecciona un cliente </b></h4>
           </div>
-          <div class="row justify-content-around mt-5" v-else>
+          <div class="row mt-5" v-else>
             <div class="row justify-content-around  mt-2">
               <div class="col-md-4 p-2 mb-3   tarjeta text-white p-4">
                 <h4 class="d-flex justify-content-between"><b>{{ clienteSeleccionado.nombre }}</b><span

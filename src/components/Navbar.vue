@@ -26,6 +26,18 @@
                 />Registro Clientes</router-link
               >
             </li>
+             <li class="nav-item">
+              <router-link
+                to="/registro"
+                v-if="userStore.userData.email === 'roys.abreu@gmail.com'"
+                class="me-4 btn-sm btn-dark text-white"
+                id="boton-master"
+                ><font-awesome-icon
+                  :icon="['fas', 'address-card']"
+                  class="me-2"
+                />Registro</router-link
+              >
+            </li>
             <li class="nav-item">
               <router-link
                 to="/misClientes"

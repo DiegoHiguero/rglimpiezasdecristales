@@ -46,7 +46,7 @@
           <form @submit.prevent="handleSubmit" class="mt-4 row g-3">
             <div class="row mt-3 d-lg-flex col-12 justify-content-around">
               <h2 class="text-center text-white">
-                Demandez un devis gratuit !
+               Pida presupuesto gratuito!
               </h2>
               <!-- <div class="col-md-5 d-flex justify-content-center row">
                         <font-awesome-icon
@@ -366,7 +366,7 @@ ul li {
 }
 
 .tiempo {
-  color: #1a5f28;
+  color: #4970B6;
   font-weight: 600;
 }
 
@@ -374,7 +374,7 @@ ul li {
     list-style-type: disc !important;
     padding-left:1em !important;
     margin-left:1em;
-    color: #1a5f28;
+    color: #4970B6;
     font-weight: 600;
 }
 .tiempo2 {
