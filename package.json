@@ -24,6 +24,7 @@
     "firebase-admin": "^11.10.1",
     "firebase-tools": "^12.5.2",
     "jspdf": "^2.5.2",
+    "jspdf-autotable": "^5.0.2",
     "mapbox-geocoding": "^0.1.5",
     "mapbox-gl": "^2.15.0",
     "pinia": "^2.0.33",

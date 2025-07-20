@@ -9,6 +9,7 @@ import Contacto from "./views/Contacto.vue";
 import Servicios from "./views/Servicios.vue";
 import Confidentialite from "./views/Confidentialite.vue";
 import MentionsLegales from "./views/MentionsLegales.vue";
+import LimpiezasMensuales from "./views/LimpiezasMensuales.vue";
 // import Editar from "./views/Editar.vue";
 
 import {useUserStore}from './stores/user';
@@ -40,11 +41,11 @@ const requiereAuth2 = async(to,from,next) => {
 }
 
 
-
 const routes = [
     {path:'/', component:Home,},
     {path:'/login', component:Login},
     {path:'/Register', component:Register,beforeEnter:requiereAuth2},
+    {path:'/registro', component:LimpiezasMensuales,beforeEnter:requiereAuth2},
     // {path:'/editar/:id', component:Editar,beforeEnter:requiereAuth},
     {path:'/misClientes', component:MisClientes,beforeEnter:requiereAuth2},
     {path:'/misFacturas', component:MisFacturas,beforeEnter:requiereAuth},
@@ -62,3 +63,4 @@ const router = createRouter({
 
 export default router;
 //despues inicializamos en main.js
+
