@@ -9,7 +9,7 @@
         </li>
         <li class="col-md-6 text-center">
           <router-link to="/mentionslegales"  
-                >Aviso legales
+                >Avisos legales
               </router-link>
         </li>
       </ul>
