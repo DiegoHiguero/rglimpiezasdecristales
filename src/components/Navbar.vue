@@ -38,11 +38,9 @@
             Facturas
           </router-link>
         </li>
-        <li class="nav-item" >
-            
+        <li class="nav-item" >  
             <a class="nav-link me-4 router-link-active router-link-exact-active me-4 btn-outline-light" id="boton-session" href="#scrollspyHeading1">INICIO</a>
           <ul class="nav  d-flex flex-row">
-
             <li class="nav-item">
               <router-link
                 to="/register"
@@ -158,6 +156,8 @@
               </button>
             </li>
           </ul>
+        </li>
+      </ul>
           </div>
   </nav>
   

@@ -121,40 +121,44 @@ const message = ref("");
 const userStore = useUserStore();
 
 const enviarMensaje = async () => {
-  if(!prenom.value,!email.value , !message.value){
-    userStore.mensajeAlerta("Il faut remplir toutes les champs")
-  }else{
-    try {
-    const contactParams = {
-      prenom: prenom.value,
-      email: email.value,
-      message: message.value,
-    };
+    if ((!prenom.value, !email.value, !message.value, !phone.value)) {
+      userStore.mensajeAlerta("Debe rellenar todos los campos"); // Translated from "Il faut remplir toutes les champs"
+    } else {
+      try {
+        const contactParams = {
+          prenom: prenom.value,
+          email: email.value,
+          message: message.value,
+          phone: phone.value,
+        };
 
-    await emailjs
-      .send(
+        await emailjs
+           .send(
         "service_iytm8yl",
         "template_7yngfsa",
         contactParams,
         "IF1Sn503DHVPja4II"
-      )
-      .then(
-        (result) => {
-          prenom.value="",
-          email.value="",
-          message.value="",
-          userStore.mensajeAlerta("Bien joué! Le message a été bien envoyé")
-        },
-        (error) => {
-          userStore.mensajeAlerta("Ups! Il y a eu un probleme")
-        }
-      );
-  } catch (error) {
-    console.log(error);
-  }
-  }
-  
-};
+          )
+          .then(
+            (result) => {
+              (prenom.value = ""),
+              (email.value = ""),
+              (message.value = ""),
+              (phone.value = ""),
+              userStore.mensajeAlerta(
+                "¡Bien hecho! El mensaje ha sido enviado correctamente" // Translated from "Bien joué! Le message a été bien envoyé"
+              );
+            },
+            (error) => {
+              userStore.mensajeAlerta("¡Uy! Hubo un problema"); // Translated from "Ups! Il y a eu un probleme"
+            }
+          );
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
+
 </script>
 
 <style>
