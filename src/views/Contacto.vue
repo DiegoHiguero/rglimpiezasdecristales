@@ -1,10 +1,12 @@
 <template>
-  <div class="container mb-4 bg-white">
-    <div class="row d-flex justify-content-center">
-      <div class="col-lg-7 col-12">
-        <h3 class="  m-4 d-flex justify-content-center">
-          Nous Contacter
-        </h3>
+<div class="padre" >
+    <!-- Contenido principal -->
+
+
+    <div
+      class="row d-flex justify-content-center ms-3 mx-3  bg-image principal mt-3  bg-body-tertiary rounded-4 align-items-md-stretch ">
+      <div class="row col-md-6 m-5 p-2">
+        <h1 class="display-4 mx-2 px-2 mt-4 pt-4"> <span class="prof"> Contáctanos</span></h1>
         <div class="p-4 pt-1 p-lg-8 form"  style="border-radius: 0.75rem">  
           <form @submit.prevent="handleSubmit" class="mt-1 row g-3">
             <div class="row mt-3 col-12 d-flex justify-content-around">
@@ -13,7 +15,7 @@
                   :icon="['fas', 'phone']"
                   class="me-2 text-white text-center mb-3 icon fa-xl"
                 />
-                <p class="text-white text-center">+33 658 80 24 03</p>
+                <p class="text-white text-center">+34 696 169 435</p>
               </div>
               <div class="col-md-4 d-flex justify-content-center row">
                 <font-awesome-icon
@@ -21,7 +23,7 @@
                   class="me-2 text-white text-center mb-3 icon fa-xl"
                 />
                 <p class="text-white text-center">
-                  toucanet64@gmail.com
+                  info@royallclean.com
                 </p>
               </div>
             </div>
@@ -30,7 +32,7 @@
                 for="validationServer01"
                 class="col-sm-2 col-form-label"
                 required
-                >Prénom</label
+                >Apellido</label
               >
               <input
                 type="text"
@@ -64,7 +66,7 @@
                 for="inputPassword"
                 class="col-sm-2 col-form-label"
                 required
-                >Sujet</label
+                >Asunto</label
               >
               <input
                 class="form-control border-0"
@@ -79,7 +81,7 @@
                 for="inputPassword"
                 class="col-sm-2 col-form-label"
                 required
-                >Message</label
+                >Mensaje</label
               >
               <textarea
                 class="form-control border-0"
@@ -94,8 +96,8 @@
                <!-- <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button> -->
          </div>
             <div class="d-grid">
-              <button class="btn" style="background-color: #1A5F28;color: white;font-weight: bold;" @click="enviarMensaje()">
-                Confirmer
+              <button class="btn" style="background-color: #4970B6;color: white;font-weight: bold;" @click="enviarMensaje()">
+                Confirmar
               </button>
             </div>
           </form>
@@ -131,10 +133,10 @@ const enviarMensaje = async () => {
 
     await emailjs
       .send(
-        "service_emqkbc7",
-        "template_lu5kxwz",
+        "service_iytm8yl",
+        "template_7yngfsa",
         contactParams,
-        "rFNGy51A07Q9Pt33i"
+        "IF1Sn503DHVPja4II"
       )
       .then(
         (result) => {
