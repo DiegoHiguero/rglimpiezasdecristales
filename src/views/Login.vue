@@ -1,16 +1,16 @@
 <template>
-  <div class="container">
-    <div class="row">
-     <div class="offset-lg-3 col-lg-6 col-12">
+  <div class="container-fluid " >
+    <div class="row mx-2  ms-1 mt-3 mb-2 p-3" style="background-color: white; border-radius: 15px;">
+     <div class="offset-lg-3 col-lg-6 col-12 " >
       <h2 class="mb-4 d-flex justify-content-center ">Conexion</h2>
       <div class="p-4 my-4 p-lg-8 form" style="border-radius: 0.75rem;">
         <div class="text-center p-2 mt-2 alert alert-danger " v-if="userStore.timeOut !== false" >
                {{ userStore.mensaje }}
          </div>
         <form @submit.prevent="handleSubmit" class=" mt-4 row g-3">
-          <h1 class="mb-2 text-white">Bienvenido</h1>
+          <h1 class="mb-2 text-white">Bienvenido!</h1>
            <div class="mb-3">
-              <label for="exampleFormControlInput1" class="col-sm-2 col-form-label">Email</label>
+              <label for="exampleFormControlInput1" class="col-sm-2 col-form-label text-white">Email</label>
               <input type="email" 
                             class="form-control border-0" 
                             id="exampleFormControlInput1" 
@@ -18,7 +18,7 @@
                             v-model.trim="email">
             </div>
           <div class="mb-3 mb-4">
-              <label for="inputPassword" class="col-sm-2 col-form-label">Password</label>
+              <label for="inputPassword" class="col-sm-2 col-form-label text-white">Password</label>
               <input type="password" 
                             class="form-control border-0" 
                             id="inputPassword"
@@ -26,7 +26,7 @@
                   
           </div>
           <div class="d-grid">
-            <button class="btn " style="background-color: #1A5F28;color: white;font-weight: bold;" :disabled=userStore.loadingUser>Envoyer</button>
+            <button class="btn " style="background-color: #4970B6;color: white;font-weight: bold;" :disabled=userStore.loadingUser>Iniciar</button>
           </div>
     
        </form>

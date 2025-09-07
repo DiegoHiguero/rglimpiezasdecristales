@@ -1,96 +1,98 @@
 <template>
-  <div class="container">
-    <div class="row" style="background-color: white;">
+  <div class=" m-1 container-fluid">
+    <div class="row mx-2  ms-1 mt-3 mb-2 p-3"  style="background-color: white; border-radius: 15px; ">
       <h2 class=" mb-4 d-flex justify-content-center ">
-        Politique de confidentialité
+        Política de privacidad
       </h2>
-      <p >Date d'entrée en vigueur : 01/09/2023</p>
+      <p >Fecha de entrada en vigor: 01/09/2023</p>
       <p >
-        Nous vous remercions de votre visite sur notre site web. La protection
-        de vos données personnelles est une priorité pour nous. Cette politique
-        de confidentialité vise à vous informer sur les types de données que
-        nous collectons, la manière dont nous les utilisons et les mesures que
-        nous prenons pour les protéger.
+        Gracias por visitar nuestro sitio web. La protección
+        de sus datos personales es una prioridad para nosotros. Esta política
+        de privacidad tiene como objetivo informarle sobre los tipos de datos que
+        recopilamos, cómo los usamos y las medidas que
+        tomamos para protegerlos.
       </p>
-      <h4>1. Collecte des données personnelles</h4>
+      <h4>1. Recopilación de datos personales</h4>
       <p >
-        Nous collectons certaines informations personnelles lorsque vous
-        utilisez notre site web, par exemple lorsque vous remplissez un
-        formulaire de contact. Ces informations peuvent inclure, sans s'y
-        limiter, votre nom, adresse e-mail, adresse postale, numéro de
-        téléphone, etc.
-      </p>
-
-      <h4>2. Utilisation des données personnelles</h4>
-      <p >
-        Nous utilisons les données personnelles que nous collectons dans le but
-        de : Répondre à vos demandes de renseignements et vous fournir les
-        informations demandées.Améliorer l'expérience utilisateur en analysant les
-        tendances d'utilisation et en recueillant des commentaires. Assurer le
-        bon fonctionnement technique de notre site web.
+        Recopilamos cierta información personal cuando usted
+        utiliza nuestro sitio web, por ejemplo, cuando completa un
+        formulario de contacto. Esta información puede incluir, sin
+        limitarse a, su nombre, dirección de correo electrónico, dirección postal,
+        número de teléfono, etc.
       </p>
 
-      <h4>3. Partage des données personnelles</h4>
+      <h4>2. Uso de datos personales</h4>
       <p >
-        Nous ne vendons pas, ne louons pas et ne partageons pas vos données
-        personnelles avec des tiers à des fins commerciales. Nous pouvons
-        partager vos données personnelles avec des prestataires de services
-        tiers qui nous aident dans le cadre de nos activités, tels que des
-        services d'hébergement web, des services de marketing par e-mail, etc.
-        Ces prestataires sont tenus de respecter la confidentialité de vos
-        données et de les utiliser uniquement dans le cadre des services qu'ils
-        fournissent pour notre compte.
+        Utilizamos los datos personales que recopilamos con el fin
+        de: Responder a sus consultas y proporcionarle la
+        información solicitada. Mejorar la experiencia del usuario analizando las
+        tendencias de uso y recopilando comentarios. Asegurar el
+        correcto funcionamiento técnico de nuestro sitio web.
       </p>
 
-      <h4>4. Cookies et technologies similaires</h4>
+      <h4>3. Compartir datos personales</h4>
       <p >
-        Nous utilisons des cookies et d'autres technologies de suivi similaires
-        pour améliorer votre expérience sur notre site web. Les cookies sont de
-        petits fichiers texte stockés sur votre appareil qui nous aident à
-        analyser les tendances d'utilisation, à personnaliser le contenu et à
-        collecter des informations démographiques sur nos utilisateurs. Vous
-        pouvez modifier les paramètres de votre navigateur pour refuser les
-        cookies ou être averti lorsque des cookies sont envoyés.
+        No vendemos, alquilamos ni compartimos sus datos
+        personales con terceros con fines comerciales. Podemos
+        compartir sus datos personales con proveedores de servicios
+        terceros que nos ayudan en el marco de nuestras actividades, como
+        servicios de alojamiento web, servicios de marketing por correo electrónico, etc.
+        Estos proveedores están obligados a respetar la confidencialidad de sus
+        datos y a utilizarlos únicamente en el marco de los servicios que
+        prestan en nuestro nombre.
       </p>
 
-      <h4>5. Sécurité des données</h4>
+      <h4>4. Cookies y tecnologías similares</h4>
       <p >
-        Nous prenons des mesures de sécurité appropriées pour protéger vos
-        données personnelles contre tout accès non autorisé, toute altération,
-        toute divulgation ou destruction non autorisée. Cependant, veuillez
-        noter qu'aucune méthode de transmission sur Internet ou de stockage
-        électronique n'est totalement sécurisée, et nous ne pouvons pas garantir
-        la sécurité absolue de vos données.
+        Utilizamos cookies y otras tecnologías de seguimiento similares
+        para mejorar su experiencia en nuestro sitio web. Las cookies son
+        pequeños archivos de texto almacenados en su dispositivo que nos ayudan a
+        analizar las tendencias de uso, personalizar el contenido y
+        recopilar información demográfica sobre nuestros usuarios. Usted
+        puede modificar la configuración de su navegador para rechazar las
+        cookies o para ser advertido cuando se envían cookies.
       </p>
 
-      <h4>6. Vos droits</h4>
+      <h4>5. Seguridad de los datos</h4>
       <p >
-        En application de la loi Informatique et
-        Libertés du 6 janvier 1978, vous disposez d’un droit d’accès, de
-        rectification, de modification et de suppression des données qui vous
-        concernent.  Vous pouvez exercer ce droit de plusieurs façons : par
-        courriel à l'aide du  <router-link  to="/contacto" style="color: #f24e29;">formulaire </router-link>; en envoyant un courrier à : </p>
-        <p >Diego HIguero</p> 
-        <p >12, rue d'Harcet </p> 
-        <p class="text-white  ">Biarritz 64200 </p> 
-        <p class="text-white  ">France </p> 
-      
+        Tomamos las medidas de seguridad adecuadas para proteger sus
+        datos personales contra cualquier acceso no autorizado, alteración,
+        divulgación o destrucción no autorizada. Sin embargo, tenga en cuenta
+        que ningún método de transmisión por Internet o de almacenamiento
+        electrónico es totalmente seguro, y no podemos garantizar
+        la seguridad absoluta de sus datos.
+      </p>
+
+      <h4>6. Sus derechos</h4>
+      <p >
+        En aplicación de la ley "Informatique et
+        Libertés" (Informática y Libertades) del 6 de enero de 1978, usted
+        dispone de un derecho de acceso, rectificación, modificación y supresión
+        de los datos que le conciernen. Puede ejercer este derecho de varias
+        formas: por correo electrónico a través del <router-link to="/contacto" style="color: #f24e29;">formulario</router-link>;
+        enviando un correo a:
+      </p>
+        <p >Roys Abreu</p>
+        <p >Calle Angeles 10, bajo 9 </p>
+        <p class="  ">Madrid,Getafe 28902 </p>
+        <p class=" ">España </p>
+
 
       <h4>
-        7. Modifications de la politique de confidentialité
+        7. Modificaciones de la política de privacidad
       </h4>
       <p >
-        Nous nous réservons le droit de modifier cette politique de
-        confidentialité à tout moment. Toute mise à jour sera publiée sur cette
-        page avec une date d'entrée en vigueur mise à jour. En utilisant notre
-        site web, vous acceptez les termes de cette politique de
-        confidentialité.
+        Nos reservamos el derecho de modificar esta política de
+        privacidad en cualquier momento. Cualquier actualización se publicará en esta
+        página con una fecha de entrada en vigor actualizada. Al utilizar nuestro
+        sitio web, usted acepta los términos de esta política de
+        privacidad.
       </p>
 
       <p>
-        Si vous avez des questions ou des préoccupations concernant notre
-        politique de confidentialité, veuillez nous contacter à
-        toucanet64@gmail.com
+        Si tiene preguntas o inquietudes sobre nuestra
+        política de privacidad, contáctenos en
+        info@royalclean.com
       </p>
     </div>
   </div>
