@@ -1,576 +1,540 @@
-import { defineStore } from 'pinia'
-import { reactive } from 'vue'
-import dayjs from "dayjs"; // Asegúrate de que dayjs y sus plugins se usan si es necesario
+import { defineStore } from 'pinia';
+import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 
-// Importar SOLO del paquete COMPLETO 'firebase/firestore'
 import {
     addDoc,
-    collection, // <-- Importa collection desde aquí
+    collection,
     deleteDoc,
     doc,
-    limit , 
+    limit,
     getDocs,
     query,
     where,
-    runTransaction, // <-- Importa runTransaction desde aquí
-    serverTimestamp, // <-- Importa serverTimestamp desde aquí
-    getDoc, // Para leer el cliente por su referencia
-    updateDoc,
     orderBy,
-    Timestamp, // Necesario para convertir fechas
+    serverTimestamp,
+    getDoc,
+    updateDoc,
+    // No utilizados en esta versión: runTransaction, Timestamp, onAuthStateChanged (auth handling is in user store)
 } from 'firebase/firestore';
-import { onAuthStateChanged } from 'firebase/auth'; // Para manejar el estado de autenticación
-// Si usas Storage, asegúrate de importarlo correctamente
-import { getStorage, ref as storageRef, getDownloadURL } from 'firebase/storage'; // Usa alias para ref si usas ref de Vue
 
-import { db, auth } from '../firebaseConfig'; // <-- Verifica que estos son instancias válidas
+// Si usas Storage, asegúrate de importarlo correctamente
+// import { getStorage, ref as storageRef, getDownloadURL } from 'firebase/storage';
+
+import { db, auth } from '../firebaseConfig'; // Asegúrate de que auth se importe si es necesario para permisos
+import { useUserStore } from './user'; // Importa el user store para permisos
+
+
+// Extender dayjs para usar from() para fechas relativas
+dayjs.extend(relativeTime);
 
 export const useDatabaseStore = defineStore('database', {
     state: () => ({
-        //traemos todo de la base de datos almacenadolos en documents
-        documents: [],
-        layersEventos: reactive([]),
-        filtroMes:[],
-        facturasUrl: [],
-        loadingDoc: false,
-        totalGanancias : 0,
-        cotizacion: 0,
-        numeroClientes : 0,
-        totalNeto : 0,
-        interior:false,
-        exterior:false,
-        lastDay:null,
-         // NUEVO Estado para cargar clientes
-         limpiezas: [], // Aquí guardaremos los registros de limpieza
-        isLoading: false, // Para manejar estados de carga
-        error: null, // Para manejar errores
-        isDeleting: false, // Estado de carga específico para la eliminación
-        deleteError: null, // Estado de error específico para la eliminación
-        clientes: [], // Aquí guardaremos la lista de clientes
-        isLoadingClientes: false, // Estado de carga para clientes
-        errorClientes: null,      // Estado de error para clientes
-        isAddingClient: false, // NUEVO: Para manejar el estado de carga al añadir cliente
-        addClientError: null,  // NUEVO: Para manejar errores al añadir cliente
-        nextFacturaFormatted: 'Calculando...',
+        // --- ESTADO PARA GESTIÓN DE LIMPIEZAS MENSUALES ---
+        limpiezas: [], // Lista principal de registros de limpieza
+        nextFacturaFormatted: 'Calculando...', // Próximo número de factura
+        
+        // Estados de carga y error para operaciones de limpieza
+        isLoadingLimpiezas: false, // Carga al obtener limpiezas
+        errorLimpiezas: null,     // Errores al obtener limpiezas
+        isAddingLimpieza: false,  // Carga al añadir limpieza
+        addLimpiezaError: null,   // Errores al añadir limpieza
+        isUpdatingLimpieza: false,// Carga al actualizar limpieza
+        updateLimpiezaError: null,// Errores al actualizar limpieza
+        isDeletingLimpieza: false,// Carga al eliminar limpieza
+        deleteLimpiezaError: null,// Errores al eliminar limpieza
+
+        // Filtros actuales para la vista de limpiezas
+        selectedMonth: '',
+        selectedYear: '',
+
+        // --- ESTADO PARA GESTIÓN DE CLIENTES ---
+        clientes: [], // Lista de clientes
+        
+        // Estados de carga y error para operaciones de clientes
+        isLoadingClientes: false, // Carga al obtener clientes
+        errorClientes: null,     // Errores al obtener clientes
+        isAddingClient: false,   // Carga al añadir cliente
+        addClientError: null,    // Errores al añadir cliente
+        isUpdatingClient: false, // Carga al actualizar cliente
+        updateClientError: null, // Errores al actualizar cliente
+        isDeletingClient: false, // Carga al eliminar cliente
+        deleteClientError: null, // Errores al eliminar cliente
     }),
-    //acciones modifican los state
+
     actions: {
-    async addLimpieza(limpiezaData) {
-      this.isLoading = true;
-      this.error = null;
-      try {
-        // *** CAMBIO CRÍTICO AQUÍ: Llamar a la acción que calcula la factura ***
-        // Esto asegura que siempre obtengamos el número de factura más actual.
-        await this.fetchNextFacturaFormattedNumber(); 
-        const facturaAsignada = this.nextFacturaFormatted;
+        // --- ACCIONES DE LIMPIEZAS MENSUALES ---
 
-        // Crea el objeto final que se guardará en Firestore
-        const dataToSave = {
-          ...limpiezaData,
-          factura: facturaAsignada, // Aquí se añade el número de factura
-          createdAt: serverTimestamp(), // Usa serverTimestamp() para una fecha de servidor precisa
-        };
+        /**
+         * Añade un nuevo registro de limpieza a Firestore.
+         * Calcula el próximo número de factura y lo asigna.
+         * @param {Object} limpiezaData - Datos del registro de limpieza a añadir.
+         */
+        async addLimpieza(limpiezaData) {
+            this.isAddingLimpieza = true;
+            this.addLimpiezaError = null;
+            try {
+                await this.fetchNextFacturaFormattedNumber(); // Asegura el número de factura antes de añadir
+                const facturaAsignada = this.nextFacturaFormatted;
 
-        const docRef = await addDoc(collection(db, 'limpiezasMensuales'), dataToSave);
-        console.log("Documento de limpieza añadido con ID: ", docRef.id, "y factura #", facturaAsignada);
+                const dataToSave = {
+                    ...limpiezaData,
+                    factura: facturaAsignada,
+                    createdAt: serverTimestamp(), // Fecha de creación en el servidor
+                };
 
-        // Recarga los datos para que la tabla y `nextFacturaFormatted` se actualicen
-        // (ya que fetchLimpiezas actualiza `this.limpiezas`, que usa `nextFacturaFormatted` para el cálculo)
-        // Puedes pasarle los filtros actuales si los mantienes en el estado del store,
-        // o dejarlo sin argumentos para recargar todos los registros si esa es tu preferencia inicial.
-        await this.fetchLimpiezas(this.selectedMonth, this.selectedYear); 
-        // También puedes limpiar `nuevaLimpieza` en el componente después de esta llamada.
+                const docRef = await addDoc(collection(db, 'limpiezasMensuales'), dataToSave);
+                console.log("Documento de limpieza añadido con ID: ", docRef.id, "y factura #", facturaAsignada);
 
-      } catch (e) {
-        console.error("Error añadiendo el documento de limpieza: ", e);
-        this.error = e;
-        throw e; 
-      } finally {
-        this.isLoading = false;
-      }
-    },   
-    async fetchLimpiezas(month = '', year = '') {
-        this.isLoading = true;
-        this.error = null;
-        try {
-            let q = collection(db, 'limpiezasMensuales');
+                // Recarga los datos para que la tabla se actualice y el número de factura se recalcule
+                // Se pasan los filtros actuales para mantener el contexto
+                await this.fetchLimpiezas(this.selectedMonth, this.selectedYear);
 
-            // Actualiza los filtros en el estado del store para que addLimpieza los use
+            } catch (e) {
+                console.error("Error añadiendo el documento de limpieza: ", e);
+                this.addLimpiezaError = e;
+                throw e; // Re-lanza el error para que el componente lo capture
+            } finally {
+                this.isAddingLimpieza = false;
+            }
+        },
+      async updatePaymentStatus(limpiezaId, newFechaPago, newFormaPago) {
+            this.isUpdatingLimpieza = true; // Usa el estado de carga que ya tienes
+            this.updateLimpiezaError = null; // Limpia errores previos
+
+            // --- Chequeo de permisos (para esta operación sensible) ---
+            const userStore = useUserStore();
+            if (!userStore.userData || (userStore.userData.email !== "higuerodiego@gmail.com" && userStore.userData.email !== "familiahiguero@gmail.com")) {
+                console.warn("Firebase Permissions: Attempted to update payment status without admin privileges or valid user.");
+                this.updateLimpiezaError = new Error("No tienes permisos suficientes para actualizar el estado de pago.");
+                this.isUpdatingLimpieza = false;
+                throw this.updateLimpiezaError;
+            }
+            // --- FIN Chequeo de permisos ---
+
+            try {
+                const docRef = doc(db, 'limpiezasMensuales', limpiezaId);
+                await updateDoc(docRef, {
+                    fechaPago: newFechaPago, // Firestore aceptará null para quitar el campo si newFechaPago es null
+                    formaPago: newFormaPago,
+                });
+
+                console.log(`Pago para limpieza ${limpiezaId} actualizado en Firestore.`);
+
+                // Refetch todas las limpiezas para asegurar que la lista de pendientes se actualice
+                // y el item desaparezca de la vista si se marcó como pagado.
+                await this.fetchLimpiezas(this.selectedMonth, this.selectedYear);
+
+            } catch (error) {
+                console.error("Error al actualizar el estado de pago en Firestore:", error);
+                this.updateLimpiezaError = error;
+                throw error; // Re-lanza el error para que el componente pueda manejarlo
+            } finally {
+                this.isUpdatingLimpieza = false;
+            }
+        },
+        /**
+         * Obtiene los registros de limpiezas mensuales de Firestore, aplicando filtros de mes/año.
+         * @param {string} month - Mes (0-11) como string, o '' para todos.
+         * @param {string} year - Año como string, o '' para todos.
+         */
+               async fetchLimpiezas(month = '', year = '') {
+            this.isLoadingLimpiezas = true;
+            this.errorLimpiezas = null;
+
+            const userStore = useUserStore();
+            if (!userStore.userData || (userStore.userData.email !== "higuerodiego@gmail.com" && userStore.userData.email !== "familiahiguero@gmail.com")) {
+                this.errorLimpiezas = new Error("No tienes permisos suficientes para acceder a la información de limpiezas.");
+                this.isLoadingLimpiezas = false;
+                return;
+            }
             this.selectedMonth = month;
             this.selectedYear = year;
 
-            // Lógica de filtrado (si ya la tienes implementada en tu app)
-            if (month !== '' && year !== '') {
-                // Aquí necesitarías campos en Firestore que representen el mes y el año
-                // Por ejemplo, si guardas 'fechaPagoMes' y 'fechaPagoAnio'
-                // q = query(q, where('fechaPagoMes', '==', parseInt(month)), where('fechaPagoAnio', '==', parseInt(year)));
-                // O si parseas la fecha completa:
-                // const startDate = new Date(parseInt(year), parseInt(month), 1);
-                // const endDate = new Date(parseInt(year), parseInt(month) + 1, 0, 23, 59, 59, 999);
-                // q = query(q, where('fechaPago', '>=', startDate), where('fechaPago', '<=', endDate));
-                // Asegúrate de tener los índices necesarios en Firestore para estas consultas.
-            } else if (year !== '') {
-                // Filtro solo por año
-                // const startOfYear = new Date(parseInt(year), 0, 1);
-                // const endOfYear = new Date(parseInt(year), 11, 31, 23, 59, 59, 999);
-                // q = query(q, where('fechaPago', '>=', startOfYear), where('fechaPago', '<=', endOfYear));
-            } else {
-                // Por defecto, se trae todo si no hay filtros, o podrías traer solo el año actual.
-                // Consulta original:
-                // Si el formato de 'factura' siempre garantiza orden cronológico (FYYYY-MM-DD-###),
-                // entonces `orderBy('factura', 'desc')` para el más reciente tiene sentido.
-                // Aunque para el cálculo del max, es mejor obtener todos y ordenar localmente.
-            }
-            
-            // Para asegurar que nextFacturaFormatted funcione, siempre obtenemos todos los datos
-            // o al menos todos los del año/mes para el cálculo preciso.
-            const querySnapshot = await getDocs(q);
-            this.limpiezas = querySnapshot.docs.map(doc => ({
-                id: doc.id,
-                ...doc.data()
-            })).sort((a, b) => {
-                // Ordena por el número secuencial de la factura para un cálculo correcto
-                const getFacturaNumber = (facturaString) => {
-                    if (!facturaString) return 0;
-                    const parts = facturaString.split('-');
-                    return parseInt(parts[parts.length - 1], 10) || 0;
-                };
-                return getFacturaNumber(a.factura) - getFacturaNumber(b.factura);
-            });
+            try {
+                let limpiezasRef = collection(db, 'limpiezasMensuales');
+                let combinedDocs = new Map(); // Usamos un Map para almacenar documentos únicos por ID
 
-        } catch (e) {
-            this.error = e;
-            console.error("Error fetching limpiezas:", e);
-        } finally {
-            this.isLoading = false;
-        }
-    },
+                if (year !== '') {
+                    const yearNum = parseInt(year);
+                    const monthNum = month !== '' ? parseInt(month) : null;
 
-    // **3. Acción para calcular y guardar el próximo número de factura (sin cambios)**
-    async fetchNextFacturaFormattedNumber() {
-        try {
-            const now = new Date();
-            const year = now.getFullYear();
-            const month = (now.getMonth() + 1).toString().padStart(2, '0');
+                    let queryStartDate, queryEndDate;
+                    if (monthNum !== null) {
+                        queryStartDate = dayjs().year(yearNum).month(monthNum).startOf('month').format('YYYY-MM-DD');
+                        queryEndDate = dayjs().year(yearNum).month(monthNum).endOf('month').format('YYYY-MM-DD');
+                    } else {
+                        // Si solo hay año (mes es '')
+                        queryStartDate = dayjs().year(yearNum).startOf('year').format('YYYY-MM-DD');
+                        queryEndDate = dayjs().year(yearNum).endOf('year').format('YYYY-MM-DD');
+                    }
 
-            const prefix = `F${year}-${month}-`;
+                    // Consulta 1: Basada en 'fechaPrincipalLimpieza'
+                    // Necesitarás un índice compuesto en Firestore para (fechaPrincipalLimpieza ASC, factura DESC)
+                    let q1 = query(
+                        limpiezasRef,
+                        where('fechaPrincipalLimpieza', '>=', queryStartDate),
+                        where('fechaPrincipalLimpieza', '<=', queryEndDate),
+                        orderBy('fechaPrincipalLimpieza', 'asc'), // Necesario para la consulta de rango
+                        orderBy('factura', 'desc') // Orden secundario para la consulta
+                    );
+                    const snapshot1 = await getDocs(q1);
+                    snapshot1.forEach(doc => combinedDocs.set(doc.id, { id: doc.id, ...doc.data() }));
 
-            const q = query(
-                collection(db, 'limpiezasMensuales'),
-                where('factura', '>=', prefix),
-                where('factura', '<', prefix + '\uf8ff'),
-                orderBy('factura', 'desc'),
-                limit(1)
-            );
+                    // Consulta 2: Basada en 'fechaPago' (solo si hay fecha de pago)
+                    // Necesitarás un índice compuesto en Firestore para (fechaPago ASC, factura DESC)
+                    let q2 = query(
+                        limpiezasRef,
+                        where('fechaPago', '>=', queryStartDate),
+                        where('fechaPago', '<=', queryEndDate),
+                        orderBy('fechaPago', 'asc'), // Necesario para la consulta de rango
+                        orderBy('factura', 'desc') // Orden secundario para la consulta
+                    );
+                    const snapshot2 = await getDocs(q2);
+                    snapshot2.forEach(doc => combinedDocs.set(doc.id, { id: doc.id, ...doc.data() }));
 
-            const querySnapshot = await getDocs(q);
-            let nextSequentialNumber = 1;
+                    // Convertir los documentos únicos del Map a un array
+                    this.limpiezas = Array.from(combinedDocs.values());
 
-            if (!querySnapshot.empty) {
-                const lastFacturaDoc = querySnapshot.docs[0];
-                const lastFactura = lastFacturaDoc.data().factura;
+                } else {
+                    // Si no hay filtro de mes/año (ambos vacíos), carga todos los registros (comportamiento actual para esta situación)
+                    // Si la colección es muy grande, considera limitar esto o forzar un filtro.
+                    const qAll = query(limpiezasRef, orderBy('factura', 'desc'));
+                    const querySnapshotAll = await getDocs(qAll);
+                    this.limpiezas = querySnapshotAll.docs.map(doc => ({
+                        id: doc.id,
+                        ...doc.data()
+                    }));
+                }
                 
-                const parts = lastFactura.split('-');
-                const currentSequential = parseInt(parts[parts.length - 1], 10);
-                
-                nextSequentialNumber = currentSequential + 1;
+
+            } catch (e) {
+                this.errorLimpiezas = e;
+                console.error("Error fetching limpiezas:", e);
+            } finally {
+                this.isLoadingLimpiezas = false;
             }
+        },
+        /**
+         * Calcula el próximo número de factura secuencial basado en el mes y año actuales.
+         */
+        async fetchNextFacturaFormattedNumber() {
+            try {
+                const now = new Date();
+                const year = now.getFullYear();
+                const month = (now.getMonth() + 1).toString().padStart(2, '0'); // Mes 1-indexado, con 2 dígitos
 
-            const formattedSequential = nextSequentialNumber.toString().padStart(3, '0');
-            this.nextFacturaFormatted = `${prefix}${formattedSequential}`;
-            console.log("Próximo número de factura calculado:", this.nextFacturaFormatted);
+                const prefix = `F${year}-${month}-`;
 
-        } catch (err) {
-            console.error("Error al calcular el próximo número de factura:", err);
-            this.nextFacturaFormatted = 'Error al calcular factura';
-        }
-    },
-         async addClient(clientData) {
+                const q = query(
+                    collection(db, 'limpiezasMensuales'),
+                    where('factura', '>=', prefix),
+                    where('factura', '<', prefix + '\uf8ff'), // Rango para buscar facturas con el prefijo
+                    orderBy('factura', 'desc'),
+                    limit(1) // Solo necesitamos la última
+                );
+
+                const querySnapshot = await getDocs(q);
+                let nextSequentialNumber = 1;
+
+                if (!querySnapshot.empty) {
+                    const lastFacturaDoc = querySnapshot.docs[0];
+                    const lastFactura = lastFacturaDoc.data().factura;
+
+                    // Extrae el número secuencial de la última factura (ej. 'F2023-11-005' -> 5)
+                    const parts = lastFactura.split('-');
+                    const currentSequential = parseInt(parts[parts.length - 1], 10);
+
+                    nextSequentialNumber = currentSequential + 1;
+                }
+
+                // Formatea el número secuencial a 3 dígitos (ej. 1 -> '001')
+                const formattedSequential = nextSequentialNumber.toString().padStart(3, '0');
+                this.nextFacturaFormatted = `${prefix}${formattedSequential}`;
+                console.log("Próximo número de factura calculado:", this.nextFacturaFormatted);
+
+            } catch (err) {
+                console.error("Error al calcular el próximo número de factura:", err);
+                this.nextFacturaFormatted = 'Error al calcular factura';
+                throw err; // Re-lanza el error
+            }
+        },
+
+        /**
+         * Actualiza un registro de limpieza existente en Firestore.
+         * @param {string} id - ID del documento de limpieza a actualizar.
+         * @param {Object} updatedData - Datos a actualizar.
+         */
+        async updateLimpieza(id, updatedData) {
+            this.isUpdatingLimpieza = true;
+            this.updateLimpiezaError = null;
+
+            try {
+                const docRef = doc(db, 'limpiezasMensuales', id);
+                await updateDoc(docRef, updatedData);
+
+                console.log("Documento de limpieza actualizado con ID:", id);
+
+                // Re-fetch para asegurar la consistencia de los datos en la tabla
+                await this.fetchLimpiezas(this.selectedMonth, this.selectedYear);
+
+            } catch (err) {
+                this.updateLimpiezaError = err;
+                console.error("Error actualizando limpieza:", err);
+                throw err; // Re-lanza el error para que el componente lo maneje
+            } finally {
+                this.isUpdatingLimpieza = false;
+            }
+        },
+
+        /**
+         * Elimina un registro de limpieza de Firestore.
+         * @param {string} id - ID del documento de limpieza a eliminar.
+         */
+        async deleteLimpieza(id) {
+            this.isDeletingLimpieza = true;
+            this.deleteLimpiezaError = null;
+
+            try {
+                const docRef = doc(db, 'limpiezasMensuales', id);
+                await deleteDoc(docRef);
+
+                console.log("Documento de limpieza eliminado con ID:", id);
+
+                // Actualizar estado local: filtrar el array para remover el documento
+                this.limpiezas = this.limpiezas.filter(limpieza => limpieza.id !== id);
+
+            } catch (err) {
+                this.deleteLimpiezaError = err;
+                console.error("Error eliminando limpieza:", err);
+                throw err; // Re-lanza el error
+            } finally {
+                this.isDeletingLimpieza = false;
+            }
+        },
+
+        // --- ACCIONES DE GESTIÓN DE CLIENTES ---
+
+        /**
+         * Añade un nuevo cliente a Firestore.
+         * @param {Object} clientData - Datos del cliente a añadir.
+         */
+        async addClient(clientData) {
             this.isAddingClient = true;
             this.addClientError = null;
             try {
-                // Prepara los datos para guardar, puedes añadir un timestamp si lo deseas
                 const dataToSave = {
                     ...clientData,
-                    createdAt: serverTimestamp(), // Opcional: Para registrar cuándo se creó
+                    createdAt: serverTimestamp(),
                 };
-
-                // Añade el documento a la colección 'clientes'
                 const docRef = await addDoc(collection(db, 'clientes'), dataToSave);
                 console.log("Nuevo cliente añadido con ID:", docRef.id);
-
-                // Si quieres, puedes añadir el nuevo cliente a la lista local inmediatamente
-                // aunque fetchClientes() se encargará de refrescar la lista al cerrar el modal.
-                // this.clientes.push({ id: docRef.id, ...dataToSave, createdAt: new Date() });
-
             } catch (err) {
                 this.addClientError = err;
                 console.error("Error al añadir el cliente:", err);
-                throw err; // Re-lanza el error para que el componente pueda reaccionar
+                throw err;
             } finally {
                 this.isAddingClient = false;
             }
         },
+
+        /**
+         * Obtiene todos los clientes de Firestore.
+         */
         async fetchClientes() {
             this.isLoadingClientes = true;
             this.errorClientes = null;
             try {
-                // Aquí asumimos que tienes una colección llamada 'clientes'
-                // y que cada documento tiene un campo 'nombre' para el nombre del cliente.
-                const clientesQuery = query(collection(db, 'clientes'), orderBy('nombre', 'asc')); // Ordena por nombre
+                const clientesQuery = query(collection(db, 'clientes'), orderBy('nombre', 'asc'));
                 const querySnapshot = await getDocs(clientesQuery);
 
                 this.clientes = querySnapshot.docs.map(doc => ({
                     id: doc.id,
-                    nombre: doc.data().nombre || 'Cliente sin nombre' // Asume que el campo se llama 'nombre'
+                    ...doc.data(),
                 }));
-
-
             } catch (err) {
                 this.errorClientes = err;
                 console.error("Error fetching clientes:", err);
-                this.clientes = [];
+                this.clientes = []; // Limpia la lista en caso de error
             } finally {
                 this.isLoadingClientes = false;
             }
         },
-        async updateLimpieza(id, updatedData) {
-      this.isUpdating = true;
-      this.updateError = null;
 
-      try {
-        const docRef = doc(db, 'limpiezasMensuales', id);
-
-        // --- IMPORTANTE: MANEJO DE FECHAS Y NÚMEROS AL GUARDAR ---
-        // updatedData viene del v-model del modal (strings 'YYYY-MM-DD', null, números, booleanos).
-        // Firestore generalmente guarda strings ISO como Timestamps y nulls como nulls.
-        // Los números se guardan como números.
-        // Asegúrate de que no estás enviando strings vacíos ('') para campos que deberían ser null.
-        // Tu componente ya usa `|| null` al preparar `dataToUpdate`, lo cual está bien.
-
-        // No necesitamos convertir manualmente si el componente ya envía null para campos vacíos
-        // Si tuvieras problemas de conversión automática, podrías hacer esto:
-        // const dataToSave = { ...updatedData };
-        // Object.keys(dataToSave).forEach(key => {
-        //    if (key.startsWith('semana') || key === 'fechaPago') {
-        //        if (dataToSave[key] === '') dataToSave[key] = null; // Convierte cadena vacía a null
-        //    }
-        //    if (key === 'precioBruto') {
-        //       if (dataToSave[key] === null || dataToSave[key] === undefined || dataToSave[key] < 0) dataToSave[key] = null; // Guarda null si es inválido
-        //    }
-        // });
-
-
-        await updateDoc(docRef, updatedData); // Usa updatedData si no hiciste conversiones manuales
-
-        console.log("Documento actualizado con ID:", id);
-
-        // En lugar de actualizar localmente, refetch los datos
-        // Esto asegura la consistencia con Firestore.
-         await this.fetchLimpiezas();
-
-      } catch (err) {
-        this.updateError = err;
-        console.error("Error updating limpieza:", err);
-        throw err;
-      } finally {
-        this.isUpdating = false;
-      }
-        },
-        async deleteLimpieza(id) {
-      this.isDeleting = true; // Inicia el estado de eliminación
-      this.deleteError = null; // Limpia errores previos de eliminación
-
-      try {
-        // Obtiene una referencia al documento específico por su ID
-        const docRef = doc(db, 'limpiezasMensuales', id);
-
-        // Llama a deleteDoc para eliminar el documento en Firestore
-        await deleteDoc(docRef);
-
-        console.log("Documento eliminado con ID:", id);
-
-        // --- Actualizar el estado local de Pinia ---
-        // Filtra el array para eliminar el documento con el ID dado
-        this.limpiezas = this.limpiezas.filter(limpieza => limpieza.id !== id);
-
-      } catch (err) {
-        this.deleteError = err; // Registra el error de eliminación
-        console.error("Error deleting limpieza:", err);
-        throw err; // Re-lanza el error para que el componente que llama lo maneje
-      } finally {
-        this.isDeleting = false; // Finaliza el estado de eliminación
-      }
-        },
-        getClienteMapa() {
-            if (this.eventos.length !== 0) {
-                return
+        /**
+         * Obtiene un cliente específico por su ID.
+         * Intenta buscarlo en el estado local primero (caché), luego en Firestore.
+         * @param {string} clientId - ID del cliente a buscar.
+         * @returns {Object|null} El objeto cliente o null si no se encuentra.
+         */
+        async fetchClientById(clientId) {
+            if (!clientId) {
+                console.warn("fetchClientById llamado sin clientId.");
+                return null;
             }
-            this.loadingDoc = true
+            // Intenta encontrarlo en la lista de clientes ya cargados (caché)
+            const cachedClient = this.clientes.find(c => c.id === clientId);
+            if (cachedClient) {
+                return cachedClient;
+            }
+
+            // Si no está en caché, ve a Firestore
             try {
-                const q = query(collection(db, 'clientes'))
-
-                const unsubscribe = onSnapshot(q, (snapshot) => {
-                    snapshot.docChanges().forEach((change) => {
-                        if (change.type === "added") {
-                            this.layersEventos.push({
-                                type: "Feature",
-                                properties: {
-                                    icon: "marker",
-                                },
-                                geometry: {
-                                    type: "Point",
-                                    coordinates: [change.doc.data().ubicacion.lng, change.doc.data().ubicacion.lat],
-                                },
-
-                            })
-                        }
-                        if (change.type === "modified") {
-                            const indiceElemento = this.eventos.findIndex(el => el.id == change.doc.id)
-                            this.eventos[indiceElemento] = {
-                                id: change.doc.id,
-                                ...change.doc.data()
-                            }
-                            this.evento.numAsistentes = change.doc.data().asistentes.length
-                            const indiceLayer = this.layersEventos.findIndex(el => el.id == change.doc.id)
-                            this.layersEventos[indiceLayer] = {
-
-                                type: "Feature",
-                                properties: {
-                                    id: change.doc.id,
-                                    categoria: change.doc.data().categoria,
-                                    codigoPostal: change.doc.data().codigoPostal,
-                                    descripcion: change.doc.data().descripcion,
-                                    fechaFin: change.doc.data().fechaFin,
-                                    fechaInicio: change.doc.data().fechaInicio,
-                                    asistentes: change.doc.data().asistentes,
-                                    numAsistentes: change.doc.data().asistentes.length,
-                                    imagen: change.doc.data().imagen,
-                                    titulo: change.doc.data().titulo,
-                                    icon: "marker",
-                                },
-                                geometry: {
-                                    type: "Point",
-                                    coordinates: [change.doc.data().ubicacion.lng, change.doc.data().ubicacion.lat],
-                                },
-
-                            }
-                        }
-                        if (change.type === "removed") {
-                            this.eventos = this.eventos.filter(item => item.id !== change.doc.id)
-                        }
-                    });
-                });
+                const clientRef = doc(db, 'clientes', clientId);
+                const clientSnap = await getDoc(clientRef);
+                if (clientSnap.exists()) {
+                    console.log(`Cliente ${clientId} encontrado en Firestore.`);
+                    const fetchedClient = { id: clientSnap.id, ...clientSnap.data() };
+                    // Añade el cliente a la caché local si no estaba
+                    this.clientes.push(fetchedClient);
+                    return fetchedClient;
+                } else {
+                    console.log(`No se encontró el cliente con ID: ${clientId}`);
+                    return null;
+                }
             } catch (error) {
-                console.log(error);
+                console.error(`Error al obtener cliente con ID ${clientId}:`, error);
+                throw error;
+            }
+        },
+
+        /**
+         * Actualiza un cliente existente en Firestore.
+         * @param {string} clientId - ID del cliente a actualizar.
+         * @param {Object} clientData - Datos a actualizar.
+         */
+        async updateClient(clientId, clientData) {
+            this.isUpdatingClient = true;
+            this.updateClientError = null;
+            try {
+                const clientRef = doc(db, 'clientes', clientId);
+                await updateDoc(clientRef, clientData);
+
+                console.log("Cliente actualizado con ID:", clientId);
+
+                // Actualizar el estado local de clientes después de la actualización exitosa
+                const index = this.clientes.findIndex(c => c.id === clientId);
+                if (index !== -1) {
+                    // Actualiza el objeto en el array, manteniendo la reactividad.
+                    this.clientes[index] = { ...this.clientes[index], ...clientData };
+                }
+            } catch (error) {
+                console.error("Error al actualizar cliente:", error);
+                this.updateClientError = error;
+                throw error;
             } finally {
-                this.loadingDoc = false
+                this.isUpdatingClient = false;
             }
         },
-        async getClientes() {
-            if (this.documents.length !== 0) {
-                return;
-            }
-            this.loadingDoc = true
+
+        /**
+         * Elimina un cliente de Firestore.
+         * @param {string} clientId - ID del cliente a eliminar.
+         */
+        async deleteClient(clientId) {
+            this.isDeletingClient = true;
+            this.deleteClientError = null;
             try {
-                const q = query(collection(db, 'clientes'))
-                const querySnapshot = await getDocs(q)
-                
-                querySnapshot.forEach(doc => {
-                    this.totalGanancias = this.totalGanancias + doc.data().precio;
-                    //accedemos ala ifo del id y a ladata de ese id
-                    
-                    const cliente = {
-                        id: doc.id,
-                        //destructuracion del objeto
-                        ...doc.data()
-                    };
-                   
-                    this.documents=[...new Set(cliente)]
-                    // this.documents.push({
-                    //     id: doc.id,
-                    //     //destructuracion del objeto
-                    //     ...doc.data()
-                    // })
-                    
-                })
-               
-                const querySnapshot2 = await getCount(q)
+                const clientRef = doc(db, 'clientes', clientId);
+                await deleteDoc(clientRef);
 
-               
-               
-                    this.cotizacion = ((this.totalGanancias * 23.2)/100).toFixed(2);
-                    this.totalNeto = (this.totalGanancias - this.cotizacion).toFixed(2);
-               
+                console.log("Cliente eliminado con ID:", clientId);
 
+                // Eliminar el cliente del estado local
+                this.clientes = this.clientes.filter(c => c.id !== clientId);
             } catch (error) {
-                console.log(error);
+                console.error("Error al eliminar cliente:", error);
+                this.deleteClientError = error;
+                throw error;
             } finally {
-                this.loadingDoc = false
-                
+                this.isDeletingClient = false;
             }
         },
-        async getRegistro() {
-            if (this.registro.length !== 0) {
-                return;
-            }
-            this.loadingDoc = true
-            try {
-                const q = query(collection(db,'registro'))
-                
-                
-                const querySnapshot = await getDocs(q)
-                 querySnapshot.forEach(doc => {
-                   
-                    // const clienteRegistro = {
-                    //     id: doc.id,
-                    //     //destructuracion del objeto
-                    //     ...doc.data()
-                    // };
-                   
-                    // this.registro=[...new Set(clienteRegistro)]
-                    this.registro.push({
-                        id: doc.id,
-                        //destructuracion del objeto
-                        ...doc.data()
-                    })
-                    
-                })
-                
-                    
-            } catch (error) {
-                console.log(error);
-            } finally {
-                this.loadingDoc = false
-                
-            }
-        },
-        async getInfoCliente() {
-            this.loadingDoc = true
-            try {
-                const q = query(
-                    collection(db, "clientes"),
-                    where("user", "==", auth.currentUser.uid))
-                const querySnapshot = await getDocs(q)
-                querySnapshot.forEach(doc => {
-                    //accedemos a la ifo del id y a la data de ese id
-                   
-                    this.documents.push({
-                        id: doc.id,
-                        //destructuracion del objeto
-                        ...doc.data()
 
-                    })
-                    // for (let index = 0; index < doc.data().factura.length; index++) {
-                    //     const element = doc.data().factura[index];
-                    //     this.facturasUrl.push({ refFactura: element.referencia, nombreFactura: element.nombre })
+        // --- ACCIONES DE UTILIDAD ---
 
-                    // }
-                })
-            } catch (error) {
-                console.log(error);
-            } finally {
-                this.loadingDoc = false
-            }
-        },
-        async addCliente(apellido, ciudad, codigoPostal, diasLimpieza, direccion, telephone, email, nombre, nombreUsuario, precio,casa, provincia,creacion,coordenadas) {
-
-            try {
-                const objetoDoc = {
-                    apellido: apellido,
-                    ciudad: ciudad,
-                    codigoPostal: codigoPostal,
-                    diasLimpieza: diasLimpieza,
-                    direccion: direccion,
-                    telephone: telephone,
-                    email: email,
-                    nombre: nombre,
-                    nombreUsuario: nombreUsuario,
-                    precio: precio,
-                    casa:casa,
-                    provincia: provincia,
-                    creacion:creacion,
-                    coordenadas:coordenadas,
-                    user: auth.currentUser.uid
-                };
-                const docRef = await addDoc(collection(db, "clientes"), objetoDoc)
-
-            } catch (error) {
-                console.log(error);
-            } finally {
-
-            }
-        },
-        async addRegistro(year, mes, clientes) {
-            
-            try {
-                const objetoDoc = {
-                    year: year,
-                    mes: mes,
-                    clientes: [clientes],               
-                };
-                const docRef = await addDoc(collection(db,"registro"), objetoDoc)
-
-            } catch (error) {
-                console.log(error);
-            } finally {
-
-            }
-        },
-        async deleteUser(id) {
-            const auth = getAuth();
-            const user = auth.currentUser;
-
-            try {
-                const docRef = doc(db, "clientes", id)
-                console.log(docRef);
-                await deleteDoc(docRef)
-                deleteUser(user)
-                //elimina un item de un array, devuelva todo cuando el itm.id coincida con el id que le pasamos
-                this.documents = this.documents.filter(item => item.id !== id)
-            } catch (error) {
-                console.log(error.message);
-            } finally {
-
-            }
-        },
-        async deleteFactura(id){
-            try {
-                const docRef = doc(db,'clientes',id)
-                console.log(docRef);
-                await deleteDoc(docRef) 
-                console.log(docRef);
-            } catch (error) {
-                console.log(error);
-            }finally{
-
-            }
-        },
-        ultimoDia(dia){
-            if (dia !== undefined) {
-                const lastday = dia.slice(-1)[0].fechaLimp;
-                dayjs.extend(relativeTime)
+        /**
+         * Calcula los días restantes desde la última fecha de limpieza.
+         * @param {Array} dias - Array de objetos con fechas de limpieza.
+         * @returns {string} - Cadena de texto indicando el tiempo relativo o "aun no hay datos".
+         */
+        ultimoDia(dias) {
+            if (dias && dias.length > 0) {
+                const lastday = dias[dias.length - 1].fechaLimp;
                 const date = dayjs(lastday);
-                const lastDayFormat = date.format('DD-MM-YYYY')
-               const diasFaltan = dayjs(lastDayFormat).from();
-               
-              return diasFaltan;
-            }else{
-                return "aun no hay datos"
-            }  
-             }
-    // Puedes añadir más acciones aquí (ej: updateLimpieza, deleteLimpieza)
-  },
+                const lastDayFormat = date.format('DD-MM-YYYY');
+                return dayjs(lastDayFormat).fromNow(); // Usa fromNow() para tiempo relativo
+            } else {
+                return "aun no hay datos";
+            }
+        },
+    },
 
-  getters: {
-    // Podrías tener getters si necesitas datos calculados
-    // Por ejemplo, para encontrar el próximo número de factura
-    
-    // Puedes añadir un getter para mostrar los registros ordenados si no los ordenas al cargar/añadir
-    // sortedLimpiezas: (state) => { /* lógica de ordenación */ }
-  },
-       
+    getters: {
+        /**
+         * Calcula el total bruto de todas las limpiezas cargadas.
+         * @returns {number}
+         */
+        totalBrutoLimpiezas: (state) => {
+            return state.limpiezas.reduce((acc, limpieza) => {
+                const bruto = Number(limpieza.precioBruto);
+                return acc + (isNaN(bruto) ? 0 : bruto);
+            }, 0);
+        },
+       pendingLimpiezas: (state) => {
+            // Filtra las limpiezas que no tienen fechaPago (es decir, null o una cadena vacía)
+            return state.limpiezas.filter(limpieza => !limpieza.fechaPago)
+                                  .sort((a, b) => {
+                                      // Ordena por fechaPrincipalLimpieza, las más antiguas primero
+                                      const dateA = a.fechaPrincipalLimpieza ? new Date(a.fechaPrincipalLimpieza) : new Date(0); // Usa new Date(0) para limpiezas sin fecha, poniéndolas al principio
+                                      const dateB = b.fechaPrincipalLimpieza ? new Date(b.fechaPrincipalLimpieza) : new Date(0);
+                                      return dateA.getTime() - dateB.getTime();
+                                  });
+        },
+          getClientById: (state) => (clientId) => {
+            return state.clientes.find(cliente => cliente.id === clientId);
+        },
+        /**
+         * Calcula el total neto de todas las limpiezas cargadas.
+         * Aplica un cálculo del 23.2% de cotización.
+         * @returns {number}
+         */
+        totalNetoLimpiezas: (state) => {
+            return state.limpiezas.reduce((acc, limpieza) => {
+                const bruto = Number(limpieza.precioBruto);
+                if (isNaN(bruto)) return acc;
+                const cotizacion = bruto * 0.232;
+                return acc + (bruto - cotizacion);
+            }, 0);
+        },
+
+        /**
+         * Calcula la cotización total de todas las limpiezas cargadas.
+         * @returns {number}
+         */
+        totalCotizacionLimpiezas: (state) => {
+            return state.limpiezas.reduce((acc, limpieza) => {
+                const bruto = Number(limpieza.precioBruto);
+                return acc + (isNaN(bruto) ? 0 : bruto * 0.232);
+            }, 0);
+        },
+
+        /**
+         * Determina si alguna operación (añadir, actualizar, eliminar) está en curso.
+         * @returns {boolean}
+         */
+        isProcessing: (state) => {
+            return state.isLoadingLimpiezas || state.isAddingLimpieza || state.isUpdatingLimpieza || state.isDeletingLimpieza ||
+                   state.isLoadingClientes || state.isAddingClient || state.isUpdatingClient || state.isDeletingClient;
+        },
+        
+        /**
+         * Combina todos los errores activos en un solo objeto o null.
+         * Útil para mostrar un mensaje de error general.
+         */
+        hasError: (state) => {
+            return state.errorLimpiezas || state.addLimpiezaError || state.updateLimpiezaError || state.deleteLimpiezaError ||
+                   state.errorClientes || state.addClientError || state.updateClientError || state.deleteClientError || null;
         }
-
-)
+    },
+});

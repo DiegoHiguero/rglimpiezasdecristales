@@ -1,10 +1,11 @@
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
+// firebaseConfig.js
+
+import { initializeApp, getApps, getApp } from "firebase/app"; // Importamos getApps y getApp
 import { getAuth } from "firebase/auth";
 import { getAnalytics } from "firebase/analytics";
 import { getStorage, ref } from "firebase/storage";
-//paquete mas comprimido (lite)
-import { getFirestore } from 'firebase/firestore/lite'
+import { getFirestore } from 'firebase/firestore';
+import { getFunctions } from 'firebase/functions';
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -28,13 +29,35 @@ const firebaseConfig = {
 
 };
 
+let firebaseAppInstance;
 
-// Initialize Firebase
-const firebaseApp = initializeApp(firebaseConfig);
-const auth = getAuth();
+// Comprobamos si ya hay alguna aplicación Firebase inicializada.
+// Esto es común en entornos de desarrollo con Hot Module Reloading (HMR)
+// para evitar el error "Firebase App named '[DEFAULT]' already exists".
+if (!getApps().length) {
+  try {
+    firebaseAppInstance = initializeApp(firebaseConfig);
+    // console.log("DEBUG FirebaseConfig: Firebase App inicializada por primera vez.");
+  } catch (error) {
+    console.error("ERROR FirebaseConfig: Fallo al inicializar Firebase App:", error);
+    // Si falla aquí, significa que hay un problema fundamental con la configuración
+    throw error; // Re-lanza el error para que sea visible
+  }
+} else {
+  // Si ya hay una aplicación, la recuperamos.
+  firebaseAppInstance = getApp();
+  console.log("DEBUG FirebaseConfig: Firebase App ya estaba inicializada, recuperando la instancia existente.");
+}
 
-const db = getFirestore()
-// Initialize Cloud Storage and get a reference to the service
-const storage = getStorage(firebaseApp);
+// *** ¡Añadamos un console.log justo antes de la línea problematica! ***
+// console.log("DEBUG FirebaseConfig: firebaseAppInstance antes de inicializar servicios:", firebaseAppInstance);
 
-export {auth,storage,db};
+
+// Pasa la instancia de la app a TODOS los servicios de Firebase
+export const auth = getAuth(firebaseAppInstance);
+export const db = getFirestore(firebaseAppInstance);
+export const storage = getStorage(firebaseAppInstance);
+export const functions = getFunctions(firebaseAppInstance); // <-- Esta es probablemente la línea 29
+// export const analytics = getAnalytics(firebaseAppInstance); // Si lo usas, también inicialízalo aquí
+
+export { firebaseAppInstance as firebaseApp }; // Exportamos la instancia de la app

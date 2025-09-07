@@ -20,38 +20,7 @@
               <h2 class="text-center text-white">
                Pida presupuesto gratuito!
               </h2>
-              <!-- <div class="col-md-5 d-flex justify-content-center row">
-                        <font-awesome-icon
-                          :icon="['fas', 'phone']"
-                          class="me-2 text-white text-center mb-3 icon fa-xl"
-                        />
-                        <p class="text-white text-center">+33 658 80 24 03</p>
-                      </div>
-                      <div class="col-md-5 d-flex justify-content-center row">
-                        <font-awesome-icon
-                          :icon="['fas', 'envelope']"
-                          class="me-2 text-white text-center mb-3 icon fa-xl"
-                        />
-                        <p class="text-white text-center">toucanet64@gmail.com</p>
-                      </div>             </div>
-            <div class="col-md-6">
-              <label
-                for="validationServer01"
-                class="col-sm-2 col-form-label text-white"
-                required
-                >Nombre</label
-              >
-              <input
-                type="text"
-                class="form-control"
-                id="validationServer01"
-                v-model="prenom"
-                placeholder="Prenom"
-                required
-              />
-              <!-- <div class="valid-feedback">
-                      Looks good!
-                    </div> -->
+           
             </div>
             <div class="col-md-6">
               <label
@@ -474,7 +443,7 @@ document.getElementById("content").classList.add("show")},4000)});
 
   const enviarMensaje = async () => {
     if ((!prenom.value, !email.value, !message.value, !phone.value)) {
-      userStore.mensajeAlerta("Il faut remplir toutes les champs");
+      userStore.mensajeAlerta("Debe rellenar todos los campos"); // Translated from "Il faut remplir toutes les champs"
     } else {
       try {
         const contactParams = {
@@ -498,11 +467,11 @@ document.getElementById("content").classList.add("show")},4000)});
               (message.value = ""),
               (phone.value = ""),
               userStore.mensajeAlerta(
-                "Bien joué! Le message a été bien envoyé"
+                "¡Bien hecho! El mensaje ha sido enviado correctamente" // Translated from "Bien joué! Le message a été bien envoyé"
               );
             },
             (error) => {
-              userStore.mensajeAlerta("Ups! Il y a eu un probleme");
+              userStore.mensajeAlerta("¡Uy! Hubo un problema"); // Translated from "Ups! Il y a eu un probleme"
             }
           );
       } catch (error) {
@@ -510,6 +479,7 @@ document.getElementById("content").classList.add("show")},4000)});
       }
     }
   };
+
 
 
   function closeBanner() {
