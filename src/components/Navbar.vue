@@ -41,45 +41,124 @@
         <li class="nav-item" >
             
             <a class="nav-link me-4 router-link-active router-link-exact-active me-4 btn-outline-light" id="boton-session" href="#scrollspyHeading1">INICIO</a>
-          
-        </li>
-        <li class="nav-item" >
-         
-            <a class="nav-link router-link-active router-link-exact-active me-4 btn-outline-light" id="boton-session" href="#scrollspyHeading2">NOSOTROS</a>
-          
-        </li>
-        <li class="nav-item">
-          
-            <a class="nav-link router-link-active router-link-exact-active me-4 btn-outline-light" id="boton-session" href="#scrollspyHeading3">SERVICIOS</a>
-          
-        </li>
-        <li class="nav-item">
-          
-             
-            <a class="nav-link router-link-active router-link-exact-active me-4 btn-outline-light" id="boton-session" href="#scrollspyHeading4">PRECIOS</a>
-          
-        </li>
-        <li class="nav-item ms-auto">
-          <router-link
-            to="/login"
-            v-if="!userStore.userData.email"
-            class="me-4 btn-sm btn-outline-light"
-            id="boton-session" >
-            <font-awesome-icon :icon="['fas', 'user']" class=" mb-1" title="Inicio de sesión" /> Cuenta
-          </router-link>
-        </li>
-        <li class="nav-item">
-          <button
-            class="btn-sm btn-danger"
-            v-if="userStore.userData.email"
-            @click="userStore.logOutUser"
-          >
-            <font-awesome-icon :icon="['fas', 'right-from-bracket']" class="me-2" /> Cerrar sesión
-          </button>
-        </li>
-      </ul>
-      
-    </div>
+          <ul class="nav  d-flex flex-row">
+
+            <li class="nav-item">
+              <router-link
+                to="/register"
+                v-if="userStore.userData.email === 'roys.abreu@gmail.com'"
+                class="me-4 btn-sm btn-dark text-white"
+                id="boton-master"
+                ><font-awesome-icon
+                  :icon="['fas', 'address-card']"
+                  class="me-2"
+                />Registro Clientes</router-link
+              >
+            </li>
+             <li class="nav-item">
+              <router-link
+                to="/registro"
+                v-if="userStore.userData.email === 'roys.abreu@gmail.com'"
+                class="me-4 btn-sm btn-dark text-white"
+                id="boton-master"
+                ><font-awesome-icon
+                  :icon="['fas', 'address-card']"
+                  class="me-2"
+                />Registro</router-link
+              >
+            </li>
+            <li class="nav-item">
+              <router-link
+                to="/misClientes"
+                v-if="userStore.userData.email === 'roys.abreu@gmail.com'"
+                class="me-4 btn-sm btn-dark text-white"
+                id="boton-master"
+                ><font-awesome-icon
+                  :icon="['fas', 'rectangle-list']"
+                  class="me-2"
+                />Clientes</router-link
+              >
+            </li>
+            <li class="nav-item">
+              <router-link
+                to="/misFacturas"
+                v-if="userStore.userData.email"
+                class="me-4 btn-sm btn-dark text-white"
+                id="boton-master"
+                ><font-awesome-icon
+                  :icon="['fas', 'file-invoice']"
+                  class="me-2"
+                />Facturas</router-link
+              >
+            </li>
+            <li class="nav-item">
+              <router-link
+                to="/"
+                v-if="!userStore.userData.email"
+                class="me-4  btn-sm btn-outline-light"
+                id="boton-session"
+              ><i class="fas fa-home"></i> INICIO
+              </router-link>
+            </li>
+            <li class="nav-item">
+              <router-link
+                to="/"
+                v-if="!userStore.userData.email"
+                class="me-4  btn-sm btn-outline-light"
+                id="boton-session"
+              ><i class="fas fa-briefcase"></i>NOSOTROS
+
+              </router-link>
+            </li>
+            <li class="nav-item">
+              <router-link
+                to="/"
+                v-if="!userStore.userData.email"
+
+                class="me-4  btn-sm btn-outline-light"
+                id="boton-session"
+              ><i class="fas fa-concierge-bell"> </i> SERVICIOS
+
+              </router-link>
+            </li>
+            <li class="nav-item">
+              <router-link
+                to="/"
+                v-if="!userStore.userData.email"
+
+                class="me-4  btn-sm btn-outline-light"
+                id="boton-session"
+              ><i class="fas fa-mobile-alt"></i> TRABAJOS
+
+              </router-link>
+            </li>
+            <li class="nav-item">
+              <router-link
+                to="/login"
+                v-if="!userStore.userData.email"
+                class="me-4  btn-sm btn-outline-light"
+                id="boton-session"
+              >
+                <font-awesome-icon
+                  :icon="['fas', 'user']"
+                  class="me-2 "
+                />Iniciar sesión
+              </router-link>
+            </li>
+            <li class="nav-item">
+              <button
+                class=" btn-sm btn-danger"
+                v-if="userStore.userData.email"
+                @click="userStore.logOutUser"
+              >
+                <font-awesome-icon
+                  :icon="['fas', 'right-from-bracket']"
+                  class="me-2"
+                />Cerrar sesión
+              </button>
+            </li>
+          </ul>
+          </div>
   </nav>
   
 </template>

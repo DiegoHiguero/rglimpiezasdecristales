@@ -113,7 +113,7 @@ onMounted(() => {
 
 <style >
 .map-container {
-  width: 100vw;
+  width: auto;
   height: 100vh;
 }
 .mapboxgl-popup-close-button {

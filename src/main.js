@@ -41,6 +41,7 @@ import {
 import { faFacebook, faFacebookF, faInstagram, faLinkedin, faLinkedinIn, faTwitter }from "@fortawesome/free-brands-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import Vue3Signature from "vue3-signature"
+import { faHandPointUp } from '@fortawesome/free-solid-svg-icons/faHandPointUp'
 library.add(faTrashCan,
     faMagnifyingGlass,
     faCheck,
@@ -73,7 +74,8 @@ library.add(faTrashCan,
     faInstagram,
    faFacebookF,
    faLinkedinIn,
-    faTwitter
+    faTwitter,
+    faHandPointUp,
 
 );
 

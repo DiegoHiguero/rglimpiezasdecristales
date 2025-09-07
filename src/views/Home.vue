@@ -15,9 +15,25 @@
       <div class="row col-md-6 pt-2 pb-4 d-flex justify-content-center mt-4" style=" z-index: 2;">
         <div class="col-lg-8 mt-4 p-4 pt-1 p-lg-8 formulario" style="border-radius: 0.75rem;">
           <form @submit.prevent="handleSubmit" class="mt-4 row g-3">
-            <div class="row mt-3 col-12 d-flex justify-content-around">
-           <div class="row mt-3 d-lg-flex col-12 justify-content-around"><h2 class="text-center text-white"> Pida presupuesto gratuito! </h2></div>
-            </div>
+
+            <div class="row mt-3 d-lg-flex col-12 justify-content-around">
+              <h2 class="text-center text-white">
+               Pida presupuesto gratuito!
+              </h2>
+              <!-- <div class="col-md-5 d-flex justify-content-center row">
+                        <font-awesome-icon
+                          :icon="['fas', 'phone']"
+                          class="me-2 text-white text-center mb-3 icon fa-xl"
+                        />
+                        <p class="text-white text-center">+33 658 80 24 03</p>
+                      </div>
+                      <div class="col-md-5 d-flex justify-content-center row">
+                        <font-awesome-icon
+                          :icon="['fas', 'envelope']"
+                          class="me-2 text-white text-center mb-3 icon fa-xl"
+                        />
+                        <p class="text-white text-center">toucanet64@gmail.com</p>
+                      </div>             </div>
             <div class="col-md-6">
               <label
                 for="validationServer01"
@@ -717,19 +733,6 @@ document.getElementById("content").classList.add("show")},4000)});
     float: right;
     padding: 10px;
     cursor: pointer;
-  }
-
-  .tiempo {
-    color: hsl(226, 57%, 24%);
-    font-weight: 600;
-  }
-
-  .lista {
-    list-style-type: disc !important;
-    padding-left: 1em !important;
-    margin-left: 1em;
-    color: hsl(226, 57%, 24%);
-    font-weight: 600;
   }
 
   .tiempo2 {
