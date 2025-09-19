@@ -71,33 +71,46 @@ export const useDatabaseStore = defineStore('database', {
          * @param {Object} limpiezaData - Datos del registro de limpieza a añadir.
          */
         async addLimpieza(limpiezaData) {
-            this.isAddingLimpieza = true;
-            this.addLimpiezaError = null;
-            try {
-                await this.fetchNextFacturaFormattedNumber(); // Asegura el número de factura antes de añadir
-                const facturaAsignada = this.nextFacturaFormatted;
+        this.isAddingLimpieza = true;
+        this.addLimpiezaError = null;
+        try {
+            let finalFacturaNumber;
 
-                const dataToSave = {
-                    ...limpiezaData,
-                    factura: facturaAsignada,
-                    createdAt: serverTimestamp(), // Fecha de creación en el servidor
-                };
-
-                const docRef = await addDoc(collection(db, 'limpiezasMensuales'), dataToSave);
-                console.log("Documento de limpieza añadido con ID: ", docRef.id, "y factura #", facturaAsignada);
-
-                // Recarga los datos para que la tabla se actualice y el número de factura se recalcule
-                // Se pasan los filtros actuales para mantener el contexto
-                await this.fetchLimpiezas(this.selectedMonth, this.selectedYear);
-
-            } catch (e) {
-                console.error("Error añadiendo el documento de limpieza: ", e);
-                this.addLimpiezaError = e;
-                throw e; // Re-lanza el error para que el componente lo capture
-            } finally {
-                this.isAddingLimpieza = false;
+            // 1. Verificar si limpiezaData ya contiene un número de factura (el manual)
+            // y si no está vacío o solo con espacios.
+            if (limpiezaData.factura && String(limpiezaData.factura).trim() !== '') {
+                finalFacturaNumber = String(limpiezaData.factura).trim(); // Usar el número manual
+            } else {
+                // 2. Si no hay número manual, entonces SÍ, calculamos el siguiente automático.
+                await this.fetchNextFacturaFormattedNumber(); // Asegura el número de factura automático
+                finalFacturaNumber = this.nextFacturaFormatted; // Usar el número automático
             }
-        },
+
+            const dataToSave = {
+                ...limpiezaData,
+                factura: finalFacturaNumber, // <-- ¡Ahora asigna el número de factura final, ya sea manual o automático!
+                createdAt: serverTimestamp(), // Fecha de creación en el servidor
+            };
+
+            const docRef = await addDoc(collection(db, 'limpiezasMensuales'), dataToSave);
+            console.log("Documento de limpieza añadido con ID: ", docRef.id, "y factura #", finalFacturaNumber);
+
+            // Importante: Después de añadir el documento (con factura manual o automática),
+            // necesitamos recalcular el siguiente número automático para futuras adiciones.
+            await this.fetchNextFacturaFormattedNumber(); // Re-calcula para la próxima vez
+
+            // Recarga los datos para que la tabla se actualice y el número de factura se recalcule
+            // Se pasan los filtros actuales para mantener el contexto
+            await this.fetchLimpiezas(this.selectedMonth, this.selectedYear);
+
+        } catch (e) {
+            console.error("Error añadiendo el documento de limpieza: ", e);
+            this.addLimpiezaError = e;
+            throw e; // Re-lanza el error para que el componente lo capture
+        } finally {
+            this.isAddingLimpieza = false;
+        }
+    },
       async updatePaymentStatus(limpiezaId, newFechaPago, newFormaPago) {
             this.isUpdatingLimpieza = true; // Usa el estado de carga que ya tienes
             this.updateLimpiezaError = null; // Limpia errores previos
@@ -143,7 +156,7 @@ export const useDatabaseStore = defineStore('database', {
             this.errorLimpiezas = null;
 
             const userStore = useUserStore();
-            if (!userStore.userData || (userStore.userData.email !== "higuerodiego@gmail.com" && userStore.userData.email !== "familiahiguero@gmail.com")) {
+            if (!userStore.userData || (userStore.userData.email !== "higuerodiego@gmail.com" && userStore.userData.email !== "roys.abreu@gmail.com")) {
                 this.errorLimpiezas = new Error("No tienes permisos suficientes para acceder a la información de limpiezas.");
                 this.isLoadingLimpiezas = false;
                 return;
@@ -251,7 +264,6 @@ export const useDatabaseStore = defineStore('database', {
                 // Formatea el número secuencial a 3 dígitos (ej. 1 -> '001')
                 const formattedSequential = nextSequentialNumber.toString().padStart(3, '0');
                 this.nextFacturaFormatted = `${prefix}${formattedSequential}`;
-                console.log("Próximo número de factura calculado:", this.nextFacturaFormatted);
 
             } catch (err) {
                 console.error("Error al calcular el próximo número de factura:", err);

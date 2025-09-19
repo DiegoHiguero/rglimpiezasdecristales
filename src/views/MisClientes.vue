@@ -1,459 +1,908 @@
 <template>
-  <div class="p-3 mt-2 py-3 my-2 bg-image">
-    <h1 class="text-center mt-4 mb-4 ">Mis clientes</h1>
+  <div class="container-fluid bg-white">
+    <h1 class="text-center mt-2 pt-5 mb-4 ">Mis clientes</h1>
     <h2 class="text-center pb-3"> <font-awesome-icon :icon="['fas', 'calendar-days']" class="me-2 fa-lg"
-        style="color: #37b650" />{{ diaActual }}</h2>
-    <div v-if="databaseStore.loadingDoc" class="spinner-border" role="status">
-      <span class="visually-hidden">Loading...</span>
-    </div>
-    <div class="container-fluid p-0" v-else>
-      <div class="col-md-4 bg-white rounded mt-4 mb-4 p-3">
-        <div class="col-12 ">
-          <h3 class=""> Total Bruto: {{ databaseStore.totalGanancias }}€</h3>
-        </div>
-        <div class="col-12 ">
-          <h3 class=""> Total Neto: {{ databaseStore.totalNeto }}€</h3>
-        </div>
-        <div class="col-12 ">
-          <h3 class=""> Cotizacion: {{ databaseStore.cotizacion }}€</h3>
-        </div>
-        <div class="col-12 ">
-          <h3 class=""> Total Clientes: {{ databaseStore.numeroClientes }}</h3>
-        </div>
+        style="color: #4970B6" />{{ diaActual }}</h2>
+
+    <!-- Indicadores de carga para la vista principal -->
+    <div v-if="databaseStore.isLoadingClientes" class="text-center p-3">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Cargando clientes...</span>
       </div>
+      <p class="mt-2">Cargando clientes...</p>
+    </div>
+    <div v-else-if="databaseStore.errorClientes" class="alert alert-danger text-center">
+      Error al cargar clientes: {{ databaseStore.errorClientes.message }}
+    </div>
+
+    <!-- Contenido principal de la vista si no hay carga ni error -->
+    <div class="container-fluid p-0" v-else>
       <div class="row">
-        <div>
-          <select name="status" class="form-select col-4" aria-label="Default select example"
-            v-model="clienteSeleccionado">
-            <option selected v-for="(item, index) in databaseStore.documents" :key="item.id" :value=item>{{
-              item.nombreUsuario }}</option>
-          </select>
-          <div v-if="clienteSeleccionado === undefined">
-            <h4 class="mt-2"><b>Por favor selecciona un cliente </b></h4>
-          </div>
-          <div class="row mt-5" v-else>
-            <div class="row justify-content-around  mt-2">
-              <div class="col-md-4 p-2 mb-3   tarjeta text-white p-4">
-                <h4 class="d-flex justify-content-between"><b>{{ clienteSeleccionado.nombre }}</b><span
-                    class="badge bg-success" style="font-size: 1.5rem;">{{ clienteSeleccionado.precio }} €</span></h4>
-                <ul>
-                  <li>
-                    <p>{{ clienteSeleccionado.direccion }}</p>
-                  </li>
-                  <li>
-                    <p>{{ clienteSeleccionado.codigoPostal }} {{ clienteSeleccionado.ciudad }}</p>
-                  </li>
-                  <li>
-                    <p>{{ clienteSeleccionado.telephone }}</p>
-                  </li>
-                </ul>
+        <!-- SECCIÓN DE EVENTOS ELIMINADA -->
 
-              </div>
-              <div class="col-md-4 p-2 mb-3 tarjeta text-white p-4">
-                <h4 class="text-center m-3">Dias de limpieza</h4>
-                <div class="d-flex flex-row">
-                  <div class="card text-white bg-primary m-3" v-for="(item, index) in clienteSeleccionado.diasLimpieza"
-                    :key="index" style="max-width: 18rem">
-                    <div class="card-body">
-                      <h5 class="card-title">{{ item }}</h5>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <!-- <div class="col-md-3 p-2   tarjeta text-white p-4">
-                  <h4 class="text-center m-3">Facturas :</h4>
-                  <div class="row">
-                    <p style="text-indent: 3%" id="cliente" v-for="item in clienteSeleccionado.factura" :key="item">
-                      {{ item.nombre }}
-
-                      <span class="btn btn-sm btn-warning"
-                        @click="databaseStore.deleteFactura(item.id)"><font-awesome-icon
-                          :icon="['fas', 'trash-can']" />Eliminar</span>
-                      <a :href="item.referencia" target="_blank" class="btn btn-sm m-2 btn-primary"><font-awesome-icon
-                          :icon="['fas', 'magnifying-glass']" />Ver</a>
-                    </p>
-                  </div>
-                </div> -->
+        <!-- Sección de Detalles del Cliente Seleccionado y Añadir Limpieza (ahora solo detalles y historial) -->
+        <div v-if="clienteSeleccionado" class="col-12 mt-4">
+          <div class="card mb-4 shadow-sm">
+            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+              <h3 class="mb-0">Detalles del Cliente: {{ clienteSeleccionado.nombre }} {{ clienteSeleccionado.apellido }}</h3>
+              <button @click="clienteSeleccionado = null; historialLimpiezasCliente = []" class="btn btn-light btn-sm" title="Cerrar detalles">
+                <font-awesome-icon :icon="['fas', 'times']" /> Cerrar
+              </button>
             </div>
-            <div class="row  justify-content-around mt-2">
-              <div class="col-md-5 m-2 p-3 limpiezas">
-                <h2 class="text-center pt-2">Anadir Limpieza</h2>
-                <div class="form-group mt-5">
-                  <label for="startDate">Fecha</label>
-                  <h1>{{ fecha }}</h1>
-                  <input id="startDate" v-model="fecha" class="form-control" type="date" />
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <h5>Información de Contacto</h5>
+                  <p><strong>Teléfono:</strong> {{ clienteSeleccionado.telefono || 'N/A' }}</p>
+                  <p><strong>Email:</strong> {{ clienteSeleccionado.email || 'N/A' }}</p>
+                  <!-- MODIFICACIÓN AQUÍ -->
+                  <p>
+                    <strong>Última Limpieza:</strong>
+                    <span :class="timeSinceLastCleaning.statusClass">
+                      <b>{{ timeSinceLastCleaning.text }}</b>
+                    </span>
+                  </p>
                 </div>
-                <div class="form-check mt-1 text-center">
-                  <button class="btn " :class="[databaseStore.exterior ? 'btn-success' : 'btn-danger']"
-                    @click="limpiezaExt()">
-                    EXTERIOR
-                  </button>
-                  <button class="btn  m-3" :class="[databaseStore.interior ? 'btn-success' : 'btn-danger']"
-                    @click="limpiezaInt()">
-                    INTERIOR
-                  </button>
+                <div class="col-md-6 mb-3">
+                  <h5>Dirección de Facturación</h5>
+                  <p>{{ clienteSeleccionado.direccion }}</p>
+                  <p>{{ clienteSeleccionado.codigoPostal }} {{ clienteSeleccionado.ciudad }} ({{ clienteSeleccionado.provincia }})</p>
                 </div>
-                <div class="form-group ">
-                  <label for="exampleFormControlTextarea1">Mensaje</label>
-                  <textarea v-model="mensage" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                <div class="col-md-6 mb-3" v-if="clienteSeleccionado.direccionIntervencion && clienteSeleccionado.direccionIntervencion.calle">
+                  <h5>Dirección de Intervención</h5>
+                  <p>{{ clienteSeleccionado.direccionIntervencion.calle }}</p>
+                  <p>{{ clienteSeleccionado.direccionIntervencion.codigoPostal }} {{ clienteSeleccionado.direccionIntervencion.ciudad }} ({{ clienteSeleccionado.direccionIntervencion.provincia }})</p>
                 </div>
-                <div class=" mt-3">
-                  <h2 class="text-center pt-2">Firma</h2>
-                  <Vue3Signature ref="signature1" :w="'auto'" :h="'40vh'" class="example"></Vue3Signature>
+                <div class="col-md-6 mb-3">
+                  <h5>Tarifas de Limpieza</h5>
+                  <p><strong>Exterior:</strong> {{ formatCurrency(clienteSeleccionado.precioExterior) }}</p>
+                  <p><strong>Interior:</strong> {{ formatCurrency(clienteSeleccionado.precioInterior) }}</p>
                 </div>
-                <div class="text-center p-2 mt-2 alert alert-success d-flex justify-content-evenly " role="alert"
-                  v-if="userStore.timeOut !== false">
-                  <font-awesome-icon :icon="['fas', 'bell']" shake class="fa-xl" />
-                  <h5>{{ userStore.mensaje }} </h5> <font-awesome-icon :icon="['fas', 'bell']" shake class="fa-xl" />
-                </div>
-                <button class="btn btn-primary col-12 mt-3 mb-3" @click="clear(index)">LIMPIAR
-                </button>
-                <button class="btn btn-success col-12 mt-3 mb-3"
-                  @click="passage(clienteSeleccionado, 'image/jpeg', index)">ENVIAR
-                </button>
               </div>
-              <div class="row col-md-5  m-2 p-1  limpiezas">
-                <div class="container col-md-11" id="accordionPassage">
-                  <h2 class="text-center pt-2">Registro Limpiezas</h2>
-                  <div class="container mt-3 p-0">
-                    <select name="status" class="form-select col-4" v-model="mes">
-                      <option value='enero'>enero</option>
-                      <option value='febrero'>febrero</option>
-                      <option value='marzo'>marzo</option>
-                      <option value='abril'>abril</option>
-                      <option value='mayo'>mayo</option>
-                      <option value='junio'>junio</option>
-                      <option value='julio'>julio</option>
-                      <option value='agosto'>agosto</option>
-                      <option value='septiembre'>septiembre</option>
-                      <option value='octubre'>octubre</option>
-                      <option value='noviembre'>noviembre</option>
-                      <option value='diciembre'>diciembre</option>
-                    </select>
-                    <table class="table table-striped table-hover mt-4 pt-4">
-                      <thead>
-                        <tr class="text-center">
-                          <th scope="col">J</th>
-                          <th scope="col">EXT</th>
-                          <th scope="col">INT</th>
-                          <th scope="col">COM</th>
-                        </tr>
-                      </thead>
-                      <tbody v-for=" (day, index) in clienteSeleccionado.registro">
-                        <tr class="text-center" v-if="day.nombreMes === mes">
-                          <th scope="row" v-if="day.fechaLimp === undefined">Aun no hay fecha</th>
-                          <th scope="row" v-else>{{ day.diaLimp }} {{ day.fechaLimp }}</th>
-                          <td v-if="day.exterior">
-                            <font-awesome-icon :icon="['fas', 'check']" class="me-2 fa" style="color: #51f772" />
-                          </td>
-                          <td v-else>
-                            <font-awesome-icon :icon="['fas', 'xmark']" class="me-2 fa" style="color: red" />
-                          </td>
-                          <td v-if="day.interior">
-                            <font-awesome-icon :icon="['fas', 'check']" class="me-2 fa" style="color: #51f772" />
-                          </td>
-                          <td v-else>
-                            <font-awesome-icon :icon="['fas', 'xmark']" class="me-2 fa" style="color: red" />
-                          </td>
-                          <td>{{ day.comentarios }} </td>
-                          <td>
-                            <div class="form-check">
-                              <input class="form-check-input" type="checkbox" :value=day.imagen id="flexCheckChecked"
-                                v-model="firmasSeleccionadas">
-                              <img :src=day.imagen alt="firma del cliente" style="max-width: 120px;">
-                            </div>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                    <div class="mb-4">
-                      <button class="btn btn-success"
-                        @click="userStore.firmasPDF(firmasSeleccionadas, clienteSeleccionado)">
-                        Crear PDF Firmas
-                      </button>
-                      <hr class="hr mb-3" />
-                    </div>
-                    <div class="mt-4">
-                      <h2 class="text-center pt-2">Nueva Factura</h2>
-                      <form class="mt-4">
-                        <div class="input-group mb-3">
-                          <div class="input-group-prepend">
-                            <span class="input-group-text" id="basic-addon1">Numero Factura</span>
-                          </div>
-                          <input type="text" class="form-control" placeholder="Numero Factura" aria-label="Username"
-                            aria-describedby="basic-addon1" v-model="numFactura">
-                        </div>
-                        <div class="form-group mb-5">
-                          <label for="startDate">Fecha</label>
-                          <input id="startDate" v-model="fecha" class="form-control" type="date" />
-                        </div>
-                        <div v-for=" (item, index) in userStore.descripciones" class="d-flex row mb-3">
-                          <div class=" mb-3 col-md-12">
-                            <input type="text" maxlength="55" class="form-control" placeholder="descripcion"
-                              :aria-label=item.descripcion aria-describedby="basic-addon1" v-model=descripcion[index]>
-                          </div>
-                          <div class=" mb-3 col-md-3">
-                            <input type="number" class="form-control" placeholder="cant" :aria-label=item.cant
-                              aria-describedby="basic-addon1" v-model=cant[index]>
-                          </div>
-                          <div class="mb-3 col-md-3">
-                            <input type="number" class="form-control" placeholder="preciou" :aria-label=item.preciou
-                              aria-describedby="basic-addon1" v-model=preciou[index]>
-                          </div>
-                          <div class="mb-3 col-md-3">
-                            <input type="number" class="form-control" placeholder="importe" :aria-label=item.importe
-                              aria-describedby="basic-addon1" v-model=importe[index]>
-                          </div>
-                          <hr class="hr mb-3" />
-                        </div>
-                        <div class="row">
-                          <div class="col-6">
-                            <button class="btn btn-warning mb-2 p-2 " @click.prevent="nuevaDescripcion()">
-                              <font-awesome-icon :icon="['fas', 'plus']" class="me-2 fa-lg"
-                                style="padding-left: .5rem;" />
-                            </button>
-                          </div>
-                        </div>
-                      </form>
-                      <button class="btn btn-danger "
-                        @click="userStore.crearPDF(clienteSeleccionado, descripcion, cant, preciou, importe, fecha, numFactura)">Crear
-                        FACTURA PDF
-                      </button>
-                    </div>
-                  </div>
-                </div>
+              <hr>
+
+              <h5 class="mt-4">Historial de Limpiezas</h5>
+              <div v-if="historialLimpiezasCliente.length > 0" class="table-responsive">
+                <table class="table table-sm table-bordered table-striped">
+                  <thead>
+                    <tr>
+                      <th>Factura #</th>
+                      <th style="min-width: 100px;">Sem.1</th>
+                      <th style="min-width: 100px;">Sem.2</th>
+                      <th style="min-width: 100px;">Sem.3</th>
+                      <th style="min-width: 100px;">Sem.4</th>
+                      <th style="min-width: 100px;">Sem.5</th>
+                      <th>Bruto(€)</th>
+                      <th>Neto(€)</th>
+                      <th>Cot(€)</th>
+                      <th>Fecha Pago</th>
+                      <th>Estado</th>
+                      <th>Forma Pago</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="limpieza in historialLimpiezasCliente" :key="limpieza.id">
+                      <td>{{ limpieza.factura }}</td>
+                      <td class="text-center">
+                        {{ formatEuropeanDate(limpieza.semana1) }}
+                        <br v-if="limpieza.semana1Tipo" />
+                        <span v-if="limpieza.semana1Tipo === 'exterior' || limpieza.semana1Tipo === 'ambas'" class="badge bg-primary me-1">E</span>
+                        <span v-if="limpieza.semana1Tipo === 'interior' || limpieza.semana1Tipo === 'ambas'" class="badge bg-secondary">I</span>
+                      </td>
+                      <td class="text-center">
+                        {{ formatEuropeanDate(limpieza.semana2) }}
+                        <br v-if="limpieza.semana2Tipo" />
+                        <span v-if="limpieza.semana2Tipo === 'exterior' || limpieza.semana2Tipo === 'ambas'" class="badge bg-primary me-1">E</span>
+                        <span v-if="limpieza.semana2Tipo === 'interior' || limpieza.semana2Tipo === 'ambas'" class="badge bg-secondary">I</span>
+                      </td>
+                      <td class="text-center">
+                        {{ formatEuropeanDate(limpieza.semana3) }}
+                        <br v-if="limpieza.semana3Tipo" />
+                        <span v-if="limpieza.semana3Tipo === 'exterior' || limpieza.semana3Tipo === 'ambas'" class="badge bg-primary me-1">E</span>
+                        <span v-if="limpieza.semana3Tipo === 'interior' || limpieza.semana3Tipo === 'ambas'" class="badge bg-secondary">I</span>
+                      </td>
+                      <td class="text-center">
+                        {{ formatEuropeanDate(limpieza.semana4) }}
+                        <br v-if="limpieza.semana4Tipo" />
+                        <span v-if="limpieza.semana4Tipo === 'exterior' || limpieza.semana4Tipo === 'ambas'" class="badge bg-primary me-1">E</span>
+                        <span v-if="limpieza.semana4Tipo === 'interior' || limpieza.semana4Tipo === 'ambas'" class="badge bg-secondary">I</span>
+                      </td>
+                      <td class="text-center">
+                        {{ formatEuropeanDate(limpieza.semana5) }}
+                        <br v-if="limpieza.semana5Tipo" />
+                        <span v-if="limpieza.semana5Tipo === 'exterior' || limpieza.semana5Tipo === 'ambas'" class="badge bg-primary me-1">E</span>
+                        <span v-if="limpieza.semana5Tipo === 'interior' || limpieza.semana5Tipo === 'ambas'" class="badge bg-secondary">I</span>
+                      </td>
+                      <td>{{ formatCurrency(limpieza.precioBruto) }}</td>
+                      <td><strong>{{ formatCurrency(calculatePrecioNeto(limpieza.precioBruto)) }}</strong></td>
+                      <td>{{ formatCurrency(calculateCotizacion(limpieza.precioBruto)) }}</td>
+                      <td>{{ limpieza.fechaPago ? formatEuropeanDate(limpieza.fechaPago) : 'N/A' }}</td>
+                      <td>
+                        <span :class="{'badge bg-success': limpieza.fechaPago, 'badge bg-warning text-dark': !limpieza.fechaPago}">
+                          {{ limpieza.fechaPago ? 'Pagado' : 'Pendiente' }}
+                        </span>
+                      </td>
+                      <td>{{ limpieza.formaPago || 'N/A' }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <p v-else class="text-muted">No hay limpiezas registradas para este cliente.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sección de gestión de todos los clientes -->
+        <div class="col-12 mt-5">
+          <h2 class="text-center mb-4">Gestión de Todos los Clientes</h2>
+          <div class="mb-3">
+            <button class="btn btn-success" @click="openAddClientModal">Añadir Nuevo Cliente</button>
+          </div>
+
+          <div class="card mt-4">
+            <!-- Encabezado del desplegable AHORA MÁS GRANDE Y VISIBLE -->
+            <div class="card-header d-flex justify-content-between align-items-center bg-light py-3 px-4">
+              <h2 class="mb-0">
+                <button class="btn btn-link text-decoration-none text-dark p-0 d-flex align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#collapseClients" aria-expanded="false" aria-controls="collapseClients">
+                  Lista Completa de Clientes <span class="badge bg-secondary ms-3 fs-5">{{ clientCount }}</span>
+                  <font-awesome-icon :icon="['fas', 'chevron-down']" class="collapse-icon ms-3 fa-lg" />
+                </button>
+              </h2>
+            </div>
+            <!-- Cuerpo del desplegable (colapsable) -->
+            <div class="card-body collapse" id="collapseClients">
+              <div v-if="databaseStore.isUpdatingClient" class="alert alert-info">
+                Guardando cambios del cliente...
+              </div>
+              <div v-if="databaseStore.updateClientError" class="alert alert-danger">
+                Error al actualizar el cliente: {{ databaseStore.updateClientError.message }}
+              </div>
+              <div v-if="databaseStore.isDeletingClient" class="alert alert-info">
+                Eliminando cliente...
+              </div>
+              <div v-if="databaseStore.deleteClientError" class="alert alert-danger">
+                Error al eliminar el cliente: {{ databaseStore.deleteClientError.message }}
+              </div>
+
+              <div class="table-responsive" v-if="databaseStore.clientes.length > 0">
+                <table class="table table-striped table-hover">
+                  <thead>
+                    <tr>
+                      <th>Nombre Completo</th>
+                      <th>Dirección Facturación</th>
+                      <th>Dirección Intervención</th>
+                      <th>Contacto</th>
+                      <th>Precio Exterior (€)</th>
+                      <th>Precio Interior (€)</th>
+                      <th>Tarifa Total (€)</th>
+                      <th>Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="cliente in databaseStore.clientes" :key="cliente.id">
+                      <td>{{ cliente.nombre }} {{ cliente.apellido }}</td>
+                      <td>
+                        {{ cliente.direccion }}<br>
+                        {{ cliente.codigoPostal }} {{ cliente.ciudad }} ({{ cliente.provincia }})
+                      </td>
+                      <td>
+                        <span v-if="cliente.direccionIntervencion && cliente.direccionIntervencion.calle">
+                          {{ cliente.direccionIntervencion.calle }}<br>
+                          {{ cliente.direccionIntervencion.codigoPostal }} {{ cliente.direccionIntervencion.ciudad }} ({{ cliente.direccionIntervencion.provincia }})
+                        </span>
+                        <span v-else>N/A</span>
+                      </td>
+                      <td>
+                        <span v-if="cliente.telefono">{{ cliente.telefono }}</span>
+                        <span v-if="cliente.telefono && cliente.email"> | </span>
+                        <span v-if="cliente.email">{{ cliente.email }}</span>
+                      </td>
+                      <td>{{ formatCurrency(cliente.precioExterior) }}</td>
+                      <td>{{ formatCurrency(cliente.precioInterior) }}</td>
+                      <td><strong>{{ formatCurrency(cliente.precioExterior + cliente.precioInterior) }}</strong></td>
+                      <td>
+                        <button @click="selectClientForDetails(cliente)" class="btn btn-sm btn-primary me-2" title="Ver detalles y añadir limpieza">
+                          <font-awesome-icon :icon="['fas', 'eye']" />
+                        </button>
+                        <button @click="openEditClientModal(cliente)" class="btn btn-sm btn-info text-white me-2" title="Editar cliente">
+                          <font-awesome-icon :icon="['fas', 'file-pen']" />
+                        </button>
+                        <button @click="confirmDeleteClient(client)" class="btn btn-sm btn-danger" title="Eliminar cliente">
+                          <font-awesome-icon :icon="['fas', 'trash-can']" />
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div v-else class="alert alert-warning m-3">
+                No hay clientes registrados aún. ¡Añade uno usando el botón de arriba!
               </div>
             </div>
           </div>
         </div>
-        <div class="p-2 mt-5 mb-2 mapa bg-white">
+
+        <!-- Nueva Sección de Gráficos de Ingresos -->
+        <div class="col-12 mt-5">
+          <h2 class="text-center mb-4">Evolución de Ingresos</h2>
+          <div class="card mt-4 p-4">
+            <div class="row">
+
+              <!-- Gráfico de Ingresos Mensuales -->
+              <div class="col-12 col-md-6 mb-4">
+                <h3 class="mb-3">Ingresos Mensuales</h3>
+                <div v-if="monthlyIncomeSeries[0] && monthlyIncomeSeries[0].data.length > 0">
+                  <apexchart type="line" :options="monthlyIncomeChartOptions" :series="monthlyIncomeSeries"></apexchart>
+                </div>
+                <div v-else class="alert alert-info text-center">
+                  No hay datos de ingresos mensuales disponibles para mostrar el gráfico.
+                </div>
+              </div>
+
+              <!-- Gráfico de Ingresos Anuales -->
+              <div class="col-12 col-md-6 mb-4">
+                <h3 class="mb-3">Ingresos Anuales</h3>
+                <div v-if="yearlyIncomeSeries[0] && yearlyIncomeSeries[0].data.length > 0">
+                  <apexchart type="bar" :options="yearlyIncomeChartOptions" :series="yearlyIncomeSeries"></apexchart>
+                </div>
+                <div v-else class="alert alert-info text-center">
+                  No hay datos de ingresos anuales disponibles para mostrar el gráfico.
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- Componentes externos -->
+        <div>
+          <!-- <NuevaFactura /> -->
+        </div>
+        <div class="row col-12 mb-4 p-2 mapa bg-white">
           <Mapa />
         </div>
       </div>
     </div>
   </div>
+
+  <!-- Modal para Añadir Nuevo Cliente -->
+  <div v-if="isAddClientModalOpen" class="modal fade show" style="display: block;" tabindex="-1" aria-labelledby="addClientModalLabel" aria-modal="true" role="dialog">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addClientModalLabel">Añadir Nuevo Cliente</h5>
+          <button type="button" class="btn-close" @click="closeAddClientModal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+        <form @submit.prevent="saveNewClient">
+              <div class="row g-3">
+                <div class="col-12 mb-3">
+                  <h4 class="mb-0">Información Personal</h4>
+                  <hr class="mt-2 mb-3">
+                </div>
+                <div class="col-md-6">
+                  <label for="new-client-nombre" class="form-label">Nombre</label>
+                  <input type="text" class="form-control" id="new-client-nombre" v-model="newClient.nombre" required>
+                </div>
+                <div class="col-md-6">
+                  <label for="new-client-apellido" class="form-label">Apellido</label>
+                  <input type="text" class="form-control" id="new-client-apellido" v-model="newClient.apellido"
+                    required>
+                </div>
+
+                <div class="col-12 mt-4 mb-3">
+                  <h4 class="mb-0">Dirección de Facturación</h4>
+                  <hr class="mt-2 mb-3">
+                </div>
+                <div class="col-12">
+                  <label for="new-client-direccion" class="form-label">Dirección (Calle y Número)</label>
+                  <input type="text" class="form-control" id="new-client-direccion" v-model="newClient.direccion"
+                    required>
+                </div>
+                <div class="col-md-6">
+                  <label for="new-client-ciudad" class="form-label">Ciudad</label>
+                  <input type="text" class="form-control" id="new-client-ciudad" v-model="newClient.ciudad" required>
+                </div>
+                <div class="col-md-6">
+                  <label for="new-client-provincia" class="form-label">Provincia</label>
+                  <input type="text" class="form-control" id="new-client-provincia" v-model="newClient.provincia"
+                    required>
+                </div>
+                <div class="col-md-4">
+                  <label for="new-client-codigo-postal" class="form-label">Código Postal</label>
+                  <input type="text" class="form-control" id="new-client-codigo-postal"
+                    v-model="newClient.codigoPostal">
+                </div>
+
+                <div class="col-12 mt-4 mb-3">
+                  <h4 class="mb-0">Dirección de Intervención (Opcional)</h4>
+                  <hr class="mt-2 mb-3">
+                </div>
+                <div class="col-12">
+                  <label for="new-client-intervencion-calle" class="form-label">Dirección (Calle y Número)</label>
+                  <input type="text" class="form-control" id="new-client-intervencion-calle"
+                    v-model="newClient.direccionIntervencion.calle">
+                </div>
+                <div class="col-md-6">
+                  <label for="new-client-intervencion-ciudad" class="form-label">Ciudad</label>
+                  <input type="text" class="form-control" id="new-client-intervencion-ciudad"
+                    v-model="newClient.direccionIntervencion.ciudad">
+                </div>
+                <div class="col-md-6">
+                  <label for="new-client-intervencion-provincia" class="form-label">Provincia</label>
+                  <input type="text" class="form-control" id="new-client-intervencion-provincia"
+                    v-model="newClient.direccionIntervencion.provincia">
+                </div>
+                <div class="col-md-4">
+                  <label for="new-client-intervencion-codigo-postal" class="form-label">Código Postal</label>
+                  <input type="text" class="form-control" id="new-client-intervencion-codigo-postal"
+                    v-model="newClient.codigoPostal">
+                </div>
+
+                <div class="col-12 mt-4 mb-3">
+                  <h4 class="mb-0">Información de Contacto</h4>
+                  <hr class="mt-2 mb-3">
+                </div>
+                <div class="col-md-6">
+                  <label for="new-client-telefono" class="form-label">Teléfono</label>
+                  <input type="tel" class="form-control" id="new-client-telefono" v-model="newClient.telefono">
+                </div>
+                <div class="col-md-6">
+                  <label for="new-client-email" class="form-label">Email</label>
+                  <input type="email" class="form-control" id="new-client-email" v-model="newClient.email">
+                </div>
+                <div class="col-12 mt-4 mb-3">
+                  <h4 class="mb-0">Tipo de Cliente</h4>
+                  <hr class="mt-2 mb-3">
+                </div>
+                <div class="col-md-6">
+                  <label for="new-client-tipo" class="form-label">Tipo de Cliente</label>
+                  <select id="new-client-tipo" class="form-select" v-model="newClient.tipoCliente" required>
+                    <option value="" disabled>Seleccione un tipo</option>
+                    <option value="empresa">Empresa</option>
+                    <option value="cooperativa">Cooperativa</option>
+                    <option value="casa">Casa</option>
+                  </select>
+                </div>
+                <div class="col-12 mt-4 mb-3">
+                  <h4 class="mb-0">Tarifas de Limpieza (€)</h4>
+                  <hr class="mt-2 mb-3">
+                </div>
+                <div class="col-md-6">
+                  <label for="new-client-precio-exterior" class="form-label">Precio por Limpieza Exterior</label>
+                  <input type="number" class="form-control" id="new-client-precio-exterior"
+                    v-model.number="newClient.precioExterior" step="0.01" min="0">
+                </div>
+                <div class="col-md-6">
+                  <label for="new-client-precio-interior" class="form-label">Precio por Limpieza Interior</label>
+                  <input type="number" class="form-control" id="new-client-precio-interior"
+                    v-model.number="newClient.precioInterior" step="0.01" min="0">
+                </div>
+              </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" @click="closeAddClientModal">Cancelar</button>
+          <button type="button" class="btn btn-primary" @click="saveNewClient" :disabled="isSavingNewClient">
+            {{ isSavingNewClient ? 'Guardando...' : 'Guardar Cliente' }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div v-if="isAddClientModalOpen" class="modal-backdrop fade show"></div>
+
+  <!-- Modal para Editar Cliente Existente -->
+  <div v-if="isEditClientModalOpen" class="modal fade show" style="display: block;" tabindex="-1" aria-labelledby="editClientModalLabel" aria-modal="true" role="dialog">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editClientModalLabel">Editar Cliente: {{ editedClient.nombre }} {{ editedClient.apellido }}</h5>
+          <button type="button" class="btn-close" @click="closeEditClientModal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form @submit.prevent="saveEditedClient">
+              <div class="row g-3">
+                <div class="col-12 mb-3">
+                  <h4 class="mb-0">Información Personal</h4>
+                  <hr class="mt-2 mb-3">
+                </div>
+                <div class="col-md-6">
+                  <label for="edit-client-nombre" class="form-label">Nombre</label>
+                  <input type="text" class="form-control" id="edit-client-nombre" v-model="editedClient.nombre" required>
+                </div>
+                <div class="col-md-6">
+                  <label for="edit-client-apellido" class="form-label">Apellido</label>
+                  <input type="text" class="form-control" id="edit-client-apellido" v-model="editedClient.apellido"
+                    required>
+                </div>
+
+                <div class="col-12 mt-4 mb-3">
+                  <h4 class="mb-0">Dirección de Facturación</h4>
+                  <hr class="mt-2 mb-3">
+                </div>
+                <div class="col-12">
+                  <label for="edit-client-direccion" class="form-label">Dirección (Calle y Número)</label>
+                  <input type="text" class="form-control" id="edit-client-direccion" v-model="editedClient.direccion"
+                    required>
+                </div>
+                <div class="col-md-6">
+                  <label for="edit-client-ciudad" class="form-label">Ciudad</label>
+                  <input type="text" class="form-control" id="edit-client-ciudad" v-model="editedClient.ciudad" required>
+                </div>
+                <div class="col-md-6">
+                  <label for="edit-client-provincia" class="form-label">Provincia</label>
+                  <input type="text" class="form-control" id="edit-client-provincia" v-model="editedClient.provincia"
+                    required>
+                </div>
+                <div class="col-md-4">
+                  <label for="edit-client-codigo-postal" class="form-label">Código Postal</label>
+                  <input type="text" class="form-control" id="edit-client-codigo-postal"
+                    v-model="editedClient.codigoPostal">
+                </div>
+
+                <div class="col-12 mt-4 mb-3">
+                  <h4 class="mb-0">Dirección de Intervención (Opcional)</h4>
+                  <hr class="mt-2 mb-3">
+                </div>
+                <div class="col-12">
+                  <label for="edit-client-intervencion-calle" class="form-label">Dirección (Calle y Número)</label>
+                  <input type="text" class="form-control" id="edit-client-intervencion-calle"
+                    v-model="editedClient.direccionIntervencion.calle">
+                </div>
+                <div class="col-md-6">
+                  <label for="edit-client-intervencion-ciudad" class="form-label">Ciudad</label>
+                  <input type="text" class="form-control" id="edit-client-intervencion-ciudad"
+                    v-model="editedClient.direccionIntervencion.ciudad">
+                </div>
+                <div class="col-md-6">
+                  <label for="edit-client-intervencion-provincia" class="form-label">Provincia</label>
+                  <input type="text" class="form-control" id="edit-client-intervencion-provincia"
+                    v-model="editedClient.direccionIntervencion.provincia">
+                </div>
+                <div class="col-md-4">
+                  <label for="edit-client-intervencion-codigo-postal" class="form-label">Código Postal</label>
+                  <input type="text" class="form-control" id="edit-client-intervencion-codigo-postal"
+                    v-model="editedClient.codigoPostal">
+                </div>
+
+                <div class="col-12 mt-4 mb-3">
+                  <h4 class="mb-0">Información de Contacto</h4>
+                  <hr class="mt-2 mb-3">
+                </div>
+                <div class="col-md-6">
+                  <label for="edit-client-telefono" class="form-label">Teléfono</label>
+                  <input type="tel" class="form-control" id="edit-client-telefono" v-model="editedClient.telefono">
+                </div>
+                <div class="col-md-6">
+                  <label for="edit-client-email" class="form-label">Email</label>
+                  <input type="email" class="form-control" id="edit-client-email" v-model="editedClient.email">
+                </div>
+                <div class="col-12 mt-4 mb-3">
+                  <h4 class="mb-0">Tipo de Cliente</h4>
+                  <hr class="mt-2 mb-3">
+                </div>
+                <div class="col-md-6">
+                  <label for="edit-client-tipo" class="form-label">Tipo de Cliente</label>
+                  <select id="edit-client-tipo" class="form-select" v-model="editedClient.tipoCliente" required>
+                    <option value="" disabled>Seleccione un tipo</option>
+                    <option value="empresa">Empresa</option>
+                    <option value="cooperativa">Cooperativa</option>
+                    <option value="casa">Casa</option>
+                  </select>
+                </div>
+                <div class="col-12 mt-4 mb-3">
+                  <h4 class="mb-0">Tarifas de Limpieza (€)</h4>
+                  <hr class="mt-2 mb-3">
+                </div>
+                <div class="col-md-6">
+                  <label for="edit-client-precio-exterior" class="form-label">Precio por Limpieza Exterior</label>
+                  <input type="number" class="form-control" id="edit-client-precio-exterior"
+                    v-model.number="editedClient.precioExterior" step="0.01" min="0">
+                </div>
+                <div class="col-md-6">
+                  <label for="edit-client-precio-interior" class="form-label">Precio por Limpieza Interior</label>
+                  <input type="number" class="form-control" id="edit-client-precio-interior"
+                    v-model.number="editedClient.precioInterior" step="0.01" min="0">
+                </div>
+              </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" @click="closeEditClientModal">Cancelar</button>
+          <button type="button" class="btn btn-primary" @click="saveEditedClient" :disabled="databaseStore.isUpdatingClient">
+            {{ databaseStore.isUpdatingClient ? 'Guardando...' : 'Guardar Cambios' }}
+          </button>
+        </div>
+      </div>
+    </div>
+    </div>
+  <div v-if="isEditClientModalOpen" class="modal-backdrop fade show"></div>
 </template>
 
 <script setup>
-import { useUserStore } from "../stores/user";
+import { ref, onMounted, computed } from 'vue';
 import { useDatabaseStore } from "../stores/database";
-import { useRouter } from "vue-router";
-import { reactive, ref } from 'vue'
-import {
-  addDoc,
-  arrayUnion,
-  collection,
-  doc,
-  query,
-  where,
-  getDocs,
-  setDoc,
-  updateDoc,
-} from "firebase/firestore/lite";
-import { db } from "../firebaseConfig";
-import emailjs from "@emailjs/browser";
-import {
-  getDownloadURL,
-  uploadString,
-  getStorage,
-  ref as refStorage,
-
-} from "firebase/storage";
-import Mapa from "../components/Mapa.vue";
 import dayjs from "dayjs";
-import { es } from "dayjs/locale/es";
-import localeData from "dayjs/plugin/localeData";
-dayjs.locale("es");
+import 'dayjs/locale/es'; // ¡Importante para que 'fromNow' se muestre en español!
+import 'dayjs/locale/fr';
 
-//userStore tendra toda la info de useUserStore
-const userStore = useUserStore();
+import VueApexCharts from "vue3-apexcharts";
+import Mapa from '../components/Mapa.vue';
+
+// --- ESTADOS LOCALES Y REFERENCES ---
 const databaseStore = useDatabaseStore();
-const descripcion = ref([])
-const cant = ref([])
-const preciou = ref([])
-const importe = ref([])
+const diaActual = ref(dayjs().locale('es').format('DD MMMM YYYY'));
+const clienteSeleccionado = ref(null);
+const historialLimpiezasCliente = ref([]); // Para el historial de limpiezas del cliente seleccionado
 
-databaseStore.getClientes();
-databaseStore.getInfoCliente();
-const clienteSeleccionado = ref();
-const file = ref(null);
-const fecha = ref();
-const fechaDataPicker = ref();
-const mes = ref();
-const mensage = ref("");
-const numFactura = ref("");
-const month = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
-const date = dayjs();
-const firmasSeleccionadas = ref([]);
-const d = new Date();
-const mesActual = month[d.getMonth()];
-const diaActual = date.format('dddd DD MMMM YYYY');
-const anoActual = d.getFullYear();
+// ... (El resto de tus refs como newClient, editedClient, etc.)
+const newClient = ref({
+  nombre: '', apellido: '', direccion: '', ciudad: '', provincia: '', codigoPostal: '',
+  direccionIntervencion: { calle: '', ciudad: '', provincia: '', codigoPostal: '' },
+  telefono: '', email: '', precioExterior: 0.00, precioInterior: 0.00, tipoCliente: ''
+});
+const editedClient = ref({
+  id: null, nombre: '', apellido: '', direccion: '', ciudad: '', provincia: '', codigoPostal: '',
+  direccionIntervencion: { calle: '', ciudad: '', provincia: '', codigoPostal: '' },
+  telefono: '', email: '', precioExterior: 0.00, precioInterior: 0.00, tipoCliente: ''
+});
 
-const signature1 = ref(null)
-const limpiezaExt = () => {
-  databaseStore.exterior = !databaseStore.exterior
-}
-const limpiezaInt = () => {
-  databaseStore.interior = !databaseStore.interior
-}
-const nuevaDescripcion = () => {
-  userStore.contador++
-  userStore.descripciones.push({
-    descripcion: "Descripcion ",
-    cant: "cantidad2",
-    preciou: "",
-    importe: "",
-  })
+const isAddClientModalOpen = ref(false);
+const isEditClientModalOpen = ref(false);
+const isSavingNewClient = ref(false);
+const isSavingEditedClient = ref(false);
 
-}
-// const enviar = async (idCliente, cliente, index, email) => {
-//   const factura = file.value[index].files;
-//   const facturaNombre = factura[0].name;
-//   userStore.enviarFactura(factura, cliente);
+const clientCount = computed(() => databaseStore.clientes.length);
 
-//   const clienteRef = doc(db, "clientes", idCliente);
-//   try {
-//     const facturaRef = `/${cliente}/${facturaNombre}`;
-//     const storage = getStorage();
-//     const referenciaUrl = storageRef(storage, facturaRef);
-//     const urlCliente = await getDownloadURL(referenciaUrl).then((url) => {
-//       return url;
-//     });
-//     await updateDoc(clienteRef, {
-//       factura: arrayUnion({
-//         referencia: urlCliente,
-//         nombre: nombreFactura.value,
-//       }),
-//     });
-//     const contactParams = {
-//       clienteEmail: email,
-//       to_name: cliente,
-//       nombre: nombreFactura.value,
-//       referencia: urlCliente,
-//     };
-
-//     emailjs
-//       .send(
-//         "service_emqkbc7",
-//         "template_e1objeh",
-//         contactParams,
-//         "rFNGy51A07Q9Pt33i"
-//       )
-//       .then(
-//         (result) => {
-//           // console.log("SUCCESS!", result.text);
-//         },
-//         (error) => {
-//           // console.log("FAILED...", error.text);
-//         }
-//       );
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
-const clear = () => {
-  signature1.value.clear()
-}
-const passage = async (cliente, t, index, nombreCliente, numfactura) => {
-
-  signature1.value.addWaterMark({
-    text: `${cliente.nombre} ${fecha.value}`,          // watermark text, > default ''
-    font: "15px Arial",         // mark font, > default '20px sans-serif'
-    style: 'all',               // fillText and strokeText,  'all'/'stroke'/'fill', > default 'fill
-    fillStyle: "black",           // fillcolor, > default '#333'
-    strokeStyle: "black",	       // strokecolor, > default '#333'
-    x: 20,                     // fill positionX, > default 20
-    y: 20,                     // fill positionY, > default 20
-    sx: 20,                    // stroke positionX, > default 40
-    sy: 20                     // stroke positionY, > default 40
+// --- Funciones para manejar los modales de cliente ---
+const openAddClientModal = () => {
+  isAddClientModalOpen.value = true;
+  Object.assign(newClient.value, {
+    nombre: '', apellido: '', direccion: '', ciudad: '', provincia: '', codigoPostal: '',
+    direccionIntervencion: { calle: '', ciudad: '', provincia: '', codigoPostal: '' },
+    telefono: '', email: '', precioExterior: 0.00, precioInterior: 0.00, tipoCliente: ''
   });
-  const imagenDatos = signature1.value.save(t)
-  const mes = new Date(fecha.value)
-  const mesCalendario = month[mes.getMonth()];
+};
 
-  try {
-    const clienteRef = collection(db, "clientes");
-    const q = query(clienteRef, where("registro", "array-contains", "nombreMes"));
-    const querySnapshot = await getDocs(q);
-    querySnapshot.forEach((doc) => {
-      // doc.data() is never undefined for query doc snapshots
-    })
-    const storage = getStorage();
-    const imageRef = refStorage(storage, `${cliente.nombre}-${fecha.value}`);
-    uploadString(imageRef, imagenDatos, 'data_url').then((snapshot) => {
-      console.log('Uploaded a data_url string!');
+const closeAddClientModal = () => {
+  isAddClientModalOpen.value = false;
+};
 
-    });
-
-    const date = dayjs(fecha.value);
-    const fechaEs = date.format('dddd DD-MM-YYYY');
-    const urlImagen = await getDownloadURL(imageRef).then((url) => {
-      return url;
-    });
-    await updateDoc(doc(clienteRef, cliente.id,), {
-
-      registro: arrayUnion({
-        year: anoActual,
-        nombreMes: mesCalendario,
-        fechaLimp: fechaEs,
-        interior: databaseStore.interior,
-        exterior: databaseStore.exterior,
-        comentarios: mensage.value,
-        imagen: urlImagen
-      })
-    }, { merge: true })
-    userStore.mensajeAlerta("Tu fecha se envio correctamente")
-  } catch (error) {
-    console.log(error);
-    userStore.mensajeAlerta("UPS! Algo no funciono")
-  } finally {
-    databaseStore.interior = false;
-    databaseStore.exterior = false;
-    mensage.value = "";
-    fecha.value = "";
-    signature1.value.clear()
-
+const saveNewClient = async () => {
+  if (!newClient.value.nombre || !newClient.value.apellido) {
+    alert('Por favor, ingresa el Nombre y Apellido del cliente.');
+    return;
   }
-}
+  isSavingNewClient.value = true;
+  try {
+    await databaseStore.addClient(newClient.value);
+    alert('Cliente añadido con éxito!');
+    closeAddClientModal();
+  } catch (error) {
+    alert('Error al añadir el cliente: ' + (databaseStore.addClientError?.message || 'Desconocido'));
+    console.error("Error al guardar el nuevo cliente:", error);
+  } finally {
+    isSavingNewClient.value = false;
+  }
+};
+
+const openEditClientModal = (client) => {
+  isEditClientModalOpen.value = true;
+  // Copia profunda para no modificar el original directamente
+  editedClient.value = JSON.parse(JSON.stringify(client));
+  // Asegurarse de que direccionIntervencion exista para evitar errores
+  if (!editedClient.value.direccionIntervencion) {
+    editedClient.value.direccionIntervencion = { calle: '', ciudad: '', provincia: '', codigoPostal: '' };
+  }
+};
+
+const closeEditClientModal = () => {
+  isEditClientModalOpen.value = false;
+  editedClient.value = {
+    id: null, nombre: '', apellido: '', direccion: '', ciudad: '', provincia: '', codigoPostal: '',
+    direccionIntervencion: { calle: '', ciudad: '', provincia: '', codigoPostal: '' },
+    telefono: '', email: '', precioExterior: 0.00, precioInterior: 0.00, tipoCliente: ''
+  };
+};
+
+const saveEditedClient = async () => {
+  if (!editedClient.value.nombre || !editedClient.value.apellido) {
+    alert('Por favor, ingresa el Nombre y Apellido del cliente.');
+    return;
+  }
+  isSavingEditedClient.value = true;
+  try {
+    await databaseStore.updateClient(editedClient.value.id, editedClient.value);
+    alert('Cliente actualizado con éxito!');
+    closeEditClientModal();
+    // Si el cliente editado es el mismo que el seleccionado para detalles, actualiza los detalles también
+    if (clienteSeleccionado.value && clienteSeleccionado.value.id === editedClient.value.id) {
+        clienteSeleccionado.value = editedClient.value;
+        // Si se actualizó el cliente seleccionado, también refrescar el historial
+        selectClientForDetails(editedClient.value);
+    }
+  } catch (error) {
+    alert('Error al actualizar el cliente: ' + (databaseStore.updateClientError?.message || 'Desconocido'));
+    console.error("Error al actualizar el cliente:", error);
+  } finally {
+    isSavingEditedClient.value = false;
+  }
+};
+
+const confirmDeleteClient = async (client) => {
+  const isConfirmed = window.confirm(`¿Estás seguro de que quieres eliminar al cliente ${client.nombre} ${client.apellido}?`);
+  if (isConfirmed) {
+    try {
+      await databaseStore.deleteClient(client.id);
+      alert('Cliente eliminado con éxito!');
+      if (clienteSeleccionado.value && clienteSeleccionado.value.id === client.id) {
+        clienteSeleccionado.value = null; // Limpiar detalles si el cliente eliminado era el seleccionado
+        historialLimpiezasCliente.value = []; // Limpiar historial también
+      }
+    } catch (error) {
+      alert('Error al eliminar el cliente: ' + (databaseStore.deleteClientError?.message || 'Desconocido'));
+      console.error("Error al eliminar el cliente:", error);
+    }
+  }
+};
+
+// --- Funciones de Formato ---
+const formatCurrency = (value) => {
+  const numberValue = Number(value);
+  if (isNaN(numberValue)) return '';
+  return new Intl.NumberFormat('es-ES', {
+    style: 'currency',
+    currency: 'EUR',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(numberValue);
+};
+
+const formatEuropeanDate = (dateValue) => {
+  if (!dateValue) return '';
+  let date;
+  if (typeof dateValue.toDate === 'function') {
+    date = dayjs(dateValue.toDate());
+  } else if (dateValue instanceof Date) {
+    date = dayjs(dateValue);
+  } else if (typeof dateValue === 'string' || typeof dateValue === 'number') {
+    date = dayjs(dateValue);
+    if (!date.isValid()) { /* console.warn('Fecha inválida detectada:', dateValue); */ return ''; }
+  } else {
+    /* console.warn('Formato de fecha desconocido:', dateValue); */ return '';
+  }
+  return date.format('DD/MM/YYYY');
+};
+
+const calculateCotizacion = (precioBruto) => {
+  const brute = Number(precioBruto);
+  if (isNaN(brute) || brute <= 0) return 0;
+  return parseFloat((brute * 0.232).toFixed(2));
+};
+
+const calculatePrecioNeto = (precioBruto) => {
+  const brute = Number(precioBruto);
+  if (isNaN(brute) || brute <= 0) return 0;
+  const cotizacion = calculateCotizacion(brute);
+  return parseFloat((brute - cotizacion).toFixed(2));
+};
+
+// --- Modificación de selectClientForDetails ---
+const selectClientForDetails = (client) => {
+  clienteSeleccionado.value = client;
+  // Filtramos todas las limpiezas de la tienda que pertenecen a este cliente.
+  historialLimpiezasCliente.value = databaseStore.limpiezas
+    .filter((limpieza) => limpieza.clienteId === client.id)
+    .sort((a, b) => {
+      // Ordenar por fecha principal de limpieza (la más reciente primero)
+      const dateA = getRelevantCleaningDate(a) ? dayjs(getRelevantCleaningDate(a)) : dayjs('1900-01-01');
+      const dateB = getRelevantCleaningDate(b) ? dayjs(getRelevantCleaningDate(b)) : dayjs('1900-01-01');
+      return dateB.diff(dateA); // Orden descendente (más reciente primero)
+    });
+};
+
+// Función para obtener la fecha más relevante de una limpieza (la más temprana de todas las fechas asociadas)
+const getRelevantCleaningDate = (limpiezaData) => {
+  let relevantDate = null;
+
+  // Priorizar fechaPrincipalLimpieza si existe y es válida
+  if (limpiezaData.fechaPrincipalLimpieza) {
+    const principalDate = dayjs(limpiezaData.fechaPrincipalLimpieza);
+    if (principalDate.isValid()) {
+      relevantDate = principalDate;
+    }
+  }
+
+  // Si no hay fechaPrincipalLimpieza válida, buscar la fecha más temprana entre semanas
+  // Solo busca en semanas si no encontró una fecha principal que ya sea la más temprana.
+  for (let i = 1; i <= 5; i++) {
+    const dateString = limpiezaData[`semana${i}`];
+    if (dateString) {
+      const currentDate = dayjs(dateString);
+      if (currentDate.isValid()) {
+        if (!relevantDate || currentDate.isBefore(relevantDate)) {
+          relevantDate = currentDate;
+        }
+      }
+    }
+  }
+
+  // Luego, buscar en las limpiezas extra y actualizar si alguna es más temprana
+  if (limpiezaData.extraCleanings && limpiezaData.extraCleanings.length > 0) {
+    for (const extra of limpiezaData.extraCleanings) {
+      if (extra.date) {
+        const extraDate = dayjs(extra.date);
+        if (extraDate.isValid()) {
+          if (!relevantDate || extraDate.isBefore(relevantDate)) {
+            relevantDate = extraDate;
+          }
+        }
+      }
+    }
+  }
+  return relevantDate ? relevantDate.format('YYYY-MM-DD') : null;
+};
+
+
+// --- MODIFICACIÓN: timeSinceLastCleaning para devolver también el statusClass ---
+const timeSinceLastCleaning = computed(() => {
+  if (!historialLimpiezasCliente.value || historialLimpiezasCliente.value.length === 0) {
+    return { text: 'Sin limpiezas previas', statusClass: '' }; // Sin clase si no hay limpiezas
+  }
+
+  const lastCleaning = historialLimpiezasCliente.value[0];
+  const lastCleaningDateStr = getRelevantCleaningDate(lastCleaning);
+
+  if (!lastCleaningDateStr) {
+    return { text: 'Fecha de última limpieza no disponible', statusClass: '' };
+  }
+
+  const date = dayjs(lastCleaningDateStr);
+  if (!date.isValid()) {
+    return { text: 'Fecha inválida', statusClass: '' };
+  }
+
+  dayjs.locale('es'); // Asegurarse de que dayjs use el locale español para 'fromNow'
+
+  const now = dayjs();
+  const daysDifference = now.diff(date, 'days'); // Diferencia en días
+
+  let statusClass = '';
+  let formattedText;
+
+  if (daysDifference >= 30) { // Más de un mes (30 días o más)
+    statusClass = 'text-danger';
+    formattedText = `${formatEuropeanDate(date)} (${now.from(date)})`; // Fecha exacta (hace X tiempo)
+  } else if (daysDifference >= 20 && daysDifference <= 29) { // Entre 20 y 29 días
+    statusClass = 'text-warning';
+    formattedText = now.from(date); // Solo hace X tiempo
+  } else { // Menos de 20 días
+    statusClass = 'text-success';
+    formattedText = now.from(date); // Solo hace X tiempo
+  }
+
+  return { text: formattedText, statusClass: statusClass };
+});
+
+
+// --- Gráficos - MODIFICADO PARA USAR PRECIO NETO ---
+const monthlyIncomeChartOptions = computed(() => ({
+  chart: {
+    id: 'monthly-income-chart',
+    toolbar: { show: false },
+  },
+  xaxis: {
+    categories: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+    title: { text: 'Mes' }
+  },
+  yaxis: {
+    title: { text: 'Ingresos Netos (€)' }, // Título actualizado
+  },
+  dataLabels: {
+    enabled: true,
+    formatter: function (val) { return formatCurrency(val); }
+  },
+  tooltip: {
+    y: {
+      formatter: function (val) { return formatCurrency(val); }
+    }
+  }
+}));
+
+const monthlyIncomeSeries = computed(() => {
+  const data = Array(12).fill(0); // Inicializar 12 meses con 0
+  databaseStore.limpiezas.forEach(limpieza => {
+    if (limpieza.fechaPago && limpieza.precioBruto) {
+      const month = dayjs(limpieza.fechaPago).month(); // 0-11
+      // *** CAMBIO AQUÍ: Usar calculatePrecioNeto ***
+      data[month] += calculatePrecioNeto(limpieza.precioBruto);
+    }
+  });
+  return [{ name: 'Ingresos Netos', data: data.map(val => parseFloat(val.toFixed(2))) }]; // Nombre actualizado
+});
+
+const yearlyIncomeDataAndCategories = computed(() => {
+    const incomeByYear = {};
+    let minYear = new Date().getFullYear();
+    let maxYear = new Date().getFullYear();
+
+    databaseStore.limpiezas.forEach(limpieza => {
+        if (limpieza.fechaPago && limpieza.precioBruto) {
+            const year = dayjs(limpieza.fechaPago).year();
+            minYear = Math.min(minYear, year);
+            maxYear = Math.max(maxYear, year);
+
+            if (!incomeByYear[year]) {
+                incomeByYear[year] = 0;
+            }
+            // *** CAMBIO AQUÍ: Usar calculatePrecioNeto ***
+            incomeByYear[year] += calculatePrecioNeto(limpieza.precioBruto);
+        }
+    });
+
+    if (Object.keys(incomeByYear).length === 0 && databaseStore.limpiezas.length === 0) {
+        incomeByYear[new Date().getFullYear()] = 0;
+        minYear = new Date().getFullYear();
+        maxYear = new Date().getFullYear();
+    }
+    if (!incomeByYear[new Date().getFullYear()]) {
+      incomeByYear[new Date().getFullYear()] = 0;
+      minYear = Math.min(minYear, new Date().getFullYear());
+      maxYear = Math.max(maxYear, new Date().getFullYear());
+    }
+
+    const categories = [];
+    const data = [];
+    for (let year = minYear; year <= maxYear; year++) {
+        categories.push(year.toString());
+        data.push(parseFloat((incomeByYear[year] || 0).toFixed(2)));
+    }
+
+    return { categories, data };
+});
+
+const yearlyIncomeSeries = computed(() => {
+    return [{ name: 'Ingresos Netos', data: yearlyIncomeDataAndCategories.value.data }]; // Nombre actualizado
+});
+
+const yearlyIncomeChartOptions = computed(() => ({
+  chart: {
+    id: 'yearly-income-chart',
+    toolbar: { show: false },
+  },
+  plotOptions: {
+    bar: {
+      horizontal: false,
+      columnWidth: '55%',
+      endingShape: 'rounded'
+    },
+  },
+  xaxis: {
+    categories: yearlyIncomeDataAndCategories.value.categories,
+    title: { text: 'Año' }
+  },
+  yaxis: {
+    title: { text: 'Ingresos Netos (€)' }, // Título actualizado
+  },
+  dataLabels: {
+    enabled: true,
+    formatter: function (val) { return formatCurrency(val); }
+  },
+  tooltip: {
+    y: {
+      formatter: function (val) { return formatCurrency(val); }
+    }
+  }
+}));
+
+
+// --- LIFECYCLE HOOKS ---
+onMounted(async () => {
+  // Carga todas las limpiezas para asegurar un historial completo.
+  await databaseStore.fetchLimpiezas();
+  await databaseStore.fetchClientes();
+});
 </script>
 
-<style>
-.tarjeta {
-  border-radius: 20px;
-  background: rgb(0, 0, 0);
-  background: linear-gradient(90deg, rgba(0, 0, 0, 1) 80%, rgb(2, 28, 31) 185%);
-}
-
-.limpiezas {
-  background-color: #f8f5f5;
-  border-radius: 19px;
-  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
-}
-.bg-image {
-  background-color: #ffffff;
-  border-radius: 15px ;
-}
-
-#dia {
-  padding: 2.75rem 2.75rem;
-}
-
-.mapa {
-  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
-
-}
-
-li {
-  list-style: none;
-}
-
-label {
-  color: black;
-  font-weight: bold;
-}
-
-.nuevaLimpieza {
-  background-color: rgba(192, 189, 189, 0.527);
-}
-</style>

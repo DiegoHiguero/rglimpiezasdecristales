@@ -1,8 +1,6 @@
 <template>
   <div class="padre" >
     <!-- Contenido principal -->
-
-
     <div
       class="row d-flex justify-content-center ms-3 mx-3  bg-image principal mt-3  bg-body-tertiary rounded-4 align-items-md-stretch " >
       <div class="row col-md-6 m-2 p-2">
@@ -14,70 +12,97 @@
       </div>
       <div class="row col-md-6 pt-2 pb-4 d-flex justify-content-center mt-4" style=" z-index: 2;">
         <div class="col-lg-8 mt-4 p-4 pt-1 p-lg-8 formulario" style="border-radius: 0.75rem;">
-          <form @submit.prevent="handleSubmit" class="mt-4 row g-3">
-
+          <form @submit.prevent="enviarMensaje" class="mt-4 row g-3">
             <div class="row mt-3 d-lg-flex col-12 justify-content-around">
               <h2 class="text-center text-white">
-               Pida presupuesto gratuito!
+                Pida presupuesto gratuito!
               </h2>
-           
             </div>
-            <div class="col-md-6">
-              <label
-                for="exampleFormControlInput1"
-                class="col-sm-2 col-form-label text-white"
-                required
-                >Email</label
-              >
-              <input
-                type="email"
-                class="form-control border-0"
-                id="exampleFormControlInput1"
-                placeholder="name@example.com"
-                v-model.trim="email"
+            <div class="">
+              <label for="prenomInput" class="col-sm-2 col-form-label text-white">Nombre</label>
+              <input 
+                type="text" 
+                class="form-control" 
+                :class="{ 'is-invalid': prenomError, 'is-valid': prenom.length > 0 && !prenomError }"
+                id="prenomInput"
+                 placeholder="Su nombre"  
+                v-model="prenom" 
+                @blur="validatePrenom" 
+                @input="validatePrenom"
               />
+              <div v-if="prenomError" class="invalid-feedback">
+                {{ prenomError }}
+              </div>
+              <div v-else-if="prenom.length > 0 && !prenomError" class="valid-feedback">
+                ¡Perfecto!
+              </div>
             </div>
-            <div class=""><label for="exampleFormControlInput2" class="col-sm-2 col-form-label text-white"
-                required>Teléfono</label>
-              <input type="phone" class="form-control border-0" id="exampleFormControlInput2" placeholder="teléfono">
+            <div class="">
+              <label for="emailInput" class="col-sm-2 col-form-label text-white">Email</label>
+              <input 
+                type="email" 
+                class="form-control border-0" 
+                :class="{ 'is-invalid': emailError, 'is-valid': email.length > 0 && !emailError }"
+                id="emailInput"
+                placeholder="nombre@ejemplo.com" 
+                v-model.trim="email" 
+                @blur="validateEmail" 
+                @input="validateEmail"
+              />
+              <div v-if="emailError" class="invalid-feedback">
+                {{ emailError }}
+              </div>
+              <div v-else-if="email.length > 0 && !emailError" class="valid-feedback">
+                ¡Perfecto!
+              </div>
+            </div>
+            <div class="">
+              <label for="phoneInput" class="col-sm-2 col-form-label text-white">Teléfono</label>
+              <input 
+                type="tel" 
+                class="form-control border-0" 
+                :class="{ 'is-invalid': phoneError, 'is-valid': phone.length > 0 && !phoneError }"
+                id="phoneInput" 
+                placeholder="Su numero"
+                v-model.trim="phone" 
+                @blur="validatePhone" 
+                @input="validatePhone"
+              />
+              <div v-if="phoneError" class="invalid-feedback">
+                {{ phoneError }}
+              </div>
+              <div v-else-if="phone.length > 0 && !phoneError" class="valid-feedback">
+                ¡Perfecto!
+              </div>
             </div>
             <div class="mb-3 mb-4">
-              <label
-                for="inputPassword"
-                class="col-sm-2 col-form-label text-white"
-                required
-                >Asunto</label
-              >
-              <input
-                class="form-control border-0"
-                id="inputPassubjetsword"
-                placeholder="Subjet"
-                v-model="subjet"
-                required
-              />
-            </div>
-            <div class="mb-3 mb-4">
-              <label
-                for="inputPassword"
-                class="col-sm-2 col-form-label text-white"
-                required
-                >Mensaje</label
-              >
-              <textarea
-                class="form-control border-0"
-                id="inputPassubjetsword"
-                placeholder="Message"
-                v-model="message"
-                required
+              <label for="messageInput" class="col-sm-2 col-form-label text-white">Mensaje</label>
+              <textarea 
+                class="form-control border-0" 
+                :class="{ 'is-invalid': messageError, 'is-valid': message.length > 0 && !messageError }"
+                id="messageInput" 
+                placeholder="Mensaje" 
+                v-model="message" 
+                @blur="validateMessage" 
+                @input="validateMessage"
               ></textarea>
+              <div v-if="messageError" class="invalid-feedback">
+                {{ messageError }}
+              </div>
+              <div v-else-if="message.length > 0 && !messageError" class="valid-feedback">
+               ¡Perfecto!
+              </div>
             </div>
-            <div class="text-center p-2 mt-2 alert alert-success " v-if="userStore.timeOut !== false" >
-               {{ userStore.mensaje }}
-               <!-- <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button> -->
-         </div>
+            <div class="text-center p-2 mt-2 alert alert-success" v-if="userStore.timeOut !== false">
+              {{ userStore.mensaje }}
+            </div>
             <div class="d-grid">
-              <button class="btn" style="background-color: #4970B6;color: white;font-weight: bold;" @click="enviarMensaje()">
-                Confirmar
+             <button :disabled="isSubmitting || !isFormValid" class="btn" style="
+                  background-color: #3230af;
+                  color: white;
+                  font-weight: bold;
+                ">
+                {{ isSubmitting ? 'Envio en curso...' : 'Enviar' }}
               </button>
             </div>
           </form>
@@ -411,163 +436,307 @@ Todas nuestras tarifas incluyen los productos de limpieza y corresponden a un ú
     <!--Final de contenedor-->
   </div>
 </template>
+<script setup lang="ts">
+import { useUserStore } from "../stores/user";
+import { onMounted, ref, computed } from "vue";
+import emailjs from "@emailjs/browser";
+import { getAnalytics, logEvent } from "firebase/analytics";
+import logoCoop from '../assets/img/logoCoop.png';
+import creditWebp from '../assets/img/credit.webp';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore'; 
+import { db, auth } from '../firebaseConfig'; 
 
+const showCreditBanner = ref(true);
+const fadeOutBanner = ref(false); 
+// Preloader state
+const showPreloader = ref(true);
+const fadingOut = ref(false); // To keep preloader mounted during fade-out transition
 
+// Existing form refs
+const prenom = ref("");
+const email = ref("");
+const message = ref("");
+const phone = ref("");
 
+// Existing validation errors
+const prenomError = ref("");
+const emailError = ref("");
+const phoneError = ref("");
+const messageError = ref("");
 
+const userStore = useUserStore();
+const analytics = getAnalytics();
+const isSubmitting = ref(false);
 
+// --- Preloader Logic ---
+onMounted(() => {
+  setTimeout(() => {
+    fadeOutBanner.value = true; // Inicia la animación de desvanecimiento
+    setTimeout(() => {
+      showCreditBanner.value = false; // Elimina completamente el banner del DOM después del fade-out
+    }, 1000); // Coincide con la duración de la transición CSS
+  }, 7000); 
+    // Lógica para animar los iconos de ventajas al hacer scroll
+  const advantageCards = document.querySelectorAll('.advantage-card');
 
-<script setup>
-window.addEventListener("load",()=>{setTimeout(()=>{document.getElementById("intro").style.opacity="0";
-document.getElementById("intro").style.visibility="hidden";
-document.getElementById("content").classList.add("show")},4000)});
-  //setup expone los los datos
-
-  import {
-    useUserStore
-  } from "../stores/user";
-  import {
-    onMounted
-  } from "vue";
-  import {
-    ref
-  } from "vue";
-  import emailjs from "@emailjs/browser";
-
-  const prenom = ref("");
-  const email = ref("");
-  const message = ref("");
-  const phone = ref("");
-
-  const userStore = useUserStore();
-
-  const enviarMensaje = async () => {
-    if ((!prenom.value, !email.value, !message.value, !phone.value)) {
-      userStore.mensajeAlerta("Debe rellenar todos los campos"); // Translated from "Il faut remplir toutes les champs"
-    } else {
-      try {
-        const contactParams = {
-          prenom: prenom.value,
-          email: email.value,
-          message: message.value,
-          phone: phone.value,
-        };
-
-        await emailjs
-           .send(
-        "service_iytm8yl",
-        "template_7yngfsa",
-        contactParams,
-        "IF1Sn503DHVPja4II"
-          )
-          .then(
-            (result) => {
-              (prenom.value = ""),
-              (email.value = ""),
-              (message.value = ""),
-              (phone.value = ""),
-              userStore.mensajeAlerta(
-                "¡Bien hecho! El mensaje ha sido enviado correctamente" // Translated from "Bien joué! Le message a été bien envoyé"
-              );
-            },
-            (error) => {
-              userStore.mensajeAlerta("¡Uy! Hubo un problema"); // Translated from "Ups! Il y a eu un probleme"
-            }
-          );
-      } catch (error) {
-        console.log(error);
-      }
-    }
+  const observerOptions = {
+    root: null, // Observa el viewport
+    rootMargin: '0px',
+    threshold: 0.5 // Dispara cuando el 50% del elemento es visible
   };
 
+  const observer = new IntersectionObserver((entries, observer) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        // Si el elemento entra en la vista
+        entry.target.classList.add('is-visible'); // Añade la clase para animar
+        observer.unobserve(entry.target); // Deja de observar el elemento una vez que se ha animado
+      }
+    });
+  }, observerOptions);
 
+  // Observa cada tarjeta de ventaja
+  advantageCards.forEach(card => {
+    observer.observe(card);
+  });
+  // Hide preloader after a delay (e.g., 3 seconds)
+  // In a real app, you might wait for actual data/image loading
+  setTimeout(() => {
+    fadingOut.value = true; // Start fade-out animation
+    document.body.style.overflow = ''; // Re-enable scrolling
 
-  function closeBanner() {
-    userStore.isActive = true;
-  }
+    // After the fade-out animation completes (e.g., 1s for transition)
+    setTimeout(() => {
+      showPreloader.value = false; // Completely remove preloader from DOM
+      fadingOut.value = false; // Reset fade-out state
+    }, 1000); // Should match CSS transition duration for .preloader-overlay.fade-out
+  }, 3000); // Preloader visible for 3 seconds
 
-  function checkCookie() {
-    var check = getCookie("cookieConsent-ANALYTICS");
-    if (check !== "") {
-      return (userStore.cookie = true);
-    }
-    if (check === false) {
-      document.cookie =
-        "cookieConsent-ANALYTICS" +
-        "=; Path=/; Domain=localhost; Expires=Thu, 01 Jan 1970 00:00:01 GMT;";
-    } else {
-      return (userStore.cookie = false); //setCookie("acookie", "accepted", 365);
-    }
-  }
+  // Prevent scrolling while preloader is active
+  document.body.style.overflow = 'hidden';
+
+  // Your existing checkCookie logic
   checkCookie();
+});
 
-  function setCookie(cname, cvalue, exdays) {
-    var d = new Date();
-    d.setTime(d.getTime() + exdays * 24 * 60 * 60 * 1000);
-    var expires = "expires=" + d.toGMTString();
-    document.cookie = cname + "=" + cvalue + "; " + expires;
-    userStore.isActive = true;
-    gtag("consent", "update", {
+const scrollToCreditImpot = () => {
+  const targetElement = document.getElementById('sectionCreditImpot');
+  if (targetElement) {
+    targetElement.scrollIntoView({ behavior: 'smooth' });
+    // Registramos un evento en Firebase Analytics cuando el banner es clicado
+    logEvent(analytics, 'credit_banner_clicked', { action: 'scroll_to_section' });
+  }
+  // Opcional: Hacer que el banner desaparezca inmediatamente después de hacer clic
+  fadeOutBanner.value = true;
+  setTimeout(() => {
+    showCreditBanner.value = false;
+  }, 1000); // Coincide con la duración de la transición CSS
+};
+// --- Validation Functions ---
+const validatePrenom = () => {
+  prenomError.value = ""; // Clear previous error
+  if (!prenom.value.trim()) {
+    prenomError.value = "El nombre es obligatorio.";
+    return false;
+  }
+  return true;
+};
+
+const validateEmail = () => {
+  emailError.value = ""; // Clear previous error
+  if (!email.value.trim()) {
+    emailError.value = "Se requiere dirección de correo electrónico.";
+    return false;
+  }
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email.value)) {
+    emailError.value = "Por favor, introduce una dirección de correo electrónico válida.";
+    return false;
+  }
+  return true;
+};
+
+const validatePhone = () => {
+  phoneError.value = ""; // Clear previous error
+  if (!phone.value.trim()) {
+    phoneError.value = "Se requiere el número de teléfono.";
+    return false;
+  }
+  // This regex allows digits, spaces, hyphens, and parentheses
+  const phoneRegex = /^[\d\s\-\(\)]+$/;
+  if (!phoneRegex.test(phone.value)) {
+    phoneError.value = "Ingrese un número de teléfono válido.";
+    return false;
+  }
+  // Optional: Check minimum length after stripping non-digits
+  if (phone.value.trim().replace(/[\s\-\(\)]/g, '').length < 9) {
+    phoneError.value = "El número de teléfono debe contener al menos 9 dígitos.";
+    return false;
+  }
+  return true;
+};
+
+const validateMessage = () => {
+  messageError.value = ""; // Clear previous error
+  if (!message.value.trim()) {
+    messageError.value = "El mensaje es obligatorio.";
+    return false;
+  }
+  if (message.value.trim().length < 10) {
+    messageError.value = "El mensaje debe contener al menos 10 caracteres.";
+    return false;
+  }
+  return true;
+};
+
+// --- Overall Form Validation (used before submission) ---
+const validateForm = () => {
+  userStore.mensaje = ''; // Clear general message before re-validating
+  userStore.timeOut = false; // Reset timeout for general messages
+
+  const isPrenomValid = validatePrenom();
+  const isEmailValid = validateEmail();
+  const isPhoneValid = validatePhone();
+  const isMessageValid = validateMessage();
+
+  return isPrenomValid && isEmailValid && isPhoneValid && isMessageValid;
+};
+
+// Computed property to determine if the form is generally valid for button enabling
+const isFormValid = computed(() => {
+  // Check if all fields have content AND no specific field errors
+  return prenom.value.trim() !== '' && !prenomError.value &&
+         email.value.trim() !== '' && !emailError.value &&
+         phone.value.trim() !== '' && !phoneError.value &&
+         message.value.trim() !== '' && !messageError.value;
+});
+
+// --- Send Message Function (modified to integrate validation) ---
+const enviarMensaje = async () => {
+  if (isSubmitting.value) return;
+
+  const formIsValid = validateForm();
+  if (!formIsValid) {
+    userStore.mensajeAlerta("Corrija cualquier error en el formulario antes de enviarlo.");
+    // ... logEvent existente ...
+    return;
+  }
+
+  isSubmitting.value = true;
+
+  try {
+    const contactParams = {
+      prenom: prenom.value,
+      email: email.value,
+      message: message.value,
+      phone: phone.value,
+    };
+
+    // 1. Envía el email (tu lógica existente)
+    await emailjs.send(
+      "service_emqkbc7",
+      "template_lu5kxwz",
+      contactParams,
+      "rFNGy51A07Q9Pt33i"
+    );
+
+    // 2. Guarda el mensaje en Firestore
+    await addDoc(collection(db, "mensajes"), {
+      prenom: prenom.value,
+      email: email.value,
+      message: message.value,
+      phone: phone.value,
+      timestamp: serverTimestamp(), // Guarda la fecha y hora del servidor
+      read: false // Por defecto, el mensaje está "no leído"
+    });
+
+    // Éxito: Limpiar campos y mostrar mensaje
+    prenom.value = "";
+    email.value = "";
+    message.value = "";
+    phone.value = "";
+    prenomError.value = "";
+    emailError.value = "";
+    phoneError.value = "";
+    messageError.value = "";
+
+    userStore.mensajeAlerta("¡Bien hecho! El mensaje se envió correctamente.");
+    // ... logEvent existente ...
+
+  } catch (error: any) {
+    console.error("Error al enviar mensaje o guardar en Firestore:", error);
+    userStore.mensajeAlerta("¡Ups! Hubo un problema al enviar el mensaje.");
+    // ... logEvent existente ...
+  } finally {
+    isSubmitting.value = false;
+  }
+};
+
+function closeBanner() {
+  userStore.isActive = true;
+  logEvent(analytics, 'cookie_banner_closed', { action: 'dismiss' });
+}
+
+function checkCookie() {
+  var check = getCookie("cookieConsent-ANALYTICS");
+  if (check !== "") {
+    userStore.cookie = true;
+  }
+  // Corrected condition: getCookie returns a string, 'false' is a string
+  else if (check === "false") {
+    document.cookie = "cookieConsent-ANALYTICS" + "=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;";
+  } else {
+    userStore.cookie = false;
+  }
+}
+
+function setCookie(cname: string, cvalue: boolean, exdays: number) {
+  var d = new Date();
+  d.setTime(d.getTime() + exdays * 24 * 60 * 60 * 1000);
+  var expires = "expires=" + d.toUTCString();
+  document.cookie = cname + "=" + cvalue + "; " + expires + "; Path=/; Secure; SameSite=Lax";
+  userStore.isActive = true;
+  if (typeof (window as any).gtag === 'function') {
+    (window as any).gtag("consent", "update", {
       ad_storage: "granted",
       analytics_storage: "granted",
     });
   }
+  logEvent(analytics, 'cookie_banner_accepted', {
+    consent_type: cname,
+    value: cvalue
+  });
+}
 
-  function refuseCookie(cname, cvalue, exdays) {
-    var d = new Date();
-    d.setTime(d.getTime() + exdays * 24 * 60 * 60 * 1000);
-    var expires = "expires=" + d.toGMTString();
-    document.cookie = cname + "=" + cvalue + "; " + expires;
-    userStore.isActive = true;
-    gtag("consent", "update", {
+function refuseCookie(cname: string, cvalue: boolean, exdays: number) {
+  var d = new Date();
+  d.setTime(d.getTime() + exdays * 24 * 60 * 60 * 1000);
+  var expires = "expires=" + d.toUTCString();
+  document.cookie = cname + "=" + cvalue + "; " + expires + "; Path=/; Secure; SameSite=Lax";
+  userStore.isActive = true;
+  if (typeof (window as any).gtag === 'function') {
+    (window as any).gtag("consent", "update", {
       ad_storage: "denied",
       analytics_storage: "denied",
     });
   }
+  logEvent(analytics, 'cookie_banner_refused', {
+    consent_type: cname,
+    value: cvalue
+  });
+}
 
-  function getCookie(cname) {
-    var name = cname + "=";
-    var ca = document.cookie.split(";");
-    for (var i = 0; i < ca.length; i++) {
-      var c = ca[i].trim();
-      if (c.indexOf(name) === 0) return c.substring(name.length, c.length);
-    }
-    return "";
+function getCookie(cname: string): string {
+  var name = cname + "=";
+  var ca = document.cookie.split(";");
+  for (var i = 0; i < ca.length; i++) {
+    var c = ca[i].trim();
+    if (c.indexOf(name) === 0) return c.substring(name.length, c.length);
   }
-  getCookie("toucanet");
-  const logoSpan = document.querySelector('.logo-parts')
-
-  function animacion() {
-    setTimeout(() => {
-      logoSpan.forEach((span, index) => {
-        setTimeout(() => {
-          span.classList.add('active')
-        }, (index + 1) * 100)
-      })
-    }, 2300)
-  }
-
-  // animacion(){
-  //   setTimeout(()=>{
-  //     logoSpan.forEach((span,index)=>{
-  //       setTimeout(()=>{
-  //         span.classList.add('active');
-  //       },(index + 1) * 100);
-  //     });
-  //     setTimeout(()=>{
-  //       logoSpan.forEach((span,index)=>{
-  //         setTimeout(()=>{
-  //           span.classList.remove('active');
-  //           span.classList.add('fade');
-  //         },(span + 1) * 50)
-  //       });
-  //     },2000);
-  //     setTimeout(()=>{
-  //       intro.style.top = '100vh';
-  //     },2300)
-  //   })
-  // };
+  return "";
+}
 </script>
+
 <style scoped>
 .intro{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;background:#fff;transition:opacity 1s ease-out,visibility 1s ease-out;z-index:1000;position:fixed;top:0;left:0;right:0;bottom:0}
 .intro img{width:220px;animation:fadeIn 2s ease-in-out;z-index:2;position:relative}

@@ -3,104 +3,43 @@ import {
     onAuthStateChanged,
     signInWithEmailAndPassword,
     signOut,
-    GoogleAuthProvider, // Importamos el proveedor de Google
-    signInWithPopup     // Importamos el método para el pop-up de inicio de sesión
+    GoogleAuthProvider,
+    signInWithPopup
 } from "firebase/auth";
-import { ref, uploadBytes, getDownloadURL, getStorage } from "firebase/storage";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { defineStore } from "pinia";
-import { auth, db, storage,functions } from "../firebaseConfig";
-import dayjs from "dayjs";
-import router from "../router"; // El router ya está importado, ¡excelente!
-import { useDatabaseStore } from "./database";
-import { computed } from "@vue/reactivity"
-import jsPDF from 'jspdf';
-import { getFunctions, httpsCallable } from 'firebase/functions';
+// Importaciones de Firestore para el contador de mensajes
+import { collection, query, where, onSnapshot } from 'firebase/firestore'; 
 
+import { auth, db, storage } from "../firebaseConfig"; // Asegúrate de que 'db' se exporte desde firebaseConfig
+import dayjs from "dayjs";
+import router from "../router";
+import { useDatabaseStore } from "./database";
+import { getFunctions, httpsCallable } from "firebase/functions";
+import jsPDF from 'jspdf';
 
 export const useUserStore = defineStore('userStore', {
     state: () => ({
-        userData: {
-            email: null,
-            uid: null,
-        },
-         googleAccessToken: null, 
-        facturas: [],
-        descripciones: [
-            {
-                descripcion: "",
-                cant: "",
-                preciou: "",
-                importe: "",
-            },
-        ],
-        isActive: false,
-        modalActive: true,
-        cookie: false,
+        userData: { email: null, uid: null },
+        googleAccessToken: null,
         loadingUser: false,
-        loadingAuth: true, 
-        // loadingSesion: false, // Este estado es probablemente redundante con loadingUser
+        loadingAuth: true,
         mensaje: null,
-        mensajeColorAlerta: null,
         timeOut: false,
         selectedDate: dayjs(),
-        currentDate: 0,
-        ano: "",
-        mes: "",
-        dia: "",
-        day: 0, // Nota: Este 'day' podría entrar en conflicto si intentas usarlo como un objeto 'day' para calendario.
         today: dayjs().format("YYYY-MM-DD"),
-        weekdays: ["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"],
-        // Estos son típicamente 'props' de un componente, no estados de Pinia. Los he comentado
-        // para evitar posibles conflictos o malinterpretaciones en el store global.
-        // day: { type: Object, required: true },
-        // isCurrentMonth: { type: Boolean, default: false },
-        // isToday: { type: Boolean, default: false }
+        cookie: false, // Asegúrate de que esta propiedad también esté aquí si la usas
+        unreadMessagesCount: 0, // NUEVO: Estado para el contador de mensajes no leídos
+        _messagesUnsubscribe: null, // NUEVO: Para almacenar la función de desuscripción de Firestore
     }),
     actions: {
-        // Métodos relacionados con el calendario. Si tienes un componente de calendario
-        // o un store dedicado a ello, estos métodos encajarían mejor allí.
-        label() {
-            // Asegúrate de que `this.day` sea un objeto con una propiedad `date` aquí
-            // para que esto funcione correctamente.
-            return dayjs(this.day.date).format("D");
-        },
-        days() {
-            return [
-                { date: "2020-06-29", isCurrentMonth: false },
-                { date: "2020-06-30", isCurrentMonth: false },
-                { date: "2020-07-01", isCurrentMonth: true },
-                { date: "2020-07-02", isCurrentMonth: true },
-                { date: "2020-07-31", isCurrentMonth: true },
-                { date: "2020-08-01", isCurrentMonth: false },
-                { date: "2020-08-02", isCurrentMonth: false }
-            ];
-        },
-        selectedMonth() {
-            return this.selectedDate.format("MMMM YYYY");
-        },
-        selectPrevious() {
-            this.selectedDate = dayjs(this.selectedDate).subtract(1, "month");
-        },
-        selectCurrent() {
-            this.selectedDate = dayjs();
-        },
-        selectNext() {
-            this.selectedDate = dayjs(this.selectedDate).add(1, "month");
-        },
-        // Fin de métodos relacionados con el calendario.
-
-        mensajeAlerta(mensajeAlerta) {
-            this.mensaje = mensajeAlerta
-            this.timeOut = true
-            setTimeout(() => this.timeOut = false, 5000)
-        },
+        // --- Auth y Registro ---
         async registerUser(email, password) {
-            this.loadingUser = true
-            this.timeOut = false; // Resetear mensajes anteriores
+            this.loadingUser = true;
+            this.timeOut = false;
             this.mensaje = null;
             try {
-                // `onAuthStateChanged` (en `initAuthListener`) se encargará de establecer `userData` y la redirección
-                await createUserWithEmailAndPassword(auth, email, password)
+                await createUserWithEmailAndPassword(auth, email, password);
             } catch (error) {
                 console.error("Error en registerUser:", error);
                 this.timeOut = true;
@@ -116,50 +55,46 @@ export const useUserStore = defineStore('userStore', {
                         break;
                     default:
                         this.mensaje = "Une erreur est survenue lors de l'enregistrement.";
-                        break;
                 }
             } finally {
-                this.loadingUser = false
-            }
-        },
-        async loginUser(email, password) {
-            this.loadingUser = true
-            this.timeOut = false; // Resetear mensajes anteriores
-            this.mensaje = null;
-            try {
-                // `onAuthStateChanged` (en `initAuthListener`) se encargará de establecer `userData` y la redirección
-                await signInWithEmailAndPassword(auth, email, password)
-            } catch (error) {
-                console.error("Error en loginUser:", error); // Usar console.error para errores
-                this.timeOut = true;
-                switch (error.code) {
-                    case "auth/wrong-password":
-                        this.mensaje = "Mot de passe incorrect.";
-                        break;
-                    case "auth/user-not-found":
-                        this.mensaje = "Désolé, l'utilisateur n'est pas enregistré.";
-                        break;
-                    case "auth/invalid-email":
-                        this.mensaje = "Email invalide.";
-                        break;
-                    case "auth/network-request-failed":
-                    case "auth/internal-error":
-                        this.mensaje = "Veuillez vérifier votre connexion Internet.";
-                        break;
-                    case "auth/too-many-requests":
-                        this.mensaje = "Trop de tentatives de connexion échouées. Veuillez réessayer plus tard.";
-                        break;
-                    default:
-                        this.mensaje = "Une erreur est survenue lors de la connexion.";
-                        break;
-                }
-            } finally {
-                this.loadingUser = false
+                this.loadingUser = false;
             }
         },
 
-        // ¡NUEVA ACCIÓN: Iniciar sesión con Google!
-          async signInWithGoogle() {
+        async loginUser(email, password) {
+            this.loadingUser = true;
+            this.timeOut = false;
+            this.mensaje = null;
+            try {
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                this.userData = { email: userCredential.user.email, uid: userCredential.user.uid };
+                
+                // NUEVO: Inicia la escucha de mensajes si es un administrador
+                if (this.isAdminUser(userCredential.user)) {
+                    this.startUnreadMessagesListener();
+                }
+            } catch (error) {
+                console.error("Error en loginUser:", error);
+                this.timeOut = true;
+                switch (error.code) {
+                    case "auth/wrong-password":
+                        this.mensaje = "Contraseña incorrecta.";
+                        break;
+                    case "auth/user-not-found":
+                        this.mensaje = "Lo sentimos, el usuario no está registrado.";
+                        break;
+                    case "auth/invalid-email":
+                        this.mensaje = "Correo electrónico no válido.";
+                        break;
+                    default:
+                        this.mensaje = "Se produjo un error durante la conexión.";
+                }
+            } finally {
+                this.loadingUser = false;
+            }
+        },
+
+        async signInWithGoogle() {
             this.loadingUser = true;
             this.timeOut = false;
             this.mensaje = null;
@@ -170,205 +105,206 @@ export const useUserStore = defineStore('userStore', {
             try {
                 const result = await signInWithPopup(auth, provider);
                 const credential = GoogleAuthProvider.credentialFromResult(result);
-                // ¡IMPORTANTE! Guardar el accessToken aquí, inmediatamente después del inicio de sesión
                 this.googleAccessToken = credential.accessToken;
-                console.log("DEBUG: googleAccessToken guardado en store después de signIn.");
+                this.userData = { email: result.user.email, uid: result.user.uid }; // Actualiza userData con el usuario de Google
+                
+                // NUEVO: Inicia la escucha de mensajes si es un administrador (para Google Sign-In también)
+                if (this.isAdminUser(result.user)) {
+                    this.startUnreadMessagesListener();
+                }
 
+                console.log("DEBUG: googleAccessToken guardado en store después de signIn.");
+                router.push('/registro');
             } catch (error) {
                 console.error("Error al iniciar sesión con Google:", error);
                 this.timeOut = true;
-                this.googleAccessToken = null; // Asegúrate de limpiarlo si falla
-                switch (error.code) {
-                    case "auth/popup-closed-by-user":
-                        this.mensaje = "La ventana de conexión Google a été fermée.";
-                        break;
-                    case "auth/cancelled-popup-request":
-                        this.mensaje = "La demande de connexion Google a été annulée.";
-                        break;
-                    case "auth/operation-not-allowed":
-                        this.mensaje = "L'authentification Google n'est pas activée pour ce projet.";
-                        break;
-                    default:
-                        this.mensaje = "Une erreur est survenue lors de la connexion avec Google.";
-                        break;
-                }
+                this.googleAccessToken = null;
+                this.mensaje = "Error al iniciar sesión con Google.";
             } finally {
                 this.loadingUser = false;
             }
         },
 
         async logOutUser() {
-            const databaseStore = useDatabaseStore()
-            databaseStore.$reset() // Limpia los datos de la base de datos al cerrar sesión
+            const databaseStore = useDatabaseStore();
+            databaseStore.$reset();
             try {
-                await signOut(auth)
-                // `onAuthStateChanged` (en `initAuthListener`) se encargará de establecer `userData` a null y la redirección.
+                await signOut(auth);
+                this.userData = { email: null, uid: null };
+                this.googleAccessToken = null;
+                // NUEVO: Detiene la escucha de mensajes al cerrar sesión
+                this.stopUnreadMessagesListener(); 
             } catch (error) {
                 console.error("Error al cerrar sesión:", error);
-                this.mensajeAlerta("Une erreur est survenue lors de la déconnexion.");
+                this.mensajeAlerta("Se produjo un error al cerrar sesión.");
             }
         },
 
-        // **REFRACTORIZADO:** Este es ahora el listener principal de Firebase Authentication.
-        // Debe llamarse una vez al inicio de tu aplicación (ej. en main.js o App.vue).
-           // **ESTA ACCIÓN ES LA QUE FALTA O ESTÁ MAL ESCRITA**
+        // --- Listener Auth ---
+        // Este método se asegura de que el estado de autenticación se resuelva
+        // y también inicia el listener de mensajes si es necesario.
         async currentUser() {
-            // Si ya hay un usuario autenticado en Firebase Auth Y tenemos sus datos básicos en el store,
-            // podemos resolver inmediatamente con el objeto de usuario REAL de Firebase.
-            if (auth.currentUser && this.userData.uid) {
-                return Promise.resolve(auth.currentUser); // ¡Esto es clave! Devuelve el objeto User real.
-            }
+            // Si ya hay un usuario y se ha procesado, retornamos la promesa resuelta
+            if (auth.currentUser && this.userData.uid) return Promise.resolve(auth.currentUser);
 
-            // Si no hay usuario autenticado o si this.userData aún no está cargado,
-            // esperamos a que Firebase determine el estado de autenticación.
             return new Promise((resolve, reject) => {
                 const unsubscribe = onAuthStateChanged(auth, user => {
-                    unsubscribe(); // Desuscribirse después de obtener el estado inicial
+                    unsubscribe(); // Importante: desuscribirse después de la primera llamada
                     if (user) {
-                        // Si hay un usuario, actualizamos los datos básicos en el store
                         this.userData = { email: user.email, uid: user.uid };
-                        resolve(user); // Y resolvemos con el objeto User real.
+                        // NUEVO: Si el usuario es admin, inicia el listener de mensajes si no está activo
+                        if (this.isAdminUser(user) && !this._messagesUnsubscribe) {
+                            this.startUnreadMessagesListener();
+                        }
+                        resolve(user);
                     } else {
-                        // Si no hay usuario, limpiamos los datos del store
                         this.userData = { email: null, uid: null };
-                        resolve(null); // Y resolvemos con null.
+                        // NUEVO: Si no hay usuario, asegura que el listener de mensajes esté detenido
+                        this.stopUnreadMessagesListener(); 
+                        resolve(null);
                     }
-                }, reject); // Añade reject para capturar errores de Firebase Auth
+                }, reject);
             });
         },
 
-        // **Asegúrate de que initAuthListener sea como la última versión que te di**
-            initAuthListener() {
+        // Este listener se ejecuta constantemente para mantener el estado de autenticación actualizado.
+        // También maneja el inicio/detención del listener de mensajes.
+        initAuthListener() {
             onAuthStateChanged(auth, user => {
                 if (user) {
-                    // Si hay un usuario logueado
-                    if (user.email === "higuerodiego@gmail.com") {
-                        // Es el usuario permitido, actualizamos los datos y redirigimos
-                        this.userData = { email: user.email, uid: user.uid };
-                        if (router.currentRoute.value.path !== '/registro') {
-                            router.push('/registro');
-                        }
-                    } else {
-                        // Si es CUALQUIER OTRO USUARIO, lo desconectamos inmediatamente
-                        this.mensajeAlerta("Accès non autorisé pour cet utilisateur.");
-                        this.logOutUser(); // Llama a tu acción de logout
-                        // Redirigir a la página de inicio/login
-                        if (router.currentRoute.value.path !== '/') {
-                             router.push('/');
-                        }
+                    this.userData = { email: user.email, uid: user.uid };
+                    // NUEVO: Si el usuario es admin, inicia el listener de mensajes si no está activo
+                    if (this.isAdminUser(user) && !this._messagesUnsubscribe) {
+                        this.startUnreadMessagesListener();
                     }
                 } else {
-                    // Si NO hay usuario logueado
                     this.userData = { email: null, uid: null };
-                    // Limpiar datos de la base de datos si el usuario no está logueado
+                    this.googleAccessToken = null;
                     const databaseStore = useDatabaseStore();
                     databaseStore.$reset();
-                    // Redirigir a la página de inicio/login si no estamos ya allí
-                    if (router.currentRoute.value.path !== '/') {
-                        router.push("/");
-                    }
+                    // NUEVO: Si no hay usuario, detiene el listener de mensajes
+                    this.stopUnreadMessagesListener(); 
+                    if (router.currentRoute.value.path !== '/') router.push("/");
                 }
-                this.loadingAuth = false; // Indica que el estado de autenticación inicial se ha cargado
+                this.loadingAuth = false;
                 this.loadingUser = false;
             });
         },
-             async fetchTodayCalendarEvents() {
-        this.loadingUser = true;
 
-        const user = await this.currentUser();
+        mensajeAlerta(msg) {
+            this.mensaje = msg;
+            this.timeOut = true;
+            setTimeout(() => this.timeOut = false, 5000);
+        },
 
-        if (!user) { // No hay usuario Firebase logueado
-            console.error("Client-side: No Firebase user logged in after waiting for auth state. Cannot call Cloud Function.");
-            this.mensajeAlerta("No hay usuario autenticado. Por favor, inicie sesión para ver el calendario.");
-            this.googleAccessToken = null;
-            this.loadingUser = false;
-            return [];
-        }
+        // NUEVO: Método para verificar si el usuario es un administrador
+        isAdminUser(user) {
+            if (!user || !user.email) return false;
+            // Asegúrate de que los emails coincidan con tus admins
+            return user.email === 'higuerodiego@gmail.com' || user.email === 'familiahiguero@gmail.com';
+        },
 
-        // --- Lógica para el googleAccessToken ---
-        if (!this.googleAccessToken) { // Si el accessToken de Google Calendar no está en el store
-            const isGoogleAuth = user.providerData.some(p => p.providerId === GoogleAuthProvider.PROVIDER_ID);
-
-            if (isGoogleAuth) { // Si el usuario de Firebase SÍ inició sesión con Google
-                console.warn("DEBUG: Usuario de Firebase autenticado (con Google), pero Google Calendar accessToken no presente. Intentando re-adquirirlo silenciosamente...");
-                try {
-                    // Intenta re-autenticar con Google para obtener un nuevo access token.
-                    // Esto suele funcionar si el usuario ya tiene una sesión de Google activa en el navegador.
-                    const provider = new GoogleAuthProvider();
-                    provider.addScope('https://www.googleapis.com/auth/calendar.events.readonly');
-                    // Opcional: provider.setCustomParameters({ prompt: 'none' }); - A veces necesario, a veces causa problemas. Prueba sin él primero.
-
-                    const result = await signInWithPopup(auth, provider); // Vuelve a llamar a signInWithPopup
-                    const credential = GoogleAuthProvider.credentialFromResult(result);
-                    this.googleAccessToken = credential.accessToken; // ¡Guarda el nuevo token!
-                    console.log("DEBUG: Google Calendar accessToken re-adquirido exitosamente.");
-
-                } catch (error) {
-                    console.error("DEBUG: Fallo al re-adquirir Google Calendar accessToken silenciosamente:", error);
-                    // Manejo de errores específicos (pop-up bloqueado, usuario canceló, etc.)
-                    if (error.code === 'auth/popup-blocked') {
-                        this.mensajeAlerta("Tu navegador ha bloqueado una ventana emergente necesaria para conectar el calendario. Por favor, habilita las ventanas emergentes para este sitio e intenta de nuevo.");
-                    } else if (error.code === 'auth/popup-closed-by-user' || error.code === 'auth/cancelled-popup-request') {
-                        this.mensajeAlerta("La ventana de autenticación de Google fue cerrada. No se pudo obtener acceso al calendario.");
-                    } else {
-                        this.mensajeAlerta("Error al obtener el token de acceso de Google. Por favor, re-inicie sesión con Google.");
-                    }
-                    this.googleAccessToken = null; // Asegúrate de que el token sea nulo si falla la adquisición
-                    this.loadingUser = false;
-                    return []; // Sale si no se pudo re-adquirir
-                }
-            } else { // Si el usuario de Firebase NO inició sesión con Google
-                console.warn("DEBUG: Usuario de Firebase autenticado (no con Google), Google Calendar accessToken no presente. Requiere inicio de sesión con Google.");
-                this.mensajeAlerta("Para ver el calendario, por favor, inicia sesión con Google.");
-                this.loadingUser = false;
-                return []; // Sale si no se requiere Google auth para este usuario
+        // NUEVO: Acción para iniciar la escucha de mensajes no leídos
+        startUnreadMessagesListener() {
+            // Si ya hay un listener activo, no hacemos nada para evitar duplicados
+            if (this._messagesUnsubscribe) {
+                return;
             }
-        }
+            // Solo iniciar si el usuario actual es un administrador
+            if (!this.isAdminUser(auth.currentUser)) { // Usar auth.currentUser para la verificación en tiempo real
+                return;
+            }
 
-        // Si llegamos aquí, this.googleAccessToken debería estar presente (o se acaba de adquirir)
-        if (!this.googleAccessToken) { // Doble verificación por si acaso
-            this.mensajeAlerta("No se pudo obtener el token de acceso de Google. Por favor, re-inicie sesión.");
-            this.loadingUser = false;
-            return [];
-        }
+            const messagesCollection = collection(db, 'mensajes');
+            const q = query(messagesCollection, where('read', '==', false));
 
-        // --- Refrescar el token de Firebase ID (tu código actual) ---
-        try {
-            await user.getIdToken(true);
-            console.log("DEBUG: Firebase ID Token refrescado/validado para la llamada a Cloud Function.");
-        } catch (error) {
-            console.error("DEBUG: Error al refrescar el token de Firebase ID:", error);
-            this.mensajeAlerta("Error al validar la sesión de Firebase. Por favor, reinicie la sesión.");
-            this.googleAccessToken = null;
-            this.loadingUser = false;
-            return [];
-        }
+            this._messagesUnsubscribe = onSnapshot(q, (snapshot) => {
+                this.unreadMessagesCount = snapshot.size; // El tamaño del snapshot es el número de documentos no leídos
+            }, (error) => {
+                this.unreadMessagesCount = 0; // Reinicia el contador en caso de error
+            });
+        },
 
-        // --- Llamar a la Cloud Function (tu código actual) ---
-        try {
-            const functions = getFunctions();
-            const getEvents = httpsCallable(functions, 'getTodayCalendarEvents');
+        // NUEVO: Acción para detener la escucha de mensajes no leídos
+        stopUnreadMessagesListener() {
+            if (this._messagesUnsubscribe) {
+                this._messagesUnsubscribe(); // Llama a la función de desuscripción
+                this._messagesUnsubscribe = null;
+                this.unreadMessagesCount = 0; // Reinicia el contador al detener la escucha
+            }
+        },
+        
+        // --- FUNCION REFINADA: fetchTodayCalendarEvents ---
+        async fetchTodayCalendarEvents() {
+            this.loadingUser = true;
 
-            console.log("DEBUG: Llamando a la Cloud Function 'getTodayCalendarEvents' con el token de acceso de Google...");
-            const result = await getEvents({ accessToken: this.googleAccessToken });
+            const user = await this.currentUser();
+            if (!user) {
+                console.error("No Firebase user logged in. Cannot call Cloud Function.");
+                this.mensajeAlerta("No hay usuario autenticado. Por favor, inicie sesión para ver el calendario.");
+                this.googleAccessToken = null;
+                this.loadingUser = false;
+                return [];
+            }
 
-            console.log("DEBUG: Eventos de calendario recibidos:", result.data);
+            // Re-adquirir Google Access Token si es necesario
+            if (!this.googleAccessToken) {
+                const isGoogleAuth = user.providerData.some(p => p.providerId === GoogleAuthProvider.PROVIDER_ID);
+                if (isGoogleAuth) {
+                    try {
+                        const provider = new GoogleAuthProvider();
+                        provider.addScope('https://www.googleapis.com/auth/calendar.events.readonly');
+                        const result = await signInWithPopup(auth, provider);
+                        const credential = GoogleAuthProvider.credentialFromResult(result);
+                        this.googleAccessToken = credential.accessToken;
+                        console.log("DEBUG: Google Calendar accessToken re-adquirido.");
+                    } catch (error) {
+                        console.error("Error al re-adquirir accessToken:", error);
+                        this.mensajeAlerta("No se pudo obtener el token de acceso de Google.");
+                        this.googleAccessToken = null;
+                        this.loadingUser = false;
+                        return [];
+                    }
+                } else {
+                    this.mensajeAlerta("Para ver el calendario, por favor, inicia sesión con Google.");
+                    this.loadingUser = false;
+                    return [];
+                }
+            }
 
-            return Array.isArray(result.data) ? result.data : [];
+            if (!this.googleAccessToken) {
+                this.mensajeAlerta("No se pudo obtener el token de acceso de Google. Re-inicie sesión.");
+                this.loadingUser = false;
+                return [];
+            }
 
-        } catch (error) {
-            console.error("DEBUG: Error al obtener eventos del calendario en userStore:", error);
+            // Refrescar token de Firebase
+            try {
+                await user.getIdToken(true);
+            } catch (error) {
+                console.error("Error al refrescar Firebase ID Token:", error);
+                this.mensajeAlerta("Error al validar la sesión de Firebase.");
+                this.googleAccessToken = null;
+                this.loadingUser = false;
+                return [];
+            }
 
-            const errorCode = error.code || 'unknown-error';
-            const errorMessage = error.message || 'Error desconocido al cargar eventos del calendario.';
-
-            this.mensajeAlerta(`Error al cargar eventos del calendario: ${errorMessage} (${errorCode})`);
-
-            return [];
-        } finally {
-            this.loadingUser = false;
-        }
-    },
+            // Llamada a Cloud Function
+            try {
+                const functions = getFunctions();
+                const getEvents = httpsCallable(functions, 'getTodayCalendarEvents');
+                console.log("DEBUG: Llamando a Cloud Function...");
+                const result = await getEvents({ accessToken: this.googleAccessToken });
+                console.log("DEBUG: Eventos recibidos:", result.data);
+                return Array.isArray(result.data) ? result.data : [];
+            } catch (error) {
+                console.error("Error al obtener eventos:", error);
+                this.mensajeAlerta(`Error al cargar eventos: ${error.message || 'Desconocido'}`);
+                return [];
+            } finally {
+                this.loadingUser = false;
+            }
+        },
         async enviarFactura(file, c) {
             this.loadingUser = true;
             try {
@@ -621,4 +557,5 @@ export const useUserStore = defineStore('userStore', {
             doc.save("pdfName" + '.pdf');
         }
     },
-})
+});
+

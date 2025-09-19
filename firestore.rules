@@ -1,9 +1,30 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+    function isSignedInAsAdmin() {
+      return request.auth != null && (
+          request.auth.token.email == "higuerodiego@gmail.com" ||
+          request.auth.token.email == "roys.abreu@gmail.com"
+      );
+    }
+
+    // Regla para la colección 'clientes'
     match /clientes/{id} {
-      allow read,update,delete,create: if request.auth != null;
-	
+      allow read, update, delete, create: if isSignedInAsAdmin();
+    }
+
+    // Regla para la colección 'registro'
+    match /registro {
+      allow read, update, delete, create: if isSignedInAsAdmin();
+    }
+    match /limpiezasMensuales/{document=**} {
+       allow read, write,update,create: if isSignedInAsAdmin(); 
+  }
+    match /mensajes/{document} {
+      // Permite que cualquier usuario cree un documento (para el formulario de contacto público)
+      allow create;
+      // Solo los administradores pueden leer, actualizar o eliminar mensajes
+      allow read, update, delete: if isSignedInAsAdmin();
     }
   }
 }
