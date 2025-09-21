@@ -170,14 +170,14 @@ const formatDateForInput = (dateValue) => {
       <div class="modal-content">
         <div class="modal-header bg-primary text-white">
           <h5 class="modal-title" id="invoiceEditorModalLabel">
-            Éditer la Facture (N° {{ currentInvoice.factura }})
+            Editar la Factura (N° {{ currentInvoice.factura }})
           </h5>
           <button type="button" class="btn-close btn-close-white" @click="closeModal" aria-label="Fermer"></button>
         </div>
         <div class="modal-body">
           <div class="row mb-4">
             <div class="col-md-6">
-              <h6 class="text-primary">Détails du Client</h6>
+              <h6 class="text-primary">Detalles del Cliente</h6>
               <p><strong>{{ currentInvoice.clientDetails.nombre }} {{ currentInvoice.clientDetails.apellido }}</strong></p>
               <p>{{ currentInvoice.clientDetails.direccion }}</p>
               <p>{{ currentInvoice.clientDetails.codigoPostal }} {{ currentInvoice.clientDetails.ciudad }}</p>
@@ -185,36 +185,36 @@ const formatDateForInput = (dateValue) => {
               <p>Email: {{ currentInvoice.clientDetails.email }}</p>
             </div>
             <div class="col-md-6">
-              <h6 class="text-primary">Détails de la Facture</h6>
+              <h6 class="text-primary">Detalles de la Factura</h6>
               <div class="mb-3">
-                <label for="invoiceNumberEdit" class="form-label">Numéro de Facture:</label>
+                <label for="invoiceNumberEdit" class="form-label">Numero de Factura:</label>
                 <input type="text" class="form-control" id="invoiceNumberEdit" v-model="currentInvoice.factura" />
               </div>
               <div class="mb-3">
-                <label for="paymentMethodEdit" class="form-label">Mode de paiement:</label>
+                <label for="paymentMethodEdit" class="form-label">Forma de Pago:</label>
                 <select class="form-select" id="paymentMethodEdit" v-model="currentInvoice.formaPago">
-                  <option value="Efectivo">Espèces</option>
-                  <option value="Cheque">Chèque</option>
-                  <option value="Giro Bancario">Virement Bancaire</option>
+                  <option value="Efectivo">Efectivo</option>
+                  <option value="Cheque">Cheque</option>
+                  <option value="Giro Bancario">Giro Bancario</option>
                 </select>
               </div>
               <div class="mb-3">
-                <label for="paymentDateEdit" class="form-label">Date de paiement:</label>
+                <label for="paymentDateEdit" class="form-label">Fecha de Pago:</label>
                 <input type="date" class="form-control" id="paymentDateEdit" v-model="currentInvoice.fechaPago" />
               </div>
             </div>
           </div>
 
-          <h6 class="text-primary mb-3">Postes de Nettoyage (issus du Registre)</h6>
+          <h6 class="text-primary mb-3">Limpieza</h6>
           <div class="table-responsive">
             <table class="table table-bordered table-sm">
               <thead>
                 <tr class="table-light">
-                  <th style="width: 40%;">Description</th>
-                  <th style="width: 15%;">Date</th>
-                  <th style="width: 10%;">Qté</th>
-                  <th style="width: 15%;">Prix Unitaire H.T.</th>
-                  <th style="width: 20%;">Total H.T.</th>
+                  <th style="width: 40%;">Descripcio</th>
+                  <th style="width: 15%;">Fecha</th>
+                  <th style="width: 10%;">Cantidad</th>
+                  <th style="width: 15%;">Precio Unidad</th>
+                  <th style="width: 20%;">Total</th>
                 </tr>
               </thead>
               <tbody>
@@ -241,16 +241,16 @@ const formatDateForInput = (dateValue) => {
             </table>
           </div>
 
-          <h6 class="text-primary mt-4 mb-3">Postes Personnalisés</h6>
+          <h6 class="text-primary mt-4 mb-3">Limpieza Personalizada</h6>
           <div class="table-responsive">
             <table class="table table-bordered table-sm">
               <thead>
                 <tr class="table-light">
-                  <th style="width: 35%;">Description</th>
-                  <th style="width: 15%;">Date</th>
-                  <th style="width: 10%;">Qté</th>
-                  <th style="width: 15%;">Prix Unitaire H.T.</th>
-                  <th style="width: 20%;">Total H.T.</th>
+                  <th style="width: 35%;">Descripcion</th>
+                  <th style="width: 15%;">Fecha</th>
+                  <th style="width: 10%;">Cantidad</th>
+                  <th style="width: 15%;">Precio Unidad</th>
+                  <th style="width: 20%;">Total</th>
                   <th style="width: 5%;"></th>
                 </tr>
               </thead>
@@ -289,17 +289,17 @@ const formatDateForInput = (dateValue) => {
             </table>
           </div>
           <button type="button" class="btn btn-outline-primary btn-sm mt-2" @click="addCustomItem">
-            <font-awesome-icon :icon="['fas', 'plus']" class="me-1" /> Ajouter une ligne personnalisée
+            <font-awesome-icon :icon="['fas', 'plus']" class="me-1" /> Anadir una linea personalizada
           </button>
         </div>
         <div class="modal-footer d-flex justify-content-between">
-          <button type="button" class="btn btn-secondary" @click="closeModal">Fermer</button>
+          <button type="button" class="btn btn-secondary" @click="closeModal">Cerrar</button>
           <div>
             <button type="button" class="btn btn-info text-white me-2" @click="previewPdf">
-              <font-awesome-icon :icon="['fas', 'eye']" class="me-1" /> Prévisualiser
+              <font-awesome-icon :icon="['fas', 'eye']" class="me-1" /> Ver PDF
             </button>
             <button type="button" class="btn btn-success" @click="generatePdf">
-              <font-awesome-icon :icon="['fas', 'file-pdf']" class="me-1" /> Générer PDF
+              <font-awesome-icon :icon="['fas', 'file-pdf']" class="me-1" /> Generar PDF
             </button>
           </div>
         </div>

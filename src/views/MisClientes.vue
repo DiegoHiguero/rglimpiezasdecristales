@@ -679,7 +679,7 @@ const formatEuropeanDate = (dateValue) => {
 const calculateCotizacion = (precioBruto) => {
   const brute = Number(precioBruto);
   if (isNaN(brute) || brute <= 0) return 0;
-  return parseFloat((brute * 0.232).toFixed(2));
+  return parseFloat((brute * 0.21).toFixed(2));
 };
 
 const calculatePrecioNeto = (precioBruto) => {

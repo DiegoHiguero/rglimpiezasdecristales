@@ -137,23 +137,23 @@
             <div v-for="(extra, index) in nuevaLimpieza.extraCleanings" :key="index" class="col-12">
               <div class="row g-2 align-items-end mb-2">
                 <div class="col-md-3">
-                  <label :for="'extra-desc-' + index" class="form-label">Description</label>
+                  <label :for="'extra-desc-' + index" class="form-label">Descripcion</label>
                   <input type="text" :id="'extra-desc-' + index" class="form-control" v-model="extra.description">
                 </div>
                 <div class="col-md-2">
-                  <label :for="'extra-date-' + index" class="form-label">Date</label>
+                  <label :for="'extra-date-' + index" class="form-label">Fecha</label>
                   <input type="date" :id="'extra-date-' + index" class="form-control" v-model="extra.date">
                 </div>
                 <div class="col-md-2">
-                  <label :for="'extra-qty-' + index" class="form-label">Qté</label>
+                  <label :for="'extra-qty-' + index" class="form-label">Cantidad</label>
                   <input type="number" :id="'extra-qty-' + index" class="form-control" v-model.number="extra.quantity" min="1">
                 </div>
                 <div class="col-md-2">
-                  <label :for="'extra-price-' + index" class="form-label">Prix Unitaire (€)</label>
+                  <label :for="'extra-price-' + index" class="form-label">Precio Unidad (€)</label>
                   <input type="number" :id="'extra-price-' + index" class="form-control" v-model.number="extra.unitPrice" step="0.01" min="0">
                 </div>
                 <div class="col-md-2">
-                  <label class="form-label">Total H.T. (€)</label>
+                  <label class="form-label">Total (€)</label>
                   <input type="text" class="form-control" :value="(Number(extra.quantity) * Number(extra.unitPrice) || 0).toFixed(2)" readonly>
                 </div>
                 <div class="col-md-1">
@@ -279,7 +279,7 @@
                 <th style="min-width: 100px;">Sem.5</th>
                 <th>Bruto(€)</th>
                 <th>Neto(€)</th>
-                <th>Cot(€)</th>
+                <th>IVA</th>
                 <th>Fecha Pago</th>
                 <th>Estado</th>
                 <th>Forma Pago</th>
@@ -559,23 +559,23 @@
           <div v-for="(extra, index) in editedLimpieza.extraCleanings" :key="index" class="col-12">
             <div class="row g-2 align-items-end mb-2">
               <div class="col-md-3">
-                <label :for="'edit-extra-desc-' + index" class="form-label">Description</label>
+                <label :for="'edit-extra-desc-' + index" class="form-label">Descripcion</label>
                 <input type="text" :id="'edit-extra-desc-' + index" class="form-control" v-model="extra.description">
               </div>
               <div class="col-md-2">
-                <label :for="'edit-extra-date-' + index" class="form-label">Date</label>
+                <label :for="'edit-extra-date-' + index" class="form-label">Fecha</label>
                 <input type="date" :id="'edit-extra-date-' + index" class="form-control" v-model="extra.date">
               </div>
               <div class="col-md-2">
-                <label :for="'edit-extra-qty-' + index" class="form-label">Qté</label>
+                <label :for="'edit-extra-qty-' + index" class="form-label">Cantidad</label>
                 <input type="number" :id="'edit-extra-qty-' + index" class="form-control" v-model.number="extra.quantity" min="1">
               </div>
               <div class="col-md-2">
-                <label :for="'edit-extra-price-' + index" class="form-label">Prix Unitaire (€)</label>
+                <label :for="'edit-extra-price-' + index" class="form-label">Precio Unitario(€)</label>
                 <input type="number" :id="'edit-extra-price-' + index" class="form-control" v-model.number="extra.unitPrice" step="0.01" min="0">
               </div>
               <div class="col-md-2">
-                <label class="form-label">Total H.T. (€)</label>
+                <label class="form-label">Total(€)</label>
                 <input type="text" class="form-control" :value="(Number(extra.quantity) * Number(extra.unitPrice) || 0).toFixed(2)" readonly>
               </div>
               <div class="col-md-1">
@@ -591,9 +591,9 @@
               </div> <!-- Cierre del row g-3 -->
             </form>
             <div class="mt-3" v-if="editedLimpieza.precioBruto > 0">
-              <p><strong>Precio Neto (23.2%):</strong> {{
+              <p><strong>Precio Neto:</strong> {{
                 formatCurrency(calculatePrecioNeto(editedLimpieza.precioBruto)) }}</p>
-              <p><strong>Cotización (Restante):</strong> {{
+              <p><strong>IVA (21%):</strong> {{
                 formatCurrency(calculateCotizacion(editedLimpieza.precioBruto)) }}</p>
             </div>
           </div>
@@ -704,7 +704,6 @@
                   <select id="new-client-tipo" class="form-select" v-model="newClient.tipoCliente" required>
                     <option value="" disabled>Seleccione un tipo</option>
                     <option value="empresa">Empresa</option>
-                    <option value="cooperativa">Cooperativa</option>
                     <option value="casa">Casa</option>
                   </select>
                 </div>
@@ -751,7 +750,7 @@
 
     <!-- Modal de Vista Previa de Factura (EXISTENTE) -->
     <!-- Este modal ahora se activa a través de handlePreviewEditedPdf desde InvoiceEditorModal -->
-    <div v-if="isPreviewModalOpen" class="modal fade show" style="display: block;" tabindex="-1"
+    <div v-if="isPreviewModalOpen" class="modal fade show pdf-preview-modal" style="display: block;" tabindex="-1"
       aria-labelledby="pdfPreviewModalLabel" aria-modal="true" role="dialog">
       <div class="modal-dialog modal-xl modal-dialog-centered">
         <div class="modal-content">
@@ -1208,7 +1207,7 @@ const formatEuropeanDate = (dateValue) => {
 const calculateCotizacion = (precioBruto) => {
   const brute = Number(precioBruto);
   if (isNaN(brute) || brute <= 0) return 0;
-  return parseFloat((brute * 0.232).toFixed(2));
+  return parseFloat((brute * 0.21).toFixed(2));
 };
 
 /**
@@ -1582,132 +1581,162 @@ const resetFilter = () => {
  * Ahora recibe un objeto `invoiceData` ya procesado con todos los ítems.
  */
 const generateInvoicePdfContent = async (invoiceData) => {
+  // --- Validación (mantenida de la función original) ---
   if (!invoiceData || !invoiceData.clienteId || !invoiceData.factura || !invoiceData.invoiceItems || !invoiceData.clientDetails) {
-    alert("Données de facture incomplètes pour la génération du PDF.");
+    alert("Datos de factura incompletos para la generación del PDF.");
     return null;
   }
 
-  const doc = new jsPDF('p', 'mm', 'a4'); // 'p' para portrait, 'mm' para milímetros, 'a4' para A4
+  // --- Inicializar PDF ---
+  const doc = new jsPDF(); // Por defecto A4 vertical
 
-  const img = "src/assets/img/logo.png"; // Asegúrate de que esta ruta sea accesible
-
-  // Configuración general del PDF
-  doc.setFillColor(195, 228, 156); doc.rect(10, 220, 190, 60, "F");
-  doc.setFillColor(195, 228, 156); doc.rect(10, 10, 190, 20, "F");
-  doc.setDrawColor(0, 0, 0); doc.rect(10, 10, 190, 270);
-
-  // Logo y título
-  doc.addImage(img, 'png', 20, 10, 20, 23);
-  doc.setFont("helvetica", "bold"); doc.setFontSize(18); doc.text("T O U C A N E T", 40, 20);
-  doc.setFontSize(12); doc.text("Nettoyage des vitres", 41, 25);
-  doc.setFontSize(20); doc.text("FACTURE", 130, 22);
-
-  // Detalles de la empresa
-  doc.setFontSize(8); doc.setFont("helvetica", "normal");
-  doc.text("Micro-entrepreneur", 15, 42);
-  doc.text("Diego Higuero (EI)", 15, 47);
-  doc.text("12, rue d'Harcet", 15, 52);
-  doc.text("64200 Biarritz", 15, 57);
-  doc.text("06 58 80 24 03", 15, 62);
-  doc.text("toucanet64@gmail.com", 15, 70);
-  doc.text("www.toucanet.fr", 15, 77);
-  doc.text("Nº SIREN: 977686641", 15, 82);
-  doc.text("À payer avant le : date de facturation + 6 jours ouvrés (ou selon accord)", 15, 92);
-  doc.text("Adresse d'intervention (si différente de l'adresse de facturation) :", 15, 97);
-
-  // Dirección de intervención del cliente
+  // --- Extraer detalles del cliente para un acceso más fácil ---
   const clientDetails = invoiceData.clientDetails;
-  let { calle, ciudad, provincia, codigoPostal } = clientDetails.direccionIntervencion || {};
-  calle = calle || ''; ciudad = ciudad || ''; provincia = provincia || ''; codigoPostal = codigoPostal || '';
+  const clientName = `${clientDetails.nombre || ''} ${clientDetails.apellido || ''}`;
+  const clientAddress = clientDetails.direccion || 'N/A';
+  const invoiceNumber = invoiceData.factura.toString();
+  const currentDate = dayjs().locale('fr').format('DD/MM/YYYY');
 
-  doc.text(calle, 20, 102);
-  let cityAndPostalCombined = '';
-  if (codigoPostal && ciudad) cityAndPostalCombined = `${codigoPostal} ${ciudad}`;
-  else if (codigoPostal) cityAndPostalCombined = codigoPostal;
-  else if (ciudad) cityAndPostalCombined = ciudad;
-  doc.text(cityAndPostalCombined, 20, 107);
-  doc.text(provincia, 20, 112);
+  // --- Encabezado de la factura ---
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(20);
+  doc.text("FACTURA ", 150, 40);
 
-  // Detalles de la factura y cliente
-  doc.setFillColor(219, 219, 219); doc.rect(140, 42, 60, 7.5, "F");
-  doc.rect(140, 42, 60, 15); doc.rect(140, 42, 60, 7.5); doc.rect(140, 42, 35, 15);
-  doc.setFontSize(12); doc.text("FACTURE N°", 146, 47);
-  doc.text("DATE", 182, 47);
-  doc.setFontSize(10); doc.text(invoiceData.factura.toString(), 147, 55); // Usa el número de factura de invoiceData
-  doc.text(dayjs().locale('fr').format('DD/MM/YYYY'), 180, 55); // Fecha actual de generación del PDF
+  // --- Información del cliente y la factura (siguiendo tu nueva lógica) ---
+  doc.setFontSize(15);
+  doc.setTextColor("#5DCC47"); // Usando hex para 'verde' para ser preciso
+  doc.setFont("helvetica", "bold");
+  doc.text("EXPEDIDA A: ", 20, 70);
+  doc.text("FACT#: ", 130, 70);
+  doc.text("FECHA: ", 130, 77);
 
-  doc.setFillColor(195, 228, 156); doc.rect(140, 69, 60, 28, "F");
-  doc.setFillColor(219, 219, 219); doc.rect(140, 62, 60, 7.5, "F");
-  doc.rect(140, 62, 60, 35); doc.rect(140, 62, 60, 7.5);
-  doc.setFontSize(10); doc.text("ADRESSÉ À", 147, 67);
-  doc.setFontSize(8);
-  doc.text(`${clientDetails.nombre || ''} ${clientDetails.apellido || ''}`, 147, 75);
-  doc.text(clientDetails.direccion || 'N/A', 147, 80);
-  doc.text(`${clientDetails.codigoPostal || ''} ${clientDetails.ciudad || ''}`, 147, 85);
-  doc.text(clientDetails.email || 'N/A', 147, 90);
+  doc.setFont("helvetica", "normal");
+  doc.setTextColor("black");
+  doc.setFontSize(12); // Fuente ligeramente más grande para los detalles del cliente para mejor lectura
+  doc.text("Nombre: " + clientName, 20, 86);
+  doc.text("Dirección: " + clientAddress, 20, 92);
 
-  // Sección de descripción de servicios
-  doc.setFillColor(219, 219, 219); doc.rect(10, 120, 190, 7.5, "F");
-  doc.rect(10, 120, 190, 7.5); doc.rect(10, 120, 100, 90); doc.rect(10, 120, 125, 90);
-  doc.rect(10, 120, 140, 90); doc.rect(10, 120, 170, 90); doc.rect(10, 120, 170, 90);
-  doc.rect(10, 120, 190, 90); doc.rect(10, 210, 125, 10); doc.rect(10, 210, 170, 10);
-  doc.rect(10, 120, 190, 100); doc.setFontSize(8);
-  doc.text("DESCRIPTION", 15, 125);
-  doc.text("DATE", 117, 125);
-  doc.text("QTÉ", 140, 125);
-  doc.text("PRIX UNITAIRE H.T.", 153, 125);
-  doc.text("TOTAL H.T.", 183, 125);
 
-  // Detalles de los ítems de la factura (modificado para usar invoiceData.invoiceItems)
-  let currentY = 135;
-  const lineGap = 5;
+  doc.setFontSize(10); // Restablecer tamaño de fuente para el texto siguiente si es necesario
+  doc.text(invoiceNumber, 155, 70); // Número de factura dinámico
+  doc.text(currentDate, 155, 77); // Fecha dinámica
+
+  // --- Sección de descripción (siguiendo tu nueva lógica) ---
+  let currentY = 100; // Y inicial para la sección de descripción
+  const tableTopY = currentY;
+  // const tableHeight = 90; // Altura fija para el área de ítems, ajusta según sea necesario
+  const rowHeight = 9; // Altura de cada fila en el cuerpo de la tabla
+  const headerRectHeight = 9; // <--- CAMBIO CLAVE: Altura del recuadro del encabezado
+
+  doc.setDrawColor(93, 204, 71); // Borde verde
+  // --- CAMBIO CLAVE AQUÍ: REDUCIR ALTURA DEL RECUADRO DEL ENCABEZADO ---
+  doc.rect(20, tableTopY, 170, headerRectHeight); // Caja del encabezado, ahora más ajustada
+  doc.setFillColor(55, 120, 42); // Fondo verde más oscuro para el encabezado
+  doc.rect(20, tableTopY, 170, headerRectHeight, "F"); // Relleno del encabezado, misma altura
+
+  doc.setTextColor("white");
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(12);
+  doc.text("Descripción de servicio", 35, tableTopY + 6);
+  doc.text("Cant.", 110, tableTopY + 6);
+  doc.text("Precio u.", 140, tableTopY + 6);
+  doc.text("Importe", 170, tableTopY + 6);
+
+  doc.setTextColor("black");
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(10); // Tamaño de fuente para los detalles del ítem
+
+  // --- CAMBIO CLAVE AQUÍ: AJUSTAR Y INICIAL PARA LA PRIMERA DESCRIPCIÓN ---
+  // Se calcula para que el texto del primer ítem esté justo debajo del encabezado
+  currentY = tableTopY + headerRectHeight + 5; // El rectángulo del ítem empezará aquí
+  // Y del texto del ítem estará 5 unidades por debajo del inicio del rectángulo
+  let initialItemTextY = currentY + 5;
+
   let calculatedInvoiceTotal = 0;
+  let itemsDrawn = 0; // Contador para saber cuántos items se han dibujado
 
   for (const item of invoiceData.invoiceItems) {
-    // Solo si el total del item es mayor que 0
     if (item.totalHT && item.totalHT > 0) {
-      doc.text(item.description || '', 15, currentY);
-      doc.text(item.date || '', 116, currentY); // La fecha debería venir ya formateada si es necesaria
-      doc.text(String(item.qty || 0), 142, currentY);
-      doc.text(formatCurrency(item.unitPrice || 0), 159, currentY);
-      doc.text(formatCurrency(item.totalHT), 185, currentY);
+      const itemY = initialItemTextY + (itemsDrawn * (rowHeight + 5)); // Posición Y para el texto del item
+      const itemRectY = itemY - 5; // Posición Y para el rectángulo del item
+
+      doc.rect(20, itemRectY, 170, rowHeight); // Rectángulo para cada fila de ítem
+      doc.text(item.description || '', 35, itemY);
+      doc.text(String(item.qty || 0), 110, itemY);
+      doc.text(formatCurrency(item.unitPrice || 0), 140, itemY);
+      doc.text(formatCurrency(item.totalHT), 170, itemY);
       calculatedInvoiceTotal += item.totalHT;
-      currentY += lineGap;
+      itemsDrawn++;
     }
   }
 
-  doc.setFontSize(10); doc.text("Merci beaucoup !", 55, 216);
-  doc.setFont("helvetica", "bold"); doc.text("TOTAL H.T.", 160, 216);
-  doc.text(formatCurrency(calculatedInvoiceTotal), 184, 216);
+  // Calcular la altura total que ocuparon los ítems dinámicamente
+  const dynamicItemsHeight = itemsDrawn * (rowHeight + 5);
 
-  // Información legal
-  doc.setFontSize(8); doc.setFont("helvetica", "normal");
-  doc.text("Toucanet dispose d'une assurance responsabilité civile professionnelle.", 15, 226);
-  doc.setFont("helvetica", "bold"); doc.text("Modalités de paiement :", 15, 231);
-  doc.setFont("helvetica", "normal"); doc.text("Virement bancaire, chèque, espèces. Paiement en une", 48, 231);
-  doc.text("seule fois sous 6 jours ouvrés suivant la date d'émission de la facture.", 15, 236);
-  doc.text("Titulaire du compte :", 25, 241); doc.setFont("helvetica", "italic"); doc.text("DIEGO HIGUERO RUIZ", 53, 241);
-  doc.setFont("helvetica", "normal"); doc.text("Nom de la banque :", 25, 246); doc.setFont("helvetica", "italic"); doc.text("Caisse d'Epargne", 53, 246);
-  doc.setFont("helvetica", "normal"); doc.text("Code IBAN :", 25, 251); doc.setFont("helvetica", "italic"); doc.text("FR76 1333 5000 4008 0026 8561 397", 53, 251);
-  doc.setFont("helvetica", "normal"); doc.text("BIC :", 25, 256); doc.setFont("helvetica", "italic"); doc.text("13335 00040 08002685613 97", 53, 256);
-  doc.text("En cas de retard de paiement, une indemnité forfaitaire pour frais de", 15, 265);
-  doc.text("recouvrement de 40€ sera due selon", 15, 270);
-  doc.setFont("helvetica", "italic"); doc.text("l'article L.441-5 du Code de commerce", 50, 270);
 
-  // Total a pagar
-  doc.rect(135, 225, 65, 15); doc.setFont("helvetica", "bold"); doc.setFontSize(10); doc.text("TOTAL À PAYER TTC:", 140, 232);
-  doc.setFontSize(12); doc.text(formatCurrency(calculatedInvoiceTotal), 180, 232);
-  doc.setFont("helvetica", "italic"); doc.setFontSize(7); doc.text("TVA non applicable - article 293 B du CGI", 140, 238);
-  doc.text("Médiateur de la consommation :", 140, 255);
-  doc.text("CM2C cm2c.net", 145, 258);
-  doc.text("14 rue Saint-Jean", 145, 261);
-  doc.text("75017 Paris", 145, 264);
-  doc.text("06 09 20 48 86", 145, 267);
+  // --- Sección Total (adaptada del total de tu función original) ---
+  // Colocar el total debajo del último ítem dibujado + un espacio
+  const totalY = initialItemTextY + dynamicItemsHeight + 5;
+  doc.setTextColor("black");
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(12);
+  doc.text("TOTAL", 140, totalY);
+  doc.text(formatCurrency(calculatedInvoiceTotal), 170, totalY);
+
+  // --- Detalles de pago (siguiendo tu nueva lógica) ---
+  currentY = totalY + 20; // Ajustar la posición Y basándose en el contenido anterior
+  doc.setTextColor("#5DCC47"); // Verde
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(15); // Fuente más grande para el título de la sección
+  doc.text("DATOS DE PAGO", 20, currentY);
+
+  currentY += 10;
+  doc.setFontSize(10);
+  doc.setTextColor("black");
+  doc.setFont("helvetica", "normal");
+  doc.text("DNI: 50349726-N", 25, currentY);
+  currentY += 5;
+  doc.text("N/C: ROYS GREGORY ABREU REINOSO", 25, currentY);
+  currentY += 5;
+  doc.text("DNI: 50349726-N", 25, currentY);
 
   return doc;
 };
 
+const downloadFactura = async(limpieza)=> {
+      if (!limpieza) {
+        console.error("No se proporcionaron datos de limpieza para descargar la factura.");
+        return;
+      }
 
+      // Asegurarse de que tenemos el nombre completo del cliente si es necesario
+      // O solo el 'cliente' que ya parece ser el nombre completo en tus tablas
+      const clientName = limpieza.cliente.replace(/[^a-zA-Z0-9]/g, '_'); // Limpiar el nombre del cliente para el nombre de archivo
+      const invoiceNumber = limpieza.factura;
+
+      // Generar el nombre del archivo deseado
+      const filename = `${invoiceNumber} - ${clientName}.pdf`;
+
+      try {
+        // Llamar a tu función que genera el contenido del PDF
+        const doc = await generateInvoicePdfContent({
+          clienteId: limpieza.clienteId, // Asegúrate de pasar todos los datos necesarios
+          factura: limpieza.factura,
+          invoiceItems: limpieza.invoiceItems, // Asumo que `limpieza` también tiene los invoiceItems customizados
+          clientDetails: limpieza.clientDetails // Y los clientDetails
+        });
+
+        if (doc) {
+          // Guardar el PDF con el nombre de archivo generado
+          doc.save(filename);
+        } else {
+          console.error("La generación del PDF falló.");
+        }
+      } catch (error) {
+        console.error("Error al descargar la factura:", error);
+        alert("Ocurrió un error al descargar la factura.");
+      }
+    };
 // --- Funciones para abrir y cerrar el editor de facturas ---
 const openInvoiceEditor = async (limpieza) => {
   let clientDetails = null;
@@ -2233,21 +2262,27 @@ onMounted(async () => {
   /* display: flex; /* Esto ya lo maneja Bootstrap con la clase 'show' */
   justify-content: center;
   align-items: center;
-  z-index: 1050;
+  z-index: 1050; /* ¡CAMBIO CLAVE AQUÍ! El modal debe tener un z-index más alto */
 }
 
 .modal-backdrop {
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 1040;
+  z-index: 1040; /* ¡CAMBIO CLAVE AQUÍ! El fondo debe tener un z-index más bajo */
   width: 100vw;
   height: 100vh;
   background-color: #000;
   opacity: .5;
   /* Asegura la opacidad del fondo */
 }
+.pdf-preview-modal {
+  z-index: 1060; /* ¡Más alto que cualquier otro modal base (1050)! */
+}
 
+.pdf-preview-backdrop {
+  z-index: 1055; /* ¡Más alto que el modal base (1050), pero menor que el pdf-preview-modal (1060)! */
+}
 /* Las transiciones 'fade' y 'show' son manejadas por Bootstrap */
 /* .modal-backdrop.fade { opacity: 0; } */
 /* .modal-backdrop.show { opacity: .5; } */

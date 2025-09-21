@@ -35,7 +35,7 @@
                 <th>Días Pendiente</th>
                 <th>Monto Bruto (€)</th>
                 <th>Monto Neto (€)</th> <!-- Nueva columna -->
-                <th>Cotización (€)</th> <!-- Nueva columna -->
+                <th>IVA (€)</th> <!-- Nueva columna -->
                 <th>Forma de Pago</th>
                 <th>Fecha de Pago (Registro)</th>
                 <th>Acciones</th>
@@ -112,7 +112,7 @@ const editingStates = reactive({});
 const calculateCotizacion = (precioBruto) => {
   const brute = Number(precioBruto);
   if (isNaN(brute) || brute <= 0) return 0;
-  return parseFloat((brute * 0.232).toFixed(2));
+  return parseFloat((brute * 0.21).toFixed(2));
 };
 
 const calculatePrecioNeto = (precioBruto) => {
