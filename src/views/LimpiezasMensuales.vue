@@ -1604,7 +1604,7 @@ const generateInvoicePdfContent = async (invoiceData) => {
 
   // --- Información del cliente y la factura (siguiendo tu nueva lógica) ---
   doc.setFontSize(15);
-  doc.setTextColor("#5DCC47"); // Usando hex para 'verde' para ser preciso
+  doc.setTextColor("#4970B6"); // Usando hex para 'verde' para ser preciso
   doc.setFont("helvetica", "bold");
   doc.text("EXPEDIDA A: ", 20, 70);
   doc.text("FACT#: ", 130, 70);
@@ -1628,10 +1628,9 @@ const generateInvoicePdfContent = async (invoiceData) => {
   const rowHeight = 9; // Altura de cada fila en el cuerpo de la tabla
   const headerRectHeight = 9; // <--- CAMBIO CLAVE: Altura del recuadro del encabezado
 
-  doc.setDrawColor(93, 204, 71); // Borde verde
-  // --- CAMBIO CLAVE AQUÍ: REDUCIR ALTURA DEL RECUADRO DEL ENCABEZADO ---
+  doc.setDrawColor("#4970B6"); // Borde azul
   doc.rect(20, tableTopY, 170, headerRectHeight); // Caja del encabezado, ahora más ajustada
-  doc.setFillColor(55, 120, 42); // Fondo verde más oscuro para el encabezado
+  doc.setFillColor("4970B6"); // Fondo verde más oscuro para el encabezado
   doc.rect(20, tableTopY, 170, headerRectHeight, "F"); // Relleno del encabezado, misma altura
 
   doc.setTextColor("white");
@@ -1685,7 +1684,7 @@ const generateInvoicePdfContent = async (invoiceData) => {
 
   // --- Detalles de pago (siguiendo tu nueva lógica) ---
   currentY = totalY + 20; // Ajustar la posición Y basándose en el contenido anterior
-  doc.setTextColor("#5DCC47"); // Verde
+  doc.setTextColor("#4970B6"); // Azul
   doc.setFont("helvetica", "bold");
   doc.setFontSize(15); // Fuente más grande para el título de la sección
   doc.text("DATOS DE PAGO", 20, currentY);
