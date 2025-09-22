@@ -643,6 +643,10 @@
                   <input type="text" class="form-control" id="new-client-direccion" v-model="newClient.direccion"
                     required>
                 </div>
+                <div class="col-12">
+                  <label for="new-client-direccion" class="form-label">Dirección Complementaria (Opcional)</label>
+                  <input type="text" class="form-control" id="new-client-direccion" v-model="newClient.direccionComplementaria">
+                </div>
                 <div class="col-md-6">
                   <label for="new-client-ciudad" class="form-label">Ciudad</label>
                   <input type="text" class="form-control" id="new-client-ciudad" v-model="newClient.ciudad" required>
@@ -667,6 +671,12 @@
                   <input type="text" class="form-control" id="new-client-intervencion-calle"
                     v-model="newClient.direccionIntervencion.calle">
                 </div>
+                <div class="col-12">
+                  <label for="new-client-intervencion-calle" class="form-label">Dirección Complementaria (Opcional)</label>
+                  <input type="text" class="form-control" id="new-client-intervencion-calle"
+                    v-model="newClient.direccionIntervencion.complementaria">
+                </div>
+                
                 <div class="col-md-6">
                   <label for="new-client-intervencion-ciudad" class="form-label">Ciudad</label>
                   <input type="text" class="form-control" id="new-client-intervencion-ciudad"
@@ -928,8 +938,8 @@ const editedLimpieza = ref({
 });
 
 const newClient = ref({
-  nombre: '', apellido: '', direccion: '', ciudad: '', provincia: '', codigoPostal: '',
-  direccionIntervencion: { calle: '', ciudad: '', provincia: '', codigoPostal: '' },
+  nombre: '', apellido: '', direccion: '',direccionComplementaria:'', ciudad: '', provincia: '', codigoPostal: '',
+  direccionIntervencion: { calle: '',complementaria:'', ciudad: '', provincia: '', codigoPostal: '' },
   telefono: '', email: '', precioExterior: 0.00, precioInterior: 0.00, tipoCliente: ''
 });
 
@@ -1202,7 +1212,7 @@ const formatEuropeanDate = (dateValue) => {
 };
 
 /**
- * Calcula la cotización (23.2% del precio bruto).
+ * Calcula la cotización (21% del precio bruto).
  */
 const calculateCotizacion = (precioBruto) => {
   const brute = Number(precioBruto);
@@ -1352,8 +1362,8 @@ const closeEditModal = () => {
 const openAddClientModal = () => {
   isAddClientModalOpen.value = true;
   Object.assign(newClient.value, {
-    nombre: '', apellido: '', direccion: '', ciudad: '', provincia: '', codigoPostal: '',
-    direccionIntervencion: { calle: '', ciudad: '', provincia: '', codigoPostal: '' },
+    nombre: '', apellido: '', direccion: '',direccionComplementaria:"", ciudad: '', provincia: '', codigoPostal: '',
+    direccionIntervencion: { calle: '',complementaria:'', ciudad: '', provincia: '', codigoPostal: '' },
     telefono: '', email: '', precioExterior: 0.00, precioInterior: 0.00,
   });
 };
