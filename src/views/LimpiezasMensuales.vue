@@ -643,6 +643,10 @@
                   <input type="text" class="form-control" id="new-client-direccion" v-model="newClient.direccion"
                     required>
                 </div>
+                <div class="col-12">
+                  <label for="new-client-direccion" class="form-label">Dirección Complementaria (Opcional)</label>
+                  <input type="text" class="form-control" id="new-client-direccion" v-model="newClient.direccionComplementaria">
+                </div>
                 <div class="col-md-6">
                   <label for="new-client-ciudad" class="form-label">Ciudad</label>
                   <input type="text" class="form-control" id="new-client-ciudad" v-model="newClient.ciudad" required>
@@ -667,6 +671,12 @@
                   <input type="text" class="form-control" id="new-client-intervencion-calle"
                     v-model="newClient.direccionIntervencion.calle">
                 </div>
+                <div class="col-12">
+                  <label for="new-client-intervencion-calle" class="form-label">Dirección Complementaria (Opcional)</label>
+                  <input type="text" class="form-control" id="new-client-intervencion-calle"
+                    v-model="newClient.direccionIntervencion.complementaria">
+                </div>
+                
                 <div class="col-md-6">
                   <label for="new-client-intervencion-ciudad" class="form-label">Ciudad</label>
                   <input type="text" class="form-control" id="new-client-intervencion-ciudad"
@@ -928,8 +938,8 @@ const editedLimpieza = ref({
 });
 
 const newClient = ref({
-  nombre: '', apellido: '', direccion: '', ciudad: '', provincia: '', codigoPostal: '',
-  direccionIntervencion: { calle: '', ciudad: '', provincia: '', codigoPostal: '' },
+  nombre: '', apellido: '', direccion: '',direccionComplementaria:'', ciudad: '', provincia: '', codigoPostal: '',
+  direccionIntervencion: { calle: '',complementaria:'', ciudad: '', provincia: '', codigoPostal: '' },
   telefono: '', email: '', precioExterior: 0.00, precioInterior: 0.00, tipoCliente: ''
 });
 
@@ -1202,7 +1212,7 @@ const formatEuropeanDate = (dateValue) => {
 };
 
 /**
- * Calcula la cotización (23.2% del precio bruto).
+ * Calcula la cotización (21% del precio bruto).
  */
 const calculateCotizacion = (precioBruto) => {
   const brute = Number(precioBruto);
@@ -1352,8 +1362,8 @@ const closeEditModal = () => {
 const openAddClientModal = () => {
   isAddClientModalOpen.value = true;
   Object.assign(newClient.value, {
-    nombre: '', apellido: '', direccion: '', ciudad: '', provincia: '', codigoPostal: '',
-    direccionIntervencion: { calle: '', ciudad: '', provincia: '', codigoPostal: '' },
+    nombre: '', apellido: '', direccion: '',direccionComplementaria:"", ciudad: '', provincia: '', codigoPostal: '',
+    direccionIntervencion: { calle: '',complementaria:'', ciudad: '', provincia: '', codigoPostal: '' },
     telefono: '', email: '', precioExterior: 0.00, precioInterior: 0.00,
   });
 };
@@ -1604,7 +1614,7 @@ const generateInvoicePdfContent = async (invoiceData) => {
 
   // --- Información del cliente y la factura (siguiendo tu nueva lógica) ---
   doc.setFontSize(15);
-  doc.setTextColor("#5DCC47"); // Usando hex para 'verde' para ser preciso
+  doc.setTextColor("#4970B6"); // Usando hex para 'verde' para ser preciso
   doc.setFont("helvetica", "bold");
   doc.text("EXPEDIDA A: ", 20, 70);
   doc.text("FACT#: ", 130, 70);
@@ -1628,10 +1638,9 @@ const generateInvoicePdfContent = async (invoiceData) => {
   const rowHeight = 9; // Altura de cada fila en el cuerpo de la tabla
   const headerRectHeight = 9; // <--- CAMBIO CLAVE: Altura del recuadro del encabezado
 
-  doc.setDrawColor(93, 204, 71); // Borde verde
-  // --- CAMBIO CLAVE AQUÍ: REDUCIR ALTURA DEL RECUADRO DEL ENCABEZADO ---
+  doc.setDrawColor("#4970B6"); // Borde azul
   doc.rect(20, tableTopY, 170, headerRectHeight); // Caja del encabezado, ahora más ajustada
-  doc.setFillColor(55, 120, 42); // Fondo verde más oscuro para el encabezado
+  doc.setFillColor("4970B6"); // Fondo verde más oscuro para el encabezado
   doc.rect(20, tableTopY, 170, headerRectHeight, "F"); // Relleno del encabezado, misma altura
 
   doc.setTextColor("white");
@@ -1685,7 +1694,7 @@ const generateInvoicePdfContent = async (invoiceData) => {
 
   // --- Detalles de pago (siguiendo tu nueva lógica) ---
   currentY = totalY + 20; // Ajustar la posición Y basándose en el contenido anterior
-  doc.setTextColor("#5DCC47"); // Verde
+  doc.setTextColor("#4970B6"); // Azul
   doc.setFont("helvetica", "bold");
   doc.setFontSize(15); // Fuente más grande para el título de la sección
   doc.text("DATOS DE PAGO", 20, currentY);

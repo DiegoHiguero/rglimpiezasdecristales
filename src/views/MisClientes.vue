@@ -18,8 +18,6 @@
     <!-- Contenido principal de la vista si no hay carga ni error -->
     <div class="container-fluid p-0" v-else>
       <div class="row">
-        <!-- SECCIÓN DE EVENTOS ELIMINADA -->
-
         <!-- Sección de Detalles del Cliente Seleccionado y Añadir Limpieza (ahora solo detalles y historial) -->
         <div v-if="clienteSeleccionado" class="col-12 mt-4">
           <div class="card mb-4 shadow-sm">
@@ -46,11 +44,13 @@
                 <div class="col-md-6 mb-3">
                   <h5>Dirección de Facturación</h5>
                   <p>{{ clienteSeleccionado.direccion }}</p>
+                  <p>{{ clienteSeleccionado.direccionComplementaria }}</p>
                   <p>{{ clienteSeleccionado.codigoPostal }} {{ clienteSeleccionado.ciudad }} ({{ clienteSeleccionado.provincia }})</p>
                 </div>
                 <div class="col-md-6 mb-3" v-if="clienteSeleccionado.direccionIntervencion && clienteSeleccionado.direccionIntervencion.calle">
                   <h5>Dirección de Intervención</h5>
                   <p>{{ clienteSeleccionado.direccionIntervencion.calle }}</p>
+                  <p>{{ clienteSeleccionado.direccionIntervencion.complementaria}}</p>
                   <p>{{ clienteSeleccionado.direccionIntervencion.codigoPostal }} {{ clienteSeleccionado.direccionIntervencion.ciudad }} ({{ clienteSeleccionado.direccionIntervencion.provincia }})</p>
                 </div>
                 <div class="col-md-6 mb-3">
@@ -300,6 +300,10 @@
                   <input type="text" class="form-control" id="new-client-direccion" v-model="newClient.direccion"
                     required>
                 </div>
+                 <div class="col-12">
+                  <label for="new-client-direccion" class="form-label">Dirección Complementaria (Opcional)</label>
+                  <input type="text" class="form-control" id="new-client-direccion" v-model="newClient.direccionComplementaria">
+                </div>
                 <div class="col-md-6">
                   <label for="new-client-ciudad" class="form-label">Ciudad</label>
                   <input type="text" class="form-control" id="new-client-ciudad" v-model="newClient.ciudad" required>
@@ -318,6 +322,11 @@
                 <div class="col-12 mt-4 mb-3">
                   <h4 class="mb-0">Dirección de Intervención (Opcional)</h4>
                   <hr class="mt-2 mb-3">
+                </div>
+                 <div class="col-12">
+                  <label for="new-client-intervencion-calle" class="form-label">Dirección (Calle y Número)</label>
+                  <input type="text" class="form-control" id="new-client-intervencion-calle"
+                    v-model="newClient.direccionIntervencion.calle">
                 </div>
                 <div class="col-12">
                   <label for="new-client-intervencion-calle" class="form-label">Dirección (Calle y Número)</label>
@@ -427,6 +436,10 @@
                   <input type="text" class="form-control" id="edit-client-direccion" v-model="editedClient.direccion"
                     required>
                 </div>
+                <div class="col-12">
+                  <label for="new-client-direccion" class="form-label">Dirección Complementaria (Opcional)</label>
+                  <input type="text" class="form-control" id="new-client-direccion" v-model="editedClient.direccionComplementaria">
+                </div>
                 <div class="col-md-6">
                   <label for="edit-client-ciudad" class="form-label">Ciudad</label>
                   <input type="text" class="form-control" id="edit-client-ciudad" v-model="editedClient.ciudad" required>
@@ -450,6 +463,11 @@
                   <label for="edit-client-intervencion-calle" class="form-label">Dirección (Calle y Número)</label>
                   <input type="text" class="form-control" id="edit-client-intervencion-calle"
                     v-model="editedClient.direccionIntervencion.calle">
+                </div>
+                 <div class="col-12">
+                  <label for="new-client-intervencion-calle" class="form-label">Dirección Complementaria (Opcional)</label>
+                  <input type="text" class="form-control" id="new-client-intervencion-calle"
+                    v-model="editedClient.direccionIntervencion.complementaria">
                 </div>
                 <div class="col-md-6">
                   <label for="edit-client-intervencion-ciudad" class="form-label">Ciudad</label>
@@ -539,13 +557,13 @@ const historialLimpiezasCliente = ref([]); // Para el historial de limpiezas del
 
 // ... (El resto de tus refs como newClient, editedClient, etc.)
 const newClient = ref({
-  nombre: '', apellido: '', direccion: '', ciudad: '', provincia: '', codigoPostal: '',
-  direccionIntervencion: { calle: '', ciudad: '', provincia: '', codigoPostal: '' },
+  id: null, nombre: '', apellido: '', direccion: '',direccionComplementaria:'', ciudad: '', provincia: '', codigoPostal: '',
+  direccionIntervencion: { calle: '',complementaria:'', ciudad: '', provincia: '', codigoPostal: '' },
   telefono: '', email: '', precioExterior: 0.00, precioInterior: 0.00, tipoCliente: ''
 });
 const editedClient = ref({
   id: null, nombre: '', apellido: '', direccion: '', ciudad: '', provincia: '', codigoPostal: '',
-  direccionIntervencion: { calle: '', ciudad: '', provincia: '', codigoPostal: '' },
+  direccionIntervencion: { calle: '',complementaria:'', ciudad: '', provincia: '', codigoPostal: '' },
   telefono: '', email: '', precioExterior: 0.00, precioInterior: 0.00, tipoCliente: ''
 });
 
