@@ -795,7 +795,11 @@ import 'dayjs/locale/fr';
 
 import PagosPendientesView from '../components/PagosPendientesView.vue';
 import InvoiceEditorModal from '../components/InvoiceEditorModal.vue';
-
+import logo from '../assets/img/logoweb.png';
+import phoneIcon from '../assets/img/mobile.png';
+import emailIcon from '../assets/img/envelope.png';
+import webIcon from '../assets/img/globe.png';
+import locationIcon from '../assets/img/location.png';
 // --- ESTADOS LOCALES Y REFERENCES ---
 const databaseStore = useDatabaseStore();
 const isGeneratingPdf = ref(false); // Estado para el spinner del PDF resumen
@@ -1590,127 +1594,168 @@ const resetFilter = () => {
  * Genera el contenido PDF de una factura.
  * Ahora recibe un objeto `invoiceData` ya procesado con todos los ítems.
  */
+// --- IMPORTS ---
 const generateInvoicePdfContent = async (invoiceData) => {
-  // --- Validación (mantenida de la función original) ---
   if (!invoiceData || !invoiceData.clienteId || !invoiceData.factura || !invoiceData.invoiceItems || !invoiceData.clientDetails) {
     alert("Datos de factura incompletos para la generación del PDF.");
     return null;
   }
 
-  // --- Inicializar PDF ---
-  const doc = new jsPDF(); // Por defecto A4 vertical
+  const doc = new jsPDF();
 
-  // --- Extraer detalles del cliente para un acceso más fácil ---
   const clientDetails = invoiceData.clientDetails;
   const clientName = `${clientDetails.nombre || ''} ${clientDetails.apellido || ''}`;
   const clientAddress = clientDetails.direccion || 'N/A';
   const invoiceNumber = invoiceData.factura.toString();
   const currentDate = dayjs().locale('fr').format('DD/MM/YYYY');
 
-  // --- Encabezado de la factura ---
+  // --- LOGO ---
+  doc.addImage(logo, 'PNG', 20, 20, 50, 20);
+
+  // --- Encabezado ---
   doc.setFont("helvetica", "bold");
   doc.setFontSize(20);
-  doc.text("FACTURA ", 150, 40);
+  doc.text("FACTURA", 150, 40);
 
-  // --- Información del cliente y la factura (siguiendo tu nueva lógica) ---
-  doc.setFontSize(15);
-  doc.setTextColor("#4970B6"); // Usando hex para 'verde' para ser preciso
+  // --- Info cliente ---
+  doc.setFontSize(8);
+  doc.setTextColor("#4970B6");
   doc.setFont("helvetica", "bold");
-  doc.text("EXPEDIDA A: ", 20, 70);
-  doc.text("FACT#: ", 130, 70);
-  doc.text("FECHA: ", 130, 77);
+  doc.text("EXPEDIDA A:", 20, 70);
 
   doc.setFont("helvetica", "normal");
   doc.setTextColor("black");
-  doc.setFontSize(12); // Fuente ligeramente más grande para los detalles del cliente para mejor lectura
-  doc.text("Nombre: " + clientName, 20, 86);
-  doc.text("Dirección: " + clientAddress, 20, 92);
+  doc.text(clientName, 20, 75);
+  doc.text(clientAddress, 20, 80);
 
+  // --- FACT# y FECHA ---
+  doc.setFont("helvetica", "bold");
+  doc.setTextColor("#4970B6");
+  doc.setFontSize(9);
+  doc.text("FACT#:", 150, 70);
+  doc.text("FECHA:", 150, 77);
 
-  doc.setFontSize(10); // Restablecer tamaño de fuente para el texto siguiente si es necesario
-  doc.text(invoiceNumber, 155, 70); // Número de factura dinámico
-  doc.text(currentDate, 155, 77); // Fecha dinámica
+  doc.setFont("helvetica", "normal");
+  doc.setTextColor("black");
+  doc.text(invoiceNumber, 190, 70, { align: "right" });
+  doc.text(currentDate, 190, 77, { align: "right" });
 
-  // --- Sección de descripción (siguiendo tu nueva lógica) ---
-  let currentY = 100; // Y inicial para la sección de descripción
-  const tableTopY = currentY;
-  // const tableHeight = 90; // Altura fija para el área de ítems, ajusta según sea necesario
-  const rowHeight = 9; // Altura de cada fila en el cuerpo de la tabla
-  const headerRectHeight = 9; // <--- CAMBIO CLAVE: Altura del recuadro del encabezado
+  // --- Tabla de ítems ---
+  let tableY = 95;
+  const rowHeight = 9;
+  const headerHeight = 9;
 
-  doc.setDrawColor("#4970B6"); // Borde azul
-  doc.rect(20, tableTopY, 170, headerRectHeight); // Caja del encabezado, ahora más ajustada
-  doc.setFillColor("4970B6"); // Fondo verde más oscuro para el encabezado
-  doc.rect(20, tableTopY, 170, headerRectHeight, "F"); // Relleno del encabezado, misma altura
+  doc.setDrawColor("#4970B6");
+  doc.setFillColor("#4970B6");
+  doc.rect(20, tableY, 170, headerHeight, "F");
 
   doc.setTextColor("white");
   doc.setFont("helvetica", "bold");
   doc.setFontSize(12);
-  doc.text("Descripción de servicio", 35, tableTopY + 6);
-  doc.text("Cant.", 110, tableTopY + 6);
-  doc.text("Precio u.", 140, tableTopY + 6);
-  doc.text("Importe", 170, tableTopY + 6);
+  doc.text("Descripción de servicio", 35, tableY + 6);
+  doc.text("Cant.", 110, tableY + 6, { align: "center" });
+  doc.text("Precio u.", 140, tableY + 6, { align: "center" });
+  doc.text("Importe", 170, tableY + 6, { align: "right" });
 
   doc.setTextColor("black");
   doc.setFont("helvetica", "normal");
-  doc.setFontSize(10); // Tamaño de fuente para los detalles del ítem
+  doc.setFontSize(10);
 
-  // --- CAMBIO CLAVE AQUÍ: AJUSTAR Y INICIAL PARA LA PRIMERA DESCRIPCIÓN ---
-  // Se calcula para que el texto del primer ítem esté justo debajo del encabezado
-  currentY = tableTopY + headerRectHeight + 5; // El rectángulo del ítem empezará aquí
-  // Y del texto del ítem estará 5 unidades por debajo del inicio del rectángulo
-  let initialItemTextY = currentY + 5;
-
-  let calculatedInvoiceTotal = 0;
-  let itemsDrawn = 0; // Contador para saber cuántos items se han dibujado
+  let currentItemY = tableY + headerHeight + 5;
+  let subtotal = 0;
+  let itemsDrawn = 0;
 
   for (const item of invoiceData.invoiceItems) {
     if (item.totalHT && item.totalHT > 0) {
-      const itemY = initialItemTextY + (itemsDrawn * (rowHeight + 5)); // Posición Y para el texto del item
-      const itemRectY = itemY - 5; // Posición Y para el rectángulo del item
-
-      doc.rect(20, itemRectY, 170, rowHeight); // Rectángulo para cada fila de ítem
+      const itemY = currentItemY + (itemsDrawn * (rowHeight + 5));
+      const itemRectY = itemY - 5;
+      doc.rect(20, itemRectY, 170, rowHeight);
       doc.text(item.description || '', 35, itemY);
-      doc.text(String(item.qty || 0), 110, itemY);
-      doc.text(formatCurrency(item.unitPrice || 0), 140, itemY);
-      doc.text(formatCurrency(item.totalHT), 170, itemY);
-      calculatedInvoiceTotal += item.totalHT;
+      doc.text(String(item.qty || 0), 110, itemY, { align: "center" });
+      doc.text(formatCurrency(item.unitPrice || 0), 140, itemY, { align: "center" });
+      doc.text(formatCurrency(item.totalHT), 170, itemY, { align: "right" });
+      subtotal += item.totalHT;
       itemsDrawn++;
     }
   }
 
-  // Calcular la altura total que ocuparon los ítems dinámicamente
-  const dynamicItemsHeight = itemsDrawn * (rowHeight + 5);
+  const dynamicHeight = itemsDrawn * (rowHeight + 5);
+  let totalsY = currentItemY + dynamicHeight + 5;
 
+  const iva = subtotal * 0.21;
+  const total = subtotal + iva;
 
-  // --- Sección Total (adaptada del total de tu función original) ---
-  // Colocar el total debajo del último ítem dibujado + un espacio
-  const totalY = initialItemTextY + dynamicItemsHeight + 5;
-  doc.setTextColor("black");
+  // --- Totales alineados con columna Importe ---
+  const rowHeightTotal = 7;
+  const rowSpacing = 1;
+  const totalLabels = ["Subtotal", "IVA 21%", "TOTAL"];
+  const totalValues = [subtotal, iva, total];
+
+  for (let i = 0; i < totalLabels.length; i++) {
+    const y = totalsY + i * (rowHeightTotal + rowSpacing);
+
+    // Label centrado vertical
+    doc.setFillColor("#4970B6");
+    doc.setDrawColor("#4970B6");
+    doc.rect(120, y - 6, 40, rowHeightTotal, "FD");
+    doc.setTextColor("white");
+    doc.setFont("helvetica", "bold");
+    doc.text(totalLabels[i], 140, y - 1, { align: "center" });
+
+    // Valores alineados a la derecha sobre el borde de "Importe"
+    doc.setFillColor("white");
+    doc.setDrawColor("#4970B6");
+    doc.rect(160, y - 6, 30, rowHeightTotal, "FD");
+    doc.setTextColor("black");
+
+    if (i === 2) { // TOTAL
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(12); // <--- tamaño más grande para TOTAL
+    } else {
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(10);
+    }
+
+    doc.text(formatCurrency(totalValues[i]), 190, y - 1, { align: "right" });
+  }
+
+  totalsY += totalLabels.length * (rowHeightTotal + rowSpacing) + 10;
+
+  // --- Datos de pago ---
+  let paymentY = totalsY;
+  doc.setTextColor("#4970B6");
   doc.setFont("helvetica", "bold");
-  doc.setFontSize(12);
-  doc.text("TOTAL", 140, totalY);
-  doc.text(formatCurrency(calculatedInvoiceTotal), 170, totalY);
+  doc.setFontSize(15);
+  doc.text("DATOS DE PAGO", 20, paymentY);
 
-  // --- Detalles de pago (siguiendo tu nueva lógica) ---
-  currentY = totalY + 20; // Ajustar la posición Y basándose en el contenido anterior
-  doc.setTextColor("#4970B6"); // Azul
-  doc.setFont("helvetica", "bold");
-  doc.setFontSize(15); // Fuente más grande para el título de la sección
-  doc.text("DATOS DE PAGO", 20, currentY);
-
-  currentY += 10;
+  paymentY += 10;
   doc.setFontSize(10);
   doc.setTextColor("black");
   doc.setFont("helvetica", "normal");
-  doc.text("DNI: 50349726-N", 25, currentY);
-  currentY += 5;
-  doc.text("N/C: ROYS GREGORY ABREU REINOSO", 25, currentY);
-  currentY += 5;
-  doc.text("DNI: 50349726-N", 25, currentY);
+  doc.text("DNI: 50349726-N", 25, paymentY);
+  paymentY += 5;
+  doc.text("N/C: ROYS GREGORY ABREU REINOSO", 25, paymentY);
+  paymentY += 5;
+  doc.text("IBAN:ES69 1465 0340 53 1718233167", 25, paymentY);
+  paymentY += 7;
+  doc.addImage(phoneIcon, 'PNG', 25, paymentY - 3, 5, 5);
+  doc.text("696169435", 32, paymentY);
+  paymentY += 7;
+  doc.addImage(emailIcon, 'PNG', 25, paymentY - 3, 5, 5);
+  doc.text("roys.abreu@hotmail.es", 32, paymentY);
+  paymentY += 7;
+  doc.addImage(webIcon, 'PNG', 25, paymentY - 3, 5, 5);
+  doc.text("www.royallclean.es", 32, paymentY);
+  paymentY += 7;
+  doc.addImage(locationIcon, 'PNG', 25, paymentY - 3, 5, 5);
+  doc.text("Av. Segunda República, 17 1D, 28905 (Madrid)", 32, paymentY);
 
   return doc;
 };
+
+
+
+
 
 const downloadFactura = async(limpieza)=> {
       if (!limpieza) {
@@ -1769,9 +1814,9 @@ const openInvoiceEditor = async (limpieza) => {
     let descriptionText = '';
     let weeklyPrice = 0;
 
-    if (semanaTipo === 'exterior') { descriptionText = `Nettoyage extérieur`; weeklyPrice = extPrice; }
-    else if (semanaTipo === 'interior') { descriptionText = `Nettoyage intérieur`; weeklyPrice = intPrice; }
-    else if (semanaTipo === 'ambas') { descriptionText = `Nettoyage extérieur et intérieur`; weeklyPrice = extPrice + intPrice; }
+    if (semanaTipo === 'exterior') { descriptionText = `Limpieza exterior`; weeklyPrice = extPrice; }
+    else if (semanaTipo === 'interior') { descriptionText = `Limpieza interior`; weeklyPrice = intPrice; }
+    else if (semanaTipo === 'ambas') { descriptionText = `Limpieza exterior e interior`; weeklyPrice = extPrice + intPrice; }
     else { continue; }
 
     // Usar el precio específico de la semana si existe, de lo contrario usar el calculado
@@ -1867,7 +1912,7 @@ const handleGeneratePdf = async () => {
   isGeneratingPdf.value = true;
   try {
     if (!databaseStore.limpiezas || databaseStore.limpiezas.length === 0) {
-      alert("Aucun enregistrement de nettoyage n'a été trouvé pour générer le PDF de résumé.");
+      alert("No se encontraron registros de limpieza para generar el PDF de resumen.");
       isGeneratingPdf.value = false;
       return;
     }
@@ -1885,7 +1930,7 @@ const handleGeneratePdf = async () => {
     const usableWidth = pageWidth - leftMargin - rightMargin;
 
     const currentMonthYear = dayjs().format('MMMM YYYY').toUpperCase();
-    const titleText = `RÉSUMÉ DES NETTOYAGES ${currentMonthYear}`;
+    const titleText = `RESUMEN LIMPIEZAS ${currentMonthYear}`;
 
     doc.setFontSize(18);
     doc.text(titleText, pageWidth / 2, topMargin - 10, { align: 'center' });
