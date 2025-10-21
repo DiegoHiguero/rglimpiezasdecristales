@@ -254,7 +254,10 @@
             </div>
           </div>
         </div>
-
+<!-- Sección de Gastos -->
+<div class="col-12 mt-5">
+  <GastosTable />
+</div>
         <!-- Componentes externos -->
         <div>
           <!-- <NuevaFactura /> -->
@@ -548,6 +551,7 @@ import 'dayjs/locale/fr';
 
 import VueApexCharts from "vue3-apexcharts";
 import Mapa from '../components/Mapa.vue';
+import GastosTable from '../components/GastosTable.vue';
 
 // --- ESTADOS LOCALES Y REFERENCES ---
 const databaseStore = useDatabaseStore();

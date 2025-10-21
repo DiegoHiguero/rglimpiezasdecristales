@@ -60,9 +60,120 @@ export const useDatabaseStore = defineStore('database', {
         updateClientError: null, // Errores al actualizar cliente
         isDeletingClient: false, // Carga al eliminar cliente
         deleteClientError: null, // Errores al eliminar cliente
+        // --- ESTADO PARA GESTIÓN DE GASTOS ---
+gastos: [],
+isLoadingGastos: false,
+errorGastos: null,
+isAddingGasto: false,
+addGastoError: null,
+isUpdatingGasto: false,
+updateGastoError: null,
+isDeletingGasto: false,
+deleteGastoError: null,
+selectedMonthGastos: '',
+selectedYearGastos: '',
     }),
 
     actions: {
+        // --- ACCIONES DE GESTIÓN DE GASTOS ---
+
+async addGasto(gastoData) {
+  this.isAddingGasto = true;
+  this.addGastoError = null;
+  try {
+    const dataToSave = {
+      ...gastoData,
+      createdAt: serverTimestamp(),
+    };
+    const docRef = await addDoc(collection(db, 'gastosMensuales'), dataToSave);
+    console.log("Nuevo gasto añadido con ID:", docRef.id);
+    await this.fetchGastos(this.selectedMonthGastos, this.selectedYearGastos);
+  } catch (err) {
+    this.addGastoError = err;
+    console.error("Error al añadir gasto:", err);
+    throw err;
+  } finally {
+    this.isAddingGasto = false;
+  }
+},
+
+async fetchGastos(month = '', year = '') {
+  this.isLoadingGastos = true;
+  this.errorGastos = null;
+  this.selectedMonthGastos = month;
+  this.selectedYearGastos = year;
+
+  try {
+    const gastosRef = collection(db, 'gastosMensuales');
+    let q;
+
+    if (year !== '') {
+      const yearNum = parseInt(year);
+      const monthNum = month !== '' ? parseInt(month) : null;
+      let startDate, endDate;
+
+      if (monthNum !== null) {
+        startDate = dayjs().year(yearNum).month(monthNum).startOf('month').format('YYYY-MM-DD');
+        endDate = dayjs().year(yearNum).month(monthNum).endOf('month').format('YYYY-MM-DD');
+      } else {
+        startDate = dayjs().year(yearNum).startOf('year').format('YYYY-MM-DD');
+        endDate = dayjs().year(yearNum).endOf('year').format('YYYY-MM-DD');
+      }
+
+      q = query(
+        gastosRef,
+        where('fechaFactura', '>=', startDate),
+        where('fechaFactura', '<=', endDate),
+        orderBy('fechaFactura', 'asc')
+      );
+    } else {
+      q = query(gastosRef, orderBy('fechaFactura', 'desc'));
+    }
+
+    const querySnapshot = await getDocs(q);
+    this.gastos = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  } catch (e) {
+    this.errorGastos = e;
+    console.error("Error al obtener gastos:", e);
+  } finally {
+    this.isLoadingGastos = false;
+  }
+},
+
+async updateGasto(id, updatedData) {
+  this.isUpdatingGasto = true;
+  this.updateGastoError = null;
+  try {
+    const docRef = doc(db, 'gastosMensuales', id);
+    await updateDoc(docRef, updatedData);
+    console.log("Gasto actualizado con ID:", id);
+    await this.fetchGastos(this.selectedMonthGastos, this.selectedYearGastos);
+  } catch (err) {
+    this.updateGastoError = err;
+    console.error("Error al actualizar gasto:", err);
+    throw err;
+  } finally {
+    this.isUpdatingGasto = false;
+  }
+},
+
+async deleteGasto(id) {
+  this.isDeletingGasto = true;
+  this.deleteGastoError = null;
+  try {
+    const docRef = doc(db, 'gastosMensuales', id);
+    await deleteDoc(docRef);
+    console.log("Gasto eliminado con ID:", id);
+    this.gastos = this.gastos.filter(g => g.id !== id);
+  } catch (err) {
+    this.deleteGastoError = err;
+    console.error("Error al eliminar gasto:", err);
+    throw err;
+  } finally {
+    this.isDeletingGasto = false;
+  }
+},
+
         // --- ACCIONES DE LIMPIEZAS MENSUALES ---
 
         /**
@@ -483,6 +594,17 @@ export const useDatabaseStore = defineStore('database', {
     },
 
     getters: {
+        // --- GETTERS DE GASTOS ---
+totalGastosConIVA: (state) => {
+  return state.gastos.reduce((acc, g) => acc + (Number(g.precioConIVA) || 0), 0);
+},
+totalGastosSinIVA: (state) => {
+  return state.gastos.reduce((acc, g) => acc + (Number(g.precioSinIVA) || 0), 0);
+},
+totalIVA: (state) => {
+  return state.gastos.reduce((acc, g) => acc + (Number(g.iva) || 0), 0);
+},
+
         /**
          * Calcula el total bruto de todas las limpiezas cargadas.
          * @returns {number}
