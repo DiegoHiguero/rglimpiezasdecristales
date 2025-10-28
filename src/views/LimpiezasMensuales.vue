@@ -36,103 +36,36 @@
             <!-- Fin de sección para número de factura manual -->
 
             <div class="row justify-content-center mt-3">
-              <div class="col-md-2">
+              <div class="col-md-3">
                 <label for="semana1" class="form-label">Semana 1 </label>
                 <input type="date" class="form-control mb-2" id="semana1" v-model="nuevaLimpieza.semana1">
-                <label for="semana1precio" class="form-label">Precio (€)</label>
-                <input type="number" step="0.01" class="form-control" id="semana1precio"
-                  v-model.number="nuevaLimpieza.semana1precio">
-                <div class="d-flex gap-2 mt-1">
-                  <button type="button" class="btn btn-sm"
-                    :class="[nuevaLimpieza.semana1Exterior ? 'btn-success' : 'btn-danger']"
-                    @click="toggleSemanaType('semana1', 'exterior', nuevaLimpieza)">
-                    Exterior
-                  </button>
-                  <button type="button" class="btn btn-sm"
-                    :class="[nuevaLimpieza.semana1Interior ? 'btn-success' : 'btn-danger']"
-                    @click="toggleSemanaType('semana1', 'interior', nuevaLimpieza)">
-                    Interior
-                  </button>
-                </div>
+                <label for="semana1Notas" class="form-label">Notas</label>
+                <input type="text" class="form-control" id="semana1Notas" v-model="nuevaLimpieza.semana1Notas"
+                  placeholder="Notas para Semana 1">
               </div>
-              <div class="col-md-2">
+              <div class="col-md-3">
                 <label for="semana2" class="form-label">Semana 2 </label>
                 <input type="date" class="form-control mb-2" id="semana2" v-model="nuevaLimpieza.semana2">
-                <label for="semana2precio" class="form-label">Precio (€)</label>
-                <input type="number" step="0.01" class="form-control" id="semana2precio"
-                  v-model.number="nuevaLimpieza.semana2precio">
-                <div class="d-flex gap-2 mt-1">
-                  <button type="button" class="btn btn-sm"
-                    :class="[nuevaLimpieza.semana2Exterior ? 'btn-success' : 'btn-danger']"
-                    @click="toggleSemanaType('semana2', 'exterior', nuevaLimpieza)">
-                    Exterior
-                  </button>
-                  <button type="button" class="btn btn-sm"
-                    :class="[nuevaLimpieza.semana2Interior ? 'btn-success' : 'btn-danger']"
-                    @click="toggleSemanaType('semana2', 'interior', nuevaLimpieza)">
-                    Interior
-                  </button>
-                </div>
+                <label for="semana2Notas" class="form-label">Notas</label>
+                <input type="text" class="form-control" id="semana2Notas" v-model="nuevaLimpieza.semana2Notas"
+                  placeholder="Notas para Semana 2">
               </div>
-              <div class="col-md-2">
+              <div class="col-md-3">
                 <label for="semana3" class="form-label">Semana 3 </label>
                 <input type="date" class="form-control mb-2" id="semana3" v-model="nuevaLimpieza.semana3">
-                <label for="semana3precio" class="form-label">Precio (€)</label>
-                <input type="number" step="0.01" class="form-control" id="semana3precio"
-                  v-model.number="nuevaLimpieza.semana3precio">
-                <div class="d-flex gap-2 mt-1">
-                  <button type="button" class="btn btn-sm"
-                    :class="[nuevaLimpieza.semana3Exterior ? 'btn-success' : 'btn-danger']"
-                    @click="toggleSemanaType('semana3', 'exterior', nuevaLimpieza)">
-                    Exterior
-                  </button>
-                  <button type="button" class="btn btn-sm"
-                    :class="[nuevaLimpieza.semana3Interior ? 'btn-success' : 'btn-danger']"
-                    @click="toggleSemanaType('semana3', 'interior', nuevaLimpieza)">
-                    Interior
-                  </button>
-                </div>
+                <label for="semana3Notas" class="form-label">Notas</label>
+                <input type="text" class="form-control" id="semana3Notas" v-model="nuevaLimpieza.semana3Notas"
+                  placeholder="Notas para Semana 3">
               </div>
-              <div class="col-md-2">
+              <div class="col-md-3">
                 <label for="semana4" class="form-label">Semana 4 </label>
                 <input type="date" class="form-control mb-2" id="semana4" v-model="nuevaLimpieza.semana4">
-                <label for="semana4precio" class="form-label">Precio (€)</label>
-                <input type="number" step="0.01" class="form-control" id="semana4precio"
-                  v-model.number="nuevaLimpieza.semana4precio">
-                <div class="d-flex gap-2 mt-1">
-                  <button type="button" class="btn btn-sm"
-                    :class="[nuevaLimpieza.semana4Exterior ? 'btn-success' : 'btn-danger']"
-                    @click="toggleSemanaType('semana4', 'exterior', nuevaLimpieza)">
-                    Exterior
-                  </button>
-                  <button type="button" class="btn btn-sm"
-                    :class="[nuevaLimpieza.semana4Interior ? 'btn-success' : 'btn-danger']"
-                    @click="toggleSemanaType('semana4', 'interior', nuevaLimpieza)">
-                    Interior
-                  </button>
-                </div>
-              </div>
-              <div class="col-md-2">
-                <label for="semana5" class="form-label">Semana 5 </label>
-                <input type="date" class="form-control mb-2" id="semana5" v-model="nuevaLimpieza.semana5">
-                <label for="semana5precio" class="form-label">Precio (€)</label>
-                <input type="number" step="0.01" class="form-control" id="semana5precio"
-                  v-model.number="nuevaLimpieza.semana5precio">
-                <div class="d-flex gap-2 mt-1">
-                  <button type="button" class="btn btn-sm"
-                    :class="[nuevaLimpieza.semana5Exterior ? 'btn-success' : 'btn-danger']"
-                    @click="toggleSemanaType('semana5', 'exterior', nuevaLimpieza)">
-                    Exterior
-                  </button>
-                  <button type="button" class="btn btn-sm"
-                    :class="[nuevaLimpieza.semana5Interior ? 'btn-success' : 'btn-danger']"
-                    @click="toggleSemanaType('semana5', 'interior', nuevaLimpieza)">
-                    Interior
-                  </button>
-                </div>
+                <label for="semana4Notas" class="form-label">Notas</label>
+                <input type="text" class="form-control" id="semana4Notas" v-model="nuevaLimpieza.semana4Notas"
+                  placeholder="Notas para Semana 4">
               </div>
             </div>
-  <div class="row g-3 mt-4">
+            <div class="row g-3 mt-4">
             <h4>Limpiezas Extra</h4>
             <div v-for="(extra, index) in nuevaLimpieza.extraCleanings" :key="index" class="col-12">
               <div class="row g-2 align-items-end mb-2">
@@ -272,11 +205,6 @@
               <tr>
                 <th>Factura #</th>
                 <th>Cliente</th>
-                <th style="min-width: 100px;">Sem.1</th>
-                <th style="min-width: 100px;">Sem.2</th>
-                <th style="min-width: 100px;">Sem.3</th>
-                <th style="min-width: 100px;">Sem.4</th>
-                <th style="min-width: 100px;">Sem.5</th>
                 <th>Bruto(€)</th>
                 <th>Neto(€)</th>
                 <th>IVA</th>
@@ -291,61 +219,7 @@
                 :class="{ 'bg-danger-subtle': isPaymentDateMismatched(limpieza) }">
                 <td>{{ limpieza.factura }}</td>
                 <td>{{ limpieza.cliente }}</td>
-                <td class="text-center">
-                  {{ formatEuropeanDate(limpieza.semana1) }}
-                  <br v-if="limpieza.semana1Tipo" />
-                  <span v-if="limpieza.semana1Tipo === 'exterior' || limpieza.semana1Tipo === 'ambas'"
-                    class="badge bg-primary me-1">E</span>
-                  <span v-if="limpieza.semana1Tipo === 'interior' || limpieza.semana1Tipo === 'ambas'"
-                    class="badge bg-secondary">I</span>
-                  <div v-if="limpieza.semana1precio !== null">
-                    <small class="text-muted">{{ formatCurrency(limpieza.semana1precio) }}</small>
-                  </div>
-                </td>
-                <td class="text-center">
-                  {{ formatEuropeanDate(limpieza.semana2) }}
-                  <br v-if="limpieza.semana2Tipo" />
-                  <span v-if="limpieza.semana2Tipo === 'exterior' || limpieza.semana2Tipo === 'ambas'"
-                    class="badge bg-primary me-1">E</span>
-                  <span v-if="limpieza.semana2Tipo === 'interior' || limpieza.semana2Tipo === 'ambas'"
-                    class="badge bg-secondary">I</span>
-                  <div v-if="limpieza.semana2precio !== null">
-                    <small class="text-muted">{{ formatCurrency(limpieza.semana2precio) }}</small>
-                  </div>
-                </td>
-                <td class="text-center">
-                  {{ formatEuropeanDate(limpieza.semana3) }}
-                  <br v-if="limpieza.semana3Tipo" />
-                  <span v-if="limpieza.semana3Tipo === 'exterior' || limpieza.semana3Tipo === 'ambas'"
-                    class="badge bg-primary me-1">E</span>
-                  <span v-if="limpieza.semana3Tipo === 'interior' || limpieza.semana3Tipo === 'ambas'"
-                    class="badge bg-secondary">I</span>
-                  <div v-if="limpieza.semana3precio !== null">
-                    <small class="text-muted">{{ formatCurrency(limpieza.semana3precio) }}</small>
-                  </div>
-                </td>
-                <td class="text-center">
-                  {{ formatEuropeanDate(limpieza.semana4) }}
-                  <br v-if="limpieza.semana4Tipo" />
-                  <span v-if="limpieza.semana4Tipo === 'exterior' || limpieza.semana4Tipo === 'ambas'"
-                    class="badge bg-primary me-1">E</span>
-                  <span v-if="limpieza.semana4Tipo === 'interior' || limpieza.semana4Tipo === 'ambas'"
-                    class="badge bg-secondary">I</span>
-                  <div v-if="limpieza.semana4precio !== null">
-                    <small class="text-muted">{{ formatCurrency(limpieza.semana4precio) }}</small>
-                  </div>
-                </td>
-                <td class="text-center">
-                  {{ formatEuropeanDate(limpieza.semana5) }}
-                  <br v-if="limpieza.semana5Tipo" />
-                  <span v-if="limpieza.semana5Tipo === 'exterior' || limpieza.semana5Tipo === 'ambas'"
-                    class="badge bg-primary me-1">E</span>
-                  <span v-if="limpieza.semana5Tipo === 'interior' || limpieza.semana5Tipo === 'ambas'"
-                    class="badge bg-secondary">I</span>
-                  <div v-if="limpieza.semana5precio !== null">
-                    <small class="text-muted">{{ formatCurrency(limpieza.semana5precio) }}</small>
-                  </div>
-                </td>
+              
                 <td>{{ limpieza.precioBruto }}€</td>
                 <td><strong>{{ formatCurrency(calculatePrecioNeto(limpieza.precioBruto)) }}</strong></td>
                 <td>{{ formatCurrency(calculateCotizacion(limpieza.precioBruto)) }}</td>
@@ -382,7 +256,7 @@
               <!-- Fila para la cantidad de clientes y el total PAGADO -->
               <tr>
                 <td class="text-start"><strong>CLIENTES: {{ uniqueClientsInDisplay }}</strong></td>
-                <td colspan="6" class="text-end"><strong>TOTAL PAGADO</strong></td>
+                <td colspan="5" class="text-end"><strong>TOTAL PAGADO</strong></td> <!-- colspan ajustado de 6 a 5 -->
                 <td>{{ formatCurrency(totalPagado) }}</td>
                 <td>
                   <h4><strong>{{ formatCurrency(totalNetoPagado) }}</strong></h4>
@@ -392,7 +266,7 @@
               </tr>
               <!-- Fila para el total PENDIENTE del filtro actual -->
               <tr>
-                <td colspan="7" class="text-end">
+                <td colspan="6" class="text-end"> <!-- colspan ajustado de 7 a 6 -->
                   <span><strong>TOTAL PENDIENTE</strong></span>
                 </td>
                 <td>
@@ -440,103 +314,36 @@
 
               <h5>{{ editedLimpieza.cliente }}</h5>
               <div class="row g-3">
-                <!-- ... (el resto de tus campos de semana, precio bruto, forma de pago, fecha de pago) ... -->
                 <div class="col-md-6">
                   <label for="edit-semana1" class="form-label">Semana 1 </label>
                   <input type="date" class="form-control mb-2" id="edit-semana1" v-model="editedLimpieza.semana1">
-                  <label for="edit-semana1precio" class="form-label">Precio (€)</label>
-                  <input type="number" step="0.01" class="form-control" id="edit-semana1precio"
-                    v-model.number="editedLimpieza.semana1precio">
-                  <div class="d-flex gap-2 mt-1">
-                    <button type="button" class="btn btn-sm"
-                      :class="[editedLimpieza.semana1Exterior ? 'btn-success' : 'btn-danger']"
-                      @click="toggleSemanaType('semana1', 'exterior', editedLimpieza)">
-                      Exterior
-                    </button>
-                    <button type="button" class="btn btn-sm"
-                      :class="[editedLimpieza.semana1Interior ? 'btn-success' : 'btn-danger']"
-                      @click="toggleSemanaType('semana1', 'interior', editedLimpieza)">
-                      Interior
-                    </button>
-                  </div>
+                  <label for="edit-semana1Notas" class="form-label">Notas</label>
+                  <input type="text" class="form-control" id="edit-semana1Notas" v-model="editedLimpieza.semana1Notas"
+                    placeholder="Notas para Semana 1">
                 </div>
                 <div class="col-md-6">
                   <label for="edit-semana2" class="form-label">Semana 2 </label>
                   <input type="date" class="form-control mb-2" id="edit-semana2" v-model="editedLimpieza.semana2">
-                  <label for="edit-semana2precio" class="form-label">Precio (€)</label>
-                  <input type="number" step="0.01" class="form-control" id="edit-semana2precio"
-                    v-model.number="editedLimpieza.semana2precio">
-                  <div class="d-flex gap-2 mt-1">
-                    <button type="button" class="btn btn-sm"
-                      :class="[editedLimpieza.semana2Exterior ? 'btn-success' : 'btn-danger']"
-                      @click="toggleSemanaType('semana2', 'exterior', editedLimpieza)">
-                      Exterior
-                    </button>
-                    <button type="button" class="btn btn-sm"
-                      :class="[editedLimpieza.semana2Interior ? 'btn-success' : 'btn-danger']"
-                      @click="toggleSemanaType('semana2', 'interior', editedLimpieza)">
-                      Interior
-                    </button>
-                  </div>
+                  <label for="edit-semana2Notas" class="form-label">Notas</label>
+                  <input type="text" class="form-control" id="edit-semana2Notas" v-model="editedLimpieza.semana2Notas"
+                    placeholder="Notas para Semana 2">
                 </div>
                 <div class="col-md-6">
                   <label for="edit-semana3" class="form-label">Semana 3 </label>
                   <input type="date" class="form-control mb-2" id="edit-semana3" v-model="editedLimpieza.semana3">
-                  <label for="edit-semana3precio" class="form-label">Precio (€)</label>
-                  <input type="number" step="0.01" class="form-control" id="edit-semana3precio"
-                    v-model.number="editedLimpieza.semana3precio">
-                  <div class="d-flex gap-2 mt-1">
-                    <button type="button" class="btn btn-sm"
-                      :class="[editedLimpieza.semana3Exterior ? 'btn-success' : 'btn-danger']"
-                      @click="toggleSemanaType('semana3', 'exterior', editedLimpieza)">
-                      Exterior
-                    </button>
-                    <button type="button" class="btn btn-sm"
-                      :class="[editedLimpieza.semana3Interior ? 'btn-success' : 'btn-danger']"
-                      @click="toggleSemanaType('semana3', 'interior', editedLimpieza)">
-                      Interior
-                    </button>
-                  </div>
+                  <label for="edit-semana3Notas" class="form-label">Notas</label>
+                  <input type="text" class="form-control" id="edit-semana3Notas" v-model="editedLimpieza.semana3Notas"
+                    placeholder="Notas para Semana 3">
                 </div>
                 <div class="col-md-6">
                   <label for="edit-semana4" class="form-label">Semana 4 </label>
                   <input type="date" class="form-control mb-2" id="edit-semana4" v-model="editedLimpieza.semana4">
-                  <label for="edit-semana4precio" class="form-label">Precio (€)</label>
-                  <input type="number" step="0.01" class="form-control" id="edit-semana4precio"
-                    v-model.number="editedLimpieza.semana4precio">
-                  <div class="d-flex gap-2 mt-1">
-                    <button type="button" class="btn btn-sm"
-                      :class="[editedLimpieza.semana4Exterior ? 'btn-success' : 'btn-danger']"
-                      @click="toggleSemanaType('semana4', 'exterior', editedLimpieza)">
-                      Exterior
-                    </button>
-                    <button type="button" class="btn btn-sm"
-                      :class="[editedLimpieza.semana4Interior ? 'btn-success' : 'btn-danger']"
-                      @click="toggleSemanaType('semana4', 'interior', editedLimpieza)">
-                      Interior
-                    </button>
-                  </div>
+                  <label for="edit-semana4Notas" class="form-label">Notas</label>
+                  <input type="text" class="form-control" id="edit-semana4Notas" v-model="editedLimpieza.semana4Notas"
+                    placeholder="Notas para Semana 4">
                 </div>
+                <!-- Semana 5 ELIMINADA del modal de edición -->
 
-                <div class="col-md-6">
-                  <label for="edit-semana5" class="form-label">Semana 5 </label>
-                  <input type="date" class="form-control mb-2" id="edit-semana5" v-model="editedLimpieza.semana5">
-                  <label for="edit-semana5precio" class="form-label">Precio (€)</label>
-                  <input type="number" step="0.01" class="form-control" id="edit-semana5precio"
-                    v-model.number="editedLimpieza.semana5precio">
-                  <div class="d-flex gap-2 mt-1">
-                    <button type="button" class="btn btn-sm"
-                      :class="[editedLimpieza.semana5Exterior ? 'btn-success' : 'btn-danger']"
-                      @click="toggleSemanaType('semana5', 'exterior', editedLimpieza)">
-                      Exterior
-                    </button>
-                    <button type="button" class="btn btn-sm"
-                      :class="[editedLimpieza.semana5Interior ? 'btn-success' : 'btn-danger']"
-                      @click="toggleSemanaType('semana5', 'interior', editedLimpieza)">
-                      Interior
-                    </button>
-                  </div>
-                </div>
                 <div class="col-md-6">
                   <label for="edit-precioBruto" class="form-label">Precio Bruto (€)</label>
                   <input type="number" step="0.01" class="form-control" id="edit-precioBruto"
@@ -721,16 +528,18 @@
                   <h4 class="mb-0">Tarifas de Limpieza (€)</h4>
                   <hr class="mt-2 mb-3">
                 </div>
+                <!-- INICIO: CAMBIO SOLICITADO -->
                 <div class="col-md-6">
-                  <label for="new-client-precio-exterior" class="form-label">Precio por Limpieza Exterior</label>
-                  <input type="number" class="form-control" id="new-client-precio-exterior"
-                    v-model.number="newClient.precioExterior" step="0.01" min="0">
+                  <label for="new-client-precio-neto" class="form-label">Precio Neto (€)</label>
+                  <input type="number" class="form-control" id="new-client-precio-neto"
+                    v-model.number="newClient.precioNeto" step="0.01" min="0">
                 </div>
                 <div class="col-md-6">
-                  <label for="new-client-precio-interior" class="form-label">Precio por Limpieza Interior</label>
-                  <input type="number" class="form-control" id="new-client-precio-interior"
-                    v-model.number="newClient.precioInterior" step="0.01" min="0">
+                  <label for="new-client-precio-con-iva" class="form-label">Precio con IVA 21% (€)</label>
+                  <input type="text" class="form-control" id="new-client-precio-con-iva"
+                    :value="calculatedNewClientPrecioConIva" readonly>
                 </div>
+                <!-- FIN: CAMBIO SOLICITADO -->
               </div>
             </form>
           </div>
@@ -784,6 +593,7 @@
     <div v-if="isPreviewModalOpen" class="modal-backdrop fade show"></div>
   </div>
 </template>
+
 
 <script setup>
 import { ref, onMounted, computed } from 'vue';
@@ -920,32 +730,51 @@ const totalPendienteMesActual = computed(() => {
 const nuevaLimpieza = ref({
   cliente: '',
   clienteId: null,
-  semana1: '', semana1Exterior: false, semana1Interior: false, semana1precio: null,
-  semana2: '', semana2Exterior: false, semana2Interior: false, semana2precio: null,
-  semana3: '', semana3Exterior: false, semana3Interior: false, semana3precio: null,
-  semana4: '', semana4Exterior: false, semana4Interior: false, semana4precio: null,
-  semana5: '', semana5Exterior: false, semana5Interior: false, semana5precio: null,
+  semana1: '',
+  semana1Notas: '',
+  semana2: '',
+  semana2Notas: '',
+  semana3: '',
+  semana3Notas: '',
+  semana4: '',
+  semana4Notas: '',
+  // ... (propiedades de semana existentes con solo fecha y notas) ...
   extraCleanings: [{ description: '', date: '', quantity: 1, unitPrice: 0 }],
   formaPago: 'Efectivo',
   fechaPago: null,
+  basePriceNeto: 0, // <-- NUEVO: Para guardar el precio neto base del cliente
 });
 
 const editedLimpieza = ref({
   id: null, factura: null, cliente: '', clienteId: null,
-  semana1: '', semana1Exterior: false, semana1Interior: false, semana1precio: null,
-  semana2: '', semana2Exterior: false, semana2Interior: false, semana2precio: null,
-  semana3: '', semana3Exterior: false, semana3Interior: false, semana3precio: null,
-  semana4: '', semana4Exterior: false, semana4Interior: false, semana4precio: null,
-  semana5: '', semana5Exterior: false, semana5Interior: false, semana5precio: null,
-  extraCleanings: [], // Inicializar como array vacío para edición
+  semana1: '', semana1Notas: '',
+  semana2: '', semana2Notas: '',
+  semana3: '', semana3Notas: '',
+  semana4: '', semana4Notas: '',
+  // ... (propiedades de semana existentes con solo fecha y notas) ...
+  extraCleanings: [],
   formaPago: 'Efectivo', fechaPago: null, precioBruto: null,
+  basePriceNeto: 0, // <-- NUEVO: Para guardar el precio neto base del cliente
 });
+
 
 const newClient = ref({
   nombre: '', apellido: '', direccion: '',direccionComplementaria:'', ciudad: '', provincia: '', codigoPostal: '',
   direccionIntervencion: { calle: '',complementaria:'', ciudad: '', provincia: '', codigoPostal: '' },
-  telefono: '', email: '', precioExterior: 0.00, precioInterior: 0.00, tipoCliente: ''
+  telefono: '', email: '', tipoCliente: '',
+  precioNeto: 0.00 
 });
+// ...otras propiedades computadas existentes...
+
+// Calculado para el Precio con IVA en el formulario de nuevo cliente
+const calculatedNewClientPrecioConIva = computed(() => {
+  const neto = Number(newClient.value.precioNeto);
+  if (isNaN(neto) || neto < 0) return formatCurrency(0);
+  return formatCurrency(neto * 1.21); // Suponiendo un 21% de IVA
+});
+
+// ...resto del código de propiedades computadas...
+
 
 // Metodos para limpiezas extra en el formulario de NUEVA limpieza
 const addExtraCleaningLine = () => {
@@ -1058,15 +887,9 @@ const calculatedExtraCleaningsTotalEdited = computed(() => {
   return parseFloat(total.toFixed(2));
 });
 
-// Calculado para el formulario de NUEVA limpieza
-const calculatedPrecioBrutoNueva = computed(() => {
-  return (calculatePrecioBruto(nuevaLimpieza.value, selectedClientForNueva.value) + calculatedExtraCleaningsTotalNueva.value);
-});
 
 // Calculado para el formulario de EDICION
-const calculatedPrecioBrutoEdited = computed(() => {
-  return (calculatePrecioBruto(editedLimpieza.value, selectedClientForEdited.value) + calculatedExtraCleaningsTotalEdited.value);
-});
+
 
 
 const availableYears = computed(() => {
@@ -1186,15 +1009,7 @@ const getEarliestSemanaDate = (limpiezaData) => {
   return earliestDate ? earliestDate.format('YYYY-MM-DD') : null;
 };
 
-/**
- * Construye la cadena de tipo de limpieza (exterior, interior, ambas, null)
- */
-const getLimpiezaTypeString = (isExterior, isInterior) => {
-  if (isExterior && isInterior) return 'ambas';
-  if (isExterior) return 'exterior';
-  if (isInterior) return 'interior';
-  return null;
-};
+
 
 /**
  * Formatea una fecha a formato europeo (DD/MM/AAAA).
@@ -1221,19 +1036,46 @@ const formatEuropeanDate = (dateValue) => {
 const calculateCotizacion = (precioBruto) => {
   const brute = Number(precioBruto);
   if (isNaN(brute) || brute <= 0) return 0;
-  return parseFloat((brute * 0.21).toFixed(2));
+  // Para obtener el IVA del precio bruto: (Precio Bruto / 1.21) * 0.21
+  return parseFloat(((brute / 1.21) * 0.21).toFixed(2));
 };
-
 /**
  * Calcula el precio neto (precio bruto - cotización).
  */
 const calculatePrecioNeto = (precioBruto) => {
   const brute = Number(precioBruto);
   if (isNaN(brute) || brute <= 0) return 0;
-  const cotizacion = calculateCotizacion(brute);
-  return parseFloat((brute - cotizacion).toFixed(2));
+  // Para obtener el precio neto del precio bruto: Precio Bruto / 1.21
+  return parseFloat((brute / 1.21).toFixed(2));
 };
+// NUEVA: Propiedad computada para el precio neto base del cliente seleccionado (para la creación)
+const baseNetPriceNueva = computed(() => {
+  const client = selectedClientForNueva.value;
+  return client ? (client.precioNeto || 0) : 0;
+});
 
+// NUEVA: Propiedad computada para el precio neto base del cliente seleccionado (para la edición)
+const baseNetPriceEdited = computed(() => {
+  const client = selectedClientForEdited.value;
+  // Si no hay cliente seleccionado en el modal de edición, usa el valor ya almacenado en editedLimpieza
+  return client ? (client.precioNeto || 0) : (editedLimpieza.value.basePriceNeto || 0);
+});
+
+// Calculado para el formulario de NUEVA limpieza
+const calculatedPrecioBrutoNueva = computed(() => {
+  // Suma el precio neto base del cliente y el total de limpiezas extra
+  const totalNetoBase = baseNetPriceNueva.value + calculatedExtraCleaningsTotalNueva.value;
+  // Calcula el precio bruto aplicando el 21% de IVA
+  return parseFloat((totalNetoBase * 1.21).toFixed(2));
+});
+
+// Calculado para el formulario de EDICION
+const calculatedPrecioBrutoEdited = computed(() => {
+  // Suma el precio neto base del cliente y el total de limpiezas extra
+  const totalNetoBase = baseNetPriceEdited.value + calculatedExtraCleaningsTotalEdited.value;
+  // Calcula el precio bruto aplicando el 21% de IVA
+  return parseFloat((totalNetoBase * 1.21).toFixed(2));
+});
 /**
  * Formatea un número a moneda (€).
  */
@@ -1250,61 +1092,7 @@ const formatCurrency = (value) => {
 
 // --- MANEJO DE MODALES ---
 
-/**
- * Alterna el estado de los botones Exterior/Interior y actualiza la fecha de la semana.
- */
-const toggleSemanaType = (semanaKey, tipo, targetObject) => {
-  const exteriorKey = `${semanaKey}Exterior`;
-  const interiorKey = `${semanaKey}Interior`;
-  const semanaPrecioKey = `${semanaKey}precio`;
 
-  if (!targetObject || typeof targetObject !== 'object') {
-    console.error(`ERROR: targetObject no es un objeto válido. Recibido: ${targetObject}`);
-    return;
-  }
-
-  if (tipo === 'exterior') {
-    if (Object.prototype.hasOwnProperty.call(targetObject, exteriorKey)) {
-      targetObject[exteriorKey] = !targetObject[exteriorKey];
-    } else { console.warn(`Advertencia: La propiedad '${exteriorKey}' no existe.`); return; }
-  } else if (tipo === 'interior') {
-    if (Object.prototype.hasOwnProperty.call(targetObject, interiorKey)) {
-      targetObject[interiorKey] = !targetObject[interiorKey];
-    } else { console.warn(`Advertencia: La propiedad '${interiorKey}' no existe.`); return; }
-  }
-
-  const currentExterior = targetObject[exteriorKey];
-  const currentInterior = targetObject[interiorKey];
-
-  if (!currentExterior && !currentInterior) {
-    targetObject[semanaKey] = '';
-  } else if (!targetObject[semanaKey]) {
-    targetObject[semanaKey] = dayjs().format('YYYY-MM-DD');
-  }
-
-  const clientData = (targetObject === nuevaLimpieza.value) ? selectedClientForNueva.value : selectedClientForEdited.value;
-
-  if (clientData) {
-    let newCalculatedWeeklyPrice = 0;
-    if (currentExterior) {
-      newCalculatedWeeklyPrice += (clientData.precioExterior || 0);
-    }
-    if (currentInterior) {
-      newCalculatedWeeklyPrice += (clientData.precioInterior || 0);
-    }
-
-    if (currentExterior || currentInterior) {
-      targetObject[semanaPrecioKey] = parseFloat(newCalculatedWeeklyPrice.toFixed(2));
-    } else {
-      targetObject[semanaPrecioKey] = null;
-    }
-  } else {
-    console.warn("No hay datos de cliente disponibles para auto-llenar el precio semanal.");
-    if (!currentExterior && !currentInterior) {
-      targetObject[semanaPrecioKey] = null;
-    }
-  }
-};
 
 
 /**
@@ -1314,30 +1102,28 @@ const openEditModal = (limpieza) => {
   editingLimpiezaId.value = limpieza.id;
   const tempEditedLimpieza = {
     ...limpieza,
-    semana1: limpieza.semana1 || '', semana2: limpieza.semana2 || '', semana3: limpieza.semana3 || '',
-    semana4: limpieza.semana4 || '', semana5: limpieza.semana5 || '',
-    semana1precio: limpieza.semana1precio ?? null,
-    semana2precio: limpieza.semana2precio ?? null,
-    semana3precio: limpieza.semana3precio ?? null,
-    semana4precio: limpieza.semana4precio ?? null,
-    semana5precio: limpieza.semana5precio ?? null,
-    precioBruto: limpieza.precioBruto ?? null,
+    semana1: limpieza.semana1 || '', semana1Notas: limpieza.semana1Notas || '',
+    semana2: limpieza.semana2 || '', semana2Notas: limpieza.semana2Notas || '',
+    semana3: limpieza.semana3 || '', semana3Notas: limpieza.semana3Notas || '',
+    semana4: limpieza.semana4 || '', semana4Notas: limpieza.semana4Notas || '',
     fechaPago: limpieza.fechaPago || null,
     formaPago: limpieza.formaPago || 'Efectivo',
     clienteId: limpieza.clienteId || null,
-    // Asegúrate de que extraCleanings también se copie para edición
+    basePriceNeto: limpieza.basePriceNeto || 0, // Asegurarse de que basePriceNeto se copia
     extraCleanings: limpieza.extraCleanings ? JSON.parse(JSON.stringify(limpieza.extraCleanings)) : [{ description: '', date: '', quantity: 1, unitPrice: 0 }], // Añade una línea vacía si no hay extras
   };
 
-  for (let i = 1; i <= 5; i++) {
-    const tipo = tempEditedLimpieza[`semana${i}Tipo`];
-    tempEditedLimpieza[`semana${i}Exterior`] = tipo === 'exterior' || tipo === 'ambas';
-    tempEditedLimpieza[`semana${i}Interior`] = tipo === 'interior' || tipo === 'ambas';
-  }
+  // ELIMINA CUALQUIER BUCLE QUE ASIGNE semanaXExterior/Interior/precio/Tipo
+  // for (let i = 1; i <= 5; i++) {
+  //   const tipo = tempEditedLimpieza[`semana${i}Tipo`];
+  //   tempEditedLimpieza[`semana${i}Exterior`] = tipo === 'exterior' || tipo === 'ambas';
+  //   tempEditedLimpieza[`semana${i}Interior`] = tipo === 'interior' || tipo === 'ambas';
+  // }
   editedLimpieza.value = tempEditedLimpieza;
   isEditModalOpen.value = true;
   databaseStore.updateLimpiezaError = null;
 };
+
 
 
 /**
@@ -1348,16 +1134,17 @@ const closeEditModal = () => {
   editingLimpiezaId.value = null;
   Object.assign(editedLimpieza.value, {
     id: null, factura: null, cliente: '', clienteId: null,
-    semana1: '', semana1Exterior: false, semana1Interior: false, semana1precio: null,
-    semana2: '', semana2Exterior: false, semana2Interior: false, semana2precio: null,
-    semana3: '', semana3Exterior: false, semana3Interior: false, semana3precio: null,
-    semana4: '', semana4Exterior: false, semana4Interior: false, semana4precio: null,
-    semana5: '', semana5Exterior: false, semana5Interior: false, semana5precio: null,
-    extraCleanings: [], // Reset extraCleanings a array vacío
+    semana1: '', semana1Notas: '',
+    semana2: '', semana2Notas: '',
+    semana3: '', semana3Notas: '',
+    semana4: '', semana4Notas: '',
+    extraCleanings: [],
     formaPago: 'Efectivo', fechaPago: null, precioBruto: null, tipoCliente: '',
+    basePriceNeto: 0, // Resetear basePriceNeto
   });
   databaseStore.updateLimpiezaError = null;
 };
+
 
 
 /**
@@ -1368,7 +1155,7 @@ const openAddClientModal = () => {
   Object.assign(newClient.value, {
     nombre: '', apellido: '', direccion: '',direccionComplementaria:"", ciudad: '', provincia: '', codigoPostal: '',
     direccionIntervencion: { calle: '',complementaria:'', ciudad: '', provincia: '', codigoPostal: '' },
-    telefono: '', email: '', precioExterior: 0.00, precioInterior: 0.00,
+    telefono: '', email: '',precioNeto:'',
   });
 };
 
@@ -1398,10 +1185,10 @@ const agregarLimpieza = async () => {
   const client = selectedClientForNueva.value;
   if (!client) { alert('Error: Cliente no encontrado con el ID seleccionado.'); return; }
 
-  let algunaSemanaCompleta = false;
-  for (let i = 1; i <= 5; i++) {
-    if (nuevaLimpieza.value[`semana${i}`] || nuevaLimpieza.value[`semana${i}Exterior`] || nuevaLimpieza.value[`semana${i}Interior`]) {
-      algunaSemanaCompleta = true;
+  let algunaSemanaConFecha = false; // Ahora solo necesitamos saber si hay alguna fecha
+  for (let i = 1; i <= 4; i++) { // Cambiado de 5 a 4 si no tienes semana 5 en la UI
+    if (nuevaLimpieza.value[`semana${i}`]) {
+      algunaSemanaConFecha = true;
       break;
     }
   }
@@ -1410,8 +1197,8 @@ const agregarLimpieza = async () => {
     extra => extra.description && extra.unitPrice && extra.quantity > 0
   );
 
-  if (!algunaSemanaCompleta && !hasExtraCleanings) {
-    alert('Por favor, completa al menos una fecha o tipo de limpieza para alguna semana, o añade una limpieza extra.');
+  if (!algunaSemanaConFecha && !hasExtraCleanings) {
+    alert('Por favor, completa al menos una fecha de limpieza o añade una limpieza extra.');
     return;
   }
 
@@ -1421,36 +1208,31 @@ const agregarLimpieza = async () => {
     ? manualFacturaInput.value.trim()
     : proximaFactura.value;
 
-  // Calculamos el precio bruto inicial de las semanas
-  let basePrecioBruto = calculatePrecioBruto(nuevaLimpieza.value, selectedClientForNueva.value);
-  // Sumamos el total de las limpiezas extra al precio bruto
-  basePrecioBruto += calculatedExtraCleaningsTotalNueva.value; // Usar el computed para nueva
-  limpiezaParaGuardar.precioBruto = parseFloat(basePrecioBruto.toFixed(2));
+  // IMPORTANT: Almacenar el precio neto base del cliente en el registro de limpieza
+  limpiezaParaGuardar.basePriceNeto = baseNetPriceNueva.value; // Usa la propiedad computada
+
+  // El precioBruto ahora se calcula directamente desde el baseNetPriceNueva + extras
+  limpiezaParaGuardar.precioBruto = calculatedPrecioBrutoNueva.value;
 
   limpiezaParaGuardar.clienteId = nuevaLimpieza.value.clienteId;
   limpiezaParaGuardar.cliente = `${client.nombre} ${(client.apellido || '')}`.trim();
   limpiezaParaGuardar.fechaPago = nuevaLimpieza.value.fechaPago || null;
 
-  for (let i = 1; i <= 5; i++) {
-    const semanaKey = `semana${i}`;
-    const semanaPrecioKey = `${semanaKey}precio`;
+  // Asegurar que las fechas de semana sean null si están vacías, sin lógica de tipo/precio
+  limpiezaParaGuardar.semana1 = limpiezaParaGuardar.semana1 || null;
+  limpiezaParaGuardar.semana1Notas = limpiezaParaGuardar.semana1Notas || null;
+  limpiezaParaGuardar.semana2 = limpiezaParaGuardar.semana2 || null;
+  limpiezaParaGuardar.semana2Notas = limpiezaParaGuardar.semana2Notas || null;
+  limpiezaParaGuardar.semana3 = limpiezaParaGuardar.semana3 || null;
+  limpiezaParaGuardar.semana3Notas = limpiezaParaGuardar.semana3Notas || null;
+  limpiezaParaGuardar.semana4 = limpiezaParaGuardar.semana4 || null;
+  limpiezaParaGuardar.semana4Notas = limpiezaParaGuardar.semana4Notas || null;
+  // Elimina cualquier referencia a semanaXExterior, semanaXInterior, semanaXprecio, semanaXTipo
 
-    limpiezaParaGuardar[semanaKey] = limpiezaParaGuardar[semanaKey] || null;
-    limpiezaParaGuardar[semanaPrecioKey] = limpiezaParaGuardar[semanaPrecioKey] ?? null;
-
-    limpiezaParaGuardar[`${semanaKey}Tipo`] = getLimpiezaTypeString(
-      limpiezaParaGuardar[`${semanaKey}Exterior`],
-      limpiezaParaGuardar[`${semanaKey}Interior`]
-    );
-    delete limpiezaParaGuardar[`${semanaKey}Exterior`];
-    delete limpiezaParaGuardar[`${semanaKey}Interior`];
-  }
-
-  // Guardamos solo las extraCleanings válidas (con descripción y precio)
+  // Guardamos solo las extraCleanings válidas
   limpiezaParaGuardar.extraCleanings = limpiezaParaGuardar.extraCleanings.filter(
     extra => extra.description && extra.unitPrice && extra.quantity > 0
   );
-
 
   limpiezaParaGuardar.fechaPrincipalLimpieza = getEarliestSemanaDate(limpiezaParaGuardar);
 
@@ -1460,13 +1242,12 @@ const agregarLimpieza = async () => {
     // Reiniciar el formulario
     Object.assign(nuevaLimpieza.value, {
       cliente: '', clienteId: null,
-      semana1: '', semana1Exterior: false, semana1Interior: false, semana1precio: null,
-      semana2: '', semana2Exterior: false, semana2Interior: false, semana2precio: null,
-      semana3: '', semana3Exterior: false, semana3Interior: false, semana3precio: null,
-      semana4: '', semana4Exterior: false, semana4Interior: false, semana4precio: null,
-      semana5: '', semana5Exterior: false, semana5Interior: false, semana5precio: null,
+      semana1: '', semana1Notas: '',
+      semana2: '', semana2Notas: '',
+      semana3: '', semana3Notas: '',
+      semana4: '', semana4Notas: '',
       extraCleanings: [{ description: '', date: '', quantity: 1, unitPrice: 0 }], // Reset extraCleanings
-      formaPago: 'Efectivo', fechaPago: null,
+      formaPago: 'Efectivo', fechaPago: null, basePriceNeto: 0, // Reiniciar basePriceNeto
     });
     manualFacturaInput.value = '';
   } catch (err) {
@@ -1474,6 +1255,7 @@ const agregarLimpieza = async () => {
     console.error("Error al añadir limpieza en componente:", err);
   }
 };
+
 
 /**
  * Guarda los cambios de un registro de limpieza editado.
@@ -1493,22 +1275,21 @@ const saveEditedLimpieza = async () => {
     cliente: `${client.nombre} ${(client.apellido || '')}`.trim(),
     formaPago: editedLimpieza.value.formaPago,
     fechaPago: editedLimpieza.value.fechaPago || null,
-    // Modificación: Re-calculamos el precio bruto para la edición
-    precioBruto: calculatedPrecioBrutoEdited.value, // Usar el computed para edición
+    basePriceNeto: baseNetPriceEdited.value, // Actualizar basePriceNeto desde la propiedad computada
+    precioBruto: calculatedPrecioBrutoEdited.value, // Re-calcular precioBruto
   };
 
-  for (let i = 1; i <= 5; i++) {
-    const semanaKey = `semana${i}`;
-    const semanaPrecioKey = `${semanaKey}precio`;
+  // Asegurar que las fechas de semana y notas sean null si están vacías
+  dataToUpdate.semana1 = editedLimpieza.value.semana1 || null;
+  dataToUpdate.semana1Notas = editedLimpieza.value.semana1Notas || null;
+  dataToUpdate.semana2 = editedLimpieza.value.semana2 || null;
+  dataToUpdate.semana2Notas = editedLimpieza.value.semana2Notas || null;
+  dataToUpdate.semana3 = editedLimpieza.value.semana3 || null;
+  dataToUpdate.semana3Notas = editedLimpieza.value.semana3Notas || null;
+  dataToUpdate.semana4 = editedLimpieza.value.semana4 || null;
+  dataToUpdate.semana4Notas = editedLimpieza.value.semana4Notas || null;
+  // Elimina cualquier referencia a semanaXExterior, semanaXInterior, semanaXprecio, semanaXTipo
 
-    dataToUpdate[semanaKey] = editedLimpieza.value[semanaKey] || null;
-    dataToUpdate[semanaPrecioKey] = editedLimpieza.value[semanaPrecioKey] ?? null;
-
-    dataToUpdate[`${semanaKey}Tipo`] = getLimpiezaTypeString(
-      editedLimpieza.value[`${semanaKey}Exterior`],
-      editedLimpieza.value[`${semanaKey}Interior`]
-    );
-  }
   dataToUpdate.fechaPrincipalLimpieza = getEarliestSemanaDate(editedLimpieza.value);
 
   // Asegurarse de que extraCleanings se guarde correctamente también en la edición
@@ -1527,6 +1308,7 @@ const saveEditedLimpieza = async () => {
     isLoadingEdit.value = false;
   }
 };
+
 
 /**
  * Confirma y elimina un registro de limpieza.
@@ -1804,40 +1586,26 @@ const openInvoiceEditor = async (limpieza) => {
   }
 
   const invoiceItems = [];
-  const extPrice = clientDetails.precioExterior || 0;
-  const intPrice = clientDetails.precioInterior || 0;
 
-  for (let i = 1; i <= 5; i++) {
-    const semanaKey = `semana${i}`;
-    const semanaTipo = limpieza[`${semanaKey}Tipo`];
-    const fecha = limpieza[semanaKey];
-    let descriptionText = '';
-    let weeklyPrice = 0;
+  // AÑADIR LA LÍNEA PRINCIPAL DE "LIMPIEZA MENSUAL"
+  // Calculamos el precio neto a partir del precioBruto almacenado en la limpieza
+  // O usamos el basePriceNeto si está disponible
+  const mainCleaningNetPrice = limpieza.basePriceNeto > 0
+    ? limpieza.basePriceNeto
+    : (limpieza.precioBruto ? parseFloat((limpieza.precioBruto / 1.21).toFixed(2)) : 0);
 
-    if (semanaTipo === 'exterior') { descriptionText = `Limpieza exterior`; weeklyPrice = extPrice; }
-    else if (semanaTipo === 'interior') { descriptionText = `Limpieza interior`; weeklyPrice = intPrice; }
-    else if (semanaTipo === 'ambas') { descriptionText = `Limpieza exterior e interior`; weeklyPrice = extPrice + intPrice; }
-    else { continue; }
-
-    // Usar el precio específico de la semana si existe, de lo contrario usar el calculado
-    const semanaPrecio = limpieza[`${semanaKey}precio`];
-    if (semanaPrecio !== null && typeof semanaPrecio !== 'undefined') {
-        weeklyPrice = parseFloat(semanaPrecio);
-    }
-
-    if (weeklyPrice > 0) {
+  if (mainCleaningNetPrice > 0) {
       invoiceItems.push({
-        description: descriptionText,
-        date: fecha ? dayjs(fecha).format('YYYY-MM-DD') : '', // Asegúrate de que formatEuropeanDate devuelve un string válido
-        qty: 1,
-        unitPrice: parseFloat(weeklyPrice.toFixed(2)),
-        totalHT: parseFloat(weeklyPrice.toFixed(2)),
-        isOriginalCleaning: true // Bandera para saber que es un ítem de limpieza original
+          description: 'Limpieza Mensual',
+          date: limpieza.fechaPrincipalLimpieza ? dayjs(limpieza.fechaPrincipalLimpieza).format('YYYY-MM-DD') : '',
+          qty: 1,
+          unitPrice: mainCleaningNetPrice, // Este es el precio NETO unitario para la línea
+          totalHT: mainCleaningNetPrice, // Total Hors Taxe
+          isOriginalCleaning: true
       });
-    }
   }
 
-  // AÑADIR LAS LIMPIEZAS EXTRAS A invoiceItems
+  // AÑADIR LAS LIMPIEZAS EXTRAS como antes
   if (limpieza.extraCleanings && limpieza.extraCleanings.length > 0) {
     limpieza.extraCleanings.forEach(extra => {
       if (extra.description && extra.unitPrice && extra.quantity > 0) {
@@ -1847,12 +1615,11 @@ const openInvoiceEditor = async (limpieza) => {
           qty: extra.quantity,
           unitPrice: parseFloat(extra.unitPrice.toFixed(2)),
           totalHT: parseFloat((extra.quantity * extra.unitPrice).toFixed(2)),
-          isOriginalCleaning: false // Indicar que es un ítem extra
+          isOriginalCleaning: false
         });
       }
     });
   }
-
 
   // Preparar los datos para el modal de edición
   editableInvoiceData.value = {
@@ -1860,13 +1627,14 @@ const openInvoiceEditor = async (limpieza) => {
     clienteId: limpieza.clienteId,
     clientDetails: clientDetails,
     invoiceItems: invoiceItems,
-    customItems: [], // Comenzar con ítems personalizados vacíos
+    customItems: [],
     formaPago: limpieza.formaPago || 'Efectivo',
     fechaPago: limpieza.fechaPago ? dayjs(limpieza.fechaPago).format('YYYY-MM-DD') : '',
   };
 
   isInvoiceEditorModalOpen.value = true;
 };
+
 
 const handleGenerateEditedPdf = async (finalInvoiceData) => {
     const doc = await generateInvoicePdfContent(finalInvoiceData);
@@ -1937,8 +1705,11 @@ const handleGeneratePdf = async () => {
     doc.setFontSize(11);
     doc.setTextColor(100);
 
+    // Actualizar encabezados: eliminar "Sem.1", "Sem.2", "Sem.3", "Sem.4", "Sem.5"
+    // y reemplazarlos con un solo "Fecha Limpieza Principal" o similar, si se quiere.
+    // Si no, simplemente eliminar las columnas semanales.
     const headers = [
-      "Facture N°", "Client", "Sem.1", "Sem.2", "Sem.3", "Sem.4", "Sem.5",
+      "Facture N°", "Client", "Fec. Prin.", // Nuevo encabezado
       "Brut (€)", "Net (€)", "Cot. (€)", "Date Paiement", "Statut", "Mode Paiement"
     ];
 
@@ -1952,26 +1723,12 @@ const handleGeneratePdf = async () => {
 
     const currentMonthYearFormatted = dayjs().format('YYYY-MM');
 
-    const getWeekCellContent = (date, type) => {
-      const dateStr = date ? formatEuropeanDate(date) : '';
-      const typeStr = type ? getShortWeekType(type) : '';
+    // ELIMINAR getWeekCellContent, ya no es necesario
+    // const getWeekCellContent = (date, type) => { /* ... */ };
 
-      if (dateStr && typeStr) {
-        return [dateStr, typeStr];
-      } else if (dateStr) {
-        return [dateStr];
-      } else if (typeStr) {
-        return [typeStr];
-      }
-      return [''];
-    };
 
-    const getShortWeekType = (semanaTipo) => {
-      if (semanaTipo === 'exterior') return 'E';
-      if (semanaTipo === 'interior') return 'I';
-      if (semanaTipo === 'ambas') return 'E+I';
-      return '';
-    };
+    // ELIMINAR getShortWeekType, ya no es necesario
+
 
     const data = databaseStore.limpiezas.map(limpieza => {
       if (limpieza.fechaPago) {
@@ -1997,11 +1754,7 @@ const handleGeneratePdf = async () => {
         rowContent: [
           String(limpieza.factura || ''),
           String(limpieza.cliente || ''),
-          getWeekCellContent(limpieza.semana1, limpieza.semana1Tipo),
-          getWeekCellContent(limpieza.semana2, limpieza.semana2Tipo),
-          getWeekCellContent(limpieza.semana3, limpieza.semana3Tipo),
-          getWeekCellContent(limpieza.semana4, limpieza.semana4Tipo),
-          getWeekCellContent(limpieza.semana5, limpieza.semana5Tipo),
+          String(limpieza.fechaPrincipalLimpieza ? formatEuropeanDate(limpieza.fechaPrincipalLimpieza) : ''), // Nuevo campo
           String(formatCurrency(limpieza.precioBruto)),
           String(formatCurrency(calculatePrecioNeto(limpieza.precioBruto))),
           String(formatCurrency(calculateCotizacion(limpieza.precioBruto))),
@@ -2029,7 +1782,8 @@ const handleGeneratePdf = async () => {
     doc.setFont("helvetica", "normal");
     data.forEach(item => {
       item.rowContent.forEach((cell, colIndex) => {
-        const cellText = Array.isArray(cell) ? cell.reduce((maxLen, current) => (doc.getTextWidth(current) > doc.getTextWidth(maxLen) ? current : maxLen), '') : String(cell);
+        // La lógica para `Array.isArray(cell)` ya no es necesaria aquí, porque solo tendrás strings
+        const cellText = String(cell);
         maxContentWidths[colIndex] = Math.max(maxContentWidths[colIndex], doc.getTextWidth(cellText));
       });
     });
@@ -2067,21 +1821,9 @@ const handleGeneratePdf = async () => {
       doc.rect(startX, currentY, tableWidth, rowHeight, "F");
 
       item.rowContent.forEach((cell, colIndex) => {
-        if (Array.isArray(cell) && (colIndex >= 2 && colIndex <= 6)) {
-          const dateStr = cell[0];
-          const typeStr = cell[1];
-
-          const yOffset = 2;
-          doc.text(dateStr, currentX + cellPadding, currentY + rowHeight / 2 - yOffset, { baseline: 'middle' });
-
-          if (typeStr) {
-            const columnCenter = currentX + (columnWidths[colIndex] / 2);
-            doc.text(typeStr, columnCenter, currentY + rowHeight / 2 + yOffset, { align: 'center', baseline: 'middle' });
-          }
-        } else {
-          const cellText = String(cell);
-          doc.text(cellText, currentX + cellPadding, currentY + rowHeight / 2, { baseline: 'middle' });
-        }
+        // Eliminar la lógica condicional para Array.isArray(cell)
+        const cellText = String(cell);
+        doc.text(cellText, currentX + cellPadding, currentY + rowHeight / 2, { baseline: 'middle' });
         currentX += columnWidths[colIndex];
       });
 
@@ -2144,7 +1886,7 @@ const handleGeneratePdf = async () => {
     doc.text(`${formatCurrency(totalCotizacionPendiente)}`, currentSummaryX, summaryY);
 
 
-    const nowPdf = dayjs(); // Usar una nueva referencia para evitar conflicto de nombres con 'now' global
+    const nowPdf = dayjs();
     const pdfCreationDateTime = nowPdf.format('DD/MM/YYYY HH:mm:ss');
     doc.setFontSize(8);
     doc.setFont("helvetica", "normal");
@@ -2165,6 +1907,7 @@ const handleGeneratePdf = async () => {
     isGeneratingPdf.value = false;
   }
 };
+
 
 const handleSaveCustomItems = async (limpiezaId, customItems) => {
   try {
