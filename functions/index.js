@@ -8,4 +8,10 @@ const { google } = require('googleapis');
 
 admin.initializeApp();
 // 2. CAMBIO AQUÍ: La definición de la función 'onCall' es un poco diferente
+<<<<<<< HEAD
 // Ahora pasas un objeto de configuración (opcional) y luego el handler (async (data, context) => {...})
+=======
+
+
+
+>>>>>>> 3b38895b4c007873c8a792c1275f1e89d4175af6
