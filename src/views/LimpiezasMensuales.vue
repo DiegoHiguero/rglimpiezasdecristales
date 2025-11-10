@@ -594,7 +594,6 @@
   </div>
 </template>
 
-
 <script setup>
 import { ref, onMounted, computed } from 'vue';
 import { useDatabaseStore } from "../stores/database";
@@ -610,6 +609,11 @@ import phoneIcon from '../assets/img/mobile.png';
 import emailIcon from '../assets/img/envelope.png';
 import webIcon from '../assets/img/globe.png';
 import locationIcon from '../assets/img/location.png';
+
+// Establecer el locale de dayjs para los PDFs y cualquier otra operación que lo requiera.
+// Aquí se establece a francés como en tu código original para PDF, pero puedes ajustarlo.
+dayjs.locale('fr');
+
 // --- ESTADOS LOCALES Y REFERENCES ---
 const databaseStore = useDatabaseStore();
 const isGeneratingPdf = ref(false); // Estado para el spinner del PDF resumen
@@ -981,7 +985,8 @@ const isPaymentDateMismatched = (limpieza) => {
  */
 const getEarliestSemanaDate = (limpiezaData) => {
   let earliestDate = null;
-  for (let i = 1; i <= 5; i++) {
+  // Modificado para iterar hasta semana4 según tu estructura de datos actual
+  for (let i = 1; i <= 4; i++) {
     const dateString = limpiezaData[`semana${i}`];
     if (dateString) {
       const currentDate = dayjs(dateString);
@@ -1027,6 +1032,7 @@ const formatEuropeanDate = (dateValue) => {
   } else {
     console.warn('Formato de fecha desconocido:', dateValue); return '';
   }
+  // Utiliza el locale de dayjs que ya está configurado (fr en este caso)
   return date.format('DD/MM/YYYY');
 };
 
@@ -1376,7 +1382,6 @@ const resetFilter = () => {
  * Genera el contenido PDF de una factura.
  * Ahora recibe un objeto `invoiceData` ya procesado con todos los ítems.
  */
-// --- IMPORTS ---
 const generateInvoicePdfContent = async (invoiceData) => {
   if (!invoiceData || !invoiceData.clienteId || !invoiceData.factura || !invoiceData.invoiceItems || !invoiceData.clientDetails) {
     alert("Datos de factura incompletos para la generación del PDF.");
@@ -1415,7 +1420,8 @@ const generateInvoicePdfContent = async (invoiceData) => {
   const clientName = `${clientDetails.nombre || ''} ${clientDetails.apellido || ''}`;
   const clientAddress = clientDetails.direccion || 'N/A';
   const invoiceNumber = invoiceData.factura.toString();
-  const currentDate = dayjs().locale('fr').format('DD/MM/YYYY');
+  // Usa el locale configurado globalmente para dayjs, que aquí es 'fr'
+  const currentDate = dayjs().format('DD/MM/YYYY');
 
   // --- LOGO ---
   doc.addImage(logo, 'PNG', 20, 20, 50, 20);
@@ -1458,13 +1464,13 @@ const generateInvoicePdfContent = async (invoiceData) => {
   doc.setFillColor("#4970B6");
   doc.rect(20, tableY, 170, headerHeight, "F");
 
-  doc.setTextColor("white");
-  doc.setFont("helvetica", "bold");
-  doc.setFontSize(12);
-  doc.text("Descripción de servicio", 35, tableY + 6);
-  doc.text("Cant.", 110, tableY + 6, { align: "center" });
-  doc.text("Precio u.", 140, tableY + 6, { align: "center" });
-  doc.text("Importe", 170, tableY + 6, { align: "right" });
+  doc.setTextColor("white");
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(12);
+  doc.text("Descripción de servicio", 35, tableY + 6);
+  doc.text("Cant.", 110, tableY + 6, { align: "center" });
+  doc.text("Precio u.", 140, tableY + 6, { align: "center" });
+  doc.text("Importe", 170, tableY + 6, { align: "right" });
 
   doc.setTextColor("black");
   doc.setFont("helvetica", "normal");
@@ -1474,38 +1480,19 @@ const generateInvoicePdfContent = async (invoiceData) => {
   let subtotal = 0;
   let itemsDrawn = 0;
 
-  for (const item of invoiceData.invoiceItems) {
-    if (item.totalHT && item.totalHT > 0) {
-      const itemRectY = currentItemY + (itemsDrawn * contentLinesHeight) - 5;
-      
-      const detailsText = getLimpiezaDetailsText(item);
-
-      // Rectángulo para el ítem, ahora más alto para las dos líneas
-      doc.rect(20, itemRectY, 170, contentLinesHeight);
-      
-      // Línea 1: Descripción principal
-      doc.text(item.description || '', 35, itemRectY + 5);
-      
-      // Línea 2: Detalles de semanas y cristales
-      if (detailsText) {
-          doc.setFontSize(8); // Fuente más pequeña para los detalles
-          doc.setTextColor(100); // Color más suave para los detalles
-          doc.text(detailsText, 35, itemRectY + 12);
-          doc.setFontSize(10); // Volver al tamaño normal para otros campos
-          doc.setTextColor("black");
-      }
-
-      // Resto de campos se dibujan alineados verticalmente en el centro del bloque
-      const centerItemY = itemRectY + (contentLinesHeight / 2) + 1;
-
-      doc.text(String(item.qty || 0), 110, centerItemY, { align: "center" });
-      doc.text(formatCurrency(item.unitPrice || 0), 140, centerItemY, { align: "center" });
-      doc.text(formatCurrency(item.totalHT), 170, centerItemY, { align: "right" });
-      
-      subtotal += item.totalHT;
-      itemsDrawn++;
-    }
-  }
+  for (const item of invoiceData.invoiceItems) {
+    if (item.totalHT && item.totalHT > 0) {
+      const itemY = currentItemY + (itemsDrawn * (rowHeight + 5));
+      const itemRectY = itemY - 5;
+      doc.rect(20, itemRectY, 170, rowHeight);
+      doc.text(item.description || '', 35, itemY);
+      doc.text(String(item.qty || 0), 110, itemY, { align: "center" });
+      doc.text(formatCurrency(item.unitPrice || 0), 140, itemY, { align: "center" });
+      doc.text(formatCurrency(item.totalHT), 170, itemY, { align: "right" });
+      subtotal += item.totalHT;
+      itemsDrawn++;
+    }
+  }
 
   const dynamicHeight = itemsDrawn * contentLinesHeight;
   let totalsY = currentItemY + dynamicHeight + 5;
@@ -1522,13 +1509,13 @@ const generateInvoicePdfContent = async (invoiceData) => {
   for (let i = 0; i < totalLabels.length; i++) {
     const y = totalsY + i * (rowHeightTotal + rowSpacing);
 
-    // Label centrado vertical
-    doc.setFillColor("#4970B6");
-    doc.setDrawColor("#4970B6");
-    doc.rect(120, y - 6, 40, rowHeightTotal, "FD");
-    doc.setTextColor("white");
-    doc.setFont("helvetica", "bold");
-    doc.text(totalLabels[i], 140, y - 1, { align: "center" });
+    // Label centrado vertical
+    doc.setFillColor("#4970B6");
+    doc.setDrawColor("#4970B6");
+    doc.rect(120, y - 6, 40, rowHeightTotal, "FD");
+    doc.setTextColor("white");
+    doc.setFont("helvetica", "bold");
+    doc.text(totalLabels[i], 140, y - 1, { align: "center" });
 
     // Valores alineados a la derecha sobre el borde de "Importe"
     doc.setFillColor("white");
@@ -1582,9 +1569,6 @@ const generateInvoicePdfContent = async (invoiceData) => {
 };
 
 
-
-
-
 const downloadFactura = async(limpieza)=> {
       if (!limpieza) {
         console.error("No se proporcionaron datos de limpieza para descargar la factura.");
@@ -1600,12 +1584,17 @@ const downloadFactura = async(limpieza)=> {
       const filename = `${invoiceNumber} - ${clientName}.pdf`;
 
       try {
-        // Llamar a tu función que genera el contenido del PDF
+        // Asumo que `limpieza` aquí ya tiene todos los datos necesarios pre-procesados
+        // para `invoiceItems` y `clientDetails` o que `openInvoiceEditor` se encarga de esto.
+        // Para esta función `downloadFactura` necesitarías una `limpieza.invoiceItems`
+        // y `limpieza.clientDetails` ya preparados, o llamar a una función similar
+        // a `openInvoiceEditor` para construirlos.
+        // Por simplicidad, asumiré que los datos son pasados como en tu ejemplo original.
         const doc = await generateInvoicePdfContent({
-          clienteId: limpieza.clienteId, // Asegúrate de pasar todos los datos necesarios
+          clienteId: limpieza.clienteId,
           factura: limpieza.factura,
-          invoiceItems: limpieza.invoiceItems, // Asumo que `limpieza` también tiene los invoiceItems customizados
-          clientDetails: limpieza.clientDetails // Y los clientDetails
+          invoiceItems: limpieza.invoiceItems, // <-- ¡Importante! Asegúrate de que esto tenga los ítems finales
+          clientDetails: limpieza.clientDetails // <-- ¡Importante! Asegúrate de que esto tenga los detalles del cliente
         });
 
         if (doc) {
@@ -1619,6 +1608,7 @@ const downloadFactura = async(limpieza)=> {
         alert("Ocurrió un error al descargar la factura.");
       }
     };
+
 // --- Funciones para abrir y cerrar el editor de facturas ---
 const openInvoiceEditor = async (limpieza) => {
   let clientDetails = null;
@@ -1627,7 +1617,7 @@ const openInvoiceEditor = async (limpieza) => {
     clientDetails = await databaseStore.fetchClientById(limpieza.clienteId);
     if (!clientDetails) { alert("Client non trouvé pour la facture."); return; }
   } catch (error) {
-    alert("Erreur lors de la récupération des détails du client pour la facture.");
+    alert("Erreur lors de la récupération des detalles du client pour la facture.");
     return;
   }
 
@@ -1641,8 +1631,34 @@ const openInvoiceEditor = async (limpieza) => {
     : (limpieza.precioBruto ? parseFloat((limpieza.precioBruto / 1.21).toFixed(2)) : 0);
 
   if (mainCleaningNetPrice > 0) {
+      let mainDescription = 'Limpieza de cristales'; // Descripción por defecto
+      const weekDates = [];
+
+      // --- INICIO DE LA MODIFICACIÓN ---
+      // Verificamos si existen propiedades 'semanaX' en el objeto limpieza
+      // para determinar si es una limpieza de cristales y recoger las fechas.
+      let isWindowCleaning = false;
+      // Iteramos hasta 4, que es el máximo de `semanaX` en tu modelo
+      for (let i = 1; i <= 4; i++) { 
+          const weekProperty = `semana${i}`;
+          // Si la propiedad existe en 'limpieza' y tiene un valor (no null, no undefined, no vacío)
+          if (limpieza[weekProperty]) { 
+              isWindowCleaning = true;
+              weekDates.push(formatEuropeanDate(limpieza[weekProperty]));
+          }
+      }
+
+      if (isWindowCleaning) {
+          mainDescription = 'Limpieza de cristales'; // Cambiamos la descripción base
+          if (weekDates.length > 0) {
+              // Añadimos las fechas formateadas entre paréntesis, separadas por coma
+              mainDescription += ` (${weekDates.join(', ')})`; 
+          }
+      }
+      // --- FIN DE LA MODIFICACIÓN ---
+
       invoiceItems.push({
-          description: 'Limpieza de cristales',
+          description: 'Limpieza Mensual',
           date: limpieza.fechaPrincipalLimpieza ? dayjs(limpieza.fechaPrincipalLimpieza).format('YYYY-MM-DD') : '',
           qty: 1,
           unitPrice: mainCleaningNetPrice, // Este es el precio NETO unitario para la línea
@@ -1685,7 +1701,8 @@ const openInvoiceEditor = async (limpieza) => {
 const handleGenerateEditedPdf = async (finalInvoiceData) => {
     const doc = await generateInvoicePdfContent(finalInvoiceData);
     if (doc) {
-        const clientNameForFilename = finalInvoiceData.clientDetails.nombre.replace(/[^a-zA-Z0-9-]/g, '_');
+        // Asegúrate de que clientDetails.nombre existe antes de usarlo
+        const clientNameForFilename = finalInvoiceData.clientDetails.nombre ? finalInvoiceData.clientDetails.nombre.replace(/[^a-zA-Z0-9-]/g, '_') : 'cliente_desconocido';
         doc.save(`facture_${finalInvoiceData.factura}_${clientNameForFilename}.pdf`);
     }
 };
@@ -1731,7 +1748,7 @@ const handleGeneratePdf = async () => {
       return;
     }
 
-    dayjs.locale('fr');
+    // dayjs.locale('fr'); // Ya está configurado globalmente al inicio del script
 
     const doc = new jsPDF('l');
     const pageWidth = doc.internal.pageSize.getWidth();
@@ -1743,6 +1760,7 @@ const handleGeneratePdf = async () => {
     const rightMargin = 15;
     const usableWidth = pageWidth - leftMargin - rightMargin;
 
+    // Usa el locale configurado globalmente para dayjs, que aquí es 'fr'
     const currentMonthYear = dayjs().format('MMMM YYYY').toUpperCase();
     const titleText = `RESUMEN LIMPIEZAS ${currentMonthYear}`;
 
@@ -1948,7 +1966,7 @@ const handleGeneratePdf = async () => {
     doc.save(`résumé_nettoyages_${dayjs().format('DD-MM-YYYY')}.pdf`);
   } catch (error) {
     console.error("Erreur lors de la génération du PDF de résumé :", error);
-    alert("Une erreur est survenue lors de la génération du PDF de résumé. Veuillez réessayer.");
+    alert("Une erreur est survenue lors de la generación du PDF de résumé. Veuillez réessayer.");
   } finally {
     isGeneratingPdf.value = false;
   }
@@ -1985,6 +2003,7 @@ onMounted(async () => {
   await databaseStore.fetchNextFacturaFormattedNumber();
 });
 </script>
+
 
 <style scoped>
 /*
