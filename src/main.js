@@ -10,7 +10,7 @@ import VueApexCharts from "vue3-apexcharts"; // <-- ¡Añade esta línea!
 
 // Importaciones de Font Awesome
 import { library } from "@fortawesome/fontawesome-svg-core";
-import { faWaze } from "@fortawesome/free-brands-svg-icons";
+import { faGoogleDrive, faWaze } from "@fortawesome/free-brands-svg-icons";
 import {
     faTrashCan,
     faEye,
@@ -57,6 +57,7 @@ library.add(
     faTrashCan,
     faFilePen,
     faEye,
+    faGoogleDrive,
     faWaze,
     faFilePdf,
     faMagnifyingGlass,

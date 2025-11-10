@@ -696,6 +696,7 @@ import {
     updateDoc,
     // No utilizados en esta versión: runTransaction, Timestamp, onAuthStateChanged (auth handling is in user store)
 } from 'firebase/firestore';
+import {auth, db} from '../firebaseConfig.js'
 import Swal from 'sweetalert2';
 // Establecer el locale de dayjs para los PDFs y cualquier otra operación que lo requiera.
 // Aquí se establece a francés como en tu código original para PDF, pero puedes ajustarlo.
@@ -715,7 +716,65 @@ const editableInvoiceData = ref(null); // Contendrá los datos de la factura que
 const isSendingEmail = ref(false);
 
 const isSavingToDrive = ref(false); // <--- NUEVO: Estado para el spinner de Google Drive
+/**
+ * Busca una carpeta por nombre dentro de un parent (si se da) o la crea si no existe.
+ * @param {string} folderName - Nombre de la carpeta
+ * @param {string} accessToken - Token de Google OAuth
+ * @param {string|null} parentId - ID de la carpeta padre (opcional)
+ * @returns {Promise<string>} - Devuelve el ID de la carpeta encontrada o creada
+ */
+async function getOrCreateFolder(folderName, accessToken, parentId = null) {
+  try {
+    // 🔹 Buscar carpeta existente
+    const query = parentId
+      ? `name='${folderName}' and '${parentId}' in parents and mimeType='application/vnd.google-apps.folder' and trashed=false`
+      : `name='${folderName}' and mimeType='application/vnd.google-apps.folder' and trashed=false`;
 
+    const searchResponse = await fetch(
+      `https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(query)}&fields=files(id,name)`,
+      {
+        headers: { Authorization: `Bearer ${accessToken}` }
+      }
+    );
+
+    const searchData = await searchResponse.json();
+
+    if (searchData.files && searchData.files.length > 0) {
+      // ✅ Carpeta ya existe
+      return searchData.files[0].id;
+    }
+
+    // 🔹 Crear carpeta nueva
+    const metadata = {
+      name: folderName,
+      mimeType: 'application/vnd.google-apps.folder',
+    };
+    if (parentId) metadata.parents = [parentId];
+
+    const createResponse = await fetch(
+      'https://www.googleapis.com/drive/v3/files',
+      {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(metadata),
+      }
+    );
+
+    const createdFolder = await createResponse.json();
+    if (createdFolder.id) {
+      console.log(`📁 Carpeta creada: ${folderName} (${createdFolder.id})`);
+      return createdFolder.id;
+    } else {
+      throw new Error(`No se pudo crear la carpeta ${folderName}`);
+    }
+  } catch (err) {
+    console.error(`Error al crear carpeta ${folderName}:`, err);
+    throw err;
+  }
+}
 const sendInvoiceByEmail = async (limpieza) => {
   isSendingEmail.value = true;
 
@@ -806,7 +865,25 @@ const sendInvoiceByEmail = async (limpieza) => {
     isSendingEmail.value = false;
   }
 };
+async function uploadPdfToDrive(filename, parentFolderId, pdfBlob, accessToken) {
+  const metadata = {
+    name: filename,
+    mimeType: "application/pdf",
+    parents: [parentFolderId],
+  };
 
+  const formData = new FormData();
+  formData.append("metadata", new Blob([JSON.stringify(metadata)], { type: "application/json" }));
+  formData.append("file", pdfBlob);
+
+  const uploadRes = await fetch("https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id", {
+    method: "POST",
+    headers: { Authorization: `Bearer ${accessToken}` },
+    body: formData,
+  });
+
+  return await uploadRes.json();
+}
 
 
 const saveInvoiceToGoogleDrive = async (limpieza) => {
@@ -819,8 +896,8 @@ const saveInvoiceToGoogleDrive = async (limpieza) => {
     if (!currentUser) {
       Swal.fire({
         icon: "warning",
-        title: "Non authentifié",
-        text: "Veuillez vous connecter avant de sauvegarder la facture.",
+        title: "No autenticado",
+        text: "Por favor, inicia sesión antes de guardar la factura.",
       });
       return;
     }
@@ -830,8 +907,8 @@ const saveInvoiceToGoogleDrive = async (limpieza) => {
     if (!googleAccessToken) {
       Swal.fire({
         icon: "warning",
-        title: "Connexion Google requise",
-        text: "Veuillez d'abord vous connecter avec Google pour enregistrer la facture.",
+        title: "Conexión a Google requerida",
+        text: "Primero debes iniciar sesión con Google para guardar la factura.",
       });
       return;
     }
@@ -841,13 +918,13 @@ const saveInvoiceToGoogleDrive = async (limpieza) => {
     if (!clientDetails) {
       Swal.fire({
         icon: "error",
-        title: "Client introuvable",
-        text: "Impossible de trouver les informations du client.",
+        title: "Cliente no encontrado",
+        text: "No se pudo encontrar la información del cliente.",
       });
       return;
     }
 
-    // 4️⃣ Construir ítems de factura
+    // 4️⃣ Construir ítems de la factura
     const invoiceItems = [];
     for (let i = 1; i <= 5; i++) {
       const semanaKey = `semana${i}`;
@@ -857,9 +934,9 @@ const saveInvoiceToGoogleDrive = async (limpieza) => {
       if (!semanaTipo || !fecha) continue;
 
       let descriptionText = "";
-      if (semanaTipo === "exterior") descriptionText = "Nettoyage extérieur";
-      else if (semanaTipo === "interior") descriptionText = "Nettoyage intérieur";
-      else if (semanaTipo === "ambas") descriptionText = "Nettoyage extérieur et intérieur";
+      if (semanaTipo === "exterior") descriptionText = "Limpieza exterior";
+      else if (semanaTipo === "interior") descriptionText = "Limpieza interior";
+      else if (semanaTipo === "ambas") descriptionText = "Limpieza exterior e interior";
 
       invoiceItems.push({
         description: descriptionText,
@@ -892,7 +969,7 @@ const saveInvoiceToGoogleDrive = async (limpieza) => {
       clienteId: limpieza.clienteId,
       clientDetails,
       invoiceItems,
-      formaPago: limpieza.formaPago || "Espèces",
+      formaPago: limpieza.formaPago || "Efectivo",
       fechaPago: limpieza.fechaPago ? dayjs(limpieza.fechaPago).format("YYYY-MM-DD") : "",
     };
 
@@ -901,8 +978,8 @@ const saveInvoiceToGoogleDrive = async (limpieza) => {
     if (!pdfDoc) {
       Swal.fire({
         icon: "error",
-        title: "Erreur PDF",
-        text: "Impossible de générer le fichier PDF de la facture.",
+        title: "Error PDF",
+        text: "No se pudo generar el archivo PDF de la factura.",
       });
       return;
     }
@@ -913,20 +990,20 @@ const saveInvoiceToGoogleDrive = async (limpieza) => {
 
     const now = dayjs();
     const anioActual = now.year();
-    const mesActual = now.format("MMMM").toUpperCase(); // ej. "NOVEMBRE"
+    const mesActual = now.format("MMMM").toUpperCase(); // ej. "NOVIEMBRE"
 
     const filename = `${clientDetails.nombre.replace(/[^a-zA-Z0-9-]/g, "_")}_${mesActual}_${anioActual}.pdf`;
 
     // 7️⃣ Crear estructura de carpetas
-    const rootFolder = await getOrCreateFolder("FACTURES", googleAccessToken);
+    const rootFolder = await getOrCreateFolder("FACTURAS", googleAccessToken);
     const yearFolder = await getOrCreateFolder(`${anioActual}`, googleAccessToken, rootFolder);
     const monthFolderName = `${mesActual} ${anioActual}`;
     const monthFolder = await getOrCreateFolder(monthFolderName, googleAccessToken, yearFolder);
 
     // 8️⃣ Mostrar loader
     Swal.fire({
-      title: "Téléversement de la facture...",
-      html: "Veuillez patienter quelques secondes.",
+      title: "Subiendo la factura...",
+      html: "Por favor espera unos segundos.",
       allowOutsideClick: false,
       didOpen: () => {
         Swal.showLoading();
@@ -944,29 +1021,30 @@ const saveInvoiceToGoogleDrive = async (limpieza) => {
       limpieza.facturaEnviada = true;
       Swal.fire({
         icon: "success",
-        title: "Facture enregistrée !",
-        html: `La facture a été sauvegardée avec succès dans Google Drive.<br>
-               <a href="https://drive.google.com/file/d/${uploadedFile.id}/view" target="_blank">📄 Voir la facture</a>`,
-        confirmButtonText: "Fermer",
+        title: "¡Factura guardada!",
+        html: `La factura se ha guardado exitosamente en Google Drive.<br>
+               <a href="https://drive.google.com/file/d/${uploadedFile.id}/view" target="_blank">📄 Ver la factura</a>`,
+        confirmButtonText: "Cerrar",
       });
     } else {
       Swal.fire({
         icon: "error",
-        title: "Erreur",
-        text: "Le fichier n’a pas pu être téléversé sur Google Drive.",
+        title: "Error",
+        text: "No se pudo subir el archivo a Google Drive.",
       });
     }
   } catch (error) {
     Swal.fire({
       icon: "error",
-      title: "Erreur inattendue",
-      text: `Une erreur est survenue : ${error.message || "Inconnue"}`,
+      title: "Error inesperado",
+      text: `Ocurrió un error: ${error.message || "Desconocido"}`,
     });
-    console.error("Erreur dans saveInvoiceToGoogleDrive:", error);
+    console.error("Error en saveInvoiceToGoogleDrive:", error);
   } finally {
     isSavingToDrive.value = false;
   }
 };
+
 
 const sendInvoiceToClient = async (limpieza, pdfBase64, userStore) => {
   const databaseStore = useDatabaseStore(); // inicializar Pinia
