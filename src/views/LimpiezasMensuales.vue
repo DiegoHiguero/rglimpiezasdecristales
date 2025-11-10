@@ -1378,161 +1378,207 @@ const resetFilter = () => {
  */
 // --- IMPORTS ---
 const generateInvoicePdfContent = async (invoiceData) => {
-  if (!invoiceData || !invoiceData.clienteId || !invoiceData.factura || !invoiceData.invoiceItems || !invoiceData.clientDetails) {
-    alert("Datos de factura incompletos para la generación del PDF.");
-    return null;
-  }
+  if (!invoiceData || !invoiceData.clienteId || !invoiceData.factura || !invoiceData.invoiceItems || !invoiceData.clientDetails) {
+    alert("Datos de factura incompletos para la generación del PDF.");
+    return null;
+  }
 
-  const doc = new jsPDF();
+  const doc = new jsPDF();
+  
+    // Función auxiliar para generar el detalle de fechas de limpieza y cristales
+    // Formato deseado: Limpieza de Cristales: [Sí/No] (DD/MM, DD/MM,...)
+  const getLimpiezaDetailsText = (item) => {
+    // 1. Filtrar semanas con valor y formatearlas
+    const weekDates = [item.semana1, item.semana2, item.semana3, item.semana4]
+        .filter(date => !!date) // Solo fechas válidas
+        .map(date => dayjs(date).format('DD/MM'));
 
-  const clientDetails = invoiceData.clientDetails;
-  const clientName = `${clientDetails.nombre || ''} ${clientDetails.apellido || ''}`;
-  const clientAddress = clientDetails.direccion || 'N/A';
-  const invoiceNumber = invoiceData.factura.toString();
-  const currentDate = dayjs().locale('fr').format('DD/MM/YYYY');
-
-  // --- LOGO ---
-  doc.addImage(logo, 'PNG', 20, 20, 50, 20);
-
-  // --- Encabezado ---
-  doc.setFont("helvetica", "bold");
-  doc.setFontSize(20);
-  doc.text("FACTURA", 150, 40);
-
-  // --- Info cliente ---
-  doc.setFontSize(8);
-  doc.setTextColor("#4970B6");
-  doc.setFont("helvetica", "bold");
-  doc.text("EXPEDIDA A:", 20, 70);
-
-  doc.setFont("helvetica", "normal");
-  doc.setTextColor("black");
-  doc.text(clientName, 20, 75);
-  doc.text(clientAddress, 20, 80);
-
-  // --- FACT# y FECHA ---
-  doc.setFont("helvetica", "bold");
-  doc.setTextColor("#4970B6");
-  doc.setFontSize(9);
-  doc.text("FACT#:", 150, 70);
-  doc.text("FECHA:", 150, 77);
-
-  doc.setFont("helvetica", "normal");
-  doc.setTextColor("black");
-  doc.text(invoiceNumber, 190, 70, { align: "right" });
-  doc.text(currentDate, 190, 77, { align: "right" });
-
-  // --- Tabla de ítems ---
-  let tableY = 95;
-  const rowHeight = 9;
-  const headerHeight = 9;
-
-  doc.setDrawColor("#4970B6");
-  doc.setFillColor("#4970B6");
-  doc.rect(20, tableY, 170, headerHeight, "F");
-
-  doc.setTextColor("white");
-  doc.setFont("helvetica", "bold");
-  doc.setFontSize(12);
-  doc.text("Descripción de servicio", 35, tableY + 6);
-  doc.text("Cant.", 110, tableY + 6, { align: "center" });
-  doc.text("Precio u.", 140, tableY + 6, { align: "center" });
-  doc.text("Importe", 170, tableY + 6, { align: "right" });
-
-  doc.setTextColor("black");
-  doc.setFont("helvetica", "normal");
-  doc.setFontSize(10);
-
-  let currentItemY = tableY + headerHeight + 5;
-  let subtotal = 0;
-  let itemsDrawn = 0;
-
-  for (const item of invoiceData.invoiceItems) {
-    if (item.totalHT && item.totalHT > 0) {
-      const itemY = currentItemY + (itemsDrawn * (rowHeight + 5));
-      const itemRectY = itemY - 5;
-      doc.rect(20, itemRectY, 170, rowHeight);
-      doc.text(item.description || '', 35, itemY);
-      doc.text(String(item.qty || 0), 110, itemY, { align: "center" });
-      doc.text(formatCurrency(item.unitPrice || 0), 140, itemY, { align: "center" });
-      doc.text(formatCurrency(item.totalHT), 170, itemY, { align: "right" });
-      subtotal += item.totalHT;
-      itemsDrawn++;
-    }
-  }
-
-  const dynamicHeight = itemsDrawn * (rowHeight + 5);
-  let totalsY = currentItemY + dynamicHeight + 5;
-
-  const iva = subtotal * 0.21;
-  const total = subtotal + iva;
-
-  // --- Totales alineados con columna Importe ---
-  const rowHeightTotal = 7;
-  const rowSpacing = 1;
-  const totalLabels = ["Subtotal", "IVA 21%", "TOTAL"];
-  const totalValues = [subtotal, iva, total];
-
-  for (let i = 0; i < totalLabels.length; i++) {
-    const y = totalsY + i * (rowHeightTotal + rowSpacing);
-
-    // Label centrado vertical
-    doc.setFillColor("#4970B6");
-    doc.setDrawColor("#4970B6");
-    doc.rect(120, y - 6, 40, rowHeightTotal, "FD");
-    doc.setTextColor("white");
-    doc.setFont("helvetica", "bold");
-    doc.text(totalLabels[i], 140, y - 1, { align: "center" });
-
-    // Valores alineados a la derecha sobre el borde de "Importe"
-    doc.setFillColor("white");
-    doc.setDrawColor("#4970B6");
-    doc.rect(160, y - 6, 30, rowHeightTotal, "FD");
-    doc.setTextColor("black");
-
-    if (i === 2) { // TOTAL
-        doc.setFont("helvetica", "bold");
-        doc.setFontSize(12); // <--- tamaño más grande para TOTAL
-    } else {
-        doc.setFont("helvetica", "normal");
-        doc.setFontSize(10);
+    // 2. Crear el texto base dependiendo del campo 'cristales'
+    //    (asumiendo que cristales es booleano)
+    let baseText = '';
+    if (item.cristales === true) {
+        baseText = 'Limpieza de Cristales: Sí';
+    } else if (item.cristales === false) {
+        baseText = 'Limpieza de Cristales: No';
     }
 
-    doc.text(formatCurrency(totalValues[i]), 190, y - 1, { align: "right" });
-  }
+    // 3. Solo si hay fechas, añadirlas entre paréntesis
+    if (baseText && weekDates.length > 0) {
+        baseText += ` (${weekDates.join(', ')})`;
+    }
 
-  totalsY += totalLabels.length * (rowHeightTotal + rowSpacing) + 10;
+    // 4. Si el ítem no es de limpieza de cristales o no tiene valor, devolver vacío
+    return baseText || '';
+};
 
-  // --- Datos de pago ---
-  let paymentY = totalsY;
-  doc.setTextColor("#4970B6");
-  doc.setFont("helvetica", "bold");
-  doc.setFontSize(15);
-  doc.text("DATOS DE PAGO", 20, paymentY);
+  const clientDetails = invoiceData.clientDetails;
+  const clientName = `${clientDetails.nombre || ''} ${clientDetails.apellido || ''}`;
+  const clientAddress = clientDetails.direccion || 'N/A';
+  const invoiceNumber = invoiceData.factura.toString();
+  const currentDate = dayjs().locale('fr').format('DD/MM/YYYY');
 
-  paymentY += 10;
-  doc.setFontSize(10);
-  doc.setTextColor("black");
-  doc.setFont("helvetica", "normal");
-  doc.text("DNI: 50349726-N", 25, paymentY);
-  paymentY += 5;
-  doc.text("N/C: ROYS GREGORY ABREU REINOSO", 25, paymentY);
-  paymentY += 5;
-  doc.text("IBAN:ES69 1465 0340 53 1718233167", 25, paymentY);
-  paymentY += 7;
-  doc.addImage(phoneIcon, 'PNG', 25, paymentY - 3, 5, 5);
-  doc.text("696169435", 32, paymentY);
-  paymentY += 7;
-  doc.addImage(emailIcon, 'PNG', 25, paymentY - 3, 5, 5);
-  doc.text("roys.abreu@hotmail.es", 32, paymentY);
-  paymentY += 7;
-  doc.addImage(webIcon, 'PNG', 25, paymentY - 3, 5, 5);
-  doc.text("www.royallclean.es", 32, paymentY);
-  paymentY += 7;
-  doc.addImage(locationIcon, 'PNG', 25, paymentY - 3, 5, 5);
-  doc.text("Av. Segunda República, 17 1D, 28905 (Madrid)", 32, paymentY);
+  // --- LOGO ---
+  doc.addImage(logo, 'PNG', 20, 20, 50, 20);
 
-  return doc;
+  // --- Encabezado ---
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(20);
+  doc.text("FACTURA", 150, 40);
+
+  // --- Info cliente ---
+  doc.setFontSize(8);
+  doc.setTextColor("#4970B6");
+  doc.setFont("helvetica", "bold");
+  doc.text("EXPEDIDA A:", 20, 70);
+
+  doc.setFont("helvetica", "normal");
+  doc.setTextColor("black");
+  doc.text(clientName, 20, 75);
+  doc.text(clientAddress, 20, 80);
+
+  // --- FACT# y FECHA ---
+  doc.setFont("helvetica", "bold");
+  doc.setTextColor("#4970B6");
+  doc.setFontSize(9);
+  doc.text("FACT#:", 150, 70);
+  doc.text("FECHA:", 150, 77);
+
+  doc.setFont("helvetica", "normal");
+  doc.setTextColor("black");
+  doc.text(invoiceNumber, 190, 70, { align: "right" });
+  doc.text(currentDate, 190, 77, { align: "right" });
+
+  // --- Tabla de ítems ---
+  let tableY = 95;
+  const headerHeight = 9;
+  // Altura para las dos líneas de contenido (descripción + detalles)
+  const contentLinesHeight = 15; 
+
+  doc.setDrawColor("#4970B6");
+  doc.setFillColor("#4970B6");
+  doc.rect(20, tableY, 170, headerHeight, "F");
+
+  doc.setTextColor("white");
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(12);
+  doc.text("Descripción de servicio", 35, tableY + 6);
+  doc.text("Cant.", 110, tableY + 6, { align: "center" });
+  doc.text("Precio u.", 140, tableY + 6, { align: "center" });
+  doc.text("Importe", 170, tableY + 6, { align: "right" });
+
+  doc.setTextColor("black");
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(10);
+
+  let currentItemY = tableY + headerHeight + 5;
+  let subtotal = 0;
+  let itemsDrawn = 0;
+
+  for (const item of invoiceData.invoiceItems) {
+    if (item.totalHT && item.totalHT > 0) {
+      const itemRectY = currentItemY + (itemsDrawn * contentLinesHeight) - 5;
+      
+      const detailsText = getLimpiezaDetailsText(item);
+
+      // Rectángulo para el ítem, ahora más alto para las dos líneas
+      doc.rect(20, itemRectY, 170, contentLinesHeight);
+      
+      // Línea 1: Descripción principal
+      doc.text(item.description || '', 35, itemRectY + 5);
+      
+      // Línea 2: Detalles de semanas y cristales
+      if (detailsText) {
+          doc.setFontSize(8); // Fuente más pequeña para los detalles
+          doc.setTextColor(100); // Color más suave para los detalles
+          doc.text(detailsText, 35, itemRectY + 12);
+          doc.setFontSize(10); // Volver al tamaño normal para otros campos
+          doc.setTextColor("black");
+      }
+
+      // Resto de campos se dibujan alineados verticalmente en el centro del bloque
+      const centerItemY = itemRectY + (contentLinesHeight / 2) + 1;
+
+      doc.text(String(item.qty || 0), 110, centerItemY, { align: "center" });
+      doc.text(formatCurrency(item.unitPrice || 0), 140, centerItemY, { align: "center" });
+      doc.text(formatCurrency(item.totalHT), 170, centerItemY, { align: "right" });
+      
+      subtotal += item.totalHT;
+      itemsDrawn++;
+    }
+  }
+
+  const dynamicHeight = itemsDrawn * contentLinesHeight;
+  let totalsY = currentItemY + dynamicHeight + 5;
+
+  const iva = subtotal * 0.21;
+  const total = subtotal + iva;
+
+  // --- Totales alineados con columna Importe ---
+  const rowHeightTotal = 7;
+  const rowSpacing = 1;
+  const totalLabels = ["Subtotal", "IVA 21%", "TOTAL"];
+  const totalValues = [subtotal, iva, total];
+
+  for (let i = 0; i < totalLabels.length; i++) {
+    const y = totalsY + i * (rowHeightTotal + rowSpacing);
+
+    // Label centrado vertical
+    doc.setFillColor("#4970B6");
+    doc.setDrawColor("#4970B6");
+    doc.rect(120, y - 6, 40, rowHeightTotal, "FD");
+    doc.setTextColor("white");
+    doc.setFont("helvetica", "bold");
+    doc.text(totalLabels[i], 140, y - 1, { align: "center" });
+
+    // Valores alineados a la derecha sobre el borde de "Importe"
+    doc.setFillColor("white");
+    doc.setDrawColor("#4970B6");
+    doc.rect(160, y - 6, 30, rowHeightTotal, "FD");
+    doc.setTextColor("black");
+
+    if (i === 2) { // TOTAL
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(12); // <--- tamaño más grande para TOTAL
+    } else {
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(10);
+    }
+
+    doc.text(formatCurrency(totalValues[i]), 190, y - 1, { align: "right" });
+  }
+
+  totalsY += totalLabels.length * (rowHeightTotal + rowSpacing) + 10;
+
+  // --- Datos de pago ---
+  let paymentY = totalsY;
+  doc.setTextColor("#4970B6");
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(15);
+  doc.text("DATOS DE PAGO", 20, paymentY);
+
+  paymentY += 10;
+  doc.setFontSize(10);
+  doc.setTextColor("black");
+  doc.setFont("helvetica", "normal");
+  doc.text("DNI: 50349726-N", 25, paymentY);
+  paymentY += 5;
+  doc.text("N/C: ROYS GREGORY ABREU REINOSO", 25, paymentY);
+  paymentY += 5;
+  doc.text("IBAN:ES69 1465 0340 53 1718233167", 25, paymentY);
+  paymentY += 7;
+  doc.addImage(phoneIcon, 'PNG', 25, paymentY - 3, 5, 5);
+  doc.text("696169435", 32, paymentY);
+  paymentY += 7;
+  doc.addImage(emailIcon, 'PNG', 25, paymentY - 3, 5, 5);
+  doc.text("roys.abreu@hotmail.es", 32, paymentY);
+  paymentY += 7;
+  doc.addImage(webIcon, 'PNG', 25, paymentY - 3, 5, 5);
+  doc.text("www.royallclean.es", 32, paymentY);
+  paymentY += 7;
+  doc.addImage(locationIcon, 'PNG', 25, paymentY - 3, 5, 5);
+  doc.text("Av. Segunda República, 17 1D, 28905 (Madrid)", 32, paymentY);
+
+  return doc;
 };
 
 
@@ -1596,7 +1642,7 @@ const openInvoiceEditor = async (limpieza) => {
 
   if (mainCleaningNetPrice > 0) {
       invoiceItems.push({
-          description: 'Limpieza Mensual',
+          description: 'Limpieza de cristales',
           date: limpieza.fechaPrincipalLimpieza ? dayjs(limpieza.fechaPrincipalLimpieza).format('YYYY-MM-DD') : '',
           qty: 1,
           unitPrice: mainCleaningNetPrice, // Este es el precio NETO unitario para la línea

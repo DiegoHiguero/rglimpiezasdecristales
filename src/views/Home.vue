@@ -634,10 +634,10 @@ const enviarMensaje = async () => {
 
     // 1. Envía el email (tu lógica existente)
     await emailjs.send(
-      "service_emqkbc7",
-      "template_lu5kxwz",
+      "service_iytm8yl",
+      "template_7yngfsa",
       contactParams,
-      "rFNGy51A07Q9Pt33i"
+      "IF1Sn503DHVPja4II"
     );
 
     // 2. Guarda el mensaje en Firestore

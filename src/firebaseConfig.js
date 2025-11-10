@@ -13,7 +13,7 @@ const firebaseConfig = {
 
   apiKey: "AIzaSyCyqLZfXWsS-AG_pgJ0TQ68BCpBtPMozws",
 
-  authDomain: "royal-clean-services.firebaseapp.com",
+  authDomain: "royallclean.es",
 
   databaseURL: "https://royal-clean-services-default-rtdb.europe-west1.firebasedatabase.app",
 

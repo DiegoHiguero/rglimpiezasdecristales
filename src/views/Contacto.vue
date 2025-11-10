@@ -61,6 +61,12 @@
                 v-model.trim="email"
               />
             </div>
+              <div class="">
+              <label for="exampleFormControlInput2" class="col-sm-2 col-form-label text-white"
+                required>Teléfono</label>
+              <input type="phone" class="form-control border-0" id="exampleFormControlInput2" placeholder="Su numero"
+                v-model.trim="phone" />
+            </div>
             <div class="mb-3 mb-4">
               <label
                 for="inputPassword"
@@ -115,6 +121,7 @@ import { useUserStore } from "../stores/user";
 
 const prenom = ref("");
 const email = ref("");
+const phone = ref("");
 const subjet = ref("");
 const message = ref("");
 
@@ -134,10 +141,10 @@ const enviarMensaje = async () => {
 
         await emailjs
            .send(
-        "service_iytm8yl",
-        "template_7yngfsa",
-        contactParams,
-        "IF1Sn503DHVPja4II"
+     "service_iytm8yl",
+      "template_7yngfsa",
+      contactParams,
+      "IF1Sn503DHVPja4II"
           )
           .then(
             (result) => {

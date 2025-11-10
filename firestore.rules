@@ -19,7 +19,9 @@ service cloud.firestore {
     }
     match /limpiezasMensuales/{document=**} {
        allow read, write,update,create: if isSignedInAsAdmin(); 
-  }
+  }match /gastos/{id} {
+  allow read, update, delete, create: if isSignedInAsAdmin();
+}
     match /mensajes/{document} {
       // Permite que cualquier usuario cree un documento (para el formulario de contacto público)
       allow create;
