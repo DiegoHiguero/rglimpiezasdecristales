@@ -1994,50 +1994,41 @@ const generateInvoicePdfContent = async (invoiceData) => {
   let itemsDrawn = 0;
 
   for (const item of invoiceData.invoiceItems) {
-    if (item.totalHT && item.totalHT > 0) {
-      const itemRectY = currentItemY + (itemsDrawn * (rowHeight + 5)) - 5;
-      docPdf.rect(20, itemRectY, 170, rowHeight);
+    if (!item.totalHT || item.totalHT <= 0) continue;
 
-      const textBaselineY = itemRectY + rowHeight / 2;
-      const description = item.description || '';
-      const defaultTextStartX = 23;
-      const descriptionColStartX = 20;
-      const descriptionColWidthForCentering = 110;
+    const itemRectY = currentItemY + (itemsDrawn * (rowHeight + 5)) - 5;
+    docPdf.rect(20, itemRectY, 170, rowHeight);
 
-      const windowCleaningWithDatesPattern = /^(Limpieza de cristales)\s*\((.+)\)$/;
-      const match = description.match(windowCleaningWithDatesPattern);
+    const textBaselineY = itemRectY + rowHeight / 2;
+    let description = item.description || '';
+    const defaultTextStartX = 23;
+    const descriptionColStartX = 20;
+    const descriptionColWidthForCentering = 110;
 
-      if (match) {
-        const baseText = match[1];
-        const rawDatesContent = `(${match[2]})`;
-        const dynamicTextStartXWithDates = 35;
-
-        docPdf.setFontSize(9);
-        docPdf.text(baseText, dynamicTextStartXWithDates, textBaselineY);
-
-        const baseTextWidth = docPdf.getTextWidth(baseText);
-
-        docPdf.setFontSize(7);
-        docPdf.text(rawDatesContent, dynamicTextStartXWithDates + baseTextWidth + 1, textBaselineY);
-      } else if (description === 'Limpieza de cristales') {
-        docPdf.setFontSize(10);
-        const textWidth = docPdf.getTextWidth(description);
-        const centerX =
-          descriptionColStartX + descriptionColWidthForCentering / 2 - textWidth / 2;
-        docPdf.text(description, centerX, textBaselineY);
-      } else {
-        docPdf.setFontSize(9);
-        docPdf.text(description, defaultTextStartX, textBaselineY);
-      }
-
+    const match = description.match(/^(Limpieza de cristales)\s*\((.+)\)$/);
+    if (match) {
+      docPdf.setFontSize(9);
+      docPdf.text(match[1], 35, textBaselineY);
+      const baseTextWidth = docPdf.getTextWidth(match[1]);
+      docPdf.setFontSize(7);
+      docPdf.text(`(${match[2]})`, 35 + baseTextWidth + 1, textBaselineY);
+    } else if (description === 'Limpieza de cristales') {
       docPdf.setFontSize(10);
-      docPdf.text(String(item.qty || 0), 130, textBaselineY, { align: "center" });
-      docPdf.text(formatCurrency(item.unitPrice || 0), 155, textBaselineY, { align: "center" });
-      docPdf.text(formatCurrency(item.totalHT), 185, textBaselineY, { align: "right" });
-
-      subtotal += item.totalHT;
-      itemsDrawn++;
+      const textWidth = docPdf.getTextWidth(description);
+      const centerX = descriptionColStartX + descriptionColWidthForCentering / 2 - textWidth / 2;
+      docPdf.text(description, centerX, textBaselineY);
+    } else {
+      docPdf.setFontSize(9);
+      docPdf.text(description, defaultTextStartX, textBaselineY);
     }
+
+    docPdf.setFontSize(10);
+    docPdf.text(String(item.qty || 0), 130, textBaselineY, { align: "center" });
+    docPdf.text(formatCurrency(item.unitPrice || 0), 155, textBaselineY, { align: "center" });
+    docPdf.text(formatCurrency(item.totalHT), 185, textBaselineY, { align: "right" });
+
+    subtotal += item.totalHT;
+    itemsDrawn++;
   }
 
   const dynamicHeight = itemsDrawn * (rowHeight + 5);
