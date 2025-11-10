@@ -95,35 +95,38 @@ export const useUserStore = defineStore('userStore', {
         },
 
         async signInWithGoogle() {
-            this.loadingUser = true;
-            this.timeOut = false;
-            this.mensaje = null;
+      this.loadingUser = true;
+      this.timeOut = false;
+      this.mensaje = null;
 
-            const provider = new GoogleAuthProvider();
-            provider.addScope('https://www.googleapis.com/auth/calendar.events.readonly');
+      const provider = new GoogleAuthProvider();
+      provider.addScope('https://www.googleapis.com/auth/drive.file'); // permisos Drive
+      provider.addScope('https://www.googleapis.com/auth/gmail.send'); 
 
-            try {
-                const result = await signInWithPopup(auth, provider);
-                const credential = GoogleAuthProvider.credentialFromResult(result);
-                this.googleAccessToken = credential.accessToken;
-                this.userData = { email: result.user.email, uid: result.user.uid }; // Actualiza userData con el usuario de Google
-                
-                // NUEVO: Inicia la escucha de mensajes si es un administrador (para Google Sign-In también)
-                if (this.isAdminUser(result.user)) {
-                    this.startUnreadMessagesListener();
-                }
+      try {
+        const result = await signInWithPopup(auth, provider);
 
-                console.log("DEBUG: googleAccessToken guardado en store después de signIn.");
-                router.push('/registro');
-            } catch (error) {
-                console.error("Error al iniciar sesión con Google:", error);
-                this.timeOut = true;
-                this.googleAccessToken = null;
-                this.mensaje = "Error al iniciar sesión con Google.";
-            } finally {
-                this.loadingUser = false;
-            }
-        },
+        // 1️⃣ Guardar datos del usuario Firebase
+        this.userData = { email: result.user.email, uid: result.user.uid };
+
+        // 2️⃣ Guardar token de Google Drive
+        const credential = GoogleAuthProvider.credentialFromResult(result);
+        if (!credential?.accessToken) {
+          throw new Error("No se pudo obtener el token de Google Drive.");
+        }
+        this.googleAccessToken = credential.accessToken;
+
+
+        router.push('/registro'); // redirige al registro o dashboard
+
+      } catch (error) {
+        this.timeOut = true;
+        this.googleAccessToken = null;
+        this.mensaje = "Error al iniciar sesión con Google.";
+      } finally {
+        this.loadingUser = false;
+      }
+    },
 
         async logOutUser() {
             const databaseStore = useDatabaseStore();
@@ -201,7 +204,7 @@ export const useUserStore = defineStore('userStore', {
         isAdminUser(user) {
             if (!user || !user.email) return false;
             // Asegúrate de que los emails coincidan con tus admins
-            return user.email === 'higuerodiego@gmail.com' || user.email === 'familiahiguero@gmail.com';
+            return user.email === 'higuerodiego@gmail.com' || user.email === 'roys.abreu@gmail.com';
         },
 
         // NUEVO: Acción para iniciar la escucha de mensajes no leídos

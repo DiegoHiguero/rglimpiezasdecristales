@@ -199,91 +199,162 @@
         <div v-if="isLoading || databaseStore.isUpdating" class="alert alert-info">
           {{ isLoading ? 'Actualizando registros...' : 'Guardando cambios...' }}
         </div>
-        <div class="table-responsive">
-          <table class="table table-striped table-hover">
-            <thead>
-              <tr>
-                <th>Factura #</th>
-                <th>Cliente</th>
-                <th>Bruto(€)</th>
-                <th>Neto(€)</th>
-                <th>IVA</th>
-                <th>Fecha Pago</th>
-                <th>Estado</th>
-                <th>Forma Pago</th>
-                <th>Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="limpieza in displayLimpiezas" :key="limpieza.id"
+       <div class="table-responsive">
+        <table class="table table-striped table-hover">
+          <thead>
+            <tr>
+              <th>Factura #</th>
+              <th>Cliente</th>
+              <th style="min-width: 100px;">Sem.1</th>
+              <th style="min-width: 100px;">Sem.2</th>
+              <th style="min-width: 100px;">Sem.3</th>
+              <th style="min-width: 100px;">Sem.4</th>
+              <th style="min-width: 100px;">Sem.5</th>
+              <th>Bruto(€)</th>
+              <th>Neto(€)</th>
+              <th>Cot(€)</th>
+              <th>Fecha Pago</th>
+              <th>Estado</th>
+              <th>Forma Pago</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="limpieza in displayLimpiezas" :key="limpieza.id"
                 :class="{ 'bg-danger-subtle': isPaymentDateMismatched(limpieza) }">
-                <td>{{ limpieza.factura }}</td>
-                <td>{{ limpieza.cliente }}</td>
-              
-                <td>{{ limpieza.precioBruto }}€</td>
-                <td><strong>{{ formatCurrency(calculatePrecioNeto(limpieza.precioBruto)) }}</strong></td>
-                <td>{{ formatCurrency(calculateCotizacion(limpieza.precioBruto)) }}</td>
-                <td>{{ formatEuropeanDate(limpieza.fechaPago) }}</td>
-                <td>
-                  <span
-                    :class="{ 'badge bg-success': limpieza.fechaPago, 'badge bg-warning text-dark': !limpieza.fechaPago }">
-                    {{ limpieza.fechaPago ? 'Pagao' : 'Pendiente' }}
-                  </span>
-                </td>
-                <td>{{ limpieza.formaPago }}</td>
-                <td class="d-flex justify-content-around align-items-center gap-2">
-                  <button @click="openEditModal(limpieza)"
-                    class="btn btn-sm btn-secondary d-flex justify-content-center align-items-center"
-                    title="Éditer le registre">
-                    <font-awesome-icon :icon="['fas', 'file-pen']" />
-                  </button>
-                  <button @click="confirmDelete(limpieza)"
-                    class="btn btn-sm btn-warning d-flex justify-content-center align-items-center"
-                    title="Supprimer le registre">
-                    <font-awesome-icon :icon="['fas', 'trash-can']" />
-                  </button>
-                  <!-- INICIO: CAMBIO DE BOTONES DE FACTURA -->
-                  <button @click="openInvoiceEditor(limpieza)"
-                    class="btn btn-sm btn-primary d-flex justify-content-center align-items-center"
-                    title="Éditer et générer la facture">
-                    <font-awesome-icon :icon="['fas', 'file-invoice']" />
-                  </button>
-                  <!-- FIN: CAMBIO DE BOTONES DE FACTURA -->
-                </td>
-              </tr>
-            </tbody>
-            <tfoot>
-              <!-- Fila para la cantidad de clientes y el total PAGADO -->
-              <tr>
-                <td class="text-start"><strong>CLIENTES: {{ uniqueClientsInDisplay }}</strong></td>
-                <td colspan="5" class="text-end"><strong>TOTAL PAGADO</strong></td> <!-- colspan ajustado de 6 a 5 -->
-                <td>{{ formatCurrency(totalPagado) }}</td>
-                <td>
-                  <h4><strong>{{ formatCurrency(totalNetoPagado) }}</strong></h4>
-                </td>
-                <td>{{ formatCurrency(totalCotizacionPagado) }}</td>
-                <td colspan="4"></td>
-              </tr>
-              <!-- Fila para el total PENDIENTE del filtro actual -->
-              <tr>
-                <td colspan="6" class="text-end"> <!-- colspan ajustado de 7 a 6 -->
-                  <span><strong>TOTAL PENDIENTE</strong></span>
-                </td>
-                <td>
-                  <span>{{ formatCurrency(totalPendiente) }}</span>
-                </td>
-                <td>
-                  <span class="text-danger">
-                    <h4><strong>{{ formatCurrency(totalPendienteNeto) }}</strong></h4>
-                  </span>
-                </td>
-                <td>
-                  <span>{{ formatCurrency(totalPendienteCotizacion) }}</span>
-                </td>
-                <td colspan="4"></td>
-              </tr>
-            </tfoot>
-          </table>
+              <td>{{ limpieza.factura }}</td>
+              <td>{{ limpieza.cliente }}</td>
+
+              <!-- Semanas 1-5 -->
+              <td class="text-center">
+                {{ formatEuropeanDate(limpieza.semana1) }}
+                <br v-if="limpieza.semana1Tipo" />
+                <span v-if="limpieza.semana1Tipo === 'exterior' || limpieza.semana1Tipo === 'ambas'"
+                      class="badge bg-primary me-1">E</span>
+                <span v-if="limpieza.semana1Tipo === 'interior' || limpieza.semana1Tipo === 'ambas'"
+                      class="badge bg-secondary">I</span>
+                <div v-if="limpieza.semana1precio !== null">
+                  <small class="text-muted">{{ formatCurrency(limpieza.semana1precio) }}</small>
+                </div>
+              </td>
+              <td class="text-center">
+                {{ formatEuropeanDate(limpieza.semana2) }}
+                <br v-if="limpieza.semana2Tipo" />
+                <span v-if="limpieza.semana2Tipo === 'exterior' || limpieza.semana2Tipo === 'ambas'"
+                      class="badge bg-primary me-1">E</span>
+                <span v-if="limpieza.semana2Tipo === 'interior' || limpieza.semana2Tipo === 'ambas'"
+                      class="badge bg-secondary">I</span>
+                <div v-if="limpieza.semana2precio !== null">
+                  <small class="text-muted">{{ formatCurrency(limpieza.semana2precio) }}</small>
+                </div>
+              </td>
+              <td class="text-center">
+                {{ formatEuropeanDate(limpieza.semana3) }}
+                <br v-if="limpieza.semana3Tipo" />
+                <span v-if="limpieza.semana3Tipo === 'exterior' || limpieza.semana3Tipo === 'ambas'"
+                      class="badge bg-primary me-1">E</span>
+                <span v-if="limpieza.semana3Tipo === 'interior' || limpieza.semana3Tipo === 'ambas'"
+                      class="badge bg-secondary">I</span>
+                <div v-if="limpieza.semana3precio !== null">
+                  <small class="text-muted">{{ formatCurrency(limpieza.semana3precio) }}</small>
+                </div>
+              </td>
+              <td class="text-center">
+                {{ formatEuropeanDate(limpieza.semana4) }}
+                <br v-if="limpieza.semana4Tipo" />
+                <span v-if="limpieza.semana4Tipo === 'exterior' || limpieza.semana4Tipo === 'ambas'"
+                      class="badge bg-primary me-1">E</span>
+                <span v-if="limpieza.semana4Tipo === 'interior' || limpieza.semana4Tipo === 'ambas'"
+                      class="badge bg-secondary">I</span>
+                <div v-if="limpieza.semana4precio !== null">
+                  <small class="text-muted">{{ formatCurrency(limpieza.semana4precio) }}</small>
+                </div>
+              </td>
+              <td class="text-center">
+                {{ formatEuropeanDate(limpieza.semana5) }}
+                <br v-if="limpieza.semana5Tipo" />
+                <span v-if="limpieza.semana5Tipo === 'exterior' || limpieza.semana5Tipo === 'ambas'"
+                      class="badge bg-primary me-1">E</span>
+                <span v-if="limpieza.semana5Tipo === 'interior' || limpieza.semana5Tipo === 'ambas'"
+                      class="badge bg-secondary">I</span>
+                <div v-if="limpieza.semana5precio !== null">
+                  <small class="text-muted">{{ formatCurrency(limpieza.semana5precio) }}</small>
+                </div>
+              </td>
+
+              <td>{{ limpieza.precioBruto }}€</td>
+              <td><strong>{{ formatCurrency(calculatePrecioNeto(limpieza.precioBruto)) }}</strong></td>
+              <td>{{ formatCurrency(calculateCotizacion(limpieza.precioBruto)) }}</td>
+              <td>{{ formatEuropeanDate(limpieza.fechaPago) }}</td>
+              <td>
+                <span :class="{ 'badge bg-success': limpieza.fechaPago, 'badge bg-warning text-dark': !limpieza.fechaPago }">
+                  {{ limpieza.fechaPago ? 'Pagao' : 'Pendiente' }}
+                </span>
+              </td>
+              <td>{{ limpieza.formaPago }}</td>
+
+              <!-- Acciones con botones de Drive y Email resaltados -->
+              <td class="d-flex justify-content-around align-items-center gap-2">
+
+                <!-- Editar registro -->
+                <button @click="openEditModal(limpieza)"
+                        class="btn btn-sm btn-secondary d-flex justify-content-center align-items-center"
+                        title="Éditer le registre">
+                  <font-awesome-icon :icon="['fas', 'file-pen']" />
+                </button>
+
+                <!-- Eliminar registro -->
+                <button @click="confirmDelete(limpieza)"
+                        class="btn btn-sm btn-warning d-flex justify-content-center align-items-center"
+                        title="Supprimer le registre">
+                  <font-awesome-icon :icon="['fas', 'trash-can']" />
+                </button>
+
+                <!-- Generar factura -->
+                <button @click="openInvoiceEditor(limpieza)"
+                        class="btn btn-sm btn-primary d-flex justify-content-center align-items-center"
+                        title="Éditer et générer la facture">
+                  <font-awesome-icon :icon="['fas', 'file-invoice']" />
+                </button>
+
+                <!-- Guardar en Drive -->
+                <button @click="saveInvoiceToGoogleDrive(limpieza)" :disabled="isSavingToDrive"
+                        :class="['btn', 'btn-sm', 'd-flex', 'justify-content-center', 'align-items-center', limpieza.facturaEnviada ? 'btn-success' : 'btn-light']"
+                        title="Guardar en Google Drive">
+                  <span v-if="isSavingToDrive" class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                  <font-awesome-icon :icon="['fab', 'google-drive']" />
+                </button>
+
+                <!-- Enviar email -->
+                <button @click="sendInvoiceByEmail(limpieza)" :disabled="isSendingEmail"
+                        :class="['btn', 'btn-sm', 'd-flex', 'justify-content-center', 'align-items-center', limpieza.emailEnviado ? 'btn-success' : 'btn-light']"
+                        title="Enviar factura por correo">
+                  <span v-if="isSendingEmail" class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                  <font-awesome-icon :icon="['fas', 'envelope']" />
+                </button>
+
+              </td>
+            </tr>
+          </tbody>
+
+          <tfoot>
+            <tr>
+              <td class="text-start"><strong>CLIENTES: {{ uniqueClientsInDisplay }}</strong></td>
+              <td colspan="6" class="text-end"><strong>TOTAL PAGADO</strong></td>
+              <td>{{ formatCurrency(totalPagado) }}</td>
+              <td><h4><strong>{{ formatCurrency(totalNetoPagado) }}</strong></h4></td>
+              <td>{{ formatCurrency(totalCotizacionPagado) }}</td>
+              <td colspan="4"></td>
+            </tr>
+            <tr>
+              <td colspan="7" class="text-end"><span><strong>TOTAL PENDIENTE</strong></span></td>
+              <td><span>{{ formatCurrency(totalPendiente) }}</span></td>
+              <td><span class="text-danger"><h4><strong>{{ formatCurrency(totalPendienteNeto) }}</strong></h4></span></td>
+              <td>{{ formatCurrency(totalPendienteCotizacion) }}</td>
+              <td colspan="4"></td>
+            </tr>
+          </tfoot>
+        </table>
         </div>
         <div v-if="databaseStore.updateError" class="alert alert-danger mt-3">
           Error al guardar los cambios: {{ databaseStore.updateError.message }}
@@ -609,13 +680,31 @@ import phoneIcon from '../assets/img/mobile.png';
 import emailIcon from '../assets/img/envelope.png';
 import webIcon from '../assets/img/globe.png';
 import locationIcon from '../assets/img/location.png';
-
+import { useUserStore } from "../stores/user"
+import {
+    addDoc,
+    collection,
+    deleteDoc,
+    doc,
+    limit,
+    getDocs,
+    query,
+    where,
+    orderBy,
+    serverTimestamp,
+    getDoc,
+    updateDoc,
+    // No utilizados en esta versión: runTransaction, Timestamp, onAuthStateChanged (auth handling is in user store)
+} from 'firebase/firestore';
+import Swal from 'sweetalert2';
 // Establecer el locale de dayjs para los PDFs y cualquier otra operación que lo requiera.
 // Aquí se establece a francés como en tu código original para PDF, pero puedes ajustarlo.
 dayjs.locale('fr');
 
 // --- ESTADOS LOCALES Y REFERENCES ---
 const databaseStore = useDatabaseStore();
+
+const userStore = useUserStore()
 const isGeneratingPdf = ref(false); // Estado para el spinner del PDF resumen
 const manualFacturaInput = ref('');
 
@@ -623,8 +712,376 @@ const manualFacturaInput = ref('');
 const isInvoiceEditorModalOpen = ref(false); // Controla la visibilidad del modal del editor de facturas
 const editableInvoiceData = ref(null); // Contendrá los datos de la factura que se pasarán al editor
 // --- FIN NUEVOS ESTADOS ---
+const isSendingEmail = ref(false);
+
+const isSavingToDrive = ref(false); // <--- NUEVO: Estado para el spinner de Google Drive
+
+const sendInvoiceByEmail = async (limpieza) => {
+  isSendingEmail.value = true;
+
+  try {
+    const databaseStore = useDatabaseStore();
+    const userStore = useUserStore();
+
+    // 🧾 Construcción de los ítems de factura
+    const invoiceItems = [];
+    for (let i = 1; i <= 5; i++) {
+      const semanaKey = `semana${i}`;
+      const semanaTipo = limpieza[`${semanaKey}Tipo`];
+      const fecha = limpieza[semanaKey];
+      const semanaPrecio = limpieza[`${semanaKey}precio`];
+
+      if (!semanaTipo || !fecha) continue;
+
+      let descriptionText = "";
+      if (semanaTipo === "exterior") descriptionText = "Nettoyage extérieur";
+      else if (semanaTipo === "interior") descriptionText = "Nettoyage intérieur";
+      else if (semanaTipo === "ambas") descriptionText = "Nettoyage extérieur et intérieur";
+
+      invoiceItems.push({
+        description: descriptionText,
+        date: dayjs(fecha).format("YYYY-MM-DD"),
+        qty: 1,
+        unitPrice: parseFloat(semanaPrecio?.toFixed?.() || limpieza.precioBruto || 0),
+        totalHT: parseFloat(semanaPrecio?.toFixed?.() || limpieza.precioBruto || 0),
+        isOriginalCleaning: true,
+      });
+    }
+
+    // 🧩 Añadir limpiezas extra si existen
+    if (limpieza.extraCleanings?.length) {
+      limpieza.extraCleanings.forEach((extra) => {
+        if (extra.description && extra.unitPrice && extra.quantity > 0) {
+          invoiceItems.push({
+            description: extra.description,
+            date: extra.date ? dayjs(extra.date).format("YYYY-MM-DD") : "",
+            qty: extra.quantity,
+            unitPrice: parseFloat(extra.unitPrice.toFixed(2)),
+            totalHT: parseFloat((extra.quantity * extra.unitPrice).toFixed(2)),
+            isOriginalCleaning: false,
+          });
+        }
+      });
+    }
+
+    // 📄 Datos completos de factura
+    const finalInvoiceDataForPdf = {
+      factura: limpieza.factura,
+      clienteId: limpieza.clienteId,
+      clientDetails: await databaseStore.fetchClientById(limpieza.clienteId),
+      invoiceItems, // ✅ ahora lleno correctamente
+      formaPago: limpieza.formaPago || "Efectivo",
+      fechaPago: limpieza.fechaPago ? dayjs(limpieza.fechaPago).format("YYYY-MM-DD") : "",
+    };
+
+    // 🧠 Generar el PDF
+    const docPdf = await generateInvoicePdfContent(finalInvoiceDataForPdf);
+    if (!docPdf) {
+      alert("Fallo al generar el PDF.");
+      return;
+    }
+
+    const pdfBase64 = docPdf.output("datauristring").split(",")[1];
+
+    // ✉️ Enviar correo al cliente
+    await sendInvoiceToClient(limpieza, pdfBase64, userStore);
+
+    // ✅ Marcar como enviado
+    const limpiezaRef = doc(db, "limpiezasMensuales", limpieza.id);
+    await updateDoc(limpiezaRef, { emailEnviado: true });
+    limpieza.emailEnviado = true;
+
+    Swal.fire({
+      icon: "success",
+      title: "¡Factura enviada!",
+      html: `La factura de <strong>${finalInvoiceDataForPdf.clientDetails.nombre}</strong> se ha enviado correctamente.`,
+      timer: 4000,
+      showConfirmButton: false,
+    });
+
+  } catch (error) {
+    console.error("Error al enviar la factura:", error);
+    alert(`Error al enviar la factura: ${error.message}`);
+  } finally {
+    isSendingEmail.value = false;
+  }
+};
 
 
+
+const saveInvoiceToGoogleDrive = async (limpieza) => {
+  const databaseStore = useDatabaseStore();
+  isSavingToDrive.value = true;
+
+  try {
+    // 1️⃣ Verificar usuario autenticado
+    const currentUser = auth.currentUser;
+    if (!currentUser) {
+      Swal.fire({
+        icon: "warning",
+        title: "Non authentifié",
+        text: "Veuillez vous connecter avant de sauvegarder la facture.",
+      });
+      return;
+    }
+
+    // 2️⃣ Verificar token de Google Drive
+    const googleAccessToken = userStore.googleAccessToken;
+    if (!googleAccessToken) {
+      Swal.fire({
+        icon: "warning",
+        title: "Connexion Google requise",
+        text: "Veuillez d'abord vous connecter avec Google pour enregistrer la facture.",
+      });
+      return;
+    }
+
+    // 3️⃣ Datos del cliente
+    const clientDetails = await databaseStore.fetchClientById(limpieza.clienteId);
+    if (!clientDetails) {
+      Swal.fire({
+        icon: "error",
+        title: "Client introuvable",
+        text: "Impossible de trouver les informations du client.",
+      });
+      return;
+    }
+
+    // 4️⃣ Construir ítems de factura
+    const invoiceItems = [];
+    for (let i = 1; i <= 5; i++) {
+      const semanaKey = `semana${i}`;
+      const semanaTipo = limpieza[`${semanaKey}Tipo`];
+      const fecha = limpieza[semanaKey];
+      const semanaPrecio = limpieza[`${semanaKey}precio`];
+      if (!semanaTipo || !fecha) continue;
+
+      let descriptionText = "";
+      if (semanaTipo === "exterior") descriptionText = "Nettoyage extérieur";
+      else if (semanaTipo === "interior") descriptionText = "Nettoyage intérieur";
+      else if (semanaTipo === "ambas") descriptionText = "Nettoyage extérieur et intérieur";
+
+      invoiceItems.push({
+        description: descriptionText,
+        date: dayjs(fecha).format("YYYY-MM-DD"),
+        qty: 1,
+        unitPrice: parseFloat(semanaPrecio?.toFixed?.() || limpieza.precioBruto || 0),
+        totalHT: parseFloat(semanaPrecio?.toFixed?.() || limpieza.precioBruto || 0),
+        isOriginalCleaning: true,
+      });
+    }
+
+    if (limpieza.extraCleanings?.length) {
+      limpieza.extraCleanings.forEach((extra) => {
+        if (extra.description && extra.unitPrice && extra.quantity > 0) {
+          invoiceItems.push({
+            description: extra.description,
+            date: extra.date ? dayjs(extra.date).format("YYYY-MM-DD") : "",
+            qty: extra.quantity,
+            unitPrice: parseFloat(extra.unitPrice.toFixed(2)),
+            totalHT: parseFloat((extra.quantity * extra.unitPrice).toFixed(2)),
+            isOriginalCleaning: false,
+          });
+        }
+      });
+    }
+
+    // 5️⃣ Generar PDF
+    const finalInvoiceDataForPdf = {
+      factura: limpieza.factura,
+      clienteId: limpieza.clienteId,
+      clientDetails,
+      invoiceItems,
+      formaPago: limpieza.formaPago || "Espèces",
+      fechaPago: limpieza.fechaPago ? dayjs(limpieza.fechaPago).format("YYYY-MM-DD") : "",
+    };
+
+    // Renombramos doc a pdfDoc para evitar conflicto con Firebase
+    const pdfDoc = await generateInvoicePdfContent(finalInvoiceDataForPdf);
+    if (!pdfDoc) {
+      Swal.fire({
+        icon: "error",
+        title: "Erreur PDF",
+        text: "Impossible de générer le fichier PDF de la facture.",
+      });
+      return;
+    }
+
+    // 6️⃣ Preparar el archivo PDF
+    const fileContentBase64 = pdfDoc.output("datauristring").split(",")[1];
+    const fileBlob = new Blob([Uint8Array.from(atob(fileContentBase64), (c) => c.charCodeAt(0))], { type: "application/pdf" });
+
+    const now = dayjs();
+    const anioActual = now.year();
+    const mesActual = now.format("MMMM").toUpperCase(); // ej. "NOVEMBRE"
+
+    const filename = `${clientDetails.nombre.replace(/[^a-zA-Z0-9-]/g, "_")}_${mesActual}_${anioActual}.pdf`;
+
+    // 7️⃣ Crear estructura de carpetas
+    const rootFolder = await getOrCreateFolder("FACTURES", googleAccessToken);
+    const yearFolder = await getOrCreateFolder(`${anioActual}`, googleAccessToken, rootFolder);
+    const monthFolderName = `${mesActual} ${anioActual}`;
+    const monthFolder = await getOrCreateFolder(monthFolderName, googleAccessToken, yearFolder);
+
+    // 8️⃣ Mostrar loader
+    Swal.fire({
+      title: "Téléversement de la facture...",
+      html: "Veuillez patienter quelques secondes.",
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      },
+    });
+
+    // 9️⃣ Subir a Drive
+    const uploadedFile = await uploadPdfToDrive(filename, monthFolder, fileBlob, googleAccessToken);
+    Swal.close();
+
+    if (uploadedFile?.id) {
+      // 🔹 Actualizar Firestore: marcar facturaEnviada
+      const limpiezaRef = doc(db, 'limpiezasMensuales', limpieza.id);
+      await updateDoc(limpiezaRef, { facturaEnviada: true });
+      limpieza.facturaEnviada = true;
+      Swal.fire({
+        icon: "success",
+        title: "Facture enregistrée !",
+        html: `La facture a été sauvegardée avec succès dans Google Drive.<br>
+               <a href="https://drive.google.com/file/d/${uploadedFile.id}/view" target="_blank">📄 Voir la facture</a>`,
+        confirmButtonText: "Fermer",
+      });
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "Erreur",
+        text: "Le fichier n’a pas pu être téléversé sur Google Drive.",
+      });
+    }
+  } catch (error) {
+    Swal.fire({
+      icon: "error",
+      title: "Erreur inattendue",
+      text: `Une erreur est survenue : ${error.message || "Inconnue"}`,
+    });
+    console.error("Erreur dans saveInvoiceToGoogleDrive:", error);
+  } finally {
+    isSavingToDrive.value = false;
+  }
+};
+
+const sendInvoiceToClient = async (limpieza, pdfBase64, userStore) => {
+  const databaseStore = useDatabaseStore(); // inicializar Pinia
+
+  async function toBase64(url) {
+    const response = await fetch(url);
+    const blob = await response.blob();
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result.split(',')[1]);
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  }
+
+  function base64EncodeUnicode(str) {
+    return btoa(
+      encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, 
+        (match, p1) => String.fromCharCode('0x' + p1)
+      )
+    );
+  }
+
+  try {
+   
+    const clientDetails = await databaseStore.fetchClientById(limpieza.clienteId);
+
+    if (!clientDetails?.email) {
+      alert("No se encontró el email del cliente.");
+      return;
+    }
+
+    const email = clientDetails.email;
+    const fecha = dayjs(limpieza.fecha || new Date());
+    const mes = fecha.locale('fr').format('MMMM');
+    const ano = fecha.format('YYYY');
+    const subject = `Facture nettoyage des vitres ${mes} ${ano}`;
+
+    const bloquePago = !limpieza.fechaPago
+      ? `<p>Veuillez noter que le paiement doit être effectué d'ici la date d'échéance indiquée.</p>
+         <p style="margin-left:20px;">
+           <strong>Virement bancaire :</strong><br>
+           Titulaire du compte: DIEGO HIGUERO RUIZ<br>
+           Nom de la banque: Caisse d'Epargne<br>
+           Code IBAN: FR76 1333 5000 4008 0026 8561 397<br>
+           RIB: 13335 00040 08002685613 97
+         </p>`
+      : '';
+
+    const trackingPixel = `<img src="https://tu-servidor.com/trackEmail?clienteId=${limpieza.clienteId}&factura=${limpieza.factura}" width="1" height="1" />`;
+
+    const body = `
+      <p>A l'attention de ${clientDetails.nombre},</p>
+      <p>Nous espérons que vous allez bien. Veuillez trouver ci-dessous la facture.</p>
+      ${bloquePago}
+      <p>Bien cordialement,</p>
+      ${trackingPixel}
+    `;
+
+    const messageParts = [
+      `From: ${userStore.userData.email}`,
+      `To: ${email}`,
+      `Subject: ${subject}`,
+      "MIME-Version: 1.0",
+      'Content-Type: multipart/mixed; boundary="boundary_string"',
+      "",
+      "--boundary_string",
+      'Content-Type: text/html; charset="UTF-8"',
+      "",
+      body,
+      "",
+      "--boundary_string",
+      "Content-Type: application/pdf",
+      "Content-Transfer-Encoding: base64",
+      `Content-Disposition: attachment; filename="factura_${clientDetails.nombre}_${limpieza.factura}.pdf"`,
+      "",
+      pdfBase64,
+      "",
+      "--boundary_string--"
+    ];
+
+    const emailContent = messageParts.join("\r\n");
+
+    const response = await fetch("https://gmail.googleapis.com/gmail/v1/users/me/messages/send", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${userStore.googleAccessToken}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ raw: base64EncodeUnicode(emailContent) })
+    });
+
+    if (!response.ok) {
+      const text = await response.text();
+      throw new Error(`Error enviando email: ${text}`);
+    }
+
+    // 🔹 Actualizar Firestore: marcar emailEnviado
+    const limpiezaRef = doc(db, 'limpiezasMensuales', limpieza.id);
+    await updateDoc(limpiezaRef, { emailEnviado: true });
+    limpieza.emailEnviado = true;
+
+    Swal.fire({
+      icon: 'success',
+      title: '¡Correo enviado!',
+      html: `La factura de <strong>${clientDetails.nombre}</strong> ha sido enviada con éxito.`,
+      timer: 4000,
+      timerProgressBar: true,
+      showConfirmButton: false
+    });
+
+  } catch (error) {
+    alert(`Error al enviar la factura: ${error.message}`);
+  }
+};
 const currentFilterMonth = computed(() => {
   const monthStr = databaseStore.selectedMonth;
   return monthStr !== '' ? parseInt(monthStr) : null;
@@ -1383,137 +1840,123 @@ const resetFilter = () => {
  * Ahora recibe un objeto `invoiceData` ya procesado con todos los ítems.
  */
 const generateInvoicePdfContent = async (invoiceData) => {
-  if (!invoiceData || !invoiceData.clienteId || !invoiceData.factura || !invoiceData.invoiceItems || !invoiceData.clientDetails) {
+  if (
+    !invoiceData ||
+    !invoiceData.clienteId ||
+    !invoiceData.factura ||
+    !invoiceData.invoiceItems ||
+    !invoiceData.clientDetails
+  ) {
     alert("Datos de factura incompletos para la generación del PDF.");
     return null;
   }
 
-  const doc = new jsPDF();
+  const docPdf = new jsPDF();
 
   const clientDetails = invoiceData.clientDetails;
   const clientName = `${clientDetails.nombre || ''} ${clientDetails.apellido || ''}`;
   const clientAddress = clientDetails.direccion || 'N/A';
   const invoiceNumber = invoiceData.factura.toString();
-  // Usa el locale configurado globalmente para dayjs, que aquí es 'fr'
   const currentDate = dayjs().format('DD/MM/YYYY');
 
   // --- LOGO ---
-  doc.addImage(logo, 'PNG', 20, 20, 50, 20);
+  docPdf.addImage(logo, 'PNG', 20, 20, 50, 20);
 
   // --- Encabezado ---
-  doc.setFont("helvetica", "bold");
-  doc.setFontSize(20);
-  doc.text("FACTURA", 150, 40);
+  docPdf.setFont("helvetica", "bold");
+  docPdf.setFontSize(20);
+  docPdf.text("FACTURA", 150, 40);
 
   // --- Info cliente ---
-  doc.setFontSize(8);
-  doc.setTextColor("#4970B6");
-  doc.setFont("helvetica", "bold");
-  doc.text("EXPEDIDA A:", 20, 70);
+  docPdf.setFontSize(8);
+  docPdf.setTextColor("#4970B6");
+  docPdf.setFont("helvetica", "bold");
+  docPdf.text("EXPEDIDA A:", 20, 70);
 
-  doc.setFont("helvetica", "normal");
-  doc.setTextColor("black");
-  doc.text(clientName, 20, 75);
-  doc.text(clientAddress, 20, 80);
+  docPdf.setFont("helvetica", "normal");
+  docPdf.setTextColor("black");
+  docPdf.text(clientName, 20, 75);
+  docPdf.text(clientAddress, 20, 80);
 
   // --- FACT# y FECHA ---
-  doc.setFont("helvetica", "bold");
-  doc.setTextColor("#4970B6");
-  doc.setFontSize(9);
-  doc.text("FACT#:", 150, 70);
-  doc.text("FECHA:", 150, 77);
+  docPdf.setFont("helvetica", "bold");
+  docPdf.setTextColor("#4970B6");
+  docPdf.setFontSize(9);
+  docPdf.text("FACT#:", 150, 70);
+  docPdf.text("FECHA:", 150, 77);
 
-  doc.setFont("helvetica", "normal");
-  doc.setTextColor("black");
-  doc.text(invoiceNumber, 190, 70, { align: "right" });
-  doc.text(currentDate, 190, 77, { align: "right" });
+  docPdf.setFont("helvetica", "normal");
+  docPdf.setTextColor("black");
+  docPdf.text(invoiceNumber, 190, 70, { align: "right" });
+  docPdf.text(currentDate, 190, 77, { align: "right" });
 
   // --- Tabla de ítems ---
   let tableY = 95;
   const rowHeight = 9;
   const headerHeight = 9;
 
-  doc.setDrawColor("#4970B6");
-  doc.setFillColor("#4970B6");
-  doc.rect(20, tableY, 170, headerHeight, "F");
+  docPdf.setDrawColor("#4970B6");
+  docPdf.setFillColor("#4970B6");
+  docPdf.rect(20, tableY, 170, headerHeight, "F");
 
-  doc.setTextColor("white");
-  doc.setFont("helvetica", "bold");
-  doc.setFontSize(12);
-  doc.text("Descripción de servicio", 35, tableY + 6);
-  doc.text("Cant.", 130, tableY + 6, { align: "center" });
-  doc.text("Precio u.", 155, tableY + 6, { align: "center" });
-  doc.text("Importe", 185, tableY + 6, { align: "right" });
+  docPdf.setTextColor("white");
+  docPdf.setFont("helvetica", "bold");
+  docPdf.setFontSize(12);
+  docPdf.text("Descripción de servicio", 35, tableY + 6);
+  docPdf.text("Cant.", 130, tableY + 6, { align: "center" });
+  docPdf.text("Precio u.", 155, tableY + 6, { align: "center" });
+  docPdf.text("Importe", 185, tableY + 6, { align: "right" });
 
-  doc.setTextColor("black");
-  doc.setFont("helvetica", "normal");
-  doc.setFontSize(10);
+  docPdf.setTextColor("black");
+  docPdf.setFont("helvetica", "normal");
+  docPdf.setFontSize(10);
 
   let currentItemY = tableY + headerHeight + 5;
   let subtotal = 0;
   let itemsDrawn = 0;
 
- for (const item of invoiceData.invoiceItems) {
+  for (const item of invoiceData.invoiceItems) {
     if (item.totalHT && item.totalHT > 0) {
-      // Calculamos la posición Y para el rectángulo de la fila
       const itemRectY = currentItemY + (itemsDrawn * (rowHeight + 5)) - 5;
-      doc.rect(20, itemRectY, 170, rowHeight); // Dibuja el rectángulo de la fila
+      docPdf.rect(20, itemRectY, 170, rowHeight);
 
-      // Calculamos la línea base vertical para el texto, para que esté centrado en el rowHeight
       const textBaselineY = itemRectY + rowHeight / 2;
-
       const description = item.description || '';
-      const defaultTextStartX = 23; // Posición X por defecto para la alineación a la izquierda
-      
-      // Ancho aproximado de la columna de descripción para centrar
+      const defaultTextStartX = 23;
       const descriptionColStartX = 20;
-      const descriptionColWidthForCentering = 110; // Ancho desde 20 hasta 130 para centrar
+      const descriptionColWidthForCentering = 110;
 
-      // Regex para detectar "Limpieza de cristales" seguido de fechas entre paréntesis
       const windowCleaningWithDatesPattern = /^(Limpieza de cristales)\s*\((.+)\)$/;
       const match = description.match(windowCleaningWithDatesPattern);
 
       if (match) {
-        // --- Caso: "Limpieza de cristales (fechas)" ---
-        const baseText = match[1]; // "Limpieza de cristales"
-        const rawDatesContent = `(${match[2]})`; // Contenido de las fechas, con paréntesis incluidos
+        const baseText = match[1];
+        const rawDatesContent = `(${match[2]})`;
+        const dynamicTextStartXWithDates = 35;
 
-        // Define una nueva posición de inicio X para este caso, más a la derecha que defaultTextStartX
-        const dynamicTextStartXWithDates = 35; // Ajusta este valor (ej: 30, 35, 40) para moverlo más a la derecha
+        docPdf.setFontSize(9);
+        docPdf.text(baseText, dynamicTextStartXWithDates, textBaselineY);
 
-        // 1. Imprime "Limpieza de cristales" con tamaño 9
-        doc.setFontSize(9);
-        doc.text(baseText, dynamicTextStartXWithDates, textBaselineY);
+        const baseTextWidth = docPdf.getTextWidth(baseText);
 
-        // 2. Calcula dónde deben empezar las fechas
-        // Es crucial calcular el ancho del texto base *con el tamaño de fuente actual (9)*
-        const baseTextWidth = doc.getTextWidth(baseText); 
-
-        // 3. Imprime las fechas inmediatamente después, con tamaño 7 (más pequeño)
-        doc.setFontSize(7); 
-        // La posición X para las fechas es la posición del texto base + su ancho + un pequeño espacio
-        doc.text(rawDatesContent, dynamicTextStartXWithDates + baseTextWidth + 1, textBaselineY);
-
+        docPdf.setFontSize(7);
+        docPdf.text(rawDatesContent, dynamicTextStartXWithDates + baseTextWidth + 1, textBaselineY);
       } else if (description === 'Limpieza de cristales') {
-        // --- Caso: "Limpieza de cristales" SIN fechas ---
-        // Se ejecuta si 'openInvoiceEditor' lo identificó como limpieza de cristales,
-        // pero no se encontraron fechas en las propiedades 'semanaX'.
-        doc.setFontSize(10); // Tamaño 10 como solicitado
-        const textWidth = doc.getTextWidth(description);
-        const centerX = descriptionColStartX + (descriptionColWidthForCentering / 2) - (textWidth / 2);
-        doc.text(description, centerX, textBaselineY); // Centrado, como solicitado
+        docPdf.setFontSize(10);
+        const textWidth = docPdf.getTextWidth(description);
+        const centerX =
+          descriptionColStartX + descriptionColWidthForCentering / 2 - textWidth / 2;
+        docPdf.text(description, centerX, textBaselineY);
       } else {
-        // --- Caso: "Limpieza Mensual" o cualquier otra descripción ---
-        doc.setFontSize(9); // Tamaño base para otras descripciones
-        doc.text(description, defaultTextStartX, textBaselineY); // Alineado a la izquierda por defecto
+        docPdf.setFontSize(9);
+        docPdf.text(description, defaultTextStartX, textBaselineY);
       }
 
-      // Restauramos el tamaño de fuente para el resto de las columnas (Cantidad, Precio u., Importe)
-      doc.setFontSize(10); 
-      doc.text(String(item.qty || 0), 130, textBaselineY, { align: "center" });
-      doc.text(formatCurrency(item.unitPrice || 0), 155, textBaselineY, { align: "center" });
-      doc.text(formatCurrency(item.totalHT), 185, textBaselineY, { align: "right" });
-      
+      docPdf.setFontSize(10);
+      docPdf.text(String(item.qty || 0), 130, textBaselineY, { align: "center" });
+      docPdf.text(formatCurrency(item.unitPrice || 0), 155, textBaselineY, { align: "center" });
+      docPdf.text(formatCurrency(item.totalHT), 185, textBaselineY, { align: "right" });
+
       subtotal += item.totalHT;
       itemsDrawn++;
     }
@@ -1525,7 +1968,6 @@ const generateInvoicePdfContent = async (invoiceData) => {
   const iva = subtotal * 0.21;
   const total = subtotal + iva;
 
-  // --- Totales alineados con columna Importe ---
   const rowHeightTotal = 7;
   const rowSpacing = 1;
   const totalLabels = ["Subtotal", "IVA 21%", "TOTAL"];
@@ -1534,64 +1976,63 @@ const generateInvoicePdfContent = async (invoiceData) => {
   for (let i = 0; i < totalLabels.length; i++) {
     const y = totalsY + i * (rowHeightTotal + rowSpacing);
 
-    // Label centrado vertical
-    doc.setFillColor("#4970B6");
-    doc.setDrawColor("#4970B6");
-    doc.rect(120, y - 6, 40, rowHeightTotal, "FD");
-    doc.setTextColor("white");
-    doc.setFont("helvetica", "bold");
-    doc.text(totalLabels[i], 140, y - 1, { align: 'center' });
+    docPdf.setFillColor("#4970B6");
+    docPdf.setDrawColor("#4970B6");
+    docPdf.rect(120, y - 6, 40, rowHeightTotal, "FD");
+    docPdf.setTextColor("white");
+    docPdf.setFont("helvetica", "bold");
+    docPdf.text(totalLabels[i], 140, y - 1, { align: "center" });
 
-    // Valores alineados a la derecha sobre el borde de "Importe"
-    doc.setFillColor("white");
-    doc.setDrawColor("#4970B6");
-    doc.rect(160, y - 6, 30, rowHeightTotal, "FD");
-    doc.setTextColor("black");
+    docPdf.setFillColor("white");
+    docPdf.setDrawColor("#4970B6");
+    docPdf.rect(160, y - 6, 30, rowHeightTotal, "FD");
+    docPdf.setTextColor("black");
 
-    if (i === 2) { // TOTAL
-        doc.setFont("helvetica", "bold");
-        doc.setFontSize(12); // <--- tamaño más grande para TOTAL
+    if (i === 2) {
+      docPdf.setFont("helvetica", "bold");
+      docPdf.setFontSize(12);
     } else {
-        doc.setFont("helvetica", "normal");
-        doc.setFontSize(10);
+      docPdf.setFont("helvetica", "normal");
+      docPdf.setFontSize(10);
     }
 
-    doc.text(formatCurrency(totalValues[i]), 190, y - 1, { align: "right" });
+    docPdf.text(formatCurrency(totalValues[i]), 190, y - 1, { align: "right" });
   }
 
   totalsY += totalLabels.length * (rowHeightTotal + rowSpacing) + 10;
 
   // --- Datos de pago ---
   let paymentY = totalsY;
-  doc.setTextColor("#4970B6");
-  doc.setFont("helvetica", "bold");
-  doc.setFontSize(15);
-  doc.text("DATOS DE PAGO", 20, paymentY);
+  docPdf.setTextColor("#4970B6");
+  docPdf.setFont("helvetica", "bold");
+  docPdf.setFontSize(15);
+  docPdf.text("DATOS DE PAGO", 20, paymentY);
 
   paymentY += 10;
-  doc.setFontSize(10);
-  doc.setTextColor("black");
-  doc.setFont("helvetica", "normal");
-  doc.text("DNI: 50349726-N", 25, paymentY);
+  docPdf.setFontSize(10);
+  docPdf.setTextColor("black");
+  docPdf.setFont("helvetica", "normal");
+  docPdf.text("DNI: 50349726-N", 25, paymentY);
   paymentY += 5;
-  doc.text("N/C: ROYS GREGORY ABREU REINOSO", 25, paymentY);
+  docPdf.text("N/C: ROYS GREGORY ABREU REINOSO", 25, paymentY);
   paymentY += 5;
-  doc.text("IBAN:ES69 1465 0340 53 1718233167", 25, paymentY);
+  docPdf.text("IBAN: ES69 1465 0340 53 1718233167", 25, paymentY);
   paymentY += 7;
-  doc.addImage(phoneIcon, 'PNG', 25, paymentY - 3, 5, 5);
-  doc.text("696169435", 32, paymentY);
+  docPdf.addImage(phoneIcon, 'PNG', 25, paymentY - 3, 5, 5);
+  docPdf.text("696169435", 32, paymentY);
   paymentY += 7;
-  doc.addImage(emailIcon, 'PNG', 25, paymentY - 3, 5, 5);
-  doc.text("roys.abreu@hotmail.es", 32, paymentY);
+  docPdf.addImage(emailIcon, 'PNG', 25, paymentY - 3, 5, 5);
+  docPdf.text("roys.abreu@hotmail.es", 32, paymentY);
   paymentY += 7;
-  doc.addImage(webIcon, 'PNG', 25, paymentY - 3, 5, 5);
-  doc.text("www.royallclean.es", 32, paymentY);
+  docPdf.addImage(webIcon, 'PNG', 25, paymentY - 3, 5, 5);
+  docPdf.text("www.royallclean.es", 32, paymentY);
   paymentY += 7;
-  doc.addImage(locationIcon, 'PNG', 25, paymentY - 3, 5, 5);
-  doc.text("Av. Segunda República, 17 1D, 28905 (Madrid)", 32, paymentY);
+  docPdf.addImage(locationIcon, 'PNG', 25, paymentY - 3, 5, 5);
+  docPdf.text("Av. Segunda República, 17 1D, 28905 (Madrid)", 32, paymentY);
 
-  return doc;
+  return docPdf;
 };
+
 
 
 const downloadFactura = async(limpieza)=> {
