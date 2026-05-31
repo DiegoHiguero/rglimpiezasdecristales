@@ -47,6 +47,21 @@ onMounted(() => {
   script.src = 'https://widget.trustmary.com/7oo3gRRZW';
   script.async = true;
   widgetContainer.value?.appendChild(script);
+
+  const observer = new MutationObserver(() => {
+    const container = widgetContainer.value;
+    if (!container) return;
+    container.querySelectorAll('*').forEach(el => {
+      if (el.children.length === 0 && el.textContent.trim() === 'Here is what our customers say') {
+        el.style.display = 'none';
+        observer.disconnect();
+      }
+    });
+  });
+
+  if (widgetContainer.value) {
+    observer.observe(widgetContainer.value, { childList: true, subtree: true });
+  }
 });
 </script>
 
