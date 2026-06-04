@@ -94,15 +94,16 @@ import { articles } from '../data/blog.js';
 
 /* ── Grid ── */
 .blog-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 24px;
   margin-bottom: 48px;
-  justify-content: center;
 }
 
 /* ── Card ── */
 .blog-card {
+  width: 300px;
   background: var(--white);
   border: 1px solid var(--border);
   border-radius: var(--r-lg);

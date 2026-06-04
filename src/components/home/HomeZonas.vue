@@ -135,14 +135,15 @@ const zonas = [
 
 /* ── Grid de zonas ── */
 .zonas-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 16px;
   margin-bottom: 32px;
-  justify-content: center;
 }
 
 .zona-card {
+  width: 240px;
   background: var(--white);
   border: 1px solid var(--border);
   border-radius: var(--r-md);

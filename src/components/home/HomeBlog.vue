@@ -73,15 +73,16 @@ import { articles } from '../../data/blog.js';
 }
 
 .hb-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 16px;
   margin-bottom: 28px;
-  justify-content: center;
 }
 
 .hb-card {
   display: flex; flex-direction: column;
+  width: 240px;
   background: var(--slate); border: 1px solid var(--border);
   border-radius: var(--r-md); overflow: hidden; text-decoration: none;
   transition: box-shadow 0.2s, transform 0.2s;
