@@ -16,7 +16,9 @@
     <div class="zonas-grid">
       <div class="zona-card" v-for="zona in zonas" :key="zona.nombre">
         <div class="zona-card-head">
-          <span class="zona-icon">{{ zona.icono }}</span>
+          <span class="zona-icon-box" :style="{ background: zona.colorPale, color: zona.color }">
+            <font-awesome-icon :icon="zona.icono" />
+          </span>
           <span class="zona-nombre">{{ zona.nombre }}</span>
         </div>
         <ul class="zona-lista">
@@ -50,27 +52,32 @@
 const zonas = [
   {
     nombre: 'Madrid Capital',
-    icono: '🏙️',
+    icono: ['fas', 'city'],
+    color: '#2563eb', colorPale: '#eff6ff',
     municipios: ['Centro', 'Salamanca', 'Retiro', 'Chamberí', 'Tetuán', 'Carabanchel', 'Vallecas', 'Hortaleza', 'Moratalaz', 'Vicálvaro'],
   },
   {
     nombre: 'Sur',
-    icono: '🧭',
+    icono: ['fas', 'compass'],
+    color: '#16a34a', colorPale: '#f0fdf4',
     municipios: ['Getafe', 'Leganés', 'Alcorcón', 'Fuenlabrada', 'Móstoles', 'Parla', 'Pinto', 'Valdemoro', 'Aranjuez'],
   },
   {
     nombre: 'Norte',
-    icono: '🧭',
+    icono: ['fas', 'compass'],
+    color: '#9333ea', colorPale: '#faf5ff',
     municipios: ['Alcobendas', 'San Sebastián de los Reyes', 'Tres Cantos', 'Colmenar Viejo', 'Algete', 'Cobeña'],
   },
   {
     nombre: 'Oeste',
-    icono: '🧭',
+    icono: ['fas', 'compass'],
+    color: '#ea580c', colorPale: '#fff7ed',
     municipios: ['Pozuelo de Alarcón', 'Majadahonda', 'Las Rozas', 'Boadilla del Monte', 'Villanueva de la Cañada', 'Brunete', 'Villaviciosa de Odón'],
   },
   {
     nombre: 'Este',
-    icono: '🧭',
+    icono: ['fas', 'compass'],
+    color: '#0891b2', colorPale: '#ecfeff',
     municipios: ['Alcalá de Henares', 'Torrejón de Ardoz', 'Coslada', 'San Fernando de Henares', 'Rivas-Vaciamadrid', 'Mejorada del Campo'],
   },
 ];
@@ -132,6 +139,7 @@ const zonas = [
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: 16px;
   margin-bottom: 32px;
+  justify-content: center;
 }
 
 .zona-card {
@@ -154,7 +162,11 @@ const zonas = [
   padding-bottom: 12px;
   border-bottom: 1px solid var(--border);
 }
-.zona-icon { font-size: 1.2rem; line-height: 1; }
+.zona-icon-box {
+  width: 34px; height: 34px; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.9rem; flex-shrink: 0;
+}
 .zona-nombre {
   font-family: 'Anton', sans-serif;
   font-size: 1.05rem;

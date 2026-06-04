@@ -15,7 +15,7 @@
         class="blog-card"
       >
         <div class="blog-card-top" :style="{ background: article.colorPale }">
-          <span class="blog-card-icon">{{ article.icon }}</span>
+          <font-awesome-icon :icon="article.icon" class="blog-card-icon" :style="{ color: article.color }" />
           <span class="blog-card-season" :style="{ color: article.color, background: 'white', border: `1px solid ${article.color}22` }">
             {{ article.season }}
           </span>
@@ -98,6 +98,7 @@ import { articles } from '../data/blog.js';
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 24px;
   margin-bottom: 48px;
+  justify-content: center;
 }
 
 /* ── Card ── */
@@ -121,7 +122,7 @@ import { articles } from '../data/blog.js';
   justify-content: space-between;
   padding: 22px 20px;
 }
-.blog-card-icon { font-size: 2.4rem; line-height: 1; }
+.blog-card-icon { font-size: 2rem; }
 .blog-card-season {
   font-family: 'Raleway', sans-serif;
   font-size: 0.72rem;

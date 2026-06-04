@@ -13,7 +13,7 @@
       <header class="article-header">
         <div class="article-meta">
           <span class="article-season-badge" :style="{ color: article.color, background: article.colorPale, border: `1px solid ${article.color}33` }">
-            {{ article.icon }} {{ article.season }}
+            <font-awesome-icon :icon="article.icon" class="me-1" /> {{ article.season }}
           </span>
           <span class="article-date">{{ article.dateLabel }}</span>
         </div>

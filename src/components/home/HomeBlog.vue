@@ -18,7 +18,7 @@
         class="hb-card"
       >
         <div class="hb-card-icon-wrap" :style="{ background: article.colorPale }">
-          <span class="hb-card-icon">{{ article.icon }}</span>
+          <font-awesome-icon :icon="article.icon" class="hb-card-icon" :style="{ color: article.color }" />
         </div>
         <div class="hb-card-body">
           <span class="hb-season" :style="{ color: article.color }">{{ article.season }}</span>
@@ -77,6 +77,7 @@ import { articles } from '../../data/blog.js';
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: 16px;
   margin-bottom: 28px;
+  justify-content: center;
 }
 
 .hb-card {
@@ -89,9 +90,9 @@ import { articles } from '../../data/blog.js';
 
 .hb-card-icon-wrap {
   display: flex; align-items: center; justify-content: center;
-  padding: 22px 0;
+  padding: 28px 0;
 }
-.hb-card-icon { font-size: 2.2rem; line-height: 1; }
+.hb-card-icon { font-size: 2rem; }
 
 .hb-card-body {
   padding: 14px 16px 18px;

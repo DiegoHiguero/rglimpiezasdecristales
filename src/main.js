@@ -3,21 +3,24 @@ import './style.css'
 import App from './App.vue'
 import router from './router'
 import { createPinia } from 'pinia'
-import './firebaseConfig'; 
+import './firebaseConfig';
 
 // Importación de VueApexCharts
 import VueApexCharts from "vue3-apexcharts"; // <-- ¡Añade esta línea!
 
 // Importaciones de Font Awesome
 import { library } from "@fortawesome/fontawesome-svg-core";
-import { faWaze } from "@fortawesome/free-brands-svg-icons";
+import { faWaze, faWhatsapp, faFacebook, faInstagram, faLinkedin, faXTwitter } from "@fortawesome/free-brands-svg-icons";
 import {
     faTrashCan,
     faEye,
     faFilePen,
     faCheck,
     faMagnifyingGlass,
+    faMagnifyingGlassPlus,
     faArrowUpRightFromSquare,
+    faArrowRight,
+    faArrowUpFromWaterPump,
     faUser, faRightFromBracket,
     faFileInvoice,
     faAddressCard,
@@ -32,10 +35,13 @@ import {
     faClock,
     faPumpSoap,
     faComments,
-    faComment, // Añadí faComment que estaba en tu código de iconos aunque no en library.add
+    faComment,
     faBroom,
     faHandHoldingDollar,
     faChevronDown,
+    faChevronUp,
+    faChevronLeft,
+    faChevronRight,
     faArrowDown,
     faXmark,
     faSolarPanel,
@@ -43,6 +49,32 @@ import {
     faBell,
     faPlus,
     faFilePdf,
+    faHouse,
+    faBuilding,
+    faStore,
+    faTag,
+    faPaperPlane,
+    faLock,
+    faLocationDot,
+    faCirclePlay,
+    faPlay,
+    faStar,
+    faHeart,
+    faDroplet,
+    faShieldHalved,
+    faBolt,
+    faImages,
+    faImage,
+    faVideo,
+    faCamera,
+    faSun,
+    faMoon,
+    faSnowflake,
+    faLeaf,
+    faCompass,
+    faCity,
+    faBookOpen,
+    faCircleInfo,
 } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
@@ -54,39 +86,25 @@ import { useUserStore } from './stores/user';
 
 // 1. Configuración de Font Awesome Library
 library.add(
-    faTrashCan,
-    faFilePen,
-    faEye,
-    faWaze,
-    faFilePdf,
-    faMagnifyingGlass,
-    faCheck,
-    faXmark,
-    faArrowUpRightFromSquare,
-    faUser,
-    faRightFromBracket,
-    faFileInvoice,
-    faAddressCard,
-    faRectangleList,
-    faEnvelopeOpenText,
-    faFileArrowDown,
-    faPhone,
-    faEnvelope,
-    faSeedling,
-    faUserTie,
-    faHandSparkles,
-    faClock,
-    faPumpSoap,
-    faComments,
-    faComment, // Asegúrate de añadirlo si lo usas
-    faBroom,
-    faHandHoldingDollar,
-    faChevronDown,
-    faArrowDown,
-    faSolarPanel,
-    faCalendarDays,
-    faBell,
-    faPlus
+    faTrashCan, faFilePen, faEye,
+    faWaze, faWhatsapp, faFacebook, faInstagram, faLinkedin, faXTwitter,
+    faFilePdf, faMagnifyingGlass, faMagnifyingGlassPlus,
+    faCheck, faXmark,
+    faArrowUpRightFromSquare, faArrowRight, faArrowUpFromWaterPump, faArrowDown,
+    faUser, faRightFromBracket,
+    faFileInvoice, faAddressCard, faRectangleList, faEnvelopeOpenText, faFileArrowDown,
+    faPhone, faEnvelope, faLocationDot,
+    faSeedling, faUserTie, faHandSparkles, faClock, faPumpSoap,
+    faComments, faComment, faBroom, faHandHoldingDollar,
+    faChevronDown, faChevronUp, faChevronLeft, faChevronRight,
+    faSolarPanel, faCalendarDays, faBell, faPlus,
+    faHouse, faBuilding, faStore,
+    faTag, faPaperPlane, faLock,
+    faCirclePlay, faPlay,
+    faStar, faHeart, faDroplet, faShieldHalved, faBolt,
+    faImages, faImage, faVideo, faCamera,
+    faSun, faMoon,
+    faSnowflake, faLeaf, faCompass, faCity, faBookOpen, faCircleInfo,
 );
 
 // 2. Crear la instancia de la aplicación Vue
