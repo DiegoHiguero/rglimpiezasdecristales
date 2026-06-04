@@ -117,6 +117,7 @@
     <HomeSobreMi />
     <HomeVentajas />
     <HomeZonas />
+    <HomeBlog />
     <HomeFaq />
 
     <!-- WhatsApp flotante -->
@@ -141,6 +142,7 @@ import HomeTestimonios from '../components/home/HomeTestimonios.vue';
 import HomeSobreMi    from '../components/home/HomeSobreMi.vue';
 import HomeVentajas   from '../components/home/HomeVentajas.vue';
 import HomeZonas      from '../components/home/HomeZonas.vue';
+import HomeBlog       from '../components/home/HomeBlog.vue';
 import HomeFaq        from '../components/home/HomeFaq.vue';
 
 const prenom  = ref("");
