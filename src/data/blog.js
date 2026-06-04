@@ -1,6 +1,6 @@
-import imgInvierno  from '../assets/img/2024-02-19.jpg';
-import imgVerano    from '../assets/img/20260518_113941.jpg';
-import imgPrimavera from '../assets/img/20260324_122426.jpg';
+import imgInvierno  from '../assets/img/man-cleaning-windows.jpg';
+import imgVerano    from '../assets/img/side-view-woman-cleaning-window.jpg';
+import imgPrimavera from '../assets/img/housemaid-wearing.jpg';
 import imgOtono     from '../assets/img/20250917_131013.jpg';
 
 export const articles = [
