@@ -675,7 +675,7 @@ import 'dayjs/locale/fr';
 
 import PagosPendientesView from '../components/PagosPendientesView.vue';
 import InvoiceEditorModal from '../components/InvoiceEditorModal.vue';
-import logo from '../assets/img/logoweb.png';
+import logo from '../assets/img/ROYAL_CLEAN_2025_BLANCO.png';
 import phoneIcon from '../assets/img/mobile.png';
 import emailIcon from '../assets/img/envelope.png';
 import webIcon from '../assets/img/globe.png';
@@ -2636,4 +2636,228 @@ onMounted(async () => {
 
 /* El modal-content y modal-dialog son manejados por las clases de Bootstrap */
 /* Si necesitas personalización, podrías añadir reglas aquí */
+
+/* ══════════════════════════════════════
+   ARMONIZACIÓN CON EL TEMA DEL SITIO
+   ══════════════════════════════════════ */
+
+/* Contenedor principal */
+.container-flex {
+  background: var(--slate);
+  min-height: calc(100vh - 54px);
+  color: var(--text);
+}
+
+/* Títulos de página */
+h2.bg-white {
+  background: var(--white) !important;
+  color: var(--text) !important;
+  font-family: 'Anton', sans-serif;
+  border-radius: var(--r-md);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+}
+h2, h3, h4 {
+  font-family: 'Raleway', sans-serif;
+  color: var(--text);
+}
+
+/* Cards */
+.card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  box-shadow: var(--shadow-sm);
+}
+.card-header {
+  background: var(--navy);
+  color: #fff;
+  border-bottom: 1px solid var(--border);
+  border-radius: var(--r-md) var(--r-md) 0 0 !important;
+  padding: 14px 20px;
+  font-family: 'Raleway', sans-serif;
+  font-weight: 700;
+}
+.card-header h3 {
+  color: #fff;
+  font-size: 1rem;
+  margin: 0;
+}
+.card-body {
+  background: var(--white);
+  color: var(--text);
+}
+
+/* Etiquetas y textos de formulario */
+.form-label {
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+.form-text { color: var(--text-muted); }
+
+/* Inputs y selects */
+.form-control,
+.form-select {
+  background: var(--slate);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.88rem;
+  border-radius: var(--r-sm);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.form-control:focus,
+.form-select:focus {
+  background: var(--slate);
+  border-color: var(--blue);
+  color: var(--text);
+  box-shadow: 0 0 0 3px rgba(37,99,235,0.12);
+}
+.form-control::placeholder { color: var(--text-muted); opacity: 0.6; }
+.form-control[readonly] { opacity: 0.7; cursor: default; }
+
+/* Select option colors for dark mode */
+.form-select option {
+  background: var(--white);
+  color: var(--text);
+}
+
+/* Botones principales */
+.btn-primary {
+  background: var(--blue);
+  border-color: var(--blue);
+  font-family: 'Raleway', sans-serif;
+  font-weight: 700;
+  border-radius: var(--r-sm);
+  transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+}
+.btn-primary:hover, .btn-primary:focus {
+  background: var(--blue-hover);
+  border-color: var(--blue-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(37,99,235,0.35);
+}
+.btn-secondary {
+  font-family: 'Raleway', sans-serif;
+  font-weight: 600;
+  border-radius: var(--r-sm);
+  background: var(--slate);
+  border-color: var(--border);
+  color: var(--text-muted);
+}
+.btn-secondary:hover {
+  background: var(--border);
+  color: var(--text);
+  border-color: var(--border);
+}
+.btn-outline-secondary {
+  border-color: var(--border);
+  color: var(--text-muted);
+  font-family: 'Raleway', sans-serif;
+  font-weight: 600;
+  border-radius: var(--r-sm);
+}
+.btn-outline-secondary:hover {
+  background: var(--border);
+  color: var(--text);
+  border-color: var(--border);
+}
+
+/* Tabla */
+.table {
+  color: var(--text);
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.84rem;
+  border-color: var(--border);
+}
+.table thead tr {
+  background: var(--navy-2);
+  color: #fff;
+}
+.table thead th {
+  background: var(--navy-2);
+  color: rgba(255,255,255,0.85);
+  border-color: rgba(255,255,255,0.08);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.table tbody td {
+  border-color: var(--border);
+  background: var(--white);
+}
+.table-striped tbody tr:nth-of-type(odd) td {
+  background: var(--slate) !important;
+}
+.table-striped tbody tr:nth-of-type(even) td {
+  background: var(--white);
+}
+.table-hover tbody tr:hover td {
+  background: var(--blue-pale) !important;
+}
+.table tfoot td {
+  background: var(--white);
+  border-top: 2px solid var(--border);
+  color: var(--text);
+  font-weight: 700;
+}
+
+/* Alertas */
+.alert-info {
+  background: var(--blue-pale);
+  border-color: rgba(37,99,235,0.2);
+  color: var(--blue);
+  font-family: 'Raleway', sans-serif;
+  border-radius: var(--r-sm);
+}
+.alert-warning {
+  background: rgba(251,191,36,0.1);
+  border-color: rgba(251,191,36,0.3);
+  color: #92400e;
+  font-family: 'Raleway', sans-serif;
+  border-radius: var(--r-sm);
+}
+.alert-danger {
+  background: rgba(239,68,68,0.1);
+  border-color: rgba(239,68,68,0.3);
+  color: #dc2626;
+  font-family: 'Raleway', sans-serif;
+  border-radius: var(--r-sm);
+}
+
+/* Modales */
+.modal-content {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  color: var(--text);
+}
+.modal-header {
+  background: var(--navy);
+  border-bottom: 1px solid var(--border);
+  border-radius: var(--r-lg) var(--r-lg) 0 0;
+}
+.modal-title { color: #fff; font-family: 'Raleway', sans-serif; font-weight: 700; }
+.btn-close { filter: invert(1); }
+.modal-footer {
+  background: var(--slate);
+  border-top: 1px solid var(--border);
+  border-radius: 0 0 var(--r-lg) var(--r-lg);
+}
+.modal-body { background: var(--white); }
+.modal-body h4, .modal-body h5 { color: var(--text); }
+.modal-body hr { border-color: var(--border); }
+
+/* Badges de estado */
+.badge.bg-success { background: #16a34a !important; }
+.badge.bg-warning { background: #d97706 !important; }
+.badge.bg-primary { background: var(--blue) !important; }
+.badge.bg-secondary { background: #64748b !important; }
+
+/* small / text-muted */
+.text-muted { color: var(--text-muted) !important; }
 </style>

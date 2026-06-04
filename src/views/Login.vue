@@ -1,102 +1,296 @@
 <template>
-  <div class="container">
-    <div class="row mt-4" style="background-color: white;
-    border-radius: 15px;">
-     <div class="offset-lg-3 col-lg-6 col-12">
-      <h2 class="mb-4 d-flex justify-content-center  mt-4">Conexion</h2>
-      <div class="p-4 my-4 p-lg-8 form" style="border-radius: 0.75rem;">
-        <div class="text-center p-2 mt-2 alert alert-danger " v-if="userStore.timeOut !== false" >
-               {{ userStore.mensaje }}
-         </div>
-        <form @submit.prevent="handleSubmit" class=" mt-4 row g-3">
-          <h1 class="mb-2 text-white">¡Bienvenido!</h1>
-           <div class="mb-3">
-              <label for="exampleFormControlInput1" class="col-sm-2 col-form-label text-white">Email</label>
-              <input type="email" 
-                            class="form-control border-0" 
-                            id="exampleFormControlInput1" 
-                            placeholder="name@example.com"
-                            v-model.trim="email">
-            </div>
-          <div class="mb-3 mb-4">
-              <label for="inputPassword" class="col-sm-2 col-form-label text-white">Password</label>
-              <input type="password" 
-                            class="form-control border-0" 
-                            id="inputPassword"
-                            v-model.trim="password">
-                  
-          </div>
-          <div class="d-grid">
-            <button class="btn" style="background-color: #4970B6;color: white;font-weight: bold;" :disabled="userStore.loadingUser">Enviar</button>
-          </div>
-          
-          <!-- ¡NUEVO: Botón de Google Sign-In! -->
-          <div class="d-grid mt-3">
-            <button 
-              type="button" 
-              class="btn btn-primary" 
-              @click="handleGoogleSignIn" 
-              :disabled="userStore.loadingUser"
-              style="background-color: #DB4437; border-color: #DB4437; color: white; font-weight: bold;"
-            >
-              <i class="fab fa-google me-2"></i> Iniciar sesión con Google
-            </button>
-          </div>
-          <!-- Fin del nuevo botón -->
+  <div class="lp-wrap">
+    <div class="lp-card">
 
-       </form>
+      <!-- Cabecera -->
+      <div class="lp-header">
+        <img src="../assets/img/ROYAL_CLEAN_2025_BLANCO.png" alt="Royall Clean" class="lp-logo" />
+        <h1 class="lp-title">Bienvenido</h1>
+        <p class="lp-sub">Accede a tu panel de Royall Clean</p>
       </div>
-     </div>
+
+      <!-- Error -->
+      <div v-if="userStore.timeOut !== false" class="lp-error">
+        <font-awesome-icon :icon="['fas', 'xmark']" class="me-2" />
+        {{ userStore.mensaje }}
+      </div>
+
+      <form @submit.prevent="handleSubmit" novalidate>
+
+        <!-- Email -->
+        <div class="lf" :class="{ 'lf--ok': email.length > 0 }">
+          <div class="lf-icon"><font-awesome-icon :icon="['fas', 'envelope']" /></div>
+          <div class="lf-body">
+            <label for="loginEmail">Email</label>
+            <input type="email" id="loginEmail" placeholder="nombre@ejemplo.com" v-model.trim="email" autocomplete="email" />
+          </div>
+        </div>
+
+        <!-- Password -->
+        <div class="lf" :class="{ 'lf--ok': password.length > 0 }">
+          <div class="lf-icon"><font-awesome-icon :icon="['fas', 'lock']" /></div>
+          <div class="lf-body">
+            <label for="loginPassword">Contraseña</label>
+            <input :type="showPass ? 'text' : 'password'" id="loginPassword" placeholder="••••••••" v-model.trim="password" autocomplete="current-password" />
+          </div>
+          <button type="button" class="lf-toggle" @click="showPass = !showPass" :title="showPass ? 'Ocultar' : 'Mostrar'">
+            <font-awesome-icon :icon="['fas', showPass ? 'eye' : 'eye']" />
+          </button>
+        </div>
+
+        <!-- Submit -->
+        <button type="submit" class="lp-btn" :disabled="userStore.loadingUser">
+          <span v-if="!userStore.loadingUser">Entrar</span>
+          <span v-else class="lp-spinner"></span>
+        </button>
+
+        <!-- Divisor -->
+        <div class="lp-divider"><span>o continúa con</span></div>
+
+        <!-- Google -->
+        <button type="button" class="lp-google-btn" @click="handleGoogleSignIn" :disabled="userStore.loadingUser">
+          <svg class="lp-google-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
+            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+          </svg>
+          Iniciar sesión con Google
+        </button>
+
+      </form>
+
     </div>
-  
   </div>
 </template>
 
 <script setup>
-import { ref } from "vue"
-import { useUserStore } from "../stores/user"
-import { useRouter } from "vue-router";
+import { ref } from 'vue';
+import { useUserStore } from '../stores/user';
 
-const userStore = useUserStore()
-const router = useRouter()
-
-const email = ref('') 
-const password = ref('') 
+const userStore = useUserStore();
+const email = ref('');
+const password = ref('');
+const showPass = ref(false);
 
 const handleSubmit = async () => {
-  // Validar si los campos están vacíos
   if (!email.value || !password.value) {
-    userStore.mensajeAlerta("Il faut remplir tous les champs");
+    userStore.mensajeAlerta('Rellena todos los campos');
     return;
   }
-  
-  // Validar la longitud de la contraseña
   if (password.value.length < 6) {
-    userStore.mensajeAlerta("Le mot de passe doit avoir au moins 6 caractères");
+    userStore.mensajeAlerta('La contraseña debe tener al menos 6 caracteres');
     return;
   }
-  
-  await userStore.loginUser(email.value, password.value)
-  // La redirección después del login (tanto para email/password como para Google)
-  // se gestiona en la acción `initAuthListener` de tu userStore,
-  // la cual debería ser llamada una vez al inicio de tu aplicación (ej. en main.js).
-  // Por lo tanto, no necesitas las líneas de `router.push` aquí.
-}
+  await userStore.loginUser(email.value, password.value);
+};
 
-// ¡NUEVA FUNCIÓN: Manejador para el inicio de sesión con Google!
 const handleGoogleSignIn = async () => {
-  await userStore.signInWithGoogle()
-  // La redirección después del login de Google también se gestiona en `initAuthListener`.
-}
-
+  await userStore.signInWithGoogle();
+};
 </script>
 
-<style>
-/* Posiblemente necesites un CDN para los iconos de Font Awesome si no los tienes ya */
-@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css');
+<style scoped>
+.lp-wrap {
+  min-height: calc(100vh - 54px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 16px;
+  background: #151515;
+}
 
-.form{
-  background: rgb(0,0,0);
-background: linear-gradient(145deg, rgba(0,0,0,1) 41%, rgba(16,2,31,1) 73%);
+.lp-card {
+  width: 100%;
+  max-width: 420px;
+  background: #0f1729;
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 20px;
+  padding: 40px 36px 36px;
+  box-shadow: 0 24px 60px rgba(0,0,0,0.5);
+}
+
+/* ── Header ── */
+.lp-header {
+  text-align: center;
+  margin-bottom: 28px;
+}
+.lp-logo {
+  height: 42px;
+  width: auto;
+  margin-bottom: 20px;
+}
+.lp-title {
+  font-family: 'Anton', sans-serif;
+  font-size: 2rem;
+  color: #fff;
+  margin: 0 0 6px;
+  letter-spacing: 0.01em;
+}
+.lp-sub {
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.88rem;
+  color: #64748b;
+  margin: 0;
+}
+
+/* ── Error ── */
+.lp-error {
+  background: rgba(239,68,68,0.1);
+  border: 1px solid rgba(239,68,68,0.3);
+  color: #fca5a5;
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.84rem;
+  border-radius: 10px;
+  padding: 10px 14px;
+  margin-bottom: 20px;
+}
+
+/* ── Fields ── */
+.lf {
+  display: flex;
+  align-items: center;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.09);
+  border-radius: 12px;
+  padding: 0 14px;
+  margin-bottom: 14px;
+  transition: border-color 0.2s, background 0.2s;
+}
+.lf:focus-within {
+  border-color: rgba(96,165,250,0.5);
+  background: rgba(96,165,250,0.04);
+}
+.lf--ok { border-color: rgba(52,211,153,0.35); }
+
+.lf-icon {
+  color: #475569;
+  font-size: 0.85rem;
+  width: 18px;
+  flex-shrink: 0;
+  margin-right: 12px;
+  transition: color 0.2s;
+}
+.lf:focus-within .lf-icon { color: #60a5fa; }
+
+.lf-body {
+  flex: 1;
+  padding: 10px 0;
+}
+.lf-body label {
+  display: block;
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #64748b;
+  margin-bottom: 2px;
+}
+.lf-body input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #f1f5f9;
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.9rem;
+  padding: 0;
+}
+.lf-body input::placeholder { color: #334155; }
+
+.lf-toggle {
+  background: none;
+  border: none;
+  color: #475569;
+  cursor: pointer;
+  padding: 0 0 0 10px;
+  font-size: 0.82rem;
+  transition: color 0.2s;
+}
+.lf-toggle:hover { color: #94a3b8; }
+
+/* ── Submit ── */
+.lp-btn {
+  width: 100%;
+  padding: 13px;
+  margin-top: 6px;
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: #fff;
+  font-family: 'Raleway', sans-serif;
+  font-weight: 700;
+  font-size: 0.95rem;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.2s, box-shadow 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+}
+.lp-btn:hover:not(:disabled) {
+  opacity: 0.9;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(37,99,235,0.45);
+}
+.lp-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.lp-spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── Divider ── */
+.lp-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 20px 0;
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.75rem;
+  color: #334155;
+}
+.lp-divider::before,
+.lp-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(255,255,255,0.07);
+}
+
+/* ── Google ── */
+.lp-google-btn {
+  width: 100%;
+  padding: 12px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.09);
+  color: #cbd5e1;
+  font-family: 'Raleway', sans-serif;
+  font-weight: 600;
+  font-size: 0.88rem;
+  border-radius: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: background 0.2s, border-color 0.2s;
+}
+.lp-google-btn:hover:not(:disabled) {
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(255,255,255,0.15);
+}
+.lp-google-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.lp-google-icon { width: 18px; height: 18px; flex-shrink: 0; }
+
+@media (max-width: 480px) {
+  .lp-card { padding: 28px 20px 24px; }
+  .lp-title { font-size: 1.7rem; }
 }
 </style>
