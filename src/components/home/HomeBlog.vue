@@ -17,8 +17,11 @@
         :to="`/blog/${article.slug}`"
         class="hb-card"
       >
-        <div class="hb-card-icon-wrap" :style="{ background: article.colorPale }">
-          <font-awesome-icon :icon="article.icon" class="hb-card-icon" :style="{ color: article.color }" />
+        <div class="hb-card-img-wrap">
+          <img :src="article.image" :alt="article.season" loading="lazy" class="hb-card-img" />
+          <span class="hb-card-icon-badge" :style="{ background: article.color }">
+            <font-awesome-icon :icon="article.icon" />
+          </span>
         </div>
         <div class="hb-card-body">
           <span class="hb-season" :style="{ color: article.color }">{{ article.season }}</span>
@@ -89,11 +92,28 @@ import { articles } from '../../data/blog.js';
 }
 .hb-card:hover { box-shadow: 0 8px 28px rgba(0,0,0,0.08); transform: translateY(-3px); }
 
-.hb-card-icon-wrap {
-  display: flex; align-items: center; justify-content: center;
-  padding: 28px 0;
+.hb-card-img-wrap {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
 }
-.hb-card-icon { font-size: 2rem; }
+.hb-card-img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.4s ease;
+}
+.hb-card:hover .hb-card-img { transform: scale(1.06); }
+.hb-card-icon-badge {
+  position: absolute;
+  top: 10px; right: 10px;
+  width: 34px; height: 34px;
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff;
+  font-size: 0.85rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+}
 
 .hb-card-body {
   padding: 14px 16px 18px;

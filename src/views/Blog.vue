@@ -14,10 +14,10 @@
         :to="`/blog/${article.slug}`"
         class="blog-card"
       >
-        <div class="blog-card-top" :style="{ background: article.colorPale }">
-          <font-awesome-icon :icon="article.icon" class="blog-card-icon" :style="{ color: article.color }" />
-          <span class="blog-card-season" :style="{ color: article.color, background: 'white', border: `1px solid ${article.color}22` }">
-            {{ article.season }}
+        <div class="blog-card-top">
+          <img :src="article.image" :alt="article.season" loading="lazy" class="blog-card-img" />
+          <span class="blog-card-season" :style="{ color: '#fff', background: article.color }">
+            <font-awesome-icon :icon="article.icon" class="me-1" />{{ article.season }}
           </span>
         </div>
         <div class="blog-card-body">
@@ -118,13 +118,20 @@ import { articles } from '../data/blog.js';
   transform: translateY(-4px);
 }
 .blog-card-top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 22px 20px;
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
 }
-.blog-card-icon { font-size: 2rem; }
+.blog-card-img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.4s ease;
+}
+.blog-card:hover .blog-card-img { transform: scale(1.06); }
 .blog-card-season {
+  position: absolute;
+  bottom: 10px; left: 10px;
   font-family: 'Raleway', sans-serif;
   font-size: 0.72rem;
   font-weight: 700;

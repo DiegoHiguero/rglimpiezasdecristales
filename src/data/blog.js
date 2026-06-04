@@ -1,3 +1,8 @@
+import imgInvierno  from '../assets/img/2024-02-19.jpg';
+import imgVerano    from '../assets/img/20260518_113941.jpg';
+import imgPrimavera from '../assets/img/20260324_122426.jpg';
+import imgOtono     from '../assets/img/20250917_131013.jpg';
+
 export const articles = [
   {
     slug: 'como-limpiar-cristales-en-invierno',
@@ -7,6 +12,7 @@ export const articles = [
     dateLabel: '10 de diciembre de 2025',
     season: 'Invierno',
     icon: ['fas', 'snowflake'],
+    image: imgInvierno,
     color: '#2563eb',
     colorPale: '#eff6ff',
     metaDescription: 'Aprende cómo limpiar cristales en invierno sin dejar marcas. Consejos profesionales para combatir la humedad, condensación y bajas temperaturas en Madrid.',
@@ -46,6 +52,7 @@ export const articles = [
     dateLabel: '15 de junio de 2025',
     season: 'Verano',
     icon: ['fas', 'sun'],
+    image: imgVerano,
     color: '#d97706',
     colorPale: '#fffbeb',
     metaDescription: 'Descubre cómo mantener los cristales limpios durante el verano. Consejos para negocios y comercios en Madrid frente al polvo, insectos y el calor.',
@@ -95,6 +102,7 @@ export const articles = [
     dateLabel: '20 de marzo de 2026',
     season: 'Primavera',
     icon: ['fas', 'seedling'],
+    image: imgPrimavera,
     color: '#16a34a',
     colorPale: '#f0fdf4',
     metaDescription: 'Guía completa para limpiar cristales y escaparates después del invierno. Consejos profesionales para negocios y comercios en Madrid durante la primavera.',
@@ -148,6 +156,7 @@ export const articles = [
     dateLabel: '10 de septiembre de 2025',
     season: 'Otoño',
     icon: ['fas', 'leaf'],
+    image: imgOtono,
     color: '#ea580c',
     colorPale: '#fff7ed',
     metaDescription: 'Cómo preparar los cristales y escaparates para el otoño. Consejos de mantenimiento para negocios y comercios en Madrid ante la lluvia, el viento y la humedad.',

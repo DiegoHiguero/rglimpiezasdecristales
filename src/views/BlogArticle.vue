@@ -21,6 +21,10 @@
         <p class="article-excerpt">{{ article.excerpt }}</p>
       </header>
 
+      <div class="article-hero-img" v-if="article.image">
+        <img :src="article.image" :alt="article.title" loading="lazy" />
+      </div>
+
       <div class="article-content" v-html="article.content"></div>
 
       <div class="article-cta">
@@ -136,6 +140,19 @@ const related = computed(() => articles.filter(a => a.slug !== route.params.slug
   margin: 0;
   border-left: 3px solid var(--blue);
   padding-left: 16px;
+}
+
+/* ── Hero image ── */
+.article-hero-img {
+  border-radius: var(--r-md);
+  overflow: hidden;
+  aspect-ratio: 16 / 6;
+  margin-bottom: 32px;
+}
+.article-hero-img img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
 /* ── Content ── */
