@@ -47,7 +47,9 @@
             :to="`/blog/${a.slug}`"
             class="related-card"
           >
-            <span class="related-icon">{{ a.icon }}</span>
+            <span class="related-icon" :style="{ background: a.colorPale, color: a.color }">
+              <font-awesome-icon :icon="a.icon" />
+            </span>
             <div>
               <span class="related-season" :style="{ color: a.color }">{{ a.season }}</span>
               <p class="related-card-title">{{ a.title }}</p>
@@ -216,7 +218,11 @@ const related = computed(() => articles.filter(a => a.slug !== route.params.slug
   text-decoration: none; transition: box-shadow 0.2s, transform 0.2s;
 }
 .related-card:hover { box-shadow: 0 4px 18px rgba(0,0,0,0.07); transform: translateY(-2px); }
-.related-icon { font-size: 1.6rem; flex-shrink: 0; }
+.related-icon {
+  width: 38px; height: 38px; border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.95rem; flex-shrink: 0;
+}
 .related-season {
   font-family: 'Raleway', sans-serif;
   font-size: 0.7rem; font-weight: 700;
