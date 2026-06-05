@@ -15,7 +15,7 @@ export const articles = [
     image: imgInvierno,
     color: '#2563eb',
     colorPale: '#eff6ff',
-    metaDescription: 'Aprende cómo limpiar cristales en invierno sin dejar marcas. Consejos profesionales para combatir la humedad, condensación y bajas temperaturas en Madrid.',
+    metaDescription: 'Cómo limpiar cristales en invierno sin dejar marcas. Consejos contra la humedad, condensación y bajas temperaturas. Empresa de limpieza de cristales en Madrid.',
     content: `
       <p>Los meses de invierno presentan desafíos especiales para mantener los cristales limpios. La lluvia, la cal, la humedad, la condensación y las bajas temperaturas pueden provocar manchas y dificultar una limpieza eficaz.</p>
 
@@ -55,7 +55,7 @@ export const articles = [
     image: imgVerano,
     color: '#d97706',
     colorPale: '#fffbeb',
-    metaDescription: 'Descubre cómo mantener los cristales limpios durante el verano. Consejos para negocios y comercios en Madrid frente al polvo, insectos y el calor.',
+    metaDescription: 'Cómo mantener los cristales limpios en verano. Elimina polvo, insectos y marcas de los escaparates. Limpieza profesional de cristales para comercios y empresas en Madrid.',
     content: `
       <p>El verano es una de las épocas más exigentes para el mantenimiento de cristales y escaparates. El aumento del polvo, el polen, los insectos y las altas temperaturas provoca que las superficies acristaladas se ensucien con mayor rapidez, afectando a la imagen de negocios, oficinas y establecimientos comerciales.</p>
 
@@ -105,7 +105,7 @@ export const articles = [
     image: imgPrimavera,
     color: '#16a34a',
     colorPale: '#f0fdf4',
-    metaDescription: 'Guía completa para limpiar cristales y escaparates después del invierno. Consejos profesionales para negocios y comercios en Madrid durante la primavera.',
+    metaDescription: 'Cómo limpiar cristales después del invierno y eliminar el polen de escaparates. Guía de limpieza profesional de cristales en primavera para negocios y comercios en Madrid.',
     content: `
       <p>Tras los meses de invierno, los cristales y escaparates suelen acumular suciedad, restos de lluvia, polvo y otras partículas que afectan a su apariencia. La llegada de la primavera es el momento ideal para realizar una limpieza a fondo y recuperar la transparencia y el brillo de las superficies acristaladas.</p>
 
@@ -159,7 +159,7 @@ export const articles = [
     image: imgOtono,
     color: '#ea580c',
     colorPale: '#fff7ed',
-    metaDescription: 'Cómo preparar los cristales y escaparates para el otoño. Consejos de mantenimiento para negocios y comercios en Madrid ante la lluvia, el viento y la humedad.',
+    metaDescription: 'Limpieza de cristales en otoño: elimina manchas de lluvia, hojas y humedad de escaparates y fachadas. Prepara tu negocio para Black Friday e invierno. Empresa en Madrid.',
     content: `
       <p>La llegada del otoño trae consigo cambios meteorológicos que pueden afectar directamente al estado de los cristales y escaparates. Las lluvias frecuentes, la humedad, el viento y la acumulación de hojas provocan que las superficies acristaladas se ensucien con mayor rapidez.</p>
       <p>Por ello, esta estación es un momento clave para establecer un plan de mantenimiento que garantice una imagen profesional y cuidada del negocio.</p>
