@@ -27,8 +27,10 @@ import Footer from "./components/Footer.vue";
 import CookieBanner from "./components/CookieBanner.vue";
 import AdminSidebar from "./components/AdminSidebar.vue";
 import { useUserStore } from "./stores/user";
+import { useSyncStore } from "./stores/syncStore";
 
 const userStore = useUserStore();
+const syncStore = useSyncStore();
 const route = useRoute();
 
 const adminPaths = ['/dashboard', '/Register', '/registro', '/misClientes', '/misFacturas', '/admin/'];
@@ -39,6 +41,15 @@ watchEffect(() => {
     document.body.classList.add('admin-mode');
   } else {
     document.body.classList.remove('admin-mode');
+  }
+});
+
+// Auto-sync: starts when admin is logged in, stops otherwise
+watchEffect(() => {
+  if (isAdminRoute.value && userStore.userData?.uid && userStore.googleAccessToken) {
+    syncStore.startAutoSync(10); // every 10 minutes
+  } else if (!isAdminRoute.value) {
+    syncStore.stopAutoSync();
   }
 });
 </script>

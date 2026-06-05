@@ -82,6 +82,48 @@
 
     </div>
 
+    <!-- Google Sheets Sync -->
+    <div class="db-sync-card">
+      <div class="db-sync-left">
+        <div class="db-sync-icon">
+          <font-awesome-icon :icon="['fas', syncStore.isSyncing ? 'rotate' : 'table-cells']" :spin="syncStore.isSyncing" />
+        </div>
+        <div class="db-sync-info">
+          <div class="db-sync-title">Google Sheets</div>
+          <div class="db-sync-msg" :class="syncStore.status">{{ syncStore.message || 'Esperando sincronización...' }}</div>
+          <div class="db-sync-last" v-if="syncStore.lastSync">Última sync: {{ syncStore.lastSync }}</div>
+        </div>
+        <div class="db-sync-badge" :class="syncStore.status">
+          <span v-if="syncStore.status === 'syncing'">Sincronizando...</span>
+          <span v-else-if="syncStore.status === 'success'">✓ OK</span>
+          <span v-else-if="syncStore.status === 'error'">⚠ Error</span>
+          <span v-else>—</span>
+        </div>
+      </div>
+      <div class="db-sync-actions">
+        <button class="db-sync-btn db-sync-btn--full" @click="syncStore.performSync()" :disabled="syncStore.isSyncing">
+          <font-awesome-icon :icon="['fas', 'arrows-rotate']" />
+          Sincronizar todo
+        </button>
+        <button class="db-sync-btn" @click="syncStore.manualExport()" :disabled="syncStore.isSyncing">
+          <font-awesome-icon :icon="['fas', 'upload']" />
+          Exportar
+        </button>
+        <button class="db-sync-btn" @click="syncStore.manualImport()" :disabled="syncStore.isSyncing">
+          <font-awesome-icon :icon="['fas', 'download']" />
+          Importar
+        </button>
+        <a
+          href="https://docs.google.com/spreadsheets/d/1Fo2Tu0Y3buEFB9Elvo_SrjjkvwTISYO4cahvkaUmwO8/edit"
+          target="_blank" rel="noopener"
+          class="db-sync-btn db-sync-btn--sheet"
+        >
+          <font-awesome-icon :icon="['fas', 'arrow-up-right-from-square']" />
+          Abrir hoja
+        </a>
+      </div>
+    </div>
+
     <!-- Accesos rápidos -->
     <div class="db-shortcuts">
       <div class="db-shortcuts-title">Accesos rápidos</div>
@@ -129,12 +171,14 @@
 import { computed, onMounted } from 'vue';
 import { useDatabaseStore } from '../stores/database';
 import { useUserStore } from '../stores/user';
+import { useSyncStore } from '../stores/syncStore';
 import dayjs from 'dayjs';
 import 'dayjs/locale/es';
 dayjs.locale('es');
 
 const databaseStore = useDatabaseStore();
 const userStore = useUserStore();
+const syncStore = useSyncStore();
 
 const firstName = computed(() => {
   const email = userStore.userData?.email || '';
@@ -402,6 +446,109 @@ onMounted(async () => {
   font-weight: 700;
   color: #ef4444;
 }
+
+/* ── Google Sheets Sync ── */
+.db-sync-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  padding: 18px 22px;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.db-sync-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex: 1;
+  min-width: 0;
+}
+.db-sync-icon {
+  width: 40px; height: 40px;
+  background: rgba(52,211,153,0.1);
+  color: #34d399;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+.db-sync-info { min-width: 0; }
+.db-sync-title {
+  font-family: 'Raleway', sans-serif;
+  font-weight: 700;
+  font-size: 0.88rem;
+  color: var(--text);
+}
+.db-sync-msg {
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 260px;
+}
+.db-sync-msg.error   { color: #f87171; }
+.db-sync-msg.success { color: #34d399; }
+.db-sync-last {
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+.db-sync-badge {
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 20px;
+  flex-shrink: 0;
+  background: rgba(100,116,139,0.1);
+  color: var(--text-muted);
+}
+.db-sync-badge.syncing { background: rgba(251,191,36,0.12); color: #fbbf24; }
+.db-sync-badge.success { background: rgba(52,211,153,0.12); color: #34d399; }
+.db-sync-badge.error   { background: rgba(248,113,113,0.12); color: #f87171; }
+
+.db-sync-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+.db-sync-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.76rem;
+  font-weight: 700;
+  padding: 7px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--slate);
+  color: var(--text);
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.db-sync-btn:hover:not(:disabled) {
+  background: rgba(37,99,235,0.08);
+  border-color: var(--blue);
+  color: var(--blue);
+}
+.db-sync-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+.db-sync-btn--full { background: rgba(52,211,153,0.1); border-color: rgba(52,211,153,0.3); color: #34d399; }
+.db-sync-btn--full:hover:not(:disabled) { background: rgba(52,211,153,0.18); }
+.db-sync-btn--sheet { background: rgba(37,99,235,0.08); border-color: rgba(37,99,235,0.25); color: var(--blue); }
+.db-sync-btn--sheet:hover:not(:disabled) { background: rgba(37,99,235,0.15); }
 
 /* ── Accesos rápidos ── */
 .db-shortcuts-title {

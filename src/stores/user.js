@@ -101,8 +101,9 @@ export const useUserStore = defineStore('userStore', {
       this.mensaje = null;
 
       const provider = new GoogleAuthProvider();
-      provider.addScope('https://www.googleapis.com/auth/drive.file'); // permisos Drive
-      provider.addScope('https://www.googleapis.com/auth/gmail.send'); 
+      provider.addScope('https://www.googleapis.com/auth/drive.file');
+      provider.addScope('https://www.googleapis.com/auth/gmail.send');
+      provider.addScope('https://www.googleapis.com/auth/spreadsheets');
 
       try {
         const result = await signInWithPopup(auth, provider);
