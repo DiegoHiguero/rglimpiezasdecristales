@@ -161,13 +161,22 @@ async function api(path, method = 'GET', body = null, _retry = true) {
 
 // ─── Metadatos de hojas ──────────────────────────────────────────────────────
 
-let _meta = null
+let _meta        = null
+let _metaPromise = null   // evita fetches concurrentes múltiples
 
 async function getMeta() {
   if (_meta) return _meta
-  const d = await api('?fields=sheets.properties(sheetId,title)')
-  _meta = (d.sheets || []).map(s => s.properties)
-  return _meta
+  // Si ya hay un fetch en curso, esperamos el mismo (no iniciamos otro)
+  if (!_metaPromise) {
+    _metaPromise = api('?fields=sheets.properties(sheetId,title)')
+      .then(d => {
+        _meta = (d.sheets || []).map(s => s.properties)
+        _metaPromise = null
+        return _meta
+      })
+      .catch(e => { _metaPromise = null; throw e })
+  }
+  return _metaPromise
 }
 
 async function getSheetId(title) {
@@ -179,14 +188,20 @@ async function getSheetId(title) {
 
 async function ensureTabs(names) {
   const meta = await getMeta()
-  const existing = meta.map(m => m.title)
-  const missing = names.filter(n => !existing.includes(n))
+  const existing = new Set(meta.map(m => m.title))
+  const missing = names.filter(n => !existing.has(n))
   if (!missing.length) return
 
-  await api(':batchUpdate', 'POST', {
-    requests: missing.map(title => ({ addSheet: { properties: { title } } })),
-  })
-  _meta = null // invalidar caché
+  try {
+    await api(':batchUpdate', 'POST', {
+      requests: missing.map(title => ({ addSheet: { properties: { title } } })),
+    })
+  } catch (e) {
+    // Ignorar "ya existe" — puede ocurrir por llamadas concurrentes
+    const msg = (e.message || '').toLowerCase()
+    if (!msg.includes('already exists') && !msg.includes('ya existe')) throw e
+  }
+  _meta = null // invalidar caché para siguiente lectura
 }
 
 async function ensureHeader(key) {
