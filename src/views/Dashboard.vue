@@ -23,7 +23,10 @@
       <div class="db-stat db-stat--red">
         <div class="db-stat-icon"><font-awesome-icon :icon="['fas', 'hand-holding-dollar']" /></div>
         <div class="db-stat-body">
-          <span class="db-stat-value">{{ formatCurrency(totalPendiente) }}</span>
+          <span class="db-stat-value">
+            <span v-if="databaseStore.isLoadingLimpiezas && !databaseStore._allLimpiezas.length" class="db-stat-loading">—</span>
+            <span v-else>{{ formatCurrency(totalPendiente) }}</span>
+          </span>
           <span class="db-stat-label">Pendiente de cobro</span>
         </div>
       </div>
@@ -66,9 +69,26 @@
           <span class="db-card-title">Pagos pendientes</span>
           <router-link to="/registro" class="db-card-link">Ver todos</router-link>
         </div>
-        <div v-if="databaseStore.pendingLimpiezas.length === 0" class="db-empty">
+
+        <!-- Cargando -->
+        <div v-if="databaseStore.isLoadingLimpiezas && !databaseStore._allLimpiezas.length" class="db-empty">
+          <div class="db-mini-spinner"></div>
+          Cargando...
+        </div>
+
+        <!-- Error -->
+        <div v-else-if="databaseStore.errorLimpiezas && !databaseStore._allLimpiezas.length" class="db-empty db-empty--error">
+          <font-awesome-icon :icon="['fas', 'triangle-exclamation']" class="me-2" />
+          Error al cargar
+          <button class="db-retry-btn" @click="databaseStore.fetchLimpiezas()">Reintentar</button>
+        </div>
+
+        <!-- Sin pendientes -->
+        <div v-else-if="databaseStore.pendingLimpiezas.length === 0" class="db-empty">
           <font-awesome-icon :icon="['fas', 'check']" class="me-2" />No hay pagos pendientes
         </div>
+
+        <!-- Lista -->
         <div v-else class="db-pending-list">
           <div v-for="l in pendingTop" :key="l.id" class="db-pending-item">
             <div class="db-pending-info">
@@ -515,7 +535,34 @@ onMounted(async () => {
   color: var(--text-muted);
   text-align: center;
   padding: 24px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
 }
+.db-empty--error { color: #f87171; }
+.db-mini-spinner {
+  width: 20px; height: 20px;
+  border: 2px solid rgba(96,165,250,0.2);
+  border-top-color: #60a5fa;
+  border-radius: 50%;
+  animation: db-spin 0.8s linear infinite;
+}
+@keyframes db-spin { to { transform: rotate(360deg); } }
+.db-retry-btn {
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  background: rgba(248,113,113,0.1);
+  border: 1px solid rgba(248,113,113,0.25);
+  color: #f87171;
+  border-radius: 6px;
+  padding: 4px 12px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.db-retry-btn:hover { background: rgba(248,113,113,0.18); }
+.db-stat-loading { color: var(--text-muted); font-size: 1rem; }
 
 .db-pending-list { display: flex; flex-direction: column; gap: 8px; }
 .db-pending-item {

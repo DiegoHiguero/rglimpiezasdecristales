@@ -31,19 +31,21 @@ export function loadCache(key) {
 }
 
 /**
- * Compara dos arrays de registros para detectar cambios.
- * Compara conteo, IDs y una huella ligera de los datos para evitar
- * serializar arrays grandes completos en cada sync.
+ * Compara dos arrays de registros campo a campo.
+ * Devuelve true si hay diferencias (nuevo, modificado o eliminado).
  * @param {Array|null} cached
  * @param {Array} fresh
  * @returns {boolean}
  */
 export function hasChanges(cached, fresh) {
   if (!cached || cached.length !== fresh.length) return true
-  // Comparar fingerprint: IDs ordenados + suma de longitudes de valores
-  const fp = arr => arr
-    .map(r => r.id + ':' + Object.values(r).join('|').length)
-    .sort()
-    .join(',')
-  return fp(cached) !== fp(fresh)
+  const map = new Map(cached.map(r => [r.id, r]))
+  for (const r of fresh) {
+    const c = map.get(r.id)
+    if (!c) return true
+    for (const k of Object.keys(r)) {
+      if (String(r[k] ?? '') !== String(c[k] ?? '')) return true
+    }
+  }
+  return false
 }
