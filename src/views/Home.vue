@@ -259,7 +259,7 @@ function getCookie(cname: string): string {
 <style scoped>
 /* â”€â”€ HERO â”€â”€ */
 .principal {
-  background: url('../assets/img/office-buildings.jpg') center/cover no-repeat;
+  background: url('../assets/img/office-buildings.webp') center/cover no-repeat;
   position: relative;
   overflow: hidden;
   min-height: 500px;

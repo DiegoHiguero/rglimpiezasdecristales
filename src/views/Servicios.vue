@@ -19,7 +19,7 @@
       <!-- Negocios -->
       <div class="sv-card sv-card--blue">
         <div class="sv-card-img-wrap">
-          <img src="../assets/img/restaurant.jpg" alt="Limpieza de cristales en negocios y locales comerciales Madrid" class="sv-card-img" />
+          <img src="../assets/img/restaurant.webp" alt="Limpieza de cristales en negocios y locales comerciales Madrid" class="sv-card-img" />
           <div class="sv-card-overlay"></div>
           <span class="sv-num">01</span>
         </div>
@@ -44,7 +44,7 @@
       <!-- Hogares -->
       <div class="sv-card sv-card--green">
         <div class="sv-card-img-wrap">
-          <img src="../assets/img/casamadera.jpeg" alt="Limpieza de cristales en hogares y viviendas Madrid" class="sv-card-img" />
+          <img src="../assets/img/casamadera.webp" alt="Limpieza de cristales en hogares y viviendas Madrid" class="sv-card-img" />
           <div class="sv-card-overlay"></div>
           <span class="sv-num">02</span>
         </div>
@@ -69,7 +69,7 @@
       <!-- Comunidades y Empresas -->
       <div class="sv-card sv-card--purple">
         <div class="sv-card-img-wrap">
-          <img src="../assets/img/office-buildings.jpg" alt="Limpieza de cristales en empresas y comunidades de vecinos Madrid" class="sv-card-img" />
+          <img src="../assets/img/office-buildings.webp" alt="Limpieza de cristales en empresas y comunidades de vecinos Madrid" class="sv-card-img" />
           <div class="sv-card-overlay"></div>
           <span class="sv-num">03</span>
         </div>
@@ -94,7 +94,7 @@
       <!-- Agua a presión -->
       <div class="sv-card sv-card--orange">
         <div class="sv-card-img-wrap">
-          <img src="../assets/img/hidrolimpiadoras.jpg" alt="Limpieza con agua a presión en Madrid" class="sv-card-img" />
+          <img src="../assets/img/hidrolimpiadoras.webp" alt="Limpieza con agua a presión en Madrid" class="sv-card-img" />
           <div class="sv-card-overlay"></div>
           <span class="sv-num">04</span>
         </div>
@@ -119,7 +119,7 @@
       <!-- Placas Solares -->
       <div class="sv-card sv-card--yellow">
         <div class="sv-card-img-wrap">
-          <img src="../assets/img/limpieza-panel-thumb.jpg" alt="Limpieza de placas solares en Madrid" class="sv-card-img" />
+          <img src="../assets/img/limpieza-panel-thumb.webp" alt="Limpieza de placas solares en Madrid" class="sv-card-img" />
           <div class="sv-card-overlay"></div>
           <span class="sv-num">05</span>
         </div>
@@ -144,7 +144,7 @@
       <!-- Limpiezas de Obras -->
       <div class="sv-card sv-card--cyan">
         <div class="sv-card-img-wrap">
-          <img src="../assets/img/20260323_184851.jpg" alt="Limpieza de obras y fin de obra en Madrid" class="sv-card-img" />
+          <img src="../assets/img/20260323_184851.webp" alt="Limpieza de obras y fin de obra en Madrid" class="sv-card-img" />
           <div class="sv-card-overlay"></div>
           <span class="sv-num">06</span>
         </div>
@@ -169,7 +169,7 @@
       <!-- Limpieza de Grafitis -->
       <div class="sv-card sv-card--rose">
         <div class="sv-card-img-wrap">
-          <img src="../assets/img/grafitis.jpg" alt="Limpieza y eliminación de grafitis en Madrid" class="sv-card-img" />
+          <img src="../assets/img/grafitis.webp" alt="Limpieza y eliminación de grafitis en Madrid" class="sv-card-img" />
           <div class="sv-card-overlay"></div>
           <span class="sv-num">07</span>
         </div>
@@ -194,7 +194,7 @@
       <!-- Retirada de Vinilos -->
       <div class="sv-card sv-card--fuchsia">
         <div class="sv-card-img-wrap">
-          <img src="../assets/img/vinilo.jpg" alt="Retirada de vinilos en escaparates y cristales Madrid" class="sv-card-img" />
+          <img src="../assets/img/vinilo.webp" alt="Retirada de vinilos en escaparates y cristales Madrid" class="sv-card-img" />
           <div class="sv-card-overlay"></div>
           <span class="sv-num">08</span>
         </div>

@@ -1,8 +1,8 @@
-import imgInvierno  from '../assets/img/side-view-woman-cleaning-window.jpg';
-import imgVerano    from '../assets/img/man-cleaning-windows.jpg';
+import imgInvierno  from '../assets/img/side-view-woman-cleaning-window.webp';
+import imgVerano    from '../assets/img/man-cleaning-windows.webp';
 import imgPrimavera from '../assets/img/housemaid-wearing.jpg';
-import imgOtono     from '../assets/img/hojas-otoño.jpeg';
-import imgPaloma    from '../assets/img/paloma.png';
+import imgOtono     from '../assets/img/hojas-otono.webp';
+import imgPaloma    from '../assets/img/paloma.webp';
 
 export const articles = [
   {

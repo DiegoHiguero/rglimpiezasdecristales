@@ -3,7 +3,7 @@
     <Transition name="cb-slide">
       <div v-if="visible" class="cb-wrap" role="dialog" aria-label="Aviso de cookies">
         <div class="cb-inner">
-          <img src="../assets/img/cookies.jpeg" alt="Cookie" class="cb-cookie-img" />
+          <img src="../assets/img/cookies.webp" alt="Cookie" class="cb-cookie-img" />
           <div class="cb-text">
             <div class="cb-title">
               Usamos cookies

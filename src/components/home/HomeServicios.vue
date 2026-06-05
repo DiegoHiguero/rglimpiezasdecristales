@@ -11,7 +11,7 @@
 
       <div class="svc-card animate-on-scroll">
         <div class="svc-img-wrap">
-          <img src="../../assets/img/restaurant.jpg" class="svc-img" alt="Limpieza de cristales en negocios" />
+          <img src="../../assets/img/restaurant.webp" class="svc-img" alt="Limpieza de cristales en negocios" />
           <div class="svc-overlay"></div>
           <span class="svc-tag svc-tag--blue">Negocios</span>
         </div>
@@ -32,7 +32,7 @@
 
       <div class="svc-card animate-on-scroll">
         <div class="svc-img-wrap">
-          <img src="../../assets/img/casamadera.jpeg" class="svc-img" alt="Limpieza de cristales en hogares" />
+          <img src="../../assets/img/casamadera.webp" class="svc-img" alt="Limpieza de cristales en hogares" />
           <div class="svc-overlay"></div>
           <span class="svc-tag svc-tag--green">Hogares</span>
         </div>

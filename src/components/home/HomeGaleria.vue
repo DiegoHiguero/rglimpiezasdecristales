@@ -127,27 +127,27 @@
 
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue';
-import img2024Feb    from '../../assets/img/2024-02-19.jpg';
-import img2024Jul    from '../../assets/img/2024-07-08.jpg';
-import img2023Ene    from '../../assets/img/20230119_110356.jpg';
-import img2025Ago    from '../../assets/img/2025-08-30.jpg';
-import img2025Oct    from '../../assets/img/2025-10-22.jpg';
-import imgLimpiando  from '../../assets/img/limpiando.jpeg';
-import img20240529a  from '../../assets/img/20240529_100505.jpg';
-import img20240529b  from '../../assets/img/20240529_100458.jpg';
-import imgCollage2024 from '../../assets/img/Collage_2024-05-08_17_16_13.jpg';
-import img20260319   from '../../assets/img/20260319_124222.jpg';
-import img20260324   from '../../assets/img/20260324_122426.jpg';
-import img20250917   from '../../assets/img/20250917_131013.jpg';
-import img20260311   from '../../assets/img/20260311_121255.jpg';
-import imgBefore1    from '../../assets/img/Screenshot_20240620_180140_Maps.jpg';
-import imgAfter1     from '../../assets/img/Screenshot_20240620_180159_Maps.jpg';
-import imgBefore2    from '../../assets/img/IMG-20250520-WA0000.jpg';
-import imgAfter2     from '../../assets/img/IMG-20250520-WA0001.jpg';
-import imgSingle5    from '../../assets/img/20260518_113941.jpg';
-import imgSingle6    from '../../assets/img/20260518_122343.jpg';
-import imgSingle3    from '../../assets/img/IMG-20230901-WA0000.jpg';
-import imgSingle4    from '../../assets/img/20230606_132202.jpg';
+import img2024Feb    from '../../assets/img/2024-02-19.webp';
+import img2024Jul    from '../../assets/img/2024-07-08.webp';
+import img2023Ene    from '../../assets/img/20230119_110356.webp';
+import img2025Ago    from '../../assets/img/2025-08-30.webp';
+import img2025Oct    from '../../assets/img/2025-10-22.webp';
+import imgLimpiando  from '../../assets/img/limpiando.webp';
+import img20240529a  from '../../assets/img/20240529_100505.webp';
+import img20240529b  from '../../assets/img/20240529_100458.webp';
+import imgCollage2024 from '../../assets/img/Collage_2024-05-08_17_16_13.webp';
+import img20260319   from '../../assets/img/20260319_124222.webp';
+import img20260324   from '../../assets/img/20260324_122426.webp';
+import img20250917   from '../../assets/img/20250917_131013.webp';
+import img20260311   from '../../assets/img/20260311_121255.webp';
+import imgBefore1    from '../../assets/img/Screenshot_20240620_180140_Maps.webp';
+import imgAfter1     from '../../assets/img/Screenshot_20240620_180159_Maps.webp';
+import imgBefore2    from '../../assets/img/IMG-20250520-WA0000.webp';
+import imgAfter2     from '../../assets/img/IMG-20250520-WA0001.webp';
+import imgSingle5    from '../../assets/img/20260518_113941.webp';
+import imgSingle6    from '../../assets/img/20260518_122343.webp';
+import imgSingle3    from '../../assets/img/IMG-20230901-WA0000.webp';
+import imgSingle4    from '../../assets/img/20230606_132202.webp';
 
 const baPairs = [
   { type: 'slider', before: imgBefore1, after: imgAfter1, label: 'Jun 2024' },
