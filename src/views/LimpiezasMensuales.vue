@@ -2710,6 +2710,7 @@ h2, h3, h4 {
 .card-body {
   background: var(--white);
   color: var(--text);
+  border-radius: 0 0 var(--r-md) var(--r-md);
 }
 
 /* Etiquetas y textos de formulario */
