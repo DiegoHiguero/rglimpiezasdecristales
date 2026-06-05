@@ -260,6 +260,7 @@ function getCookie(cname: string): string {
 /* â”€â”€ HERO â”€â”€ */
 .principal {
   background: url('../assets/img/office-buildings.webp') center/cover no-repeat;
+  background-color: #0f1729;
   position: relative;
   overflow: hidden;
   min-height: 500px;
@@ -276,7 +277,7 @@ function getCookie(cname: string): string {
   pointer-events: none;
 }
 .principal > * { position: relative; z-index: 2; }
-.prof { color: var(--white); text-shadow: 0 2px 12px rgba(0,0,0,0.5); }
+.prof { color: #fff; text-shadow: 0 2px 18px rgba(0,0,0,0.8); }
 .textAnimation {
   background: linear-gradient(90deg, #60a5fa 0%, #93c5fd 50%, #60a5fa 100%);
   background-size: 200% auto;
@@ -394,7 +395,7 @@ function getCookie(cname: string): string {
 .trust-badge {
   display: inline-flex; align-items: center; gap: 6px;
   background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.28);
-  color: var(--white); padding: 5px 16px; border-radius: 20px;
+  color: #fff; padding: 5px 16px; border-radius: 20px;
   font-size: 0.82rem; font-family: 'Raleway', sans-serif; backdrop-filter: blur(4px);
 }
 
