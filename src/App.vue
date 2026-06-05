@@ -33,7 +33,7 @@ const userStore = useUserStore();
 const syncStore = useSyncStore();
 const route = useRoute();
 
-const adminPaths = ['/dashboard', '/Register', '/registro', '/misClientes', '/misFacturas', '/admin/'];
+const adminPaths = ['/dashboard', '/Register', '/registro', '/misClientes', '/misFacturas', '/gastos', '/admin/'];
 const isAdminRoute = computed(() => adminPaths.some(p => route.path === p || route.path.startsWith(p)));
 
 watchEffect(() => {

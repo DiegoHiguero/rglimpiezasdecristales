@@ -201,7 +201,8 @@ async function ensureTabs(names) {
     const msg = (e.message || '').toLowerCase()
     if (!msg.includes('already exists') && !msg.includes('ya existe')) throw e
   }
-  _meta = null // invalidar caché para siguiente lectura
+  _meta = null   // invalidar caché para siguiente lectura
+  _ready.clear() // forzar re-init de colecciones
 }
 
 async function ensureHeader(key) {
@@ -219,6 +220,24 @@ function enc(s) {
   return encodeURIComponent(s)
 }
 
+// ─── Inicialización por colección (una sola vez) ──────────────────────────────
+
+// Evita llamar ensureTabs+ensureHeader en cada lectura
+const _ready = new Set()
+const _readyPromises = {}
+
+async function initIfNeeded(key) {
+  if (_ready.has(key)) return
+  if (_readyPromises[key]) return _readyPromises[key]
+  _readyPromises[key] = (async () => {
+    await ensureTabs([SCHEMA[key].tab])
+    await ensureHeader(key)
+    _ready.add(key)
+    delete _readyPromises[key]
+  })()
+  return _readyPromises[key]
+}
+
 // ─── CRUD público ────────────────────────────────────────────────────────────
 
 /**
@@ -228,8 +247,7 @@ function enc(s) {
  */
 export async function getAll(key) {
   const { tab, fromRow } = SCHEMA[key]
-  await ensureTabs([tab])
-  await ensureHeader(key)
+  await initIfNeeded(key)
 
   const d = await api(`/values/${enc(tab + '!A2:Z')}`)
   return (d.values || []).filter(r => r[0]).map(fromRow)
@@ -243,8 +261,7 @@ export async function getAll(key) {
  */
 export async function addRecord(key, data) {
   const { tab, toRow } = SCHEMA[key]
-  await ensureTabs([tab])
-  await ensureHeader(key)
+  await initIfNeeded(key)
 
   const id = genId()
   const obj = { ...data, id, createdAt: data.createdAt || today() }

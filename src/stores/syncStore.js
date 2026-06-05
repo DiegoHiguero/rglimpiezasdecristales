@@ -43,7 +43,7 @@ export const useSyncStore = defineStore('sync', () => {
   }
 
   function startAutoSync(intervalMinutes = 10) {
-    stopAutoSync()
+    if (_interval) return  // ya está corriendo, no reiniciar
     refreshAll()
     _interval = setInterval(refreshAll, intervalMinutes * 60 * 1000)
   }
