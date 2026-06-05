@@ -82,36 +82,28 @@
 
     </div>
 
-    <!-- Google Sheets Sync -->
+    <!-- Google Sheets — Base de datos -->
     <div class="db-sync-card">
       <div class="db-sync-left">
         <div class="db-sync-icon">
           <font-awesome-icon :icon="['fas', syncStore.isSyncing ? 'rotate' : 'table-cells']" :spin="syncStore.isSyncing" />
         </div>
         <div class="db-sync-info">
-          <div class="db-sync-title">Google Sheets</div>
-          <div class="db-sync-msg" :class="syncStore.status">{{ syncStore.message || 'Esperando sincronización...' }}</div>
-          <div class="db-sync-last" v-if="syncStore.lastSync">Última sync: {{ syncStore.lastSync }}</div>
+          <div class="db-sync-title">Base de datos · Google Sheets</div>
+          <div class="db-sync-msg" :class="syncStore.status">{{ syncStore.message || 'Conectado a Google Sheets' }}</div>
+          <div class="db-sync-last" v-if="syncStore.lastSync">Última actualización: {{ syncStore.lastSync }}</div>
         </div>
         <div class="db-sync-badge" :class="syncStore.status">
-          <span v-if="syncStore.status === 'syncing'">Sincronizando...</span>
-          <span v-else-if="syncStore.status === 'success'">✓ OK</span>
+          <span v-if="syncStore.status === 'loading'">Cargando...</span>
+          <span v-else-if="syncStore.status === 'success'">✓ Activo</span>
           <span v-else-if="syncStore.status === 'error'">⚠ Error</span>
           <span v-else>—</span>
         </div>
       </div>
       <div class="db-sync-actions">
-        <button class="db-sync-btn db-sync-btn--full" @click="syncStore.performSync()" :disabled="syncStore.isSyncing">
-          <font-awesome-icon :icon="['fas', 'arrows-rotate']" />
-          Sincronizar todo
-        </button>
-        <button class="db-sync-btn" @click="syncStore.manualExport()" :disabled="syncStore.isSyncing">
-          <font-awesome-icon :icon="['fas', 'upload']" />
-          Exportar
-        </button>
-        <button class="db-sync-btn" @click="syncStore.manualImport()" :disabled="syncStore.isSyncing">
-          <font-awesome-icon :icon="['fas', 'download']" />
-          Importar
+        <button class="db-sync-btn db-sync-btn--full" @click="syncStore.refreshAll()" :disabled="syncStore.isSyncing">
+          <font-awesome-icon :icon="['fas', 'arrows-rotate']" :spin="syncStore.isSyncing" />
+          Actualizar datos
         </button>
         <a
           href="https://docs.google.com/spreadsheets/d/1Fo2Tu0Y3buEFB9Elvo_SrjjkvwTISYO4cahvkaUmwO8/edit"

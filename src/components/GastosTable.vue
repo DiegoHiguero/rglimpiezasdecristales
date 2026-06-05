@@ -141,8 +141,7 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useDatabaseStore } from '../stores/database'
-import { collection, addDoc, updateDoc, deleteDoc, doc, getDocs } from 'firebase/firestore'
-import { db } from '../firebaseConfig'
+import { getAll, addRecord, updateRecord, removeRecord } from '../services/sheetDB'
 
 const dbStore = useDatabaseStore()
 const gastos = ref([])
@@ -154,10 +153,11 @@ const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', '
 const years = Array.from({ length: 6 }, (_, i) => new Date().getFullYear() - i)
 const modalOpen = ref(false)
 
-const editingGasto = ref({ id: null, tipo: 'Gasolina', fechaFactura: '', numeroFactura: '', precioSinIVA: 0, iva: 0, precioConIVA: 0, notas: '', verificado: false })
+const emptyGasto = () => ({ id: null, tipo: 'Gasolina', fechaFactura: '', numeroFactura: '', precioSinIVA: 0, iva: 0, precioConIVA: 0, notas: '', verificado: false })
+const editingGasto = ref(emptyGasto())
 
 const openModal = (gasto = null) => {
-  editingGasto.value = gasto ? { ...gasto } : { id: null, tipo: 'Gasolina', fechaFactura: '', numeroFactura: '', precioSinIVA: 0, iva: 0, precioConIVA: 0, notas: '', verificado: false }
+  editingGasto.value = gasto ? { ...gasto } : emptyGasto()
   modalOpen.value = true
 }
 const closeModal = () => { modalOpen.value = false }
@@ -169,30 +169,32 @@ const calcularPrecios = (gasto) => {
 
 const saveGasto = async () => {
   try {
-    if (editingGasto.value.id) {
-      await updateDoc(doc(db, 'gastos', editingGasto.value.id), editingGasto.value)
+    const { id, ...data } = editingGasto.value
+    if (id) {
+      await updateRecord('gastos', id, data)
     } else {
-      await addDoc(collection(db, 'gastos'), editingGasto.value)
+      await addRecord('gastos', data)
     }
     await fetchGastos()
     closeModal()
-  } catch (e) { console.error(e) }
+  } catch (e) { console.error('[GastosTable] saveGasto:', e) }
 }
 
 const deleteGasto = async (id) => {
   if (!confirm('¿Seguro que quieres borrar este gasto?')) return
-  await deleteDoc(doc(db, 'gastos', id))
-  await fetchGastos()
+  try {
+    await removeRecord('gastos', id)
+    await fetchGastos()
+  } catch (e) { console.error('[GastosTable] deleteGasto:', e) }
 }
 
 const toggleVerificado = async (gasto) => {
   gasto.verificado = !gasto.verificado
-  await updateDoc(doc(db, 'gastos', gasto.id), { verificado: gasto.verificado })
+  await updateRecord('gastos', gasto.id, { verificado: gasto.verificado })
 }
 
 const fetchGastos = async () => {
-  const snapshot = await getDocs(collection(db, 'gastos'))
-  gastos.value = snapshot.docs.map(d => ({ id: d.id, ...d.data() }))
+  gastos.value = await getAll('gastos')
   filterGastos()
 }
 
