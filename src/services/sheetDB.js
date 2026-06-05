@@ -274,6 +274,24 @@ export async function updateRecord(key, id, patch) {
 }
 
 /**
+ * Sobreescribe toda una pestaña con un array de objetos (conservando IDs).
+ * Útil para migración masiva desde Firestore.
+ * @param {'limpiezas'|'clientes'|'gastos'} key
+ * @param {Array} records — deben tener el campo `id` ya asignado
+ */
+export async function bulkReplace(key, records) {
+  const { tab, header, toRow } = SCHEMA[key]
+  await ensureTabs([tab])
+
+  const rows = [header, ...records.map(r => toRow(r))]
+  await api(
+    `/values/${enc(tab + '!A1')}?valueInputOption=RAW`,
+    'PUT',
+    { range: `${tab}!A1`, values: rows },
+  )
+}
+
+/**
  * Elimina un registro por ID (borra la fila completa).
  * @param {'limpiezas'|'clientes'|'gastos'} key
  * @param {string} id

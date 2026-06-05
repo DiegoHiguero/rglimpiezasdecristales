@@ -101,9 +101,13 @@
         </div>
       </div>
       <div class="db-sync-actions">
-        <button class="db-sync-btn db-sync-btn--full" @click="syncStore.refreshAll()" :disabled="syncStore.isSyncing">
+        <button class="db-sync-btn db-sync-btn--full" @click="syncStore.refreshAll()" :disabled="syncStore.isSyncing || migrating">
           <font-awesome-icon :icon="['fas', 'arrows-rotate']" :spin="syncStore.isSyncing" />
           Actualizar datos
+        </button>
+        <button class="db-sync-btn db-sync-btn--migrate" @click="showMigrateModal = true" :disabled="syncStore.isSyncing || migrating">
+          <font-awesome-icon :icon="['fas', 'database']" />
+          Migrar desde Firestore
         </button>
         <a
           href="https://docs.google.com/spreadsheets/d/1Fo2Tu0Y3buEFB9Elvo_SrjjkvwTISYO4cahvkaUmwO8/edit"
@@ -115,6 +119,79 @@
         </a>
       </div>
     </div>
+
+    <!-- Modal de migración -->
+    <Teleport to="body">
+      <div v-if="showMigrateModal" class="mg-overlay" @click.self="!migrating && (showMigrateModal = false)">
+        <div class="mg-modal">
+
+          <!-- Header -->
+          <div class="mg-header">
+            <div class="mg-header-icon">
+              <font-awesome-icon :icon="['fas', migrating ? 'rotate' : 'database']" :spin="migrating" />
+            </div>
+            <div>
+              <div class="mg-header-title">Migrar datos a Google Sheets</div>
+              <div class="mg-header-sub">Copia todos tus datos de Firestore a la hoja de cálculo</div>
+            </div>
+          </div>
+
+          <!-- Info -->
+          <div v-if="!migrating && migrateResult === null" class="mg-info">
+            <p>Esta operación copiará <strong>todos los datos actuales de Firestore</strong> a las pestañas de tu Google Sheet:</p>
+            <ul>
+              <li><font-awesome-icon :icon="['fas', 'check']" class="mg-li-icon" /> Limpiezas (colección <code>limpiezasMensuales</code>)</li>
+              <li><font-awesome-icon :icon="['fas', 'check']" class="mg-li-icon" /> Clientes (colección <code>clientes</code>)</li>
+              <li><font-awesome-icon :icon="['fas', 'check']" class="mg-li-icon" /> Gastos (colecciones <code>gastos</code> y <code>gastosMensuales</code>)</li>
+            </ul>
+            <div class="mg-warning">
+              <font-awesome-icon :icon="['fas', 'triangle-exclamation']" />
+              Si la hoja ya tiene datos, serán <strong>sobreescritos</strong>. Haz una copia de seguridad si es necesario.
+            </div>
+          </div>
+
+          <!-- Progreso -->
+          <div v-if="migrating" class="mg-progress-wrap">
+            <div class="mg-progress-bar">
+              <div class="mg-progress-fill" :style="{ width: migrateProgress + '%' }"></div>
+            </div>
+            <div class="mg-progress-msg">{{ migrateMsg }}</div>
+          </div>
+
+          <!-- Resultado -->
+          <div v-if="migrateResult !== null && !migrating" class="mg-result">
+            <div class="mg-result-icon">✓</div>
+            <div class="mg-result-title">¡Migración completada!</div>
+            <div class="mg-result-stats">
+              <div class="mg-stat"><span>{{ migrateResult.limpiezas }}</span> limpiezas</div>
+              <div class="mg-stat"><span>{{ migrateResult.clientes }}</span> clientes</div>
+              <div class="mg-stat"><span>{{ migrateResult.gastos }}</span> gastos</div>
+            </div>
+            <p class="mg-result-note">Todos tus datos están ahora en Google Sheets. A partir de ahora, el dashboard lee y escribe directamente en la hoja.</p>
+          </div>
+
+          <!-- Acciones -->
+          <div class="mg-footer">
+            <button v-if="!migrating" class="mg-btn mg-btn--ghost" @click="showMigrateModal = false; migrateResult = null">
+              {{ migrateResult !== null ? 'Cerrar' : 'Cancelar' }}
+            </button>
+            <button
+              v-if="migrateResult === null && !migrating"
+              class="mg-btn mg-btn--primary"
+              @click="runMigration"
+            >
+              <font-awesome-icon :icon="['fas', 'play']" />
+              Iniciar migración
+            </button>
+            <button v-if="migrateResult !== null && !migrating" class="mg-btn mg-btn--primary" @click="afterMigration">
+              <font-awesome-icon :icon="['fas', 'check']" />
+              Cargar datos migrados
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </Teleport>
 
     <!-- Accesos rápidos -->
     <div class="db-shortcuts">
@@ -160,17 +237,47 @@
 </template>
 
 <script setup>
-import { computed, onMounted } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useDatabaseStore } from '../stores/database';
 import { useUserStore } from '../stores/user';
 import { useSyncStore } from '../stores/syncStore';
+import { migrateFromFirestore } from '../services/migrateFB';
 import dayjs from 'dayjs';
 import 'dayjs/locale/es';
 dayjs.locale('es');
 
 const databaseStore = useDatabaseStore();
-const userStore = useUserStore();
-const syncStore = useSyncStore();
+const userStore     = useUserStore();
+const syncStore     = useSyncStore();
+
+// Migración
+const showMigrateModal = ref(false);
+const migrating        = ref(false);
+const migrateProgress  = ref(0);
+const migrateMsg       = ref('');
+const migrateResult    = ref(null);
+
+async function runMigration() {
+  migrating.value  = true;
+  migrateResult.value = null;
+  try {
+    const result = await migrateFromFirestore((msg, pct) => {
+      migrateMsg.value      = msg;
+      migrateProgress.value = pct;
+    });
+    migrateResult.value = result;
+  } catch (e) {
+    migrateMsg.value = `Error: ${e.message}`;
+  } finally {
+    migrating.value = false;
+  }
+}
+
+async function afterMigration() {
+  showMigrateModal.value = false;
+  migrateResult.value    = null;
+  await syncStore.refreshAll();
+}
 
 const firstName = computed(() => {
   const email = userStore.userData?.email || '';
@@ -600,6 +707,195 @@ onMounted(async () => {
   display: flex; align-items: center; justify-content: center;
   padding: 0 4px;
 }
+
+/* ── Botón migrar ── */
+.db-sync-btn--migrate {
+  background: rgba(251,191,36,0.1);
+  border-color: rgba(251,191,36,0.3);
+  color: #fbbf24;
+}
+.db-sync-btn--migrate:hover:not(:disabled) {
+  background: rgba(251,191,36,0.18);
+}
+
+/* ── Modal de migración ── */
+.mg-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+.mg-modal {
+  background: #0f1729;
+  border: 1px solid rgba(100,116,139,0.3);
+  border-radius: 16px;
+  width: 100%;
+  max-width: 520px;
+  padding: 32px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+}
+.mg-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.mg-header-icon {
+  width: 48px; height: 48px;
+  background: rgba(251,191,36,0.1);
+  color: #fbbf24;
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.3rem;
+  flex-shrink: 0;
+}
+.mg-header-title {
+  font-family: 'Raleway', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #e2e8f0;
+}
+.mg-header-sub {
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.8rem;
+  color: #64748b;
+  margin-top: 2px;
+}
+.mg-info {
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.875rem;
+  color: #94a3b8;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+.mg-info ul {
+  padding-left: 0;
+  list-style: none;
+  margin: 12px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.mg-info li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.mg-info code {
+  background: rgba(100,116,139,0.2);
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 0.78rem;
+  color: #38bdf8;
+}
+.mg-li-icon { color: #34d399; font-size: 0.75rem; }
+.mg-warning {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: rgba(251,191,36,0.08);
+  border: 1px solid rgba(251,191,36,0.2);
+  border-radius: 8px;
+  padding: 12px 14px;
+  color: #fbbf24;
+  font-size: 0.8rem;
+  margin-top: 12px;
+}
+.mg-progress-wrap { margin-bottom: 20px; }
+.mg-progress-bar {
+  height: 6px;
+  background: rgba(100,116,139,0.2);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+.mg-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #2563eb, #34d399);
+  border-radius: 3px;
+  transition: width 0.4s ease;
+}
+.mg-progress-msg {
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.82rem;
+  color: #94a3b8;
+  text-align: center;
+}
+.mg-result { text-align: center; padding: 8px 0 16px; }
+.mg-result-icon {
+  font-size: 2.5rem;
+  color: #34d399;
+  margin-bottom: 8px;
+}
+.mg-result-title {
+  font-family: 'Raleway', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #34d399;
+  margin-bottom: 16px;
+}
+.mg-result-stats {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin-bottom: 16px;
+}
+.mg-stat {
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.8rem;
+  color: #64748b;
+  text-align: center;
+}
+.mg-stat span {
+  display: block;
+  font-family: 'Anton', sans-serif;
+  font-size: 1.6rem;
+  color: #e2e8f0;
+  line-height: 1;
+}
+.mg-result-note {
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.78rem;
+  color: #64748b;
+  line-height: 1.5;
+  margin: 0;
+}
+.mg-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 24px;
+  border-top: 1px solid rgba(100,116,139,0.15);
+  padding-top: 20px;
+}
+.mg-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  padding: 9px 18px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s, opacity 0.2s;
+}
+.mg-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+.mg-btn--ghost {
+  background: rgba(100,116,139,0.12);
+  color: #94a3b8;
+}
+.mg-btn--ghost:hover { background: rgba(100,116,139,0.2); }
+.mg-btn--primary {
+  background: #2563eb;
+  color: #fff;
+}
+.mg-btn--primary:hover { background: #1d4ed8; }
 
 /* ── Responsive ── */
 @media (max-width: 1100px) {
