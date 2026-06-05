@@ -2884,4 +2884,8 @@ h2, h3, h4 {
 
 /* small / text-muted */
 .text-muted { color: var(--text-muted) !important; }
+
+/* Bootstrap contextual bg override in dark mode */
+[data-theme="dark"] .bg-danger-subtle { background-color: rgba(239,68,68,0.15) !important; }
+[data-theme="dark"] .table > :not(caption) > * > * { color: var(--text); }
 </style>

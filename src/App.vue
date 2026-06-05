@@ -39,8 +39,10 @@ const isAdminRoute = computed(() => adminPaths.some(p => route.path === p || rou
 watchEffect(() => {
   if (isAdminRoute.value) {
     document.body.classList.add('admin-mode');
+    document.documentElement.setAttribute('data-theme', 'dark');
   } else {
     document.body.classList.remove('admin-mode');
+    document.documentElement.removeAttribute('data-theme');
   }
 });
 

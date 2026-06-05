@@ -357,7 +357,7 @@ const chartCategories = computed(() => {
 
 const chartOptions = computed(() => ({
   chart: { toolbar: { show: false }, background: 'transparent', fontFamily: 'Raleway, sans-serif' },
-  theme: { mode: document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light' },
+  theme: { mode: 'dark' },
   colors: ['#2563eb'],
   plotOptions: { bar: { borderRadius: 6, columnWidth: '50%' } },
   dataLabels: { enabled: false },
