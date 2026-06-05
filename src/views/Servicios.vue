@@ -4,8 +4,8 @@
     <!-- Cabecera -->
     <div class="sv-header">
       <span class="sv-label">Lo que hacemos</span>
-      <h1 class="sv-title">Servicios de <span class="sv-accent">Limpiacristales</span> y más</h1>
-      <p class="sv-sub">Soluciones profesionales para cada espacio en Madrid y alrededores. Presupuesto gratuito en menos de 24 h.</p>
+      <h1 class="sv-title">Limpieza de <span class="sv-accent">cristales y ventanas</span> en Madrid</h1>
+      <p class="sv-sub">Soluciones profesionales de limpieza de cristales y ventanas para hogares, negocios y comunidades en Madrid y alrededores. Presupuesto gratuito en menos de 24 h.</p>
       <div class="sv-badges">
         <span class="sv-badge"><font-awesome-icon :icon="['fas', 'check']" class="me-1" />+10 años de experiencia</span>
         <span class="sv-badge"><font-awesome-icon :icon="['fas', 'tag']" class="me-1" />Presupuesto gratis</span>

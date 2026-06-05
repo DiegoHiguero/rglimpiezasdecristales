@@ -17,8 +17,9 @@
           <ul>
             <li><router-link to="/">Inicio</router-link></li>
             <li><router-link to="/#texto-principal">Nosotros</router-link></li>
-            <li><router-link to="/#servicios">Servicios</router-link></li>
+            <li><router-link to="/servicios">Limpieza de cristales</router-link></li>
             <li><router-link to="/#precios">Precios</router-link></li>
+            <li><router-link to="/blog">Blog</router-link></li>
             <li><router-link to="/contacto">Contacto</router-link></li>
           </ul>
         </div>

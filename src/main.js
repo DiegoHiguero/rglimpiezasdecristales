@@ -91,6 +91,8 @@ import {
     faDownload,
     faDatabase,
     faTriangleExclamation,
+    faKey,
+    faWandMagicSparkles,
 } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
@@ -125,7 +127,7 @@ library.add(
     faBars,
     faReply, faCopy, faCheckDouble, faInbox, faRotateLeft, faEnvelopeOpen,
     faTableCells, faArrowsRotate, faRotate, faUpload, faDownload,
-    faDatabase, faTriangleExclamation,
+    faDatabase, faTriangleExclamation, faKey, faWandMagicSparkles,
 );
 
 // 2. Crear la instancia de la aplicación Vue

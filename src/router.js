@@ -16,6 +16,7 @@ import Dashboard from "./views/Dashboard.vue";
 // ¡NUEVA IMPORTACIÓN AQUÍ!
 import MensajesAdmin from "./views/MensajesAdmin.vue";
 import GastosView from "./views/GastosView.vue";
+import GenerarArticulo from "./views/GenerarArticulo.vue";
 import SheetView from "./views/SheetView.vue";
 import Blog from "./views/Blog.vue";
 import BlogArticle from "./views/BlogArticle.vue";
@@ -59,37 +60,37 @@ const requiereAuth2 = async(to,from,next) => {
     }
 };
 
-const BASE_TITLE = 'Royall Clean — Limpiacristales en Madrid';
-const BASE_DESC  = 'Empresa de limpiacristales en Madrid para hogares, comunidades y locales. Cristales y ventanas impecables garantizados. ¡Presupuesto gratis en 24 h! ☎ 696 169 435';
+const BASE_TITLE = 'Limpieza de Cristales en Madrid | Royall Clean';
+const BASE_DESC  = 'Limpieza de cristales y ventanas en Madrid para hogares, comunidades y locales. Más de 10 años de experiencia. ¡Presupuesto gratis en 24 h! ☎ 696 169 435';
 
 const routes = [
     {
         path: '/',
         component: Home,
         meta: {
-            title: 'Limpiacristales en Madrid | Royall Clean — Presupuesto Gratis',
-            description: BASE_DESC,
+            title: 'Limpieza de Cristales en Madrid | Royall Clean — Presupuesto Gratis',
+            description: 'Limpieza de cristales y ventanas en Madrid para hogares, comunidades y locales. Servicio profesional con más de 10 años de experiencia. ¡Presupuesto gratis en 24 h! ☎ 696 169 435',
         },
     },
     { path: '/login', component: Login },
     { path: '/Register', component: Register, beforeEnter: requiereAuth2 },
     { path: '/registro', component: LimpiezasMensuales, beforeEnter: requiereAuth2 },
     { path: '/misClientes', component: MisClientes, beforeEnter: requiereAuth2 },
-    { path: '/misFacturas', component: MisFacturas, beforeEnter: requiereAuth },
+    { path: '/misFacturas', component: MisFacturas, beforeEnter: requiereAuth2 },
     {
         path: '/contacto',
         component: Contacto,
         meta: {
-            title: 'Contacto | Royall Clean — Limpiacristales Madrid',
-            description: 'Contacta con Royall Clean para solicitar presupuesto de limpieza de cristales en Madrid. Respondemos en menos de 24 horas. ☎ 696 169 435',
+            title: 'Presupuesto Limpieza de Cristales en Madrid | Royall Clean',
+            description: 'Pide tu presupuesto gratuito de limpieza de cristales y ventanas en Madrid. Sin compromiso, respuesta en menos de 24 horas. ☎ 696 169 435',
         },
     },
     {
         path: '/servicios',
         component: Servicios,
         meta: {
-            title: 'Servicios de Limpiacristales | Royall Clean Madrid',
-            description: 'Limpieza profesional de cristales para hogares, comunidades de vecinos y locales comerciales en Madrid y alrededores. Solicita tu presupuesto.',
+            title: 'Servicios de Limpieza de Cristales y Ventanas en Madrid | Royall Clean',
+            description: 'Limpieza de cristales y ventanas en Madrid para hogares, comunidades y locales. También escaparates, fachadas, placas solares y grafitis. Solicita tu presupuesto.',
         },
     },
     {
@@ -110,6 +111,7 @@ const routes = [
     },
     { path: '/dashboard', component: Dashboard, beforeEnter: requiereAuth2 },
     { path: '/admin/mensajes', component: MensajesAdmin, beforeEnter: requiereAuth2 },
+    { path: '/admin/generar', component: GenerarArticulo, beforeEnter: requiereAuth2 },
     { path: '/gastos', component: GastosView, beforeEnter: requiereAuth2 },
     { path: '/sheet/:tab', component: SheetView, beforeEnter: requiereAuth2 },
     {
@@ -166,6 +168,18 @@ router.afterEach((to) => {
 
     const ogUrl = document.querySelector('meta[property="og:url"]');
     if (ogUrl) ogUrl.setAttribute('content', 'https://royallclean.es' + to.path);
+
+    const ogImage = document.querySelector('meta[property="og:image"]');
+    if (ogImage) {
+        if (to.meta?.dynamic && to.params?.slug) {
+            const imgArticle = articles.find(a => a.slug === to.params.slug);
+            ogImage.setAttribute('content', imgArticle?.image
+                ? window.location.origin + imgArticle.image
+                : 'https://royallclean.es/og-royallclean.jpg');
+        } else {
+            ogImage.setAttribute('content', 'https://royallclean.es/og-royallclean.jpg');
+        }
+    }
 
     const canonical = document.querySelector('link[rel="canonical"]');
     if (canonical) canonical.setAttribute('href', 'https://royallclean.es' + to.path);

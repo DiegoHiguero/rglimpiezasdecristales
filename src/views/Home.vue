@@ -6,12 +6,12 @@
 
       <div class="col-md-6 p-3 d-flex flex-column justify-content-center">
         <h1 class="display-4 p-3 fs-1">
-          <span class="prof">Profesional en limpieza de Cristales</span>
-          <span class="textAnimation d-block mt-2">¡Con más de 10 años de experiencia!</span>
+          <span class="prof">Limpieza de cristales y ventanas en Madrid</span>
+          <span class="textAnimation d-block mt-2">Más de 10 años de experiencia profesional</span>
         </h1>
-        <h1 class="p-3" style="color: #fff;">
+        <h2 class="p-3" style="color: #fff;">
           EN ROYALL CLEAN HACEMOS LA DIFERENCIA.
-        </h1>
+        </h2>
         <div class="p-3 d-flex flex-wrap gap-2">
           <a href="tel:+34696169435" class="btn btn-light fw-bold px-4">
             <font-awesome-icon :icon="['fas', 'phone']" class="me-2" />Llamar ahora

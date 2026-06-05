@@ -15,7 +15,7 @@
         class="blog-card"
       >
         <div class="blog-card-top">
-          <img :src="article.image" :alt="article.season" loading="lazy" class="blog-card-img" />
+          <img :src="article.image" :alt="article.title" loading="lazy" class="blog-card-img" />
           <span class="blog-card-season" :style="{ color: '#fff', background: article.color }">
             <font-awesome-icon :icon="article.icon" class="me-1" />{{ article.season }}
           </span>
@@ -55,6 +55,9 @@ import { articles } from '../data/blog.js';
   max-width: 1100px;
   margin: 0 auto;
   padding: 32px 20px 60px;
+  background: var(--slate);
+  color: var(--text);
+  min-height: 100vh;
 }
 
 /* ── Hero ── */

@@ -6,9 +6,9 @@
         <font-awesome-icon :icon="['fas', 'location-dot']" class="me-1" />
         Cobertura geográfica
       </span>
-      <h2 class="zonas-title">Servicio en <span class="zonas-accent">toda la Comunidad de Madrid</span></h2>
+      <h2 class="zonas-title">Limpieza de cristales en <span class="zonas-accent">toda la Comunidad de Madrid</span></h2>
       <p class="zonas-sub">
-        Nos desplazamos a Madrid capital y a todos los municipios del área metropolitana.
+        Realizamos limpieza de cristales y ventanas en Madrid capital y en todos los municipios del área metropolitana.
         Si tienes dudas sobre tu zona, <strong>llámanos y lo confirmamos.</strong>
       </p>
     </div>

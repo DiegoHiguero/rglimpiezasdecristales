@@ -10,15 +10,12 @@
       <div class="mf-filters">
         <select class="mf-select" v-model="selectedMonth">
           <option value="">Todos los meses</option>
-          <option v-for="(name, idx) in months" :key="idx" :value="idx">{{ name }}</option>
+          <option v-for="(name, idx) in months" :key="idx" :value="idx + 1">{{ name }}</option>
         </select>
         <select class="mf-select" v-model="selectedYear">
           <option value="">Todos los años</option>
           <option v-for="y in years" :key="y" :value="y">{{ y }}</option>
         </select>
-        <button class="mf-btn-filter" @click="loadData">
-          <font-awesome-icon :icon="['fas', 'magnifying-glass']" class="me-2" />Filtrar
-        </button>
       </div>
     </div>
 
@@ -27,7 +24,7 @@
       <div class="mf-stat mf-stat--blue">
         <div class="mf-stat-icon"><font-awesome-icon :icon="['fas', 'file-invoice']" /></div>
         <div>
-          <span class="mf-stat-value">{{ filteredLimpiezas.length }}</span>
+          <span class="mf-stat-value">{{ filteredRecords.length }}</span>
           <span class="mf-stat-label">Facturas</span>
         </div>
       </div>
@@ -58,15 +55,21 @@
     <div class="mf-card">
       <div class="mf-card-head">
         <span class="mf-card-title">Listado de facturas</span>
-        <span class="mf-count">{{ filteredLimpiezas.length }} registros</span>
+        <span class="mf-count">{{ filteredRecords.length }} registros</span>
       </div>
 
-      <div v-if="databaseStore.isLoadingLimpiezas" class="mf-loading">
+      <div v-if="tabState.loading" class="mf-loading">
         <div class="mf-spinner"></div>
         <p>Cargando facturas...</p>
       </div>
 
-      <div v-else-if="filteredLimpiezas.length === 0" class="mf-empty">
+      <div v-else-if="tabState.error" class="mf-empty mf-empty--error">
+        <font-awesome-icon :icon="['fas', 'triangle-exclamation']" class="mf-empty-icon" />
+        <p>Error al cargar los datos</p>
+        <button class="mf-retry-btn" @click="sheetsStore.loadTab('Registro')">Reintentar</button>
+      </div>
+
+      <div v-else-if="filteredRecords.length === 0" class="mf-empty">
         <font-awesome-icon :icon="['fas', 'file-invoice']" class="mf-empty-icon" />
         <p>No hay facturas para el período seleccionado</p>
       </div>
@@ -76,32 +79,30 @@
           <thead>
             <tr>
               <th>Factura</th>
+              <th>Fecha</th>
               <th>Cliente</th>
-              <th>Fecha servicio</th>
-              <th>Fecha pago</th>
-              <th>Forma pago</th>
-              <th class="text-right">Importe</th>
+              <th class="text-right">Subtotal</th>
+              <th class="text-right">Total</th>
               <th>Estado</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="l in filteredLimpiezas" :key="l.id" class="mf-row">
-              <td><span class="mf-factura-num">{{ l.factura }}</span></td>
-              <td>{{ getClientName(l.clienteId) }}</td>
-              <td>{{ formatDate(l.fechaPrincipalLimpieza) }}</td>
-              <td>{{ l.fechaPago ? formatDate(l.fechaPago) : '—' }}</td>
-              <td>{{ l.formaPago || '—' }}</td>
-              <td class="text-right"><strong>{{ formatCurrency(l.precioBruto) }}</strong></td>
+            <tr v-for="r in filteredRecords" :key="r._row" class="mf-row">
+              <td><span class="mf-factura-num">{{ r['NºFactura'] }}</span></td>
+              <td>{{ r['Fecha'] }}</td>
+              <td>{{ r['Cliente'] }}</td>
+              <td class="text-right">{{ r['Subtotal'] }}</td>
+              <td class="text-right"><strong>{{ r['Total'] }}</strong></td>
               <td>
-                <span class="mf-badge" :class="l.fechaPago ? 'mf-badge--paid' : 'mf-badge--pending'">
-                  {{ l.fechaPago ? 'Cobrada' : 'Pendiente' }}
+                <span class="mf-badge" :class="r['Estado'] === 'Pagada' ? 'mf-badge--paid' : 'mf-badge--pending'">
+                  {{ r['Estado'] || 'Pendiente' }}
                 </span>
               </td>
             </tr>
           </tbody>
           <tfoot>
             <tr class="mf-total-row">
-              <td colspan="5"><strong>Total</strong></td>
+              <td colspan="4"><strong>Total</strong></td>
               <td class="text-right"><strong>{{ formatCurrency(totalFacturado) }}</strong></td>
               <td></td>
             </tr>
@@ -115,52 +116,63 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue';
-import { useDatabaseStore } from '../stores/database';
+import { useSheetsStore } from '../stores/sheetsStore';
 import dayjs from 'dayjs';
 import 'dayjs/locale/es';
 dayjs.locale('es');
 
-const databaseStore = useDatabaseStore();
+const sheetsStore = useSheetsStore();
 
 const months = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
 const currentYear = dayjs().year();
-const years = Array.from({ length: 4 }, (_, i) => currentYear - i);
+const years = Array.from({ length: 5 }, (_, i) => currentYear - i);
 
-const selectedMonth = ref(dayjs().month());
-const selectedYear = ref(currentYear);
+const selectedMonth = ref('');
+const selectedYear  = ref('');
 
-const loadData = async () => {
-  await Promise.all([
-    databaseStore.fetchLimpiezas(String(selectedMonth.value), String(selectedYear.value)),
-    databaseStore.fetchClientes(),
-  ]);
-};
+onMounted(() => sheetsStore.loadTab('Registro'));
 
-onMounted(loadData);
+const tabState = computed(() => sheetsStore.tabData['Registro'] || { loading: true, error: null, records: [] });
 
-const filteredLimpiezas = computed(() => [...databaseStore.limpiezas].sort((a, b) => {
-  if (a.factura < b.factura) return 1;
-  if (a.factura > b.factura) return -1;
-  return 0;
-}));
+function parseCurrency(str) {
+  if (!str) return 0;
+  return parseFloat(String(str).replace(/[€\s]/g, '').replace(',', '.')) || 0;
+}
+
+function parseDate(str) {
+  if (!str) return null;
+  const p = String(str).split('/');
+  if (p.length !== 3) return null;
+  return dayjs(`${p[2]}-${p[1]}-${p[0]}`);
+}
+
+const allRecords = computed(() =>
+  (tabState.value.records || [])
+    .filter(r => r['NºFactura'])
+    .sort((a, b) => (b['NºFactura'] || '').localeCompare(a['NºFactura'] || ''))
+);
+
+const filteredRecords = computed(() => {
+  if (!selectedMonth.value && !selectedYear.value) return allRecords.value;
+  return allRecords.value.filter(r => {
+    const d = parseDate(r['Fecha']);
+    if (!d || !d.isValid()) return false;
+    if (selectedYear.value && d.year() !== Number(selectedYear.value)) return false;
+    if (selectedMonth.value && d.month() + 1 !== Number(selectedMonth.value)) return false;
+    return true;
+  });
+});
 
 const totalFacturado = computed(() =>
-  filteredLimpiezas.value.reduce((s, l) => s + (Number(l.precioBruto) || 0), 0)
+  filteredRecords.value.reduce((s, r) => s + parseCurrency(r['Total']), 0)
 );
 const totalCobrado = computed(() =>
-  filteredLimpiezas.value.filter(l => l.fechaPago).reduce((s, l) => s + (Number(l.precioBruto) || 0), 0)
+  filteredRecords.value.filter(r => r['Estado'] === 'Pagada').reduce((s, r) => s + parseCurrency(r['Total']), 0)
 );
 const totalPendiente = computed(() => totalFacturado.value - totalCobrado.value);
 
-const getClientName = (id) => {
-  const c = databaseStore.getClientById(id);
-  return c ? `${c.nombre} ${c.apellido || ''}`.trim() : '—';
-};
-
 const formatCurrency = (v) =>
-  new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR', minimumFractionDigits: 2 }).format(Number(v) || 0);
-
-const formatDate = (d) => d ? dayjs(d).format('DD/MM/YYYY') : '—';
+  new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR', minimumFractionDigits: 2 }).format(v || 0);
 </script>
 
 <style scoped>
@@ -224,19 +236,6 @@ const formatDate = (d) => d ? dayjs(d).format('DD/MM/YYYY') : '—';
   transition: border-color 0.2s;
 }
 .mf-select:focus { border-color: rgba(96,165,250,0.4); }
-.mf-btn-filter {
-  font-family: 'Raleway', sans-serif;
-  font-weight: 700;
-  font-size: 0.84rem;
-  background: #2563eb;
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  padding: 8px 16px;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-.mf-btn-filter:hover { background: #1d4ed8; }
 
 /* ── Stats ── */
 .mf-stats {
@@ -325,6 +324,20 @@ const formatDate = (d) => d ? dayjs(d).format('DD/MM/YYYY') : '—';
   gap: 12px;
 }
 .mf-empty-icon { font-size: 2.5rem; opacity: 0.3; }
+.mf-empty--error { color: #f87171; }
+.mf-retry-btn {
+  font-family: 'Raleway', sans-serif;
+  font-weight: 700;
+  font-size: 0.82rem;
+  background: rgba(239,68,68,0.15);
+  color: #f87171;
+  border: 1px solid rgba(239,68,68,0.3);
+  border-radius: 8px;
+  padding: 6px 16px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.mf-retry-btn:hover { background: rgba(239,68,68,0.25); }
 .mf-spinner {
   width: 32px; height: 32px;
   border: 3px solid rgba(96,165,250,0.2);

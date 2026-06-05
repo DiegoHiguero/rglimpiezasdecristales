@@ -42,7 +42,8 @@ watchEffect(() => {
     document.documentElement.setAttribute('data-theme', 'dark');
   } else {
     document.body.classList.remove('admin-mode');
-    document.documentElement.removeAttribute('data-theme');
+    const saved = localStorage.getItem('rc-theme');
+    document.documentElement.setAttribute('data-theme', saved === 'dark' ? 'dark' : 'light');
   }
 });
 
@@ -62,7 +63,8 @@ body {
   font-size: 16px;
   text-rendering: optimizeLegibility;
   font-weight: initial;
-  background-color: #151515;
+  background-color: var(--slate);
+  color: var(--text);
   padding-top: 54px;
 }
 

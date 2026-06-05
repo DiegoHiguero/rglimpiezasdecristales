@@ -2,8 +2,83 @@ import imgInvierno  from '../assets/img/side-view-woman-cleaning-window.jpg';
 import imgVerano    from '../assets/img/man-cleaning-windows.jpg';
 import imgPrimavera from '../assets/img/housemaid-wearing.jpg';
 import imgOtono     from '../assets/img/hojas-otoño.jpeg';
+import imgPaloma    from '../assets/img/paloma.png';
 
 export const articles = [
+  {
+    slug: 'limpieza-cristales-primavera-polen-pajaros-insectos',
+    title: 'Limpieza de cristales en primavera: polen, pájaros e insectos',
+    excerpt: 'La primavera trae tres enemigos al cristal de tu negocio: el polen, las heces de pájaros y los restos de insectos. Descubre cómo eliminar cada tipo de suciedad sin dañar la superficie y cuándo conviene llamar a los profesionales.',
+    date: '2026-06-05',
+    dateLabel: '5 de junio de 2026',
+    season: 'Primavera',
+    icon: ['fas', 'leaf'],
+    image: imgPaloma,
+    color: '#16a34a',
+    colorPale: '#f0fdf4',
+    metaDescription: 'Limpieza de cristales en primavera: cómo eliminar el polen, heces de pájaros e insectos de escaparates y ventanas. Guía profesional para negocios en Madrid.',
+    content: `
+      <h2>La primavera y sus retos para los cristales de tu negocio</h2>
+      <p>Con la llegada de la primavera, los comercios, oficinas y comunidades de vecinos de Madrid se enfrentan a uno de los períodos más exigentes del año en cuanto a la <strong>limpieza de ventanas y cristales</strong>. El <strong>aumento del polen en el ambiente</strong>, el mayor movimiento de aves en las ciudades y la aparición masiva de insectos convierten los escaparates y ventanas en superficies que requieren atención constante.</p>
+      <p>Una fachada acristalada sucia transmite una imagen negativa del negocio, reduce la visibilidad interior y puede llegar a deteriorar el cristal si los residuos no se eliminan a tiempo. A continuación te explicamos cómo abordar cada tipo de suciedad de manera eficaz.</p>
+
+      <h2>El mayor enemigo de la primavera: el polen</h2>
+      <p>Durante los meses de marzo, abril y mayo, los niveles de <strong>limpieza de cristales en primavera</strong> se convierten en una necesidad urgente para cualquier negocio. El polen alcanza su concentración más alta en el aire de Madrid y se deposita en todas las superficies exteriores: escaparates, ventanas de oficinas y fachadas acristaladas.</p>
+      <p>A simple vista parece una película de polvo ordinaria, pero el <strong>polen tiene propiedades adhesivas</strong> que hacen que se pegue al cristal con mayor facilidad, especialmente cuando entra en contacto con la humedad de la lluvia primaveral.</p>
+
+      <h3>Cómo eliminar el polen de los cristales correctamente</h3>
+      <ul>
+        <li><strong>No frotes en seco:</strong> el roce sin agua esparce el polen y puede rayar la superficie. Siempre empieza mojando el cristal.</li>
+        <li><strong>Usa agua abundante:</strong> aplica una solución de agua y limpiacristales profesional para disolver la capa de polen antes de frotar.</li>
+        <li><strong>Trabaja de arriba a abajo:</strong> evita que el agua sucia vuelva a ensuciar zonas ya limpias.</li>
+        <li><strong>Usa rasqueta de goma:</strong> una rasqueta profesional elimina el agua con los restos de polen sin dejar marcas ni rayaduras.</li>
+        <li><strong>Seca los bordes:</strong> los marcos y juntas retienen el polen húmedo. Un paño de microfibra es imprescindible para el acabado final.</li>
+      </ul>
+      <p>En épocas de alta polinización puede ser necesario limpiar los cristales exteriores cada tres o cinco días para mantener una imagen impecable de cara a clientes y visitantes.</p>
+
+      <h2>Heces de pájaros: un problema más serio de lo que parece</h2>
+      <p>Las heces de palomas, gorriones y otras aves urbanas son uno de los tipos de suciedad más agresivos para los cristales. No solo afean el aspecto del escaparate, sino que su composición ácida puede <strong>grabar la superficie del cristal de forma permanente</strong> si se dejan actuar durante varios días sin limpiar.</p>
+      <p>Este problema es especialmente frecuente en edificios con cornisas, salientes o zonas donde las aves suelen posarse cerca de ventanas y marquesinas de locales comerciales.</p>
+
+      <h3>Cómo limpiar heces de pájaros sin dañar el cristal</h3>
+      <ul>
+        <li><strong>Actúa cuanto antes:</strong> cuanto más tiempo permanecen las heces sobre el cristal, más difíciles son de eliminar sin causar daño.</li>
+        <li><strong>Humedece antes de retirar:</strong> nunca rasques en seco. Empapa la zona con agua tibia durante uno o dos minutos para ablandar el residuo.</li>
+        <li><strong>Usa productos de pH neutro:</strong> los productos muy ácidos o muy básicos pueden dañar los marcos y los sellos del cristal.</li>
+        <li><strong>Rasqueta con precaución:</strong> una rasqueta profesional con hoja en buen estado puede eliminar restos endurecidos sin rayar, siempre con el cristal bien húmedo.</li>
+        <li><strong>Desinfecta la zona tratada:</strong> las heces de aves pueden contener bacterias. Aplica un desinfectante suave tras la limpieza para garantizar la higiene.</li>
+      </ul>
+
+      <h2>Restos de insectos: cómo eliminarlos sin dejar marcas</h2>
+      <p>Con el calor primaveral, los insectos son mucho más activos. Moscas, mosquitos, mariposas y otros insectos quedan adheridos a escaparates y ventanas al impactar contra ellas, dejando residuos proteicos que, al secarse, se adhieren con fuerza al cristal y resultan muy difíciles de retirar sin la técnica adecuada.</p>
+      <p>Los restos de insectos son especialmente problemáticos en locales con iluminación nocturna potente, que actúa como foco de atracción durante las noches de primavera.</p>
+
+      <h3>Técnica correcta para eliminar insectos del cristal</h3>
+      <ul>
+        <li><strong>Remoja generosamente:</strong> aplica agua mezclada con limpiacristales y deja actuar al menos dos o tres minutos antes de frotar.</li>
+        <li><strong>Esponja de doble cara:</strong> usa el lado suave para frotar con cuidado y el lado más rugoso para los residuos más resistentes, nunca con estropajos metálicos.</li>
+        <li><strong>Repite si es necesario:</strong> algunos restos necesitan más de una aplicación para ablandarse por completo antes de poder retirarlos sin riesgo de rayar.</li>
+      </ul>
+
+      <h2>La lluvia de primavera: ¿aliada o enemiga de los cristales?</h2>
+      <p>Muchos propietarios de negocios creen que la lluvia limpia los cristales de forma natural, pero la realidad es la contraria. La lluvia primaveral arrastra partículas de polvo, <strong>polen</strong> y contaminantes en suspensión, y cuando el agua se seca sobre el cristal deja manchas de cal y residuos visibles que empeoran el aspecto general de la fachada.</p>
+      <p>Además, cuando coincide con los picos de polinización, la lluvia mezcla estas partículas y crea una película pegajosa muy difícil de eliminar sin productos profesionales. Lo más recomendable es programar una limpieza justo después de los periodos de lluvia intensa para recuperar la transparencia y el brillo de los cristales.</p>
+
+      <h2>¿Cuándo contratar una empresa profesional de limpiacristales?</h2>
+      <p>Para escaparates en altura, oficinas con grandes superficies acristaladas y fachadas de comunidades de vecinos, la limpieza profesional es la opción más segura, eficaz y rentable. Una empresa especializada dispone de todo lo necesario para abordar estos trabajos con garantías:</p>
+      <ul>
+        <li>Productos profesionales que eliminan polen, heces e insectos sin dañar el cristal ni los marcos.</li>
+        <li>Herramientas extensibles para alcanzar con seguridad cristales en altura.</li>
+        <li>Técnicas de secado que evitan marcas, rayaduras y residuos visibles.</li>
+        <li>Planificación de mantenimiento adaptada a la frecuencia que necesita cada negocio.</li>
+      </ul>
+      <p>En primavera, muchos comercios y comunidades de vecinos de Madrid optan por aumentar la frecuencia de limpieza a una o dos veces por semana para mantener siempre una imagen impecable frente a clientes y vecinos.</p>
+
+      <h2>Confía en Royall Clean para esta primavera</h2>
+      <p>En <strong>Royall Clean</strong> nos especializamos en la <strong>limpieza de ventanas y cristales</strong> para comercios, oficinas y comunidades de vecinos en Madrid y sus alrededores. Utilizamos productos de alta calidad y técnicas contrastadas que garantizan resultados impecables, sin marcas ni rayaduras, incluso en los casos más difíciles de polen, heces de pájaros o acumulación de insectos.</p>
+      <p>Si quieres que tus escaparates y ventanas estén siempre perfectos esta primavera, <strong>contacta con nosotros hoy mismo</strong>. Llámanos al <strong>696 169 435</strong> y te preparamos un presupuesto gratuito y sin compromiso adaptado a las necesidades de tu negocio.</p>
+    `,
+  },
   {
     slug: 'como-limpiar-cristales-en-invierno',
     title: 'Cómo limpiar cristales en invierno sin dejar marcas',

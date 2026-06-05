@@ -24,7 +24,7 @@
         <div class="db-stat-icon"><font-awesome-icon :icon="['fas', 'hand-holding-dollar']" /></div>
         <div class="db-stat-body">
           <span class="db-stat-value">
-            <span v-if="databaseStore.isLoadingLimpiezas && !databaseStore._allLimpiezas.length" class="db-stat-loading">—</span>
+            <span v-if="registroLoading && !registroRecords.length" class="db-stat-loading">—</span>
             <span v-else>{{ formatCurrency(totalPendiente) }}</span>
           </span>
           <span class="db-stat-label">Pendiente de cobro</span>
@@ -33,8 +33,8 @@
       <div class="db-stat db-stat--green">
         <div class="db-stat-icon"><font-awesome-icon :icon="['fas', 'hand-holding-dollar']" /></div>
         <div class="db-stat-body">
-          <span class="db-stat-value">{{ formatCurrency(totalCobradoMes) }}</span>
-          <span class="db-stat-label">Cobrado este mes</span>
+          <span class="db-stat-value">{{ formatCurrency(totalCobradoAnio) }}</span>
+          <span class="db-stat-label">Cobrado {{ dayjs().year() }}</span>
         </div>
       </div>
       <div class="db-stat db-stat--yellow">
@@ -71,31 +71,31 @@
         </div>
 
         <!-- Cargando -->
-        <div v-if="databaseStore.isLoadingLimpiezas && !databaseStore._allLimpiezas.length" class="db-empty">
+        <div v-if="registroLoading && !registroRecords.length" class="db-empty">
           <div class="db-mini-spinner"></div>
           Cargando...
         </div>
 
         <!-- Error -->
-        <div v-else-if="databaseStore.errorLimpiezas && !databaseStore._allLimpiezas.length" class="db-empty db-empty--error">
+        <div v-else-if="registroError && !registroRecords.length" class="db-empty db-empty--error">
           <font-awesome-icon :icon="['fas', 'triangle-exclamation']" class="me-2" />
           Error al cargar
-          <button class="db-retry-btn" @click="databaseStore.fetchLimpiezas()">Reintentar</button>
+          <button class="db-retry-btn" @click="sheetsStore.loadTab('Registro')">Reintentar</button>
         </div>
 
         <!-- Sin pendientes -->
-        <div v-else-if="databaseStore.pendingLimpiezas.length === 0" class="db-empty">
+        <div v-else-if="pendingLimpiezas.length === 0" class="db-empty">
           <font-awesome-icon :icon="['fas', 'check']" class="me-2" />No hay pagos pendientes
         </div>
 
         <!-- Lista -->
         <div v-else class="db-pending-list">
-          <div v-for="l in pendingTop" :key="l.id" class="db-pending-item">
+          <div v-for="r in pendingTop" :key="r._row" class="db-pending-item">
             <div class="db-pending-info">
-              <span class="db-pending-name">{{ getClientName(l.clienteId) }}</span>
-              <span class="db-pending-date">Fac. #{{ l.factura }}</span>
+              <span class="db-pending-name">{{ r['Cliente'] }}</span>
+              <span class="db-pending-date">Fac. {{ r['NºFactura'] }}</span>
             </div>
-            <span class="db-pending-amount">{{ formatCurrency(l.precioBruto) }}</span>
+            <span class="db-pending-amount">{{ r['Total'] }}</span>
           </div>
         </div>
       </div>
@@ -261,6 +261,7 @@ import { computed, onMounted, ref } from 'vue';
 import { useDatabaseStore } from '../stores/database';
 import { useUserStore } from '../stores/user';
 import { useSyncStore } from '../stores/syncStore';
+import { useSheetsStore } from '../stores/sheetsStore';
 import { migrateFromFirestore } from '../services/migrateFB';
 import dayjs from 'dayjs';
 import 'dayjs/locale/es';
@@ -269,6 +270,7 @@ dayjs.locale('es');
 const databaseStore = useDatabaseStore();
 const userStore     = useUserStore();
 const syncStore     = useSyncStore();
+const sheetsStore   = useSheetsStore();
 
 // Migración
 const showMigrateModal = ref(false);
@@ -313,38 +315,66 @@ const todayFormatted = computed(() =>
 const formatCurrency = (v) =>
   new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR', minimumFractionDigits: 2 }).format(Number(v) || 0);
 
-const getClientName = (clientId) => {
-  const c = databaseStore.getClientById?.(clientId) || databaseStore.clientes?.find(x => x.id === clientId);
-  return c ? `${c.nombre} ${c.apellido || ''}`.trim() : '—';
-};
+// ── Helpers para pestaña "Registro" ──────────────────────────────────────────
+
+function parseCurrency(str) {
+  if (!str) return 0;
+  return parseFloat(String(str).replace(/[€\s]/g, '').replace(',', '.')) || 0;
+}
+
+function parseDate(str) {
+  if (!str) return null;
+  const p = String(str).split('/');
+  if (p.length !== 3) return null;
+  return dayjs(`${p[2]}-${p[1]}-${p[0]}`);
+}
+
+const registroRecords = computed(() =>
+  (sheetsStore.tabData['Registro']?.records || []).filter(r => r['NºFactura'])
+);
+const registroLoading = computed(() => sheetsStore.tabData['Registro']?.loading ?? true);
+const registroError   = computed(() => sheetsStore.tabData['Registro']?.error ?? null);
+
+const pendingLimpiezas = computed(() =>
+  registroRecords.value
+    .filter(r => r['Estado'] !== 'Pagada')
+    .sort((a, b) => {
+      const da = parseDate(a['Fecha']), db = parseDate(b['Fecha']);
+      return (da?.valueOf() ?? 0) - (db?.valueOf() ?? 0);
+    })
+);
+
+const pendingTop = computed(() => pendingLimpiezas.value.slice(0, 6));
 
 const totalPendiente = computed(() =>
-  databaseStore.pendingLimpiezas.reduce((s, l) => s + (l.precioBruto || 0), 0)
+  pendingLimpiezas.value.reduce((s, r) => s + parseCurrency(r['Total']), 0)
 );
 
-const totalCobradoMes = computed(() => {
-  const mes = dayjs().month();
+const totalCobradoAnio = computed(() => {
   const anio = dayjs().year();
-  return databaseStore.limpiezas
-    .filter(l => l.fechaPago && dayjs(l.fechaPago).month() === mes && dayjs(l.fechaPago).year() === anio)
-    .reduce((s, l) => s + (l.precioBruto || 0), 0);
+  return registroRecords.value
+    .filter(r => {
+      if (r['Estado'] !== 'Pagada') return false;
+      const d = parseDate(r['Fecha']);
+      return d && d.year() === anio;
+    })
+    .reduce((s, r) => s + parseCurrency(r['Total']), 0);
 });
 
-const pendingTop = computed(() =>
-  [...databaseStore.pendingLimpiezas].slice(0, 6)
-);
-
-// Chart — últimos 6 meses
+// Chart — últimos 6 meses (por fecha de servicio)
 const chartSeries = computed(() => {
-  const months = [];
+  const data = [];
   for (let i = 5; i >= 0; i--) {
     const d = dayjs().subtract(i, 'month');
-    const total = databaseStore.limpiezas
-      .filter(l => l.fechaPago && dayjs(l.fechaPago).month() === d.month() && dayjs(l.fechaPago).year() === d.year())
-      .reduce((s, l) => s + (l.precioBruto || 0), 0);
-    months.push(parseFloat(total.toFixed(2)));
+    const total = registroRecords.value
+      .filter(r => {
+        const rd = parseDate(r['Fecha']);
+        return rd && rd.month() === d.month() && rd.year() === d.year();
+      })
+      .reduce((s, r) => s + parseCurrency(r['Total']), 0);
+    data.push(parseFloat(total.toFixed(2)));
   }
-  return [{ name: 'Ingresos (€)', data: months }];
+  return [{ name: 'Ingresos (€)', data }];
 });
 
 const chartCategories = computed(() => {
@@ -379,7 +409,7 @@ const chartOptions = computed(() => ({
 
 onMounted(async () => {
   await Promise.all([
-    databaseStore.fetchLimpiezas(),
+    sheetsStore.loadTab('Registro'),
     databaseStore.fetchClientes(),
   ]);
   userStore.startUnreadMessagesListener();

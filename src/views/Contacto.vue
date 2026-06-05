@@ -4,8 +4,8 @@
     <!-- Cabecera -->
     <div class="ct-header">
       <span class="ct-label">Contacto</span>
-      <h1 class="ct-title">Hablemos de <span class="ct-accent">tu proyecto</span></h1>
-      <p class="ct-sub">Cuéntanos qué necesitas y te preparamos un presupuesto gratuito y sin compromiso en menos de 24 h.</p>
+      <h1 class="ct-title">Presupuesto de <span class="ct-accent">limpieza de cristales</span> en Madrid</h1>
+      <p class="ct-sub">Cuéntanos qué ventanas o cristales necesitas limpiar y te preparamos un presupuesto gratuito y sin compromiso en menos de 24 h.</p>
     </div>
 
     <!-- Tarjetas de contacto -->

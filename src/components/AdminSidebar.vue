@@ -66,6 +66,10 @@
     <div class="as-divider"></div>
     <div class="as-section-label">Sitio web</div>
     <nav class="as-nav">
+      <router-link to="/admin/generar" class="as-link" :class="{ 'as-active': route.path === '/admin/generar' }" @click="mobileOpen = false">
+        <span class="as-icon"><font-awesome-icon :icon="['fas', 'wand-magic-sparkles']" /></span>
+        Generar artículo
+      </router-link>
       <router-link to="/admin/mensajes" class="as-link" :class="{ 'as-active': route.path === '/admin/mensajes' }" @click="mobileOpen = false">
         <span class="as-icon"><font-awesome-icon :icon="['fas', 'envelope-open-text']" /></span>
         Mensajes

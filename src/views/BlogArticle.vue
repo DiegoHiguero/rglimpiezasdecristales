@@ -72,13 +72,51 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
+import { computed, onMounted, onUnmounted, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { articles, getArticleBySlug } from '../data/blog.js';
 
 const route = useRoute();
 const article = computed(() => getArticleBySlug(route.params.slug));
 const related = computed(() => articles.filter(a => a.slug !== route.params.slug).slice(0, 3));
+
+let schemaEl = null;
+
+function injectSchema(a) {
+  if (schemaEl) { schemaEl.remove(); schemaEl = null; }
+  if (!a) return;
+  schemaEl = document.createElement('script');
+  schemaEl.type = 'application/ld+json';
+  schemaEl.textContent = JSON.stringify({
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'Article',
+        headline: a.title,
+        description: a.metaDescription,
+        datePublished: a.date,
+        dateModified: a.date,
+        image: window.location.origin + a.image,
+        author: { '@type': 'Organization', name: 'Royall Clean' },
+        publisher: { '@type': 'Organization', name: 'Royall Clean', url: 'https://royallclean.es' },
+        url: 'https://royallclean.es/blog/' + a.slug,
+      },
+      {
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'Inicio', item: 'https://royallclean.es/' },
+          { '@type': 'ListItem', position: 2, name: 'Blog', item: 'https://royallclean.es/blog' },
+          { '@type': 'ListItem', position: 3, name: a.title, item: 'https://royallclean.es/blog/' + a.slug },
+        ],
+      },
+    ],
+  });
+  document.head.appendChild(schemaEl);
+}
+
+onMounted(() => injectSchema(article.value));
+watch(article, injectSchema);
+onUnmounted(() => { if (schemaEl) { schemaEl.remove(); schemaEl = null; } });
 </script>
 
 <style scoped>
@@ -86,6 +124,9 @@ const related = computed(() => articles.filter(a => a.slug !== route.params.slug
   max-width: 780px;
   margin: 0 auto;
   padding: 24px 20px 60px;
+  background: var(--white);
+  color: var(--text);
+  min-height: 100vh;
 }
 
 /* ── Breadcrumb ── */
@@ -146,13 +187,18 @@ const related = computed(() => articles.filter(a => a.slug !== route.params.slug
 .article-hero-img {
   border-radius: var(--r-md);
   overflow: hidden;
-  aspect-ratio: 16 / 6;
+  aspect-ratio: 16 / 7;
   margin-bottom: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .article-hero-img img {
   width: 100%; height: 100%;
-  object-fit: cover;
+  object-fit: contain;
+  object-position: center center;
   display: block;
+  background: var(--slate);
 }
 
 /* ── Content ── */
@@ -186,6 +232,12 @@ const related = computed(() => articles.filter(a => a.slug !== route.params.slug
 }
 :deep(.article-content li) {
   margin-bottom: 6px;
+}
+:deep(.article-content img) {
+  display: block;
+  margin: 24px auto;
+  max-width: 100%;
+  border-radius: 12px;
 }
 
 /* ── CTA ── */
