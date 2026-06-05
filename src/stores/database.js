@@ -9,6 +9,7 @@ import { defineStore } from 'pinia'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import { getAll, addRecord, updateRecord, removeRecord } from '../services/sheetDB'
+import { saveCache, loadCache, hasChanges } from '../services/localCache'
 
 dayjs.extend(relativeTime)
 
@@ -54,6 +55,7 @@ export const useDatabaseStore = defineStore('database', {
 
     // Gastos
     gastos:             [],
+    _allGastos:         [],
     isLoadingGastos:    false,
     errorGastos:        null,
     isAddingGasto:      false,
@@ -138,29 +140,45 @@ export const useDatabaseStore = defineStore('database', {
     // ── Limpiezas ──────────────────────────────────────────────────────────
 
     async fetchLimpiezas(month = '', year = '') {
-      this.isLoadingLimpiezas = true
-      this.errorLimpiezas     = null
       this.selectedMonth = month
       this.selectedYear  = year
-      try {
-        const all = await getAll('limpiezas')
-        this._allLimpiezas = all
 
-        if (!year) {
-          this.limpiezas = [...all]
-        } else {
-          this.limpiezas = all.filter(l =>
-            matchesMonthYear(l.fechaPrincipalLimpieza, month, year) ||
-            matchesMonthYear(l.fechaPago, month, year)
-          )
+      // Hidratar desde caché local si aún no hay datos en memoria
+      if (!this._allLimpiezas.length) {
+        const cached = loadCache('limpiezas')
+        if (cached?.records?.length) {
+          this._allLimpiezas = cached.records
+          this.limpiezas = this._filterLimpiezas(cached.records, month, year)
         }
-        await this.fetchNextFacturaFormattedNumber()
+      } else {
+        // Re-filtrar por el nuevo mes/año sin esperar la red
+        this.limpiezas = this._filterLimpiezas(this._allLimpiezas, month, year)
+      }
+
+      this.isLoadingLimpiezas = true
+      this.errorLimpiezas     = null
+      try {
+        const fresh = await getAll('limpiezas')
+        if (hasChanges(this._allLimpiezas, fresh)) {
+          this._allLimpiezas = fresh
+          saveCache('limpiezas', fresh)
+          this.limpiezas = this._filterLimpiezas(fresh, month, year)
+          await this.fetchNextFacturaFormattedNumber()
+        }
       } catch (e) {
         this.errorLimpiezas = e
         console.error('[DB] fetchLimpiezas:', e)
       } finally {
         this.isLoadingLimpiezas = false
       }
+    },
+
+    _filterLimpiezas(all, month, year) {
+      if (!year) return [...all]
+      return all.filter(l =>
+        matchesMonthYear(l.fechaPrincipalLimpieza, month, year) ||
+        matchesMonthYear(l.fechaPago, month, year)
+      )
     },
 
     async addLimpieza(data) {
@@ -243,19 +261,33 @@ export const useDatabaseStore = defineStore('database', {
     // ── Clientes ──────────────────────────────────────────────────────────
 
     async fetchClientes() {
+      // Hidratar desde caché local si aún no hay datos
+      if (!this.clientes.length) {
+        const cached = loadCache('clientes')
+        if (cached?.records?.length) {
+          this.clientes = this._sortClientes(cached.records)
+        }
+      }
+
       this.isLoadingClientes = true
       this.errorClientes     = null
       try {
-        this.clientes = (await getAll('clientes')).sort((a, b) =>
-          (a.nombre || '').localeCompare(b.nombre || '', 'es')
-        )
+        const fresh = await getAll('clientes')
+        if (hasChanges(this.clientes, fresh)) {
+          this.clientes = this._sortClientes(fresh)
+          saveCache('clientes', fresh)
+        }
       } catch (e) {
         this.errorClientes = e
         console.error('[DB] fetchClientes:', e)
-        this.clientes = []
+        if (!this.clientes.length) this.clientes = []
       } finally {
         this.isLoadingClientes = false
       }
+    },
+
+    _sortClientes(records) {
+      return [...records].sort((a, b) => (a.nombre || '').localeCompare(b.nombre || '', 'es'))
     },
 
     async fetchClientById(id) {
@@ -315,16 +347,28 @@ export const useDatabaseStore = defineStore('database', {
     // ── Gastos ────────────────────────────────────────────────────────────
 
     async fetchGastos(month = '', year = '') {
-      this.isLoadingGastos    = true
-      this.errorGastos        = null
       this.selectedMonthGastos = month
       this.selectedYearGastos  = year
+
+      // Hidratar desde caché local si aún no hay datos
+      if (!this.gastos.length) {
+        const cached = loadCache('gastos')
+        if (cached?.records?.length) {
+          this.gastos = this._filterGastos(cached.records, month, year)
+          this._allGastos = cached.records
+        }
+      } else {
+        this.gastos = this._filterGastos(this._allGastos || this.gastos, month, year)
+      }
+
+      this.isLoadingGastos = true
+      this.errorGastos     = null
       try {
-        const all = await getAll('gastos')
-        if (!year) {
-          this.gastos = all
-        } else {
-          this.gastos = all.filter(g => matchesMonthYear(g.fechaFactura, month, year))
+        const fresh = await getAll('gastos')
+        if (hasChanges(this._allGastos || this.gastos, fresh)) {
+          this._allGastos = fresh
+          saveCache('gastos', fresh)
+          this.gastos = this._filterGastos(fresh, month, year)
         }
       } catch (e) {
         this.errorGastos = e
@@ -332,6 +376,11 @@ export const useDatabaseStore = defineStore('database', {
       } finally {
         this.isLoadingGastos = false
       }
+    },
+
+    _filterGastos(all, month, year) {
+      if (!year) return [...all]
+      return all.filter(g => matchesMonthYear(g.fechaFactura, month, year))
     },
 
     async addGasto(data) {
@@ -369,7 +418,9 @@ export const useDatabaseStore = defineStore('database', {
       this.deleteGastoError = null
       try {
         await removeRecord('gastos', id)
-        this.gastos = this.gastos.filter(g => g.id !== id)
+        this.gastos     = this.gastos.filter(g => g.id !== id)
+        this._allGastos = this._allGastos.filter(g => g.id !== id)
+        saveCache('gastos', this._allGastos)
       } catch (e) {
         this.deleteGastoError = e
         console.error('[DB] deleteGasto:', e)

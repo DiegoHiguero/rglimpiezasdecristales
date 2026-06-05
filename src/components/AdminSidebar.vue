@@ -24,19 +24,6 @@
         <span class="as-icon"><font-awesome-icon :icon="['fas', 'compass']" /></span>
         Panel principal
       </router-link>
-      <router-link to="/misClientes" class="as-link" :class="{ 'as-active': route.path === '/misClientes' }" @click="mobileOpen = false">
-        <span class="as-icon"><font-awesome-icon :icon="['fas', 'address-card']" /></span>
-        Mis clientes
-      </router-link>
-      <router-link to="/admin/mensajes" class="as-link" :class="{ 'as-active': route.path === '/admin/mensajes' }" @click="mobileOpen = false">
-        <span class="as-icon"><font-awesome-icon :icon="['fas', 'envelope-open-text']" /></span>
-        Mensajes
-        <span v-if="userStore.unreadMessagesCount > 0" class="as-badge">{{ userStore.unreadMessagesCount }}</span>
-      </router-link>
-      <router-link to="/registro" class="as-link" :class="{ 'as-active': route.path === '/registro' }" @click="mobileOpen = false">
-        <span class="as-icon"><font-awesome-icon :icon="['fas', 'rectangle-list']" /></span>
-        Registro
-      </router-link>
       <router-link to="/Register" class="as-link" :class="{ 'as-active': route.path === '/Register' }" @click="mobileOpen = false">
         <span class="as-icon"><font-awesome-icon :icon="['fas', 'user']" /></span>
         Nuevo cliente
@@ -44,6 +31,29 @@
       <router-link to="/misFacturas" class="as-link" :class="{ 'as-active': route.path === '/misFacturas' }" @click="mobileOpen = false">
         <span class="as-icon"><font-awesome-icon :icon="['fas', 'file-invoice']" /></span>
         Facturas
+      </router-link>
+    </nav>
+
+    <div class="as-divider"></div>
+    <div class="as-section-label">Base de datos</div>
+
+    <nav class="as-nav">
+      <router-link to="/registro" class="as-link" :class="{ 'as-active': route.path === '/registro' }" @click="mobileOpen = false">
+        <span class="as-icon"><font-awesome-icon :icon="['fas', 'rectangle-list']" /></span>
+        Limpiezas
+      </router-link>
+      <router-link to="/misClientes" class="as-link" :class="{ 'as-active': route.path === '/misClientes' }" @click="mobileOpen = false">
+        <span class="as-icon"><font-awesome-icon :icon="['fas', 'address-card']" /></span>
+        Clientes
+      </router-link>
+      <router-link to="/gastos" class="as-link" :class="{ 'as-active': route.path === '/gastos' }" @click="mobileOpen = false">
+        <span class="as-icon"><font-awesome-icon :icon="['fas', 'hand-holding-dollar']" /></span>
+        Gastos
+      </router-link>
+      <router-link to="/admin/mensajes" class="as-link" :class="{ 'as-active': route.path === '/admin/mensajes' }" @click="mobileOpen = false">
+        <span class="as-icon"><font-awesome-icon :icon="['fas', 'envelope-open-text']" /></span>
+        Mensajes
+        <span v-if="userStore.unreadMessagesCount > 0" class="as-badge">{{ userStore.unreadMessagesCount }}</span>
       </router-link>
     </nav>
 

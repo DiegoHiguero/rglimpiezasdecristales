@@ -15,6 +15,7 @@ import LimpiezasMensuales from "./views/LimpiezasMensuales.vue";
 import Dashboard from "./views/Dashboard.vue";
 // ¡NUEVA IMPORTACIÓN AQUÍ!
 import MensajesAdmin from "./views/MensajesAdmin.vue";
+import GastosView from "./views/GastosView.vue";
 import Blog from "./views/Blog.vue";
 import BlogArticle from "./views/BlogArticle.vue";
 import { articles } from "./data/blog.js";
@@ -108,6 +109,7 @@ const routes = [
     },
     { path: '/dashboard', component: Dashboard, beforeEnter: requiereAuth2 },
     { path: '/admin/mensajes', component: MensajesAdmin, beforeEnter: requiereAuth2 },
+    { path: '/gastos', component: GastosView, beforeEnter: requiereAuth2 },
     {
         path: '/blog',
         component: Blog,
