@@ -6,12 +6,13 @@
         <img class="logo" src="../assets/img/ROYAL_CLEAN_2025_BLANCO.png" alt="Royall Clean logo" />
       </router-link>
 
-      <button class="toggler" type="button"
+      <button class="toggler" :class="{ open: menuOpen }" type="button"
         data-bs-toggle="collapse" data-bs-target="#navMenu"
-        aria-controls="navMenu" aria-expanded="false" aria-label="Abrir menú">
-        <span class="bar"></span>
-        <span class="bar"></span>
-        <span class="bar"></span>
+        aria-controls="navMenu" :aria-expanded="menuOpen" aria-label="Abrir menú"
+        @click="menuOpen = !menuOpen">
+        <span class="bar bar-1"></span>
+        <span class="bar bar-2"></span>
+        <span class="bar bar-3"></span>
       </button>
 
       <div class="collapse navbar-collapse" id="navMenu">
@@ -70,6 +71,7 @@ const userStore = useUserStore();
 const router = useRouter();
 const route = useRoute();
 const isScrolled = ref(false);
+const menuOpen = ref(false);
 
 const isDark = ref(false);
 
@@ -89,6 +91,7 @@ const isAdmin = (email) =>
 const closeNavbar = () => {
   const menu = document.getElementById('navMenu');
   if (menu?.classList.contains('show')) {
+    menuOpen.value = false;
     document.querySelector('.toggler')?.click();
   }
 };
@@ -110,12 +113,21 @@ const scrollToSection = (id) => {
 
 const handleScroll = () => { isScrolled.value = window.scrollY > 10; };
 
+const handleOutsideClick = (e) => {
+  if (!menuOpen.value) return;
+  const nav = document.getElementById('scrollspyHeading1');
+  if (nav && !nav.contains(e.target)) {
+    closeNavbar();
+  }
+};
+
 onMounted(() => {
   const saved = localStorage.getItem('rc-theme');
   isDark.value = saved === 'dark';
   applyTheme(isDark.value);
 
   window.addEventListener('scroll', handleScroll, { passive: true });
+  document.addEventListener('click', handleOutsideClick);
   if (userStore.userData && isAdmin(userStore.userData.email)) {
     userStore.startUnreadMessagesListener();
   }
@@ -123,6 +135,7 @@ onMounted(() => {
 
 onUnmounted(() => {
   window.removeEventListener('scroll', handleScroll);
+  document.removeEventListener('click', handleOutsideClick);
   userStore.stopUnreadMessagesListener();
 });
 </script>
@@ -158,7 +171,7 @@ onUnmounted(() => {
 
 /* ── LOGO ── */
 .logo {
-  height: 38px;
+  height: 50px;
   width: auto;
   display: block;
   transition: transform 0.25s;
@@ -170,25 +183,42 @@ onUnmounted(() => {
   display: none;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
   gap: 5px;
   background: transparent;
-  border: none;
-  padding: 6px;
+  border: 1.5px solid transparent;
+  padding: 8px;
   margin-left: auto;
   cursor: pointer;
-  border-radius: 6px;
-  transition: background 0.2s;
+  border-radius: 8px;
+  transition: background 0.2s, border-color 0.2s, transform 0.15s;
 }
-.toggler:hover { background: rgba(255,255,255,0.08); }
+.toggler:hover {
+  background: rgba(96, 165, 250, 0.1);
+  border-color: rgba(96, 165, 250, 0.3);
+}
+.toggler:active { transform: scale(0.92); }
 .toggler:focus { outline: none; box-shadow: none; }
+
 .bar {
   display: block;
-  width: 21px;
+  width: 22px;
   height: 2px;
   background: rgba(255, 255, 255, 0.8);
   border-radius: 2px;
-  transition: background 0.2s;
+  transform-origin: center;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 0.3s ease,
+              background 0.2s;
 }
+.toggler:hover .bar { background: #60a5fa; }
+
+/* Estado abierto → X */
+.toggler.open .bar-1 { transform: translateY(7px) rotate(45deg); }
+.toggler.open .bar-2 { opacity: 0; transform: scaleX(0); }
+.toggler.open .bar-3 { transform: translateY(-7px) rotate(-45deg); }
+.toggler.open { border-color: rgba(96, 165, 250, 0.4); background: rgba(96, 165, 250, 0.08); }
+.toggler.open .bar { background: #60a5fa; }
 
 /* ── NAV LINKS ── */
 ul.navbar-nav {
@@ -335,6 +365,6 @@ ul.navbar-nav {
 
   .icon-btn { width: 38px; height: 38px; font-size: 1rem; border-radius: 8px; }
 
-  .logo { height: 32px; }
+  .logo { height: 42px; }
 }
 </style>

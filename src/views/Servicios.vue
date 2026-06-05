@@ -166,6 +166,56 @@
         </div>
       </div>
 
+      <!-- Limpieza de Grafitis -->
+      <div class="sv-card sv-card--rose">
+        <div class="sv-card-img-wrap">
+          <img src="../assets/img/grafitis.jpg" alt="Limpieza y eliminación de grafitis en Madrid" class="sv-card-img" />
+          <div class="sv-card-overlay"></div>
+          <span class="sv-num">07</span>
+        </div>
+        <div class="sv-card-body">
+          <div class="sv-card-icon" style="background:rgba(251,113,133,0.12);border-color:rgba(251,113,133,0.25);">
+            <font-awesome-icon :icon="['fas', 'spray-can']" style="color:#fb7185" />
+          </div>
+          <h2 class="sv-card-title" style="color:#fb7185">Limpieza de Grafitis</h2>
+          <p class="sv-card-desc">Eliminamos grafitis en fachadas, muros, portales y mobiliario urbano de forma eficaz y sin dañar la superficie. Actuación rápida para restaurar el aspecto original del inmueble.</p>
+          <ul class="sv-list">
+            <li><font-awesome-icon :icon="['fas', 'check']" class="sv-check" style="color:#fb7185" />Fachadas y muros</li>
+            <li><font-awesome-icon :icon="['fas', 'check']" class="sv-check" style="color:#fb7185" />Portales y zonas comunes</li>
+            <li><font-awesome-icon :icon="['fas', 'check']" class="sv-check" style="color:#fb7185" />Mobiliario urbano y vallados</li>
+            <li><font-awesome-icon :icon="['fas', 'check']" class="sv-check" style="color:#fb7185" />Sin dañar la superficie</li>
+          </ul>
+          <router-link to="/contacto" class="sv-cta" style="--c:#fb7185;--cs:rgba(251,113,133,0.2)">
+            <font-awesome-icon :icon="['fas', 'paper-plane']" class="me-2" />Pedir presupuesto
+          </router-link>
+        </div>
+      </div>
+
+      <!-- Retirada de Vinilos -->
+      <div class="sv-card sv-card--fuchsia">
+        <div class="sv-card-img-wrap">
+          <img src="../assets/img/vinilo.jpg" alt="Retirada de vinilos en escaparates y cristales Madrid" class="sv-card-img" />
+          <div class="sv-card-overlay"></div>
+          <span class="sv-num">08</span>
+        </div>
+        <div class="sv-card-body">
+          <div class="sv-card-icon" style="background:rgba(232,121,249,0.12);border-color:rgba(232,121,249,0.25);">
+            <font-awesome-icon :icon="['fas', 'scissors']" style="color:#e879f9" />
+          </div>
+          <h2 class="sv-card-title" style="color:#e879f9">Retirada de Vinilos</h2>
+          <p class="sv-card-desc">Retiramos vinilos adhesivos en escaparates, lunas, cristaleras y vehículos sin dejar residuos ni rayar el cristal. Acabado limpio y profesional listo para nueva decoración.</p>
+          <ul class="sv-list">
+            <li><font-awesome-icon :icon="['fas', 'check']" class="sv-check" style="color:#e879f9" />Escaparates y lunas</li>
+            <li><font-awesome-icon :icon="['fas', 'check']" class="sv-check" style="color:#e879f9" />Cristaleras y mamparas</li>
+            <li><font-awesome-icon :icon="['fas', 'check']" class="sv-check" style="color:#e879f9" />Sin rayar ni dañar el cristal</li>
+            <li><font-awesome-icon :icon="['fas', 'check']" class="sv-check" style="color:#e879f9" />Eliminación de restos de adhesivo</li>
+          </ul>
+          <router-link to="/contacto" class="sv-cta" style="--c:#e879f9;--cs:rgba(232,121,249,0.2)">
+            <font-awesome-icon :icon="['fas', 'paper-plane']" class="me-2" />Pedir presupuesto
+          </router-link>
+        </div>
+      </div>
+
     </div>
 
     <!-- Proceso de trabajo -->

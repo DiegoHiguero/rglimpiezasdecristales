@@ -52,7 +52,15 @@
       </div>
       <div class="ft-divider"></div>
       <div class="ft-bottom">
-        <span class="ft-copy">© 2025 Royall Clean · Todos los derechos reservados</span>
+        <span class="ft-copy">© 2026 Royall Clean · Todos los derechos reservados</span>
+
+        <div class="ft-weather" v-if="!loading && weatherInfo">
+          <span class="ft-weather-emoji">{{ weatherInfo.emoji }}</span>
+          <span class="ft-weather-temp">{{ temp }}°C</span>
+          <span class="ft-weather-sep">·</span>
+          <span class="ft-weather-msg">{{ weatherInfo.msg }}</span>
+        </div>
+
         <span class="ft-location"><font-awesome-icon :icon="['fas', 'location-dot']" class="me-1" />Madrid, España</span>
       </div>
     </div>
@@ -61,6 +69,38 @@
 
 <script setup>
 import { RouterLink } from 'vue-router';
+import { ref, onMounted, computed } from 'vue';
+
+const temp = ref(null);
+const weatherCode = ref(null);
+const loading = ref(true);
+
+onMounted(async () => {
+  try {
+    const res = await fetch(
+      'https://api.open-meteo.com/v1/forecast?latitude=40.4168&longitude=-3.7038&current=temperature_2m,weather_code&timezone=Europe%2FMadrid'
+    );
+    const data = await res.json();
+    temp.value = Math.round(data.current.temperature_2m);
+    weatherCode.value = data.current.weather_code;
+  } catch {
+    // silently fail
+  } finally {
+    loading.value = false;
+  }
+});
+
+const weatherInfo = computed(() => {
+  const code = weatherCode.value;
+  if (code === null) return null;
+  if (code === 0)       return { emoji: '☀️', msg: '¡Día ideal para limpiar cristales!' };
+  if (code <= 3)        return { emoji: '⛅', msg: 'Buen día para programar tu limpieza' };
+  if (code <= 48)       return { emoji: '🌫️', msg: 'Buen día para programar tu limpieza' };
+  if (code <= 67)       return { emoji: '🌧️', msg: 'Tras la lluvia, tus cristales te necesitan' };
+  if (code <= 77)       return { emoji: '❄️', msg: 'Cuida tus cristales este invierno' };
+  if (code <= 82)       return { emoji: '🌦️', msg: 'Tras la lluvia, tus cristales te necesitan' };
+  return                       { emoji: '⛈️', msg: 'Tiempo de planificar tu próxima limpieza' };
+});
 </script>
 
 <style scoped>
@@ -85,6 +125,11 @@ footer { margin: 0 15px 15px; font-family: 'Raleway', sans-serif; }
 .ft-divider { height: 1px; background: rgba(255,255,255,0.06); margin-bottom: 22px; }
 .ft-bottom { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
 .ft-copy, .ft-location { font-size: 0.75rem; color: #475569; }
+.ft-weather { display: flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07); border-radius: 20px; padding: 4px 12px; }
+.ft-weather-emoji { font-size: 0.95rem; line-height: 1; }
+.ft-weather-temp { font-size: 0.75rem; font-weight: 700; color: #94a3b8; }
+.ft-weather-sep { color: #334155; font-size: 0.7rem; }
+.ft-weather-msg { font-size: 0.72rem; color: #64748b; white-space: nowrap; }
 @media (max-width: 900px) { .ft-top { grid-template-columns: 1fr 1fr; gap: 28px; } .ft-inner { padding: 36px 24px 22px; } }
-@media (max-width: 540px) { .ft-top { grid-template-columns: 1fr; gap: 24px; } footer { margin: 0 10px 12px; } .ft-inner { padding: 28px 16px 18px; border-radius: var(--r-md); } .ft-tagline { max-width: 100%; } }
+@media (max-width: 540px) { .ft-top { grid-template-columns: 1fr; gap: 24px; } footer { margin: 0 10px 12px; } .ft-inner { padding: 28px 16px 18px; border-radius: var(--r-md); } .ft-tagline { max-width: 100%; } .ft-bottom { flex-direction: column; align-items: flex-start; gap: 10px; } .ft-weather { width: 100%; justify-content: center; } }
 </style>
