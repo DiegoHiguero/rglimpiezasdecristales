@@ -11,18 +11,20 @@
     </div>
   </div>
   <Footer />
+  <CookieBanner />
 </template>
 
 <script>
 import Navbar from "./components/Navbar.vue";
 import Footer from "./components/Footer.vue";
+import CookieBanner from "./components/CookieBanner.vue";
 import { useUserStore } from "./stores/user";
-
 
 export default {
   components: {
     Navbar,
     Footer,
+    CookieBanner,
   },
   data() {
     return {
@@ -35,12 +37,11 @@ export default {
 <style>
 
 body {
-  /*font-family: "Baloo 2", cursive;*/
   font-size: 16px;
   text-rendering: optimizeLegibility;
   font-weight: initial;
   background-color: #151515;
-
+  padding-top: 54px;
 }
 
 

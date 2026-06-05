@@ -78,8 +78,7 @@ import mapboxSdk from "@mapbox/mapbox-sdk/services/geocoding";
 import { query, collection, getDocs } from "firebase/firestore";
 import { db } from "../firebaseConfig";
 
-// Mapbox Access Token
-mapboxgl.accessToken ="pk.eyJ1IjoiaGlndWVyb2RpZWdvIiwiYSI6ImNrN3Q2a25yNTBtc2ozaG1yam8zNnRibHUifQ.Zgmrlgnrw54eXySGuI3DIQ";
+mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN;
 
 // Referencias para el mapa y sus estados
 const mapContainer = ref<HTMLElement>();
@@ -491,26 +490,44 @@ onMounted(() => {
 /* Estilos para el popup de Mapbox (fuera de scoped para que funcionen) */
 .mapboxgl-popup-content {
   border-radius: 12px;
-  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.25);
-  padding: 15px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  padding: 16px;
   text-align: center;
-  background-color: #fff;
+  background-color: #0f1729;
+  border: 1px solid rgba(255,255,255,0.1);
   overflow: hidden;
+  color: #f1f5f9;
 }
 
 .mapboxgl-popup-tip {
-    border-top-color: #fff !important;
+  border-top-color: #0f1729 !important;
+}
+
+.mapboxgl-popup-close-button {
+  color: #94a3b8;
+}
+.mapboxgl-popup-close-button:hover {
+  color: #f1f5f9;
+  background: rgba(255,255,255,0.08);
 }
 
 /* Estilos de texto para el popup */
 .mapboxgl-popup-content h5 {
-    margin-bottom: 5px;
-    font-size: 1.15rem;
+  margin-bottom: 5px;
+  font-size: 1.05rem;
+  font-family: 'Raleway', sans-serif;
+  font-weight: 700;
+  color: #f1f5f9;
 }
 .mapboxgl-popup-content p {
-    margin-bottom: 3px;
-    line-height: 1.2;
-    font-size: 0.9rem;
+  margin-bottom: 3px;
+  line-height: 1.3;
+  font-size: 0.85rem;
+  color: #94a3b8;
+  font-family: 'Raleway', sans-serif;
+}
+.mapboxgl-popup-content b {
+  color: #60a5fa;
 }
 </style>
 <style scoped>
@@ -546,54 +563,61 @@ onMounted(() => {
 /* Estilos para la información de ruta (permanece visible) */
 .route-info-display {
   position: absolute;
-  top: 10px; /* Arriba del todo, centrado */
+  top: 10px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 1;
-  background-color: rgba(255, 255, 255, 0.9);
-  padding: 8px 15px;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  color: #333;
-  font-size: 14px;
+  background-color: rgba(15, 23, 41, 0.92);
+  border: 1px solid rgba(255,255,255,0.1);
+  padding: 8px 18px;
+  border-radius: 10px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  color: #f1f5f9;
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.85rem;
   text-align: center;
   pointer-events: none;
+  white-space: nowrap;
 }
 
 .route-info-display p {
   margin: 0;
-  line-height: 1.4;
+  line-height: 1.5;
+  color: #94a3b8;
 }
+.route-info-display p strong,
+.route-info-display p b { color: #60a5fa; }
 
 /* --- ESTILOS DEL BOTÓN DE HAMBURGUESA --- */
 .hamburger-button {
   position: absolute;
-  top: 10px; /* Ajusta la posición según tus necesidades */
+  top: 10px;
   right: 10px;
-  z-index: 3; /* Asegúrate de que esté por encima del menú */
+  z-index: 3;
   width: 40px;
   height: 40px;
-  background-color: white;
-  border: 1px solid #ccc;
-  border-radius: 50%; /* Botón circular */
+  background-color: rgba(15, 23, 41, 0.92);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 50%;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
   align-items: center;
   padding: 8px;
   cursor: pointer;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-  transition: background-color 0.3s ease;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+  transition: background-color 0.2s, border-color 0.2s;
 }
 
 .hamburger-button:hover {
-  background-color: #f0f0f0;
+  background-color: rgba(30, 41, 59, 0.97);
+  border-color: rgba(96,165,250,0.3);
 }
 
 .hamburger-button .bar {
-  width: 24px;
-  height: 3px;
-  background-color: #333;
+  width: 20px;
+  height: 2px;
+  background-color: rgba(255,255,255,0.8);
   border-radius: 2px;
   transition: all 0.3s ease;
 }
@@ -614,167 +638,164 @@ onMounted(() => {
 /* --- ESTILOS DEL MENÚ DE CONTROLES DEL MAPA (Panel) --- */
 .map-controls-menu {
   position: absolute;
-  top: 60px; /* Se posiciona debajo del botón de hamburguesa */
+  top: 60px;
   right: 10px;
-  z-index: 2; /* Por debajo del botón, por encima del mapa */
+  z-index: 2;
+  min-width: 190px;
 
-  background-color: rgba(255, 255, 255, 0.95);
-  padding: 15px;
-  border-radius: 8px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  background-color: rgba(15, 23, 41, 0.96);
+  border: 1px solid rgba(255,255,255,0.1);
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
 
   display: flex;
-  flex-direction: column; /* Apila los elementos verticalmente */
-  gap: 15px; /* Espacio entre las SECCIONES (ahora títulos y hr) */
+  flex-direction: column;
+  gap: 12px;
 
-  /* Animación de entrada/salida */
   opacity: 0;
   visibility: hidden;
-  transform: translateX(100%); /* Comienza fuera de la pantalla a la derecha */
-  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
-  pointer-events: none; /* Deshabilita interacciones cuando está oculto */
+  transform: translateX(calc(100% + 10px));
+  transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s ease;
+  pointer-events: none;
 }
 
 .map-controls-menu.is-open {
   opacity: 1;
   visibility: visible;
-  transform: translateX(0); /* Vuelve a su posición normal */
-  pointer-events: auto; /* Habilita interacciones cuando está abierto */
+  transform: translateX(0);
+  pointer-events: auto;
 }
 
-/* NUEVO: ESTILOS PARA TÍTULOS Y SEPARADOR DENTRO DEL MENÚ */
 .map-controls-menu h4 {
-  margin-top: 0; /* Eliminar margen superior por defecto */
-  margin-bottom: 5px; /* Pequeño margen inferior para separar del contenido */
-  font-size: 1rem; /* Tamaño de fuente para el título */
-  color: #555; /* Color de texto más suave */
-  text-align: center; /* Centrar el texto del título */
-  width: 100%; /* Asegurar que ocupe todo el ancho disponible */
+  margin: 0 0 4px;
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.67rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #64748b;
+  text-align: center;
+  width: 100%;
 }
 
 .map-controls-menu hr {
-  width: 100%; /* La línea ocupará todo el ancho */
-  border: none; /* Eliminar borde por defecto */
-  border-top: 1px solid #eee; /* Borde superior fino y claro */
-  margin: 10px 0; /* Espacio encima y debajo de la línea */
+  width: 100%;
+  border: none;
+  border-top: 1px solid rgba(255,255,255,0.07);
+  margin: 0;
 }
 
 /* --- AJUSTES PARA LOS CONTROLES DENTRO DEL MENÚ --- */
 
 .style-switcher {
   display: flex;
-  gap: 5px;
-  background-color: transparent;
-  padding: 0;
-  border-radius: 0;
-  box-shadow: none;
+  gap: 6px;
   flex-wrap: wrap;
   justify-content: center;
-  margin-bottom: 0;
 }
 
 .style-switcher button {
-  padding: 8px 12px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  background-color: #f0f0f0;
+  flex: 1;
+  padding: 7px 10px;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 8px;
+  background-color: rgba(255,255,255,0.05);
+  color: #94a3b8;
   cursor: pointer;
-  font-size: 14px;
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+  white-space: nowrap;
 }
-
+.style-switcher button:hover:not(.active) {
+  background-color: rgba(255,255,255,0.1);
+  color: #f1f5f9;
+}
 .style-switcher button.active {
-  background-color: #007bff;
-  color: white;
-  border-color: #007bff;
+  background-color: #2563eb;
+  border-color: #2563eb;
+  color: #fff;
 }
 
-/* INICIO DE NUEVOS ESTILOS PARA LOS BOTONES DE FILTRO DE CLIENTE */
 .client-type-filter-buttons {
-  background-color: transparent; /* No necesita fondo propio */
-  padding: 0; /* No necesita padding propio, lo maneja el menú */
-  border-radius: 0;
-  box-shadow: none;
   display: flex;
-  flex-wrap: wrap; /* Permite que los elementos se envuelvan en pantallas pequeñas */
-  gap: 8px; /* Espacio entre los botones */
-  align-items: center;
-  justify-content: center; /* Centra los botones */
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: center;
 }
 
 .client-type-filter-buttons button {
-  padding: 8px 12px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  background-color: #f0f0f0; /* Color por defecto inactivo */
+  flex: 1;
+  min-width: 72px;
+  padding: 7px 10px;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 8px;
+  background-color: rgba(255,255,255,0.05);
+  color: #94a3b8;
   cursor: pointer;
-  font-size: 14px;
-  transition: background-color 0.2s, color 0.2s, border-color 0.2s;
-  flex-grow: 1; /* Permite que los botones crezcan para llenar el espacio */
-  min-width: 80px; /* Ancho mínimo para que no se hagan demasiado pequeños */
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s, opacity 0.2s;
 }
 
 .client-type-filter-buttons button:hover:not(.active) {
-  background-color: #e9e9e9; /* Ligeramente más oscuro al pasar el ratón */
+  background-color: rgba(255,255,255,0.1);
+  color: #f1f5f9;
 }
 
-/* Estilos para el botón activo (seleccionado) */
 .client-type-filter-buttons button.active {
-  color: white; /* Texto blanco para botones activos */
-  font-weight: bold;
+  color: #fff;
+  font-weight: 700;
 }
 
-/* Colores específicos para cada tipo de cliente */
+.client-type-filter-buttons button.active:not(.filter-empresa):not(.filter-casa):not(.filter-cooperativa) {
+  background-color: #2563eb;
+  border-color: #2563eb;
+}
+
 .client-type-filter-buttons button.filter-empresa {
-  background-color: #007bff; /* Azul */
-  border-color: #007bff;
+  border-color: rgba(73,112,182,0.4);
 }
 .client-type-filter-buttons button.filter-empresa.active {
-  background-color: #0056b3; /* Azul más oscuro cuando está activo */
-  border-color: #0056b3;
+  background-color: #4970B6;
+  border-color: #4970B6;
 }
 
 .client-type-filter-buttons button.filter-casa {
-  background-color: #ff69b4; /* Rosa (HotPink) */
-  border-color: #ff69b4;
+  border-color: rgba(255,105,180,0.4);
 }
 .client-type-filter-buttons button.filter-casa.active {
-  background-color: #e05c9f; /* Rosa más oscuro cuando está activo */
+  background-color: #e05c9f;
   border-color: #e05c9f;
 }
 
 .client-type-filter-buttons button.filter-cooperativa {
-  background-color: #ffa500; /* Naranja */
-  border-color: #ffa500;
+  border-color: rgba(255,165,0,0.4);
 }
 .client-type-filter-buttons button.filter-cooperativa.active {
-  background-color: #cc8400; /* Naranja más oscuro cuando está activo */
-  border-color: #cc8400;
+  background-color: #d97706;
+  border-color: #d97706;
 }
-
-/* Color por defecto para el botón "Todos" cuando está activo */
-.client-type-filter-buttons button.active:not(.filter-empresa):not(.filter-casa):not(.filter-cooperativa) {
-  background-color: #007bff; /* Puedes ajustar este color */
-  border-color: #007bff;
-}
-/* FIN DE NUEVOS ESTILOS PARA LOS BOTONES DE FILTRO DE CLIENTE */
 
 /* --- MEDIA QUERY PARA MÓVILES --- */
 @media (max-width: 768px) {
-  /* Ajustes para la información de ruta */
   .route-info-display {
     top: 60px;
+    font-size: 0.8rem;
   }
 
-  /* El botón de hamburguesa y el menú se ajustan automáticamente al ser absolutos */
   .hamburger-button {
-    width: 35px;
-    height: 35px;
+    width: 36px;
+    height: 36px;
     top: 10px;
     right: 10px;
-    padding: 6px;
+    padding: 7px;
   }
   .hamburger-button .bar {
-    width: 20px;
+    width: 18px;
     height: 2px;
   }
   .hamburger-button.is-active .bar:nth-child(1) {
@@ -785,16 +806,15 @@ onMounted(() => {
   }
 
   .map-controls-menu {
-    top: 55px; /* Más cerca del top en móvil */
+    top: 56px;
     right: 10px;
-    left: 10px; /* Expandir a casi todo el ancho */
-    max-width: unset; /* Asegurar que no haya límite de ancho */
+    left: 10px;
+    min-width: unset;
   }
 
-  /* Los botones de filtro se adaptan automáticamente con flex-wrap y flex-grow */
   .client-type-filter-buttons button {
-    font-size: 13px;
-    padding: 7px 10px;
+    font-size: 0.78rem;
+    padding: 6px 8px;
   }
 }
 </style>

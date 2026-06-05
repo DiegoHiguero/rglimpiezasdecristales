@@ -1,4 +1,48 @@
-html, body { overflow-x: hidden; 
+/* ── Global Design Tokens ── */
+:root {
+  --navy:       #0f1729;
+  --navy-2:     #1a2744;
+  --navy-3:     #243356;
+  --blue:       #2563eb;
+  --blue-hover: #1d4ed8;
+  --blue-light: #60a5fa;
+  --blue-pale:  #dbeafe;
+  --slate:      #f1f5f9;
+  --white:      #ffffff;
+  --text:       #1e293b;
+  --text-muted: #64748b;
+  --border:     #e2e8f0;
 
+  --r-sm:  8px;
+  --r-md:  16px;
+  --r-lg:  24px;
 
- }
+  --shadow-sm: 0 2px 8px  rgba(15, 23, 41, 0.07);
+  --shadow-md: 0 4px 20px rgba(15, 23, 41, 0.11);
+  --shadow-lg: 0 8px 40px rgba(15, 23, 41, 0.18);
+
+  --t: 0.25s ease;
+}
+
+/* ── Dark mode overrides ── */
+[data-theme="dark"] {
+  --slate:      #0d1526;
+  --white:      #111c32;
+  --text:       #f1f5f9;
+  --text-muted: #94a3b8;
+  --border:     rgba(255,255,255,0.08);
+  --blue-pale:  rgba(37,99,235,0.18);
+}
+
+html, body {
+  overflow-x: hidden;
+  background: var(--slate);
+  color: var(--text);
+}
+
+.animate-on-scroll {
+  opacity: 0;
+  transform: translateY(26px);
+  transition: opacity 0.55s ease, transform 0.55s ease;
+}
+.animate-on-scroll.is-visible { opacity: 1; transform: translateY(0); }

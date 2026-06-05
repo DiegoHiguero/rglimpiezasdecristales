@@ -72,6 +72,7 @@ export const useUserStore = defineStore('userStore', {
                 // NUEVO: Inicia la escucha de mensajes si es un administrador
                 if (this.isAdminUser(userCredential.user)) {
                     this.startUnreadMessagesListener();
+                    router.push('/dashboard');
                 }
             } catch (error) {
                 console.error("Error en loginUser:", error);
@@ -117,7 +118,7 @@ export const useUserStore = defineStore('userStore', {
         this.googleAccessToken = credential.accessToken;
 
 
-        router.push('/registro'); // redirige al registro o dashboard
+        router.push('/dashboard'); // redirige al dashboard de administrador
 
       } catch (error) {
         this.timeOut = true;

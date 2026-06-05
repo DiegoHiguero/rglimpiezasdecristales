@@ -1,411 +1,626 @@
 <template>
-  <div class="mensajes-admin-container">
-    <h2 >Gestión de Mensajes de Contacto</h2>
+  <div class="ma-wrap">
 
-    <div class="unread-badge-container">
-      Mensajes no leídos:
-      <span class="badge" :class="{ 'bg-success': unreadMessagesCount === 0, 'bg-danger': unreadMessagesCount > 0 }">
-        {{ unreadMessagesCount }}
-      </span>
+    <!-- Cabecera -->
+    <div class="ma-header">
+      <div>
+        <span class="ma-label">Panel Admin</span>
+        <h1 class="ma-title">Mensajes de <span class="ma-accent">Contacto</span></h1>
+      </div>
+      <div class="ma-header-right">
+        <div class="ma-unread-chip" :class="unreadMessagesCount > 0 ? 'ma-unread-chip--red' : 'ma-unread-chip--green'">
+          <font-awesome-icon :icon="['fas', unreadMessagesCount > 0 ? 'envelope' : 'envelope-open']" class="me-2" />
+          {{ unreadMessagesCount }} sin leer
+        </div>
+        <button v-if="unreadMessagesCount > 0" class="ma-btn ma-btn--ghost" @click="markAllAsRead">
+          <font-awesome-icon :icon="['fas', 'check-double']" class="me-2" />Todos leídos
+        </button>
+      </div>
     </div>
 
-    <div v-if="messages.length === 0" class="no-messages">
-      <p>No hay mensajes en este momento.</p>
+    <!-- Filtros -->
+    <div class="ma-filters">
+      <div class="ma-search">
+        <font-awesome-icon :icon="['fas', 'magnifying-glass']" class="ma-search-icon" />
+        <input
+          type="text"
+          v-model="searchQuery"
+          placeholder="Buscar por nombre, email o teléfono..."
+          class="ma-search-input"
+        />
+        <button v-if="searchQuery" class="ma-search-clear" @click="searchQuery = ''">
+          <font-awesome-icon :icon="['fas', 'xmark']" />
+        </button>
+      </div>
+      <div class="ma-tabs">
+        <button
+          v-for="tab in statusTabs"
+          :key="tab.value"
+          class="ma-tab"
+          :class="{ 'ma-tab--active': activeFilter === tab.value }"
+          @click="activeFilter = tab.value"
+        >
+          {{ tab.label }}
+          <span v-if="tab.count > 0" class="ma-tab-count">{{ tab.count }}</span>
+        </button>
+      </div>
     </div>
 
-    <div v-else class="message-list">
-      <div v-for="message in sortedMessages" :key="message.id" class="message-card" :class="{ 'message-read': message.read }">
-        <div class="message-header">
-          <h3>De: {{ message.prenom }} <span v-if="!message.read" class="unread-indicator">(No leído)</span></h3>
-          <small>{{ formatDate(message.timestamp) }}</small>
+    <!-- Sin resultados -->
+    <div v-if="filteredMessages.length === 0" class="ma-empty-card">
+      <font-awesome-icon :icon="['fas', 'inbox']" class="ma-empty-icon" />
+      <p>{{ messages.length === 0 ? 'No hay mensajes en este momento.' : 'Ningún mensaje coincide con el filtro.' }}</p>
+    </div>
+
+    <!-- Grid de mensajes -->
+    <div v-else class="ma-grid">
+      <div
+        v-for="message in filteredMessages"
+        :key="message.id"
+        class="ma-card"
+        :class="{ 'ma-card--read': message.read }"
+      >
+        <!-- Encabezado tarjeta -->
+        <div class="ma-card-header">
+          <div class="ma-sender">
+            <span class="ma-sender-name">{{ message.prenom }}</span>
+            <span v-if="!message.read" class="ma-new-dot">Nuevo</span>
+          </div>
+          <span class="ma-date">{{ formatDate(message.timestamp) }}</span>
         </div>
-        <p class="message-email"><strong>Email:</strong> {{ message.email }}</p>
-        <p class="message-phone"><strong>Teléfono:</strong> {{ message.phone }}</p>
-        <div class="message-content-wrapper">
-          <p class="message-content">{{ message.message }}</p>
+
+        <!-- Cuerpo tarjeta -->
+        <div class="ma-card-body">
+
+          <!-- Email con acciones rápidas -->
+          <div class="ma-meta-row">
+            <div class="ma-meta-item">
+              <font-awesome-icon :icon="['fas', 'envelope']" class="ma-meta-icon" />
+              <span>{{ message.email }}</span>
+            </div>
+            <div class="ma-quick-actions">
+              <a
+                :href="`mailto:${message.email}?subject=Re%3A%20Contacto%20Royal%20Clean&body=Hola%20${encodeURIComponent(message.prenom)}%2C%0A%0A`"
+                class="ma-quick-btn ma-quick-btn--blue"
+                title="Responder por email"
+              >
+                <font-awesome-icon :icon="['fas', 'reply']" />
+              </a>
+              <button
+                class="ma-quick-btn"
+                :class="copiedId === message.id + '_email' ? 'ma-quick-btn--ok' : ''"
+                @click="copyToClipboard(message.email, message.id + '_email')"
+                title="Copiar email"
+              >
+                <font-awesome-icon :icon="['fas', copiedId === message.id + '_email' ? 'check' : 'copy']" />
+              </button>
+            </div>
+          </div>
+
+          <!-- Teléfono con acciones rápidas -->
+          <div class="ma-meta-row">
+            <div class="ma-meta-item">
+              <font-awesome-icon :icon="['fas', 'phone']" class="ma-meta-icon" />
+              <span>{{ message.phone }}</span>
+            </div>
+            <div class="ma-quick-actions">
+              <a
+                :href="`https://wa.me/${toWhatsAppNumber(message.phone)}`"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="ma-quick-btn ma-quick-btn--wa"
+                title="Abrir WhatsApp"
+              >
+                <font-awesome-icon :icon="['fab', 'whatsapp']" />
+              </a>
+              <button
+                class="ma-quick-btn"
+                :class="copiedId === message.id + '_phone' ? 'ma-quick-btn--ok' : ''"
+                @click="copyToClipboard(message.phone, message.id + '_phone')"
+                title="Copiar teléfono"
+              >
+                <font-awesome-icon :icon="['fas', copiedId === message.id + '_phone' ? 'check' : 'copy']" />
+              </button>
+            </div>
+          </div>
+
+          <!-- Texto del mensaje con toggle expandir -->
+          <div class="ma-message-wrap">
+            <p class="ma-message-text" :class="{ 'ma-message-text--expanded': expandedIds.has(message.id) }">
+              {{ message.message }}
+            </p>
+            <button
+              v-if="message.message && message.message.length > 160"
+              class="ma-expand-btn"
+              @click="toggleExpand(message.id)"
+            >
+              {{ expandedIds.has(message.id) ? 'Ver menos' : 'Ver más' }}
+              <font-awesome-icon :icon="['fas', expandedIds.has(message.id) ? 'chevron-up' : 'chevron-down']" class="ms-1" />
+            </button>
+          </div>
+
+          <!-- Etiquetas de estado -->
+          <div class="ma-status-row">
+            <button
+              v-for="s in statuses"
+              :key="s.value"
+              class="ma-status-btn"
+              :class="[s.cls, { 'ma-status-btn--active': (message.status || 'nuevo') === s.value }]"
+              @click="setStatus(message.id, s.value)"
+            >{{ s.label }}</button>
+          </div>
+
         </div>
-        <div class="message-actions">
-          <button v-if="!message.read" @click="markAsRead(message.id)" class="btn btn-primary btn-sm">Marcar como Leído</button>
-          <button v-else @click="markAsUnread(message.id)" class="btn btn-secondary btn-sm">Marcar como No Leído</button>
-          <!-- Botón de Eliminar -->
-          <button @click="deleteMessage(message.id)" class="btn btn-danger btn-sm">Eliminar</button>
+
+        <!-- Footer tarjeta -->
+        <div class="ma-card-footer">
+          <button v-if="!message.read" @click="markAsRead(message.id)" class="ma-btn ma-btn--green">
+            <font-awesome-icon :icon="['fas', 'check']" class="me-2" />Leído
+          </button>
+          <button v-else @click="markAsUnread(message.id)" class="ma-btn ma-btn--ghost">
+            <font-awesome-icon :icon="['fas', 'rotate-left']" class="me-2" />No leído
+          </button>
+          <button @click="deleteMessage(message.id)" class="ma-btn ma-btn--red">
+            <font-awesome-icon :icon="['fas', 'trash-can']" class="me-2" />Eliminar
+          </button>
         </div>
       </div>
     </div>
+
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, computed } from 'vue';
-import { db, auth } from '../firebaseConfig'; 
-import { collection, query, orderBy, onSnapshot, doc, updateDoc, deleteDoc, Timestamp } from 'firebase/firestore';
+import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
+import { db } from '../firebaseConfig'
+import {
+  collection, query, orderBy, onSnapshot,
+  doc, updateDoc, deleteDoc, writeBatch, Timestamp
+} from 'firebase/firestore'
 
 interface Message {
-  id: string;
-  prenom: string;
-  email: string;
-  phone: string;
-  message: string;
-  timestamp: Timestamp;
-  read: boolean;
+  id: string
+  prenom: string
+  email: string
+  phone: string
+  message: string
+  timestamp: Timestamp
+  read: boolean
+  status?: string
 }
 
-const messages = ref<Message[]>([]);
-let unsubscribe: (() => void) | null = null;
+const messages    = ref<Message[]>([])
+const searchQuery = ref('')
+const activeFilter = ref('all')
+const expandedIds  = ref(new Set<string>())
+const copiedId     = ref('')
+let unsubscribe: (() => void) | null = null
+let prevCount = 0
 
-const unreadMessagesCount = computed(() => {
-  return messages.value.filter(msg => !msg.read).length;
-});
+const statuses = [
+  { value: 'nuevo',       label: 'Nuevo',       cls: 'ma-status-btn--blue'   },
+  { value: 'contactado',  label: 'Contactado',  cls: 'ma-status-btn--amber'  },
+  { value: 'presupuesto', label: 'Presupuesto', cls: 'ma-status-btn--purple' },
+  { value: 'cerrado',     label: 'Cerrado',     cls: 'ma-status-btn--teal'   },
+]
 
-const sortedMessages = computed(() => {
-  return [...messages.value].sort((a, b) => {
-    // Los mensajes no leídos van primero
-    if (a.read === b.read) {
-      // Si ambos tienen el mismo estado, ordenar por fecha descendente
-      return b.timestamp.toMillis() - a.timestamp.toMillis();
-    }
-    return a.read ? 1 : -1; // Mensajes no leídos (read: false) vienen antes que leídos (read: true)
-  });
-});
+const unreadMessagesCount = computed(() => messages.value.filter(m => !m.read).length)
+
+const statusTabs = computed(() => [
+  { value: 'all',         label: 'Todos',       count: 0 },
+  { value: 'nuevo',       label: 'Nuevos',      count: messages.value.filter(m => !m.status || m.status === 'nuevo').length },
+  { value: 'contactado',  label: 'Contactados', count: messages.value.filter(m => m.status === 'contactado').length },
+  { value: 'presupuesto', label: 'Presupuesto', count: messages.value.filter(m => m.status === 'presupuesto').length },
+  { value: 'cerrado',     label: 'Cerrados',    count: messages.value.filter(m => m.status === 'cerrado').length },
+])
+
+const filteredMessages = computed(() => {
+  let list = [...messages.value].sort((a, b) => {
+    if (a.read === b.read) return b.timestamp.toMillis() - a.timestamp.toMillis()
+    return a.read ? 1 : -1
+  })
+  if (activeFilter.value !== 'all') {
+    list = list.filter(m => (m.status || 'nuevo') === activeFilter.value)
+  }
+  const q = searchQuery.value.trim().toLowerCase()
+  if (q) {
+    list = list.filter(m =>
+      m.prenom.toLowerCase().includes(q) ||
+      m.email.toLowerCase().includes(q) ||
+      m.phone.includes(q)
+    )
+  }
+  return list
+})
+
+// Notificación de navegador cuando llega un mensaje nuevo
+watch(() => messages.value.length, (newLen) => {
+  if (prevCount > 0 && newLen > prevCount && Notification.permission === 'granted') {
+    new Notification('Royall Clean — Nuevo mensaje', {
+      body: 'Tienes un nuevo mensaje de contacto.',
+      icon: '/favicon.ico',
+    })
+  }
+  prevCount = newLen
+})
 
 onMounted(() => {
-  const q = query(collection(db, "mensajes"), orderBy("timestamp", "desc"));
+  if (Notification.permission === 'default') Notification.requestPermission()
 
+  const q = query(collection(db, 'mensajes'), orderBy('timestamp', 'desc'))
   unsubscribe = onSnapshot(q, (snapshot) => {
-    const fetchedMessages: Message[] = [];
-    snapshot.forEach((doc) => {
-      const data = doc.data();
-      fetchedMessages.push({
-        id: doc.id,
-        prenom: data.prenom,
-        email: data.email,
-        phone: data.phone,
-        message: data.message,
-        timestamp: data.timestamp as Timestamp,
-        read: data.read || false,
-      });
-    });
-    messages.value = fetchedMessages;
-  }, (error) => {
-    console.error("Error al obtener mensajes de Firestore:", error);
-  });
-});
+    messages.value = snapshot.docs.map(d => ({
+      id: d.id,
+      ...(d.data() as Omit<Message, 'id'>),
+      read: d.data().read || false,
+    }))
+  }, console.error)
+})
 
-onUnmounted(() => {
-  if (unsubscribe) {
-    unsubscribe();
-  }
-});
+onUnmounted(() => { if (unsubscribe) unsubscribe() })
 
-const markAsRead = async (id: string) => {
-  try {
-    const messageRef = doc(db, "mensajes", id);
-    await updateDoc(messageRef, {
-      read: true
-    });
-  } catch (error) {
-    console.error("Error al marcar mensaje como leído:", error);
-    alert("Hubo un error al marcar el mensaje como leído.");
-  }
-};
+// Acciones
+const markAsRead   = (id: string) => updateDoc(doc(db, 'mensajes', id), { read: true }).catch(console.error)
+const markAsUnread = (id: string) => updateDoc(doc(db, 'mensajes', id), { read: false }).catch(console.error)
 
-const markAsUnread = async (id: string) => {
-  try {
-    const messageRef = doc(db, "mensajes", id);
-    await updateDoc(messageRef, {
-      read: false
-    });
-  } catch (error) {
-    console.error("Error al marcar mensaje como no leído:", error);
-    alert("Hubo un error al marcar el mensaje como no leído.");
-  }
-};
+const markAllAsRead = async () => {
+  const batch = writeBatch(db)
+  messages.value.filter(m => !m.read).forEach(m =>
+    batch.update(doc(db, 'mensajes', m.id), { read: true })
+  )
+  await batch.commit()
+}
+
+const setStatus = (id: string, status: string) =>
+  updateDoc(doc(db, 'mensajes', id), { status }).catch(console.error)
 
 const deleteMessage = async (id: string) => {
-  if (confirm('¿Estás seguro de que quieres eliminar este mensaje? Esta acción no se puede deshacer.')) {
-    try {
-      await deleteDoc(doc(db, "mensajes", id));
-      console.log(`Mensaje ${id} eliminado con éxito.`);
-    } catch (error) {
-      console.error("Error al eliminar el mensaje:", error);
-      alert("Hubo un error al eliminar el mensaje.");
-    }
-  }
-};
+  if (!confirm('¿Seguro que quieres eliminar este mensaje?')) return
+  deleteDoc(doc(db, 'mensajes', id)).catch(console.error)
+}
+
+const toggleExpand = (id: string) => {
+  const s = new Set(expandedIds.value)
+  s.has(id) ? s.delete(id) : s.add(id)
+  expandedIds.value = s
+}
+
+const copyToClipboard = async (text: string, key: string) => {
+  await navigator.clipboard.writeText(text)
+  copiedId.value = key
+  setTimeout(() => { copiedId.value = '' }, 1500)
+}
+
+const toWhatsAppNumber = (phone: string) => {
+  const d = phone.replace(/\D/g, '')
+  if (d.startsWith('34')) return d
+  if (d.length === 9) return '34' + d
+  return d
+}
 
 const formatDate = (timestamp: Timestamp) => {
-  if (!timestamp) return 'N/A';
-  const date = timestamp.toDate();
-  return date.toLocaleString('fr-FR', { dateStyle: 'medium', timeStyle: 'short' });
-};
+  if (!timestamp) return 'N/A'
+  return timestamp.toDate().toLocaleString('es-ES', { dateStyle: 'medium', timeStyle: 'short' })
+}
 </script>
 
 <style scoped>
-/* Contenedor principal de la vista de administración de mensajes */
-.mensajes-admin-container {
-  max-width: 900px;
-  margin: 2rem auto;
-  padding: 1.5rem;
-  background-color: #fcfcfc; /* Fondo ligeramente fuera de blanco */
-  border-radius: 0.75rem;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-  font-family: 'Baloo 2', sans-serif;
-  color: #333;
+.ma-wrap {
+  min-height: calc(100vh - 54px);
+  background: #151515;
+  padding: 36px 20px 60px;
+  max-width: 1100px;
+  margin: 0 auto;
 }
 
-.mensajes-admin-container h2 {
-  text-align: center;
-  color: #4970B6; /* Azul principal */
-  margin-bottom: 1.5rem;
+/* ── Header ── */
+.ma-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+.ma-header-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.ma-label {
+  display: inline-block;
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.68rem;
   font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #60a5fa;
+  background: rgba(96,165,250,0.1);
+  border: 1px solid rgba(96,165,250,0.2);
+  border-radius: 20px;
+  padding: 3px 12px;
+  margin-bottom: 8px;
+}
+.ma-title { font-family: 'Anton', sans-serif; font-size: 2rem; color: #fff; margin: 0; }
+.ma-accent { color: #60a5fa; }
+
+.ma-unread-chip {
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  border-radius: 20px;
+  padding: 7px 14px;
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+}
+.ma-unread-chip--red   { background: rgba(239,68,68,0.12);  border: 1px solid rgba(239,68,68,0.25);  color: #f87171; }
+.ma-unread-chip--green { background: rgba(34,197,94,0.1);   border: 1px solid rgba(34,197,94,0.2);   color: #4ade80; }
+
+/* ── Filters ── */
+.ma-filters {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
 }
 
-/* Contenedor del badge de mensajes no leídos */
-.unread-badge-container {
-  text-align: center;
-  margin-bottom: 2rem;
-  font-size: 1.1rem;
+.ma-search {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.ma-search-icon {
+  position: absolute;
+  left: 14px;
+  color: #475569;
+  font-size: 0.82rem;
+  pointer-events: none;
+}
+.ma-search-input {
+  width: 100%;
+  background: #0f1729;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px;
+  color: #f1f5f9;
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.88rem;
+  padding: 10px 38px 10px 38px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.ma-search-input:focus { border-color: rgba(96,165,250,0.4); }
+.ma-search-input::placeholder { color: #334155; }
+.ma-search-clear {
+  position: absolute;
+  right: 10px;
+  background: none;
+  border: none;
+  color: #475569;
+  cursor: pointer;
+  padding: 4px;
+  font-size: 0.78rem;
+  transition: color 0.15s;
+}
+.ma-search-clear:hover { color: #94a3b8; }
+
+.ma-tabs {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.ma-tab {
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.8rem;
   font-weight: 600;
-  color: #555;
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.04);
+  color: #64748b;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+.ma-tab:hover { background: rgba(255,255,255,0.08); color: #94a3b8; }
+.ma-tab--active { background: rgba(96,165,250,0.15); border-color: rgba(96,165,250,0.3); color: #60a5fa; }
+.ma-tab-count {
+  font-size: 0.68rem;
+  font-weight: 700;
+  background: rgba(96,165,250,0.2);
+  color: #60a5fa;
+  border-radius: 10px;
+  padding: 1px 6px;
 }
 
-.unread-badge-container .badge {
-  font-size: 1rem;
-  padding: 0.4em 0.7em;
-  border-radius: 0.5rem;
-  margin-left: 0.5rem;
-  vertical-align: middle;
-}
-
-/* Estilos para cuando no hay mensajes */
-.no-messages {
+/* ── Empty ── */
+.ma-empty-card {
+  background: #0f1729;
+  border: 1px dashed rgba(255,255,255,0.08);
+  border-radius: 16px;
+  padding: 60px 20px;
   text-align: center;
-  padding: 3rem;
-  border: 1px dashed #ced4da;
-  border-radius: 0.75rem;
-  margin-top: 2rem;
-  background-color: #f0f0f0;
-  color: #6c757d;
-  font-style: italic;
+  color: #475569;
+  font-family: 'Raleway', sans-serif;
 }
+.ma-empty-icon { font-size: 2.5rem; margin-bottom: 14px; opacity: 0.25; display: block; }
 
-/* Lista de mensajes */
-.message-list {
+/* ── Grid ── */
+.ma-grid {
   display: grid;
-  gap: 1.5rem; /* Espacio entre las tarjetas */
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Responsive grid */
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 16px;
 }
 
-/* Estilo base para cada tarjeta de mensaje */
-.message-card {
-  background-color: #ffffff;
-  border: 1px solid #e0e0e0;
-  border-radius: 0.75rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+/* ── Card ── */
+.ma-card {
+  background: #0f1729;
+  border: 1px solid rgba(255,255,255,0.07);
+  border-left: 3px solid #2563eb;
+  border-radius: 14px;
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
 }
+.ma-card:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(0,0,0,0.4); }
+.ma-card--read { border-left-color: rgba(255,255,255,0.07); opacity: 0.65; }
+.ma-card--read:hover { opacity: 1; }
 
-.message-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
-}
-
-/* Estilo específico para mensajes leídos */
-.message-read {
-  background-color: #f8f9fa; /* Fondo ligeramente gris para mensajes leídos */
-  border-left: 5px solid #cccccc; /* Borde sutil para indicar leído */
-  opacity: 0.85; /* Un poco menos prominente */
-}
-
-/* Encabezado del mensaje */
-.message-header {
+.ma-card-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem 1.25rem;
-  border-bottom: 1px solid #eeeeee;
-  background-color: #f4f4f4; /* Fondo para el encabezado */
+  padding: 14px 18px 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  gap: 10px;
 }
-
-.message-read .message-header {
-  background-color: #e9ecef; /* Un gris aún más claro para el encabezado leído */
-}
-
-.message-header h3 {
-  font-size: 1.25rem;
+.ma-sender { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.ma-sender-name { font-family: 'Raleway', sans-serif; font-weight: 700; font-size: 0.95rem; color: #f1f5f9; }
+.ma-new-dot {
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.6rem;
   font-weight: 700;
-  color: #4970B6; /* Azul principal para el nombre del remitente */
-  margin: 0;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  background: rgba(37,99,235,0.2);
+  color: #60a5fa;
+  border: 1px solid rgba(37,99,235,0.3);
+  border-radius: 10px;
+  padding: 2px 7px;
 }
+.ma-date { font-family: 'Raleway', sans-serif; font-size: 0.72rem; color: #475569; white-space: nowrap; flex-shrink: 0; }
 
-.message-read .message-header h3 {
-  color: #495057; /* Un color más tenue para el nombre del remitente en mensajes leídos */
-}
+.ma-card-body { padding: 14px 18px; flex: 1; display: flex; flex-direction: column; gap: 10px; }
 
-.message-header small {
-  color: #6c757d;
-  font-size: 0.85rem;
-  flex-shrink: 0; /* Previene que la fecha se comprima */
-  margin-left: 1rem;
-}
-
-.unread-indicator {
-  color: #dc3545; /* Rojo de Bootstrap para el indicador de no leído */
-  font-weight: bold;
-  font-size: 0.9em;
-  margin-left: 0.5rem;
-}
-
-/* Detalles del mensaje (email, teléfono) */
-.message-card p {
-  padding: 0.5rem 1.25rem 0; /* Ajusta el padding para la información */
-  margin-bottom: 0.25rem; /* Pequeño margen entre párrafos */
-  font-size: 0.95rem;
-  color: #495057;
-}
-
-.message-card p strong {
-  color: #343a40;
-}
-
-.message-email, .message-phone {
-  word-break: break-all; /* Para prevenir overflow de emails/teléfonos largos */
-}
-
-/* Contenido del mensaje */
-.message-content-wrapper {
-  padding: 0.5rem 1.25rem 1rem;
-  flex-grow: 1; /* Permite que el contenido ocupe el espacio disponible */
-}
-
-.message-content {
-  font-size: 1rem;
-  line-height: 1.6;
-  color: #495057;
-  max-height: 100px; /* Limita la altura del mensaje para no desbordar */
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 4; /* Muestra hasta 4 líneas */
-  -webkit-box-orient: vertical;
-  margin-bottom: 0 !important; /* Elimina margen inferior extra */
-}
-
-/* Acciones del mensaje (botones) */
-.message-actions {
-  padding: 1rem 1.25rem;
-  border-top: 1px solid #eeeeee;
-  background-color: #f9f9f9;
+/* ── Meta rows ── */
+.ma-meta-row {
   display: flex;
-  justify-content: flex-end; /* Alinea los botones a la derecha */
-  gap: 0.75rem; /* Espacio entre los botones */
-  flex-wrap: wrap; /* Permite que los botones se envuelvan en pantallas pequeñas */
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.ma-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.81rem;
+  color: #64748b;
+  min-width: 0;
+  word-break: break-all;
+}
+.ma-meta-icon { color: #334155; font-size: 0.72rem; flex-shrink: 0; }
+
+.ma-quick-actions { display: flex; gap: 5px; flex-shrink: 0; }
+.ma-quick-btn {
+  width: 28px; height: 28px;
+  border-radius: 7px;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.04);
+  color: #64748b;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  text-decoration: none;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+.ma-quick-btn:hover { background: rgba(255,255,255,0.1); color: #f1f5f9; }
+.ma-quick-btn--blue  { background: rgba(37,99,235,0.15);  border-color: rgba(37,99,235,0.25);  color: #60a5fa; }
+.ma-quick-btn--wa    { background: rgba(37,211,102,0.12); border-color: rgba(37,211,102,0.25); color: #25d366; }
+.ma-quick-btn--ok    { background: rgba(34,197,94,0.15);  border-color: rgba(34,197,94,0.25);  color: #4ade80; }
+
+/* ── Message text ── */
+.ma-message-wrap { display: flex; flex-direction: column; gap: 5px; }
+.ma-message-text {
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.86rem;
+  color: #94a3b8;
+  line-height: 1.65;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.ma-message-text--expanded {
+  display: block;
+  -webkit-line-clamp: unset;
+  overflow: visible;
+}
+.ma-expand-btn {
+  background: none;
+  border: none;
+  color: #60a5fa;
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  transition: opacity 0.15s;
+}
+.ma-expand-btn:hover { opacity: 0.75; }
+
+/* ── Status buttons ── */
+.ma-status-row { display: flex; gap: 5px; flex-wrap: wrap; padding-top: 4px; }
+.ma-status-btn {
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 20px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  background: rgba(255,255,255,0.04);
+  color: #475569;
+  transition: background 0.15s, color 0.15s, border-color 0.15s, opacity 0.15s;
+  opacity: 0.5;
+}
+.ma-status-btn:hover { opacity: 0.85; }
+.ma-status-btn--active { opacity: 1 !important; }
+
+.ma-status-btn--blue.ma-status-btn--active   { background: rgba(37,99,235,0.2);   border-color: rgba(37,99,235,0.35);   color: #60a5fa; }
+.ma-status-btn--amber.ma-status-btn--active  { background: rgba(245,158,11,0.2);  border-color: rgba(245,158,11,0.35);  color: #fbbf24; }
+.ma-status-btn--purple.ma-status-btn--active { background: rgba(139,92,246,0.2);  border-color: rgba(139,92,246,0.35);  color: #a78bfa; }
+.ma-status-btn--teal.ma-status-btn--active   { background: rgba(20,184,166,0.2);  border-color: rgba(20,184,166,0.35);  color: #2dd4bf; }
+
+/* ── Footer ── */
+.ma-card-footer {
+  padding: 10px 18px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  flex-wrap: wrap;
 }
 
-.message-read .message-actions {
-  background-color: #e9ecef; /* Fondo de acciones para mensajes leídos */
+/* ── Buttons ── */
+.ma-btn {
+  font-family: 'Raleway', sans-serif;
+  font-weight: 700;
+  font-size: 0.8rem;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  padding: 7px 14px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  transition: opacity 0.15s, transform 0.15s;
+  white-space: nowrap;
 }
+.ma-btn:hover { opacity: 0.8; transform: translateY(-1px); }
+.ma-btn--green { background: rgba(34,197,94,0.12);  border-color: rgba(34,197,94,0.25);  color: #4ade80; }
+.ma-btn--ghost { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.1); color: #94a3b8; }
+.ma-btn--red   { background: rgba(239,68,68,0.12);  border-color: rgba(239,68,68,0.25);  color: #f87171; }
 
-.message-actions .btn {
-  font-family: 'Baloo 2', sans-serif;
-  font-weight: 600;
-  border-radius: 0.3rem; /* Bordes suaves para los botones */
-  padding: 0.45rem 1rem;
-  font-size: 0.9rem;
-  white-space: nowrap; /* Evita que el texto del botón se rompa */
-}
-
-/* Colores de los botones para que coincidan con la marca si es posible */
-.message-actions .btn-primary {
-  background-color: #1A5F28;
-  border-color: #1A5F28;
-  color: white;
-}
-
-.message-actions .btn-primary:hover {
-  background-color: #12421c;
-  border-color: #12421c;
-}
-
-.message-actions .btn-secondary {
-  background-color: #6c757d; /* Gris de Bootstrap para "Marcar como No Leído" */
-  border-color: #6c757d;
-  color: white;
-}
-
-.message-actions .btn-secondary:hover {
-  background-color: #5a6268;
-  border-color: #545b62;
-}
-
-.message-actions .btn-danger {
-  background-color: #dc3545;
-  border-color: #dc3545;
-  color: white;
-}
-
-.message-actions .btn-danger:hover {
-  background-color: #c82333;
-  border-color: #bd2130;
-}
-
-/* Media Queries para responsividad */
-@media (max-width: 768px) {
-  .mensajes-admin-container {
-    padding: 1rem;
-    margin: 1rem auto;
-  }
-  .message-list {
-    grid-template-columns: 1fr; /* Una columna en pantallas pequeñas */
-  }
-  .message-header {
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 0.75rem 1rem;
-  }
-  .message-header small {
-    margin-left: 0;
-    margin-top: 0.25rem;
-  }
-  .message-card p {
-    padding-left: 1rem;
-    padding-right: 1rem;
-  }
-  .message-content-wrapper {
-    padding-left: 1rem;
-    padding-right: 1rem;
-  }
-  .message-actions {
-    justify-content: center; /* Centra los botones en pantallas pequeñas */
-    padding: 0.75rem 1rem;
-  }
-  .message-actions .btn {
-    width: 100%; /* Botones de ancho completo */
-    margin-bottom: 0.5rem;
-  }
-  .message-actions .btn:last-child {
-    margin-bottom: 0;
-  }
-}
-
-@media (max-width: 480px) {
-  .mensajes-admin-container h2 {
-    font-size: 1.75rem;
-  }
-  .message-header h3 {
-    font-size: 1.1rem;
-  }
-  .message-header small {
-    font-size: 0.8rem;
-  }
-  .message-card p {
-    font-size: 0.9rem;
-  }
-  .message-content {
-    font-size: 0.95rem;
-  }
+/* ── Responsive ── */
+@media (max-width: 640px) {
+  .ma-wrap { padding: 24px 12px 48px; }
+  .ma-title { font-size: 1.6rem; }
+  .ma-grid { grid-template-columns: 1fr; }
+  .ma-card-footer { justify-content: stretch; }
+  .ma-btn { flex: 1; justify-content: center; }
 }
 </style>

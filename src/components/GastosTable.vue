@@ -1,290 +1,239 @@
 <template>
-  <div class="card mt-5 shadow-sm">
-    <div class="card-header bg-primary text-white text-center">
-      <h4 class="mb-0">Gestión de Gastos</h4>
+  <div class="gt-wrap">
+
+    <!-- Cabecera -->
+    <div class="mc-card-header">
+      <h2 class="mc-card-title">Gestión de Gastos</h2>
+      <button class="mc-btn mc-btn--primary" @click="openModal()">
+        <font-awesome-icon :icon="['fas', 'plus']" class="me-2" />Nuevo Gasto
+      </button>
     </div>
 
-    <div class="card-body">
-      <!-- FILTROS -->
-      <div class="row mb-4">
-        <div class="col-md-3">
-          <label class="form-label">Mes</label>
-          <select v-model="selectedMonth" class="form-select" @change="filterGastos">
+    <div class="mc-card-body">
+
+      <!-- Filtros -->
+      <div class="gt-filters">
+        <div class="gt-filter-group">
+          <label>Mes</label>
+          <select v-model="selectedMonth" @change="filterGastos">
             <option value="">Todos</option>
-            <option v-for="(m, index) in meses" :key="index" :value="index">{{ m }}</option>
+            <option v-for="(m, i) in meses" :key="i" :value="i">{{ m }}</option>
           </select>
         </div>
-        <div class="col-md-3">
-          <label class="form-label">Año</label>
-          <select v-model="selectedYear" class="form-select" @change="filterGastos">
+        <div class="gt-filter-group">
+          <label>Año</label>
+          <select v-model="selectedYear" @change="filterGastos">
             <option value="">Todos</option>
             <option v-for="y in years" :key="y">{{ y }}</option>
           </select>
         </div>
-        <div class="col-md-6 d-flex align-items-end justify-content-end">
-          <button class="btn btn-success" @click="openModal()">
-            <i class="bi bi-plus-circle me-2"></i>Nuevo Gasto
-          </button>
-        </div>
       </div>
 
-      <!-- TABLA DE GASTOS -->
-      <div class="table-responsive">
-        <table class="table table-bordered table-striped align-middle text-center">
-          <thead class="table-primary">
+      <!-- Tabla -->
+      <div class="mc-table-wrap">
+        <table class="mc-table">
+          <thead>
             <tr>
-              <th>Tipo de Gasto</th>
-              <th>Fecha Factura</th>
-              <th>N° Factura</th>
-              <th>Precio sin IVA (€)</th>
-              <th>IVA (21%)</th>
-              <th>Precio con IVA (€)</th>
+              <th>Tipo</th>
+              <th>Fecha</th>
+              <th>Nº Factura</th>
+              <th>Sin IVA (€)</th>
+              <th>IVA (€)</th>
+              <th>Con IVA (€)</th>
               <th>Notas</th>
               <th>Verificado</th>
               <th>Acciones</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(gasto, index) in gastosFiltrados" :key="gasto.id">
+            <tr v-for="gasto in gastosFiltrados" :key="gasto.id">
               <td>{{ gasto.tipo }}</td>
               <td>{{ gasto.fechaFactura }}</td>
               <td>{{ gasto.numeroFactura }}</td>
-              <td>{{ gasto.precioSinIVA.toFixed(2) }}</td>
-              <td>{{ gasto.iva.toFixed(2) }}</td>
-              <td>{{ gasto.precioConIVA.toFixed(2) }}</td>
+              <td>{{ gasto.precioSinIVA?.toFixed(2) }}</td>
+              <td>{{ gasto.iva?.toFixed(2) }}</td>
+              <td><strong>{{ gasto.precioConIVA?.toFixed(2) }}</strong></td>
               <td>{{ gasto.notas }}</td>
               <td>
-               <button class="btn btn-outline-success" :class="{ active: gasto.verificado }" @click="toggleVerificado(gasto)">
-                 <i :class="gasto.verificado ? 'fas fa-check-circle fa-xs' : 'far fa-circle fa-xs'"></i>
+                <button class="mc-icon-btn" :class="gasto.verificado ? 'mc-icon-btn--green' : 'mc-icon-btn--grey'" @click="toggleVerificado(gasto)" :title="gasto.verificado ? 'Verificado' : 'Sin verificar'">
+                  <font-awesome-icon :icon="['fas', 'check']" />
                 </button>
               </td>
               <td>
-                <button class="btn btn-primary btn-sm me-1" @click="openModal(gasto)">Editar</button>
-                <button class="btn btn-danger btn-sm" @click="deleteGasto(gasto.id)">Borrar</button>
+                <div class="mc-actions">
+                  <button class="mc-icon-btn mc-icon-btn--teal" @click="openModal(gasto)" title="Editar"><font-awesome-icon :icon="['fas', 'file-pen']" /></button>
+                  <button class="mc-icon-btn mc-icon-btn--red" @click="deleteGasto(gasto.id)" title="Borrar"><font-awesome-icon :icon="['fas', 'trash-can']" /></button>
+                </div>
               </td>
             </tr>
           </tbody>
-          <tfoot class="table-light fw-bold">
-            <tr>
-              <td colspan="3" class="text-end">Totales:</td>
+          <tfoot>
+            <tr class="gt-totals">
+              <td colspan="3">Totales</td>
               <td>{{ totalSinIVA.toFixed(2) }}</td>
               <td>{{ totalIVA.toFixed(2) }}</td>
-              <td>{{ totalConIVA.toFixed(2) }}</td>
+              <td><strong>{{ totalConIVA.toFixed(2) }}</strong></td>
               <td colspan="3"></td>
             </tr>
           </tfoot>
         </table>
       </div>
 
-      <!-- GRÁFICA DE COMPARACIÓN -->
-      <div class="mt-5">
-        <h5 class="text-center mb-4">Comparativa: Ingresos vs Gastos</h5>
-        <apexchart
-          width="100%"
-          height="350"
-          type="bar"
-          :options="chartOptions"
-          :series="chartSeries"
-        ></apexchart>
+      <!-- Gráfica -->
+      <div class="gt-chart">
+        <p class="mc-chart-title">Comparativa: Ingresos vs Gastos</p>
+        <apexchart width="100%" height="320" type="bar" :options="chartOptions" :series="chartSeries"></apexchart>
       </div>
-    </div>
 
-    <!-- MODAL PARA AÑADIR/EDITAR GASTO -->
-    <div class="modal fade" id="gastoModal" tabindex="-1" aria-labelledby="gastoModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header bg-primary text-white">
-            <h5 class="modal-title" id="gastoModalLabel">{{ editingGasto.id ? 'Editar Gasto' : 'Nuevo Gasto' }}</h5>
-            <button type="button" class="btn-close" @click="closeModal()"></button>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <Teleport to="body">
+    <div v-if="modalOpen" class="mc-modal-backdrop" @click.self="closeModal">
+      <div class="mc-modal">
+        <div class="mc-modal-header">
+          <h5>{{ editingGasto.id ? 'Editar Gasto' : 'Nuevo Gasto' }}</h5>
+          <button class="mc-modal-close" @click="closeModal"><font-awesome-icon :icon="['fas', 'xmark']" /></button>
+        </div>
+        <div class="mc-modal-body">
+          <div class="gt-field">
+            <label>Tipo de Gasto</label>
+            <select v-model="editingGasto.tipo">
+              <option v-for="tipo in tiposGasto" :key="tipo" :value="tipo">{{ tipo }}</option>
+            </select>
           </div>
-          <div class="modal-body">
-            <div class="mb-3">
-              <label class="form-label">Tipo de Gasto</label>
-              <select v-model="editingGasto.tipo" class="form-select">
-                <option v-for="tipo in tiposGasto" :key="tipo" :value="tipo">{{ tipo }}</option>
-              </select>
+          <div class="gt-row">
+            <div class="gt-field">
+              <label>Fecha Factura</label>
+              <input type="date" v-model="editingGasto.fechaFactura" />
             </div>
-            <div class="mb-3">
-              <label class="form-label">Fecha Factura</label>
-              <input type="date" v-model="editingGasto.fechaFactura" class="form-control" />
-            </div>
-            <div class="mb-3">
-              <label class="form-label">Número Factura</label>
-              <input type="text" v-model="editingGasto.numeroFactura" class="form-control" />
-            </div>
-            <div class="mb-3">
-              <label class="form-label">Precio con IVA (€)</label>
-              <input type="number" v-model.number="editingGasto.precioConIVA" class="form-control" @input="calcularPrecios(editingGasto)" />
-            </div>
-            <div class="mb-3">
-              <label class="form-label">Notas</label>
-              <textarea v-model="editingGasto.notas" class="form-control"></textarea>
-            </div>
-            <div class="form-check mb-3">
-              <input type="checkbox" v-model="editingGasto.verificado" class="form-check-input" id="verificadoCheck">
-              <label class="form-check-label" for="verificadoCheck">Verificado</label>
+            <div class="gt-field">
+              <label>Número Factura</label>
+              <input type="text" v-model="editingGasto.numeroFactura" placeholder="FAC-001" />
             </div>
           </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" @click="closeModal()">Cancelar</button>
-            <button type="button" class="btn btn-success" @click="saveGasto()">Guardar</button>
+          <div class="gt-field">
+            <label>Precio con IVA (€)</label>
+            <input type="number" v-model.number="editingGasto.precioConIVA" @input="calcularPrecios(editingGasto)" placeholder="0.00" />
           </div>
+          <div class="gt-field">
+            <label>Notas</label>
+            <textarea v-model="editingGasto.notas" rows="3" placeholder="Observaciones..."></textarea>
+          </div>
+          <label class="gt-check-label">
+            <input type="checkbox" v-model="editingGasto.verificado" />
+            <span class="gt-check-box">
+              <font-awesome-icon :icon="['fas', 'check']" class="gt-check-tick" />
+            </span>
+            <span>Verificado</span>
+          </label>
+        </div>
+        <div class="mc-modal-footer">
+          <button class="mc-btn mc-btn--ghost" @click="closeModal">Cancelar</button>
+          <button class="mc-btn mc-btn--primary" @click="saveGasto">Guardar</button>
         </div>
       </div>
     </div>
-
-  </div>
+  </Teleport>
 </template>
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import VueApexCharts from 'vue3-apexcharts'
 import { useDatabaseStore } from '../stores/database'
 import { collection, addDoc, updateDoc, deleteDoc, doc, getDocs } from 'firebase/firestore'
-import { db } from '../firebaseConfig'; 
+import { db } from '../firebaseConfig'
 
 const dbStore = useDatabaseStore()
-
 const gastos = ref([])
+const gastosFiltrados = ref([])
 const selectedMonth = ref('')
 const selectedYear = ref(new Date().getFullYear())
 const tiposGasto = ref(['Gasolina', 'Coche', 'Teléfono', 'Material', 'Otros'])
 const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']
 const years = Array.from({ length: 6 }, (_, i) => new Date().getFullYear() - i)
+const modalOpen = ref(false)
 
-// Modal
-const editingGasto = ref({
-  id: null,
-  tipo: 'Gasolina',
-  fechaFactura: '',
-  numeroFactura: '',
-  precioSinIVA: 0,
-  iva: 0,
-  precioConIVA: 0,
-  notas: '',
-  verificado: false
-})
+const editingGasto = ref({ id: null, tipo: 'Gasolina', fechaFactura: '', numeroFactura: '', precioSinIVA: 0, iva: 0, precioConIVA: 0, notas: '', verificado: false })
 
 const openModal = (gasto = null) => {
-  if (gasto) {
-    editingGasto.value = { ...gasto }
-  } else {
-    editingGasto.value = {
-      id: null,
-      tipo: 'Gasolina',
-      fechaFactura: '',
-      numeroFactura: '',
-      precioSinIVA: 0,
-      iva: 0,
-      precioConIVA: 0,
-      notas: '',
-      verificado: false
-    }
-  }
-  const modalEl = document.getElementById('gastoModal')
-  new bootstrap.Modal(modalEl).show()
+  editingGasto.value = gasto ? { ...gasto } : { id: null, tipo: 'Gasolina', fechaFactura: '', numeroFactura: '', precioSinIVA: 0, iva: 0, precioConIVA: 0, notas: '', verificado: false }
+  modalOpen.value = true
 }
+const closeModal = () => { modalOpen.value = false }
 
-const closeModal = () => {
-  const modalEl = document.getElementById('gastoModal')
-  bootstrap.Modal.getInstance(modalEl).hide()
-}
-
-// Calcular IVA y precio sin IVA a partir del precio con IVA
 const calcularPrecios = (gasto) => {
-  gasto.precioSinIVA = gasto.precioConIVA * 0.21
+  gasto.precioSinIVA = gasto.precioConIVA / 1.21
   gasto.iva = gasto.precioConIVA - gasto.precioSinIVA
 }
 
-// Guardar gasto (nuevo o editar)
 const saveGasto = async () => {
   try {
     if (editingGasto.value.id) {
-      const docRef = doc(db, 'gastos', editingGasto.value.id)
-      await updateDoc(docRef, editingGasto.value)
+      await updateDoc(doc(db, 'gastos', editingGasto.value.id), editingGasto.value)
     } else {
       await addDoc(collection(db, 'gastos'), editingGasto.value)
     }
     await fetchGastos()
     closeModal()
-  } catch (error) {
-    console.error("Error guardando gasto:", error)
-  }
+  } catch (e) { console.error(e) }
 }
 
-// Borrar gasto
 const deleteGasto = async (id) => {
-  if (!confirm("¿Seguro que quieres borrar este gasto?")) return
+  if (!confirm('¿Seguro que quieres borrar este gasto?')) return
   await deleteDoc(doc(db, 'gastos', id))
   await fetchGastos()
 }
 
-// Verificado toggle
 const toggleVerificado = async (gasto) => {
   gasto.verificado = !gasto.verificado
   await updateDoc(doc(db, 'gastos', gasto.id), { verificado: gasto.verificado })
 }
 
-// Cargar gastos desde Firestore
 const fetchGastos = async () => {
   const snapshot = await getDocs(collection(db, 'gastos'))
-  gastos.value = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }))
+  gastos.value = snapshot.docs.map(d => ({ id: d.id, ...d.data() }))
   filterGastos()
 }
 
-// Filtrar gastos por mes y año
-const gastosFiltrados = ref([])
 const filterGastos = () => {
   gastosFiltrados.value = gastos.value.filter(g => {
     if (!g.fechaFactura) return true
-    const fecha = new Date(g.fechaFactura)
-    const mesOk = selectedMonth.value === "" || fecha.getMonth() === Number(selectedMonth.value)
-    const anioOk = selectedYear.value === "" || fecha.getFullYear() === Number(selectedYear.value)
+    const f = new Date(g.fechaFactura)
+    const mesOk = selectedMonth.value === '' || f.getMonth() === Number(selectedMonth.value)
+    const anioOk = selectedYear.value === '' || f.getFullYear() === Number(selectedYear.value)
     return mesOk && anioOk
   })
 }
 
-// Totales
-const totalSinIVA = computed(() => gastosFiltrados.value.reduce((acc, g) => acc + (g.precioSinIVA || 0), 0))
-const totalIVA = computed(() => gastosFiltrados.value.reduce((acc, g) => acc + (g.iva || 0), 0))
-const totalConIVA = computed(() => gastosFiltrados.value.reduce((acc, g) => acc + (g.precioConIVA || 0), 0))
+const totalSinIVA = computed(() => gastosFiltrados.value.reduce((a, g) => a + (g.precioSinIVA || 0), 0))
+const totalIVA    = computed(() => gastosFiltrados.value.reduce((a, g) => a + (g.iva || 0), 0))
+const totalConIVA = computed(() => gastosFiltrados.value.reduce((a, g) => a + (g.precioConIVA || 0), 0))
 
-// GRÁFICA
 const ingresosMensuales = computed(() => {
   const arr = Array(12).fill(0)
-  dbStore.limpiezas.forEach(l => {
-    const mes = new Date(l.fechaPrincipalLimpieza).getMonth()
-    arr[mes] += Number(l.precioBruto || 0)
-  })
+  dbStore.limpiezas.forEach(l => { arr[new Date(l.fechaPrincipalLimpieza).getMonth()] += Number(l.precioBruto || 0) })
   return arr
 })
-
 const gastosMensuales = computed(() => {
   const arr = Array(12).fill(0)
-  gastosFiltrados.value.forEach(g => {
-    if (g.fechaFactura) {
-      const mes = new Date(g.fechaFactura).getMonth()
-      arr[mes] += Number(g.precioConIVA || 0)
-    }
-  })
+  gastosFiltrados.value.forEach(g => { if (g.fechaFactura) arr[new Date(g.fechaFactura).getMonth()] += Number(g.precioConIVA || 0) })
   return arr
 })
-
 const chartSeries = computed(() => [
   { name: 'Ingresos', data: ingresosMensuales.value },
   { name: 'Gastos', data: gastosMensuales.value }
 ])
-
 const chartOptions = {
-  chart: { type: 'bar', height: 350, toolbar: { show: false } },
+  chart: { type: 'bar', height: 320, toolbar: { show: false }, background: 'transparent' },
+  theme: { mode: 'dark' },
   plotOptions: { bar: { horizontal: false, columnWidth: '45%', borderRadius: 4 } },
   dataLabels: { enabled: false },
-  stroke: { show: true, width: 2, colors: ['transparent'] },
   xaxis: { categories: meses },
-  yaxis: { title: { text: '€ Euros' } },
-  fill: { opacity: 1 },
-  colors: ['#28a745', '#dc3545'],
-  tooltip: { y: { formatter: val => `€ ${val.toFixed(2)}` } }
+  yaxis: { title: { text: '€' } },
+  colors: ['#34d399', '#f87171'],
+  tooltip: { y: { formatter: v => `€ ${v.toFixed(2)}` } },
+  grid: { borderColor: 'rgba(255,255,255,0.06)' }
 }
 
 onMounted(async () => {
@@ -294,12 +243,177 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-.table td,
-.table th {
-  vertical-align: middle;
+.gt-wrap { display: block; }
+
+/* ── mc-* classes duplicated here because Vue scoped CSS doesn't cascade to child components ── */
+.mc-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 24px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  flex-wrap: wrap;
+  gap: 10px;
 }
-button.active {
-  background-color: #198754 !important;
-  color: white !important;
+.mc-card-title {
+  font-family: 'Raleway', sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  color: #f1f5f9;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
+.mc-card-body { padding: 20px 24px; }
+
+.mc-btn {
+  font-family: 'Raleway', sans-serif;
+  font-weight: 700;
+  font-size: 0.84rem;
+  border: none;
+  border-radius: 10px;
+  padding: 8px 16px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  transition: opacity 0.2s, transform 0.2s;
+}
+.mc-btn:hover { opacity: 0.85; transform: translateY(-1px); }
+.mc-btn--primary { background: linear-gradient(135deg, #2563eb, #1d4ed8); color: #fff; }
+.mc-btn--ghost   { background: rgba(255,255,255,0.06); color: #94a3b8; border: 1px solid rgba(255,255,255,0.1); }
+
+.mc-table-wrap { overflow-x: auto; }
+.mc-table { width: 100%; border-collapse: collapse; font-family: 'Raleway', sans-serif; font-size: 0.84rem; }
+.mc-table th { color: #475569; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; padding: 10px 12px; border-bottom: 1px solid rgba(255,255,255,0.07); text-align: left; white-space: nowrap; }
+.mc-table td { padding: 11px 12px; color: #94a3b8; border-bottom: 1px solid rgba(255,255,255,0.04); vertical-align: middle; }
+.mc-table tbody tr:hover td { background: rgba(255,255,255,0.02); }
+.mc-table strong { color: #e2e8f0; }
+
+.mc-actions { display: flex; gap: 6px; }
+.mc-icon-btn { width: 30px; height: 30px; border-radius: 7px; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.78rem; transition: opacity 0.2s; }
+.mc-icon-btn:hover { opacity: 0.8; }
+.mc-icon-btn--teal { background: rgba(20,184,166,0.2);  color: #2dd4bf; }
+.mc-icon-btn--red  { background: rgba(239,68,68,0.2);   color: #f87171; }
+
+.mc-chart-title { font-family: 'Raleway', sans-serif; font-size: 0.88rem; font-weight: 700; color: #94a3b8; margin-bottom: 12px; }
+
+.mc-modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 500; display: flex; align-items: center; justify-content: center; padding: 16px; }
+.mc-modal { background: #0f1729; border: 1px solid rgba(255,255,255,0.1); border-radius: 18px; width: 100%; max-width: 540px; max-height: 90vh; display: flex; flex-direction: column; box-shadow: 0 24px 80px rgba(0,0,0,0.6); }
+.mc-modal-header { display: flex; align-items: center; justify-content: space-between; padding: 18px 24px; border-bottom: 1px solid rgba(255,255,255,0.07); }
+.mc-modal-header h5 { font-family: 'Raleway', sans-serif; font-weight: 700; font-size: 1rem; color: #f1f5f9; margin: 0; }
+.mc-modal-close { background: none; border: none; color: #64748b; font-size: 1rem; cursor: pointer; padding: 4px; transition: color 0.2s; }
+.mc-modal-close:hover { color: #fff; }
+.mc-modal-body { padding: 24px; overflow-y: auto; flex: 1; }
+.mc-modal-footer { display: flex; justify-content: flex-end; gap: 10px; padding: 16px 24px; border-top: 1px solid rgba(255,255,255,0.07); }
+
+.gt-filters {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+.gt-filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 140px;
+}
+.gt-filter-group label {
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.67rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #64748b;
+}
+.gt-filter-group select {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 8px;
+  color: #f1f5f9;
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.85rem;
+  padding: 7px 10px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.gt-filter-group select:focus { border-color: rgba(96,165,250,0.4); }
+.gt-filter-group select option { background: #0f1729; }
+
+.gt-totals td {
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #60a5fa !important;
+  border-top: 1px solid rgba(255,255,255,0.1) !important;
+  padding: 10px 12px;
+}
+
+.gt-chart { margin-top: 28px; }
+
+/* Modal fields */
+.gt-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.gt-field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 14px;
+}
+.gt-field label {
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.67rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #64748b;
+}
+.gt-field input,
+.gt-field select,
+.gt-field textarea {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 8px;
+  color: #f1f5f9;
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.88rem;
+  padding: 9px 12px;
+  outline: none;
+  transition: border-color 0.2s;
+  resize: none;
+}
+.gt-field input:focus,
+.gt-field select:focus,
+.gt-field textarea:focus { border-color: rgba(96,165,250,0.4); background: rgba(96,165,250,0.04); }
+.gt-field input::placeholder,
+.gt-field textarea::placeholder { color: #334155; }
+.gt-field select option { background: #0f1729; }
+
+.gt-check-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #94a3b8;
+  user-select: none;
+}
+.gt-check-label input { display: none; }
+.gt-check-box {
+  width: 20px; height: 20px;
+  border-radius: 6px;
+  border: 2px solid rgba(255,255,255,0.15);
+  background: rgba(255,255,255,0.04);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.2s, border-color 0.2s;
+}
+.gt-check-tick { color: #fff; font-size: 0.65rem; opacity: 0; transition: opacity 0.15s; }
+.gt-check-label input:checked ~ .gt-check-box { background: #2563eb; border-color: #2563eb; }
+.gt-check-label input:checked ~ .gt-check-box .gt-check-tick { opacity: 1; }
+
+.mc-icon-btn--green { background: rgba(34,197,94,0.15); color: #4ade80; }
+.mc-icon-btn--grey  { background: rgba(100,116,139,0.15); color: #64748b; }
 </style>

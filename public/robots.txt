@@ -1,0 +1,13 @@
+User-agent: *
+Allow: /
+
+# No indexar rutas de administración ni autenticación
+Disallow: /admin/
+Disallow: /misClientes
+Disallow: /misFacturas
+Disallow: /registro
+Disallow: /Register
+Disallow: /login
+
+# Sitemap
+Sitemap: https://royallclean.es/sitemap.xml
