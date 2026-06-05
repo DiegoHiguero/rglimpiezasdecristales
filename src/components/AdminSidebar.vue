@@ -16,9 +16,8 @@
       </router-link>
     </div>
 
+    <!-- Administración -->
     <div class="as-section-label">Administración</div>
-
-    <!-- Nav principal -->
     <nav class="as-nav">
       <router-link to="/dashboard" class="as-link" :class="{ 'as-active': route.path === '/dashboard' }" @click="mobileOpen = false">
         <span class="as-icon"><font-awesome-icon :icon="['fas', 'compass']" /></span>
@@ -34,33 +33,44 @@
       </router-link>
     </nav>
 
+    <!-- Google Sheets (dinámico) -->
     <div class="as-divider"></div>
-    <div class="as-section-label">Base de datos</div>
+    <div class="as-section-label as-section-label--sheets">
+      Google Sheets
+      <button class="as-refresh-btn" @click="reloadTabs" :disabled="sheetsStore.loading" title="Recargar pestañas">
+        <font-awesome-icon :icon="['fas', 'arrows-rotate']" :class="{ 'as-spin': sheetsStore.loading }" />
+      </button>
+    </div>
 
+    <!-- Cargando tabs -->
+    <div v-if="sheetsStore.loading && !sheetsStore.tabs.length" class="as-tabs-loading">
+      <div class="as-dot-spin"></div>
+      <span>Cargando hojas...</span>
+    </div>
+
+    <nav v-else class="as-nav">
+      <router-link
+        v-for="tab in sheetsStore.tabs"
+        :key="tab"
+        :to="tabPath(tab)"
+        class="as-link"
+        :class="{ 'as-active': isTabActive(tab) }"
+        @click="mobileOpen = false"
+      >
+        <span class="as-icon"><font-awesome-icon :icon="['fas', tabIcon(tab)]" /></span>
+        {{ tab }}
+      </router-link>
+    </nav>
+
+    <!-- Mensajes (Firestore, no Sheets) -->
+    <div class="as-divider"></div>
+    <div class="as-section-label">Sitio web</div>
     <nav class="as-nav">
-      <router-link to="/registro" class="as-link" :class="{ 'as-active': route.path === '/registro' }" @click="mobileOpen = false">
-        <span class="as-icon"><font-awesome-icon :icon="['fas', 'rectangle-list']" /></span>
-        Limpiezas
-      </router-link>
-      <router-link to="/misClientes" class="as-link" :class="{ 'as-active': route.path === '/misClientes' }" @click="mobileOpen = false">
-        <span class="as-icon"><font-awesome-icon :icon="['fas', 'address-card']" /></span>
-        Clientes
-      </router-link>
-      <router-link to="/gastos" class="as-link" :class="{ 'as-active': route.path === '/gastos' }" @click="mobileOpen = false">
-        <span class="as-icon"><font-awesome-icon :icon="['fas', 'hand-holding-dollar']" /></span>
-        Gastos
-      </router-link>
       <router-link to="/admin/mensajes" class="as-link" :class="{ 'as-active': route.path === '/admin/mensajes' }" @click="mobileOpen = false">
         <span class="as-icon"><font-awesome-icon :icon="['fas', 'envelope-open-text']" /></span>
         Mensajes
         <span v-if="userStore.unreadMessagesCount > 0" class="as-badge">{{ userStore.unreadMessagesCount }}</span>
       </router-link>
-    </nav>
-
-    <div class="as-divider"></div>
-    <div class="as-section-label">Sitio web</div>
-
-    <nav class="as-nav">
       <router-link to="/" class="as-link as-link--muted" @click="mobileOpen = false">
         <span class="as-icon"><font-awesome-icon :icon="['fas', 'house']" /></span>
         Ver sitio web
@@ -88,10 +98,50 @@
 import { ref, computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { useUserStore } from '../stores/user';
+import { useSheetsStore } from '../stores/sheetsStore';
 
-const route = useRoute();
-const userStore = useUserStore();
-const mobileOpen = ref(false);
+const route       = useRoute();
+const userStore   = useUserStore();
+const sheetsStore = useSheetsStore();
+const mobileOpen  = ref(false);
+
+// Tabs conocidos → rutas específicas ya existentes
+const KNOWN_ROUTES = {
+  'Limpiezas': '/registro',
+  'Clientes':  '/misClientes',
+  'Gastos':    '/gastos',
+};
+
+// Iconos por tab conocido, genérico para el resto
+const KNOWN_ICONS = {
+  'Limpiezas':        'rectangle-list',
+  'Clientes':         'address-card',
+  'Gastos':           'hand-holding-dollar',
+  'Servicios':        'broom',
+  'Configuracion':    'circle-info',
+  'Configuración':    'circle-info',
+  'Resumen':          'calendar-days',
+  'Resumen Mensual':  'calendar-days',
+};
+
+function tabPath(tab) {
+  return KNOWN_ROUTES[tab] || `/sheet/${encodeURIComponent(tab)}`;
+}
+
+function tabIcon(tab) {
+  return KNOWN_ICONS[tab] || 'table-cells';
+}
+
+function isTabActive(tab) {
+  const path = tabPath(tab);
+  if (route.path === path) return true;
+  if (route.params?.tab === tab || route.params?.tab === encodeURIComponent(tab)) return true;
+  return false;
+}
+
+async function reloadTabs() {
+  await sheetsStore.reloadTabs();
+}
 
 const userName = computed(() => {
   const email = userStore.userData?.email || '';
@@ -140,7 +190,45 @@ const userInitial = computed(() => userName.value.charAt(0).toUpperCase());
   text-transform: uppercase;
   color: #334155;
   padding: 8px 18px 4px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
+
+.as-refresh-btn {
+  background: none;
+  border: none;
+  color: #334155;
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  transition: color 0.15s;
+}
+.as-refresh-btn:hover:not(:disabled) { color: #60a5fa; }
+.as-refresh-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* ── Loading state for tabs ── */
+.as-tabs-loading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.75rem;
+  color: #334155;
+}
+.as-dot-spin {
+  width: 12px;
+  height: 12px;
+  border: 2px solid rgba(96,165,250,0.2);
+  border-top-color: #60a5fa;
+  border-radius: 50%;
+  animation: as-spin 0.8s linear infinite;
+  flex-shrink: 0;
+}
+.as-spin { animation: as-spin 0.7s linear infinite; }
+@keyframes as-spin { to { transform: rotate(360deg); } }
 
 /* ── Nav ── */
 .as-nav {
@@ -211,32 +299,19 @@ const userInitial = computed(() => userName.value.charAt(0).toUpperCase());
   align-items: center;
   gap: 10px;
 }
-.as-user {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex: 1;
-  min-width: 0;
-}
+.as-user { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
 .as-user-avatar {
-  width: 32px;
-  height: 32px;
+  width: 32px; height: 32px;
   border-radius: 50%;
   background: rgba(96,165,250,0.15);
   border: 1px solid rgba(96,165,250,0.25);
   color: #60a5fa;
   font-family: 'Anton', sans-serif;
   font-size: 0.95rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: flex; align-items: center; justify-content: center;
   flex-shrink: 0;
 }
-.as-user-info {
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-}
+.as-user-info { display: flex; flex-direction: column; min-width: 0; }
 .as-user-name {
   font-family: 'Raleway', sans-serif;
   font-size: 0.82rem;
@@ -246,11 +321,7 @@ const userInitial = computed(() => userName.value.charAt(0).toUpperCase());
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.as-user-role {
-  font-family: 'Raleway', sans-serif;
-  font-size: 0.68rem;
-  color: #475569;
-}
+.as-user-role { font-family: 'Raleway', sans-serif; font-size: 0.68rem; color: #475569; }
 .as-logout {
   background: none;
   border: none;
@@ -271,8 +342,7 @@ const userInitial = computed(() => userName.value.charAt(0).toUpperCase());
   bottom: 20px;
   right: 20px;
   z-index: 201;
-  width: 44px;
-  height: 44px;
+  width: 44px; height: 44px;
   border-radius: 50%;
   background: #2563eb;
   color: #fff;
@@ -284,7 +354,6 @@ const userInitial = computed(() => userName.value.charAt(0).toUpperCase());
 }
 .as-toggle:hover { background: #1d4ed8; transform: scale(1.05); }
 .as-toggle.open { background: #475569; }
-
 .as-overlay {
   display: none;
   position: fixed;

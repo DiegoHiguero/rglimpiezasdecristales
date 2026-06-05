@@ -323,6 +323,91 @@ export async function bulkReplace(key, records) {
   )
 }
 
+// ─── API genérica (cualquier pestaña, sin schema fijo) ───────────────────────
+
+/**
+ * Devuelve los nombres de todas las pestañas de la hoja.
+ */
+export async function getTabNames() {
+  const meta = await getMeta()
+  return meta.map(s => s.title)
+}
+
+/**
+ * Invalida la caché de metadatos para forzar una recarga en la próxima llamada.
+ */
+export function invalidateMeta() {
+  _meta = null
+  _ready.clear()
+}
+
+/**
+ * Lee cualquier pestaña por nombre usando la fila 1 como cabecera.
+ * Cada registro incluye _row (número de fila 1-based) para edición/borrado.
+ */
+export async function getSheetRaw(tabName) {
+  const d = await api(`/values/${enc(tabName + '!A1:Z')}`)
+  const all = d.values || []
+  if (!all.length) return { headers: [], records: [] }
+  const headers = (all[0] || []).map(h => String(h))
+  const records = all.slice(1)
+    .map((row, i) => {
+      const obj = { _row: i + 2 }
+      headers.forEach((h, j) => { obj[h] = row[j] ?? '' })
+      return obj
+    })
+    .filter(r => headers.some(h => r[h] !== ''))
+  return { headers, records }
+}
+
+/**
+ * Añade una nueva fila al final de la pestaña.
+ */
+export async function appendSheetRow(tabName, headers, data) {
+  const row = headers.map(h => String(data[h] ?? ''))
+  await api(
+    `/values/${enc(tabName + '!A:Z')}:append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS`,
+    'POST',
+    { range: `${tabName}!A:Z`, values: [row] },
+  )
+}
+
+/**
+ * Actualiza una fila existente por número de fila (1-based).
+ */
+export async function updateSheetRow(tabName, rowNum, headers, data) {
+  const colEnd = colLetter(headers.length)
+  const range = `${tabName}!A${rowNum}:${colEnd}${rowNum}`
+  const row = headers.map(h => String(data[h] ?? ''))
+  await api(`/values/${enc(range)}?valueInputOption=USER_ENTERED`, 'PUT', { range, values: [row] })
+}
+
+/**
+ * Elimina una fila por número de fila (1-based).
+ */
+export async function deleteSheetRow(tabName, rowNum) {
+  const sheetId = await getSheetId(tabName)
+  await api(':batchUpdate', 'POST', {
+    requests: [{
+      deleteDimension: {
+        range: { sheetId, dimension: 'ROWS', startIndex: rowNum - 1, endIndex: rowNum },
+      },
+    }],
+  })
+}
+
+function colLetter(n) {
+  let s = ''
+  while (n > 0) {
+    n--
+    s = String.fromCharCode(65 + (n % 26)) + s
+    n = Math.floor(n / 26)
+  }
+  return s || 'Z'
+}
+
+// ─── CRUD tipado (limpiezas / clientes / gastos) ──────────────────────────────
+
 /**
  * Elimina un registro por ID (borra la fila completa).
  * @param {'limpiezas'|'clientes'|'gastos'} key
