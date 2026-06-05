@@ -148,6 +148,10 @@ import imgSingle5    from '../../assets/img/20260518_113941.webp';
 import imgSingle6    from '../../assets/img/20260518_122343.webp';
 import imgSingle3    from '../../assets/img/IMG-20230901-WA0000.webp';
 import imgSingle4    from '../../assets/img/20230606_132202.webp';
+import img20260528a  from '../../assets/img/20260528_140011.webp';
+import img20260528b  from '../../assets/img/20260528_140444.webp';
+import img20260528c  from '../../assets/img/20260528_140712.webp';
+import img20260528d  from '../../assets/img/20260528_141113.webp';
 
 const baPairs = [
   { type: 'slider', before: imgBefore1, after: imgAfter1, label: 'Jun 2024' },
@@ -191,6 +195,10 @@ const photos = [
   { src: imgSingle4,    label: 'Trabajo · Jun 2023' },
   { src: imgSingle5,    label: 'Trabajo · May 2026' },
   { src: imgSingle6,    label: 'Trabajo · May 2026' },
+  { src: img20260528a,  label: 'Trabajo · May 2026' },
+  { src: img20260528b,  label: 'Trabajo · May 2026' },
+  { src: img20260528c,  label: 'Trabajo · May 2026' },
+  { src: img20260528d,  label: 'Trabajo · May 2026' },
 ];
 
 const lightbox = ref({ open: false, index: 0 });
