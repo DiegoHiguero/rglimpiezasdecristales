@@ -1,38 +1,47 @@
 <template>
-  <Navbar />
-  <router-view v-if="!userStore.loadingSesion"></router-view>
-  <div v-else class="d-flex justify-content-center">
-    <div
-      class="spinner-grow text-success"
-      style="width: 4rem; height: 4rem"
-      role="status"
-    >
-      <span class="sr-only"></span>
+  <Navbar v-if="!isAdminRoute" />
+  <AdminSidebar v-if="isAdminRoute" />
+  <div v-if="isAdminRoute" class="admin-wrap">
+    <router-view v-if="!userStore.loadingSesion"></router-view>
+    <div v-else class="d-flex justify-content-center align-items-center" style="height:60vh">
+      <div class="spinner-grow text-primary" style="width:3rem;height:3rem" role="status"></div>
     </div>
   </div>
-  <Footer />
+  <template v-else>
+    <router-view v-if="!userStore.loadingSesion"></router-view>
+    <div v-else class="d-flex justify-content-center">
+      <div class="spinner-grow text-success" style="width: 4rem; height: 4rem" role="status">
+        <span class="sr-only"></span>
+      </div>
+    </div>
+    <Footer />
+  </template>
   <CookieBanner />
 </template>
 
-<script>
+<script setup>
+import { computed, watchEffect } from 'vue';
+import { useRoute } from 'vue-router';
 import Navbar from "./components/Navbar.vue";
 import Footer from "./components/Footer.vue";
 import CookieBanner from "./components/CookieBanner.vue";
+import AdminSidebar from "./components/AdminSidebar.vue";
 import { useUserStore } from "./stores/user";
 
-export default {
-  components: {
-    Navbar,
-    Footer,
-    CookieBanner,
-  },
-  data() {
-    return {
-      userStore: useUserStore(),
-    };
-  },
-};
-</script >
+const userStore = useUserStore();
+const route = useRoute();
+
+const adminPaths = ['/dashboard', '/Register', '/registro', '/misClientes', '/misFacturas', '/admin/'];
+const isAdminRoute = computed(() => adminPaths.some(p => route.path === p || route.path.startsWith(p)));
+
+watchEffect(() => {
+  if (isAdminRoute.value) {
+    document.body.classList.add('admin-mode');
+  } else {
+    document.body.classList.remove('admin-mode');
+  }
+});
+</script>
 
 <style>
 
@@ -42,6 +51,20 @@ body {
   font-weight: initial;
   background-color: #151515;
   padding-top: 54px;
+}
+
+body.admin-mode {
+  padding-top: 0 !important;
+  background-color: #080d1a !important;
+}
+
+.admin-wrap {
+  margin-left: 232px;
+  min-height: 100vh;
+}
+
+@media (max-width: 768px) {
+  .admin-wrap { margin-left: 0; }
 }
 
 

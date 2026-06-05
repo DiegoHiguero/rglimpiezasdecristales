@@ -77,6 +77,13 @@ import {
     faCircleInfo,
     faSprayCan,
     faScissors,
+    faBars,
+    faReply,
+    faCopy,
+    faCheckDouble,
+    faInbox,
+    faRotateLeft,
+    faEnvelopeOpen,
 } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
@@ -108,6 +115,8 @@ library.add(
     faSun, faMoon,
     faSnowflake, faLeaf, faCompass, faCity, faBookOpen, faCircleInfo,
     faSprayCan, faScissors,
+    faBars,
+    faReply, faCopy, faCheckDouble, faInbox, faRotateLeft, faEnvelopeOpen,
 );
 
 // 2. Crear la instancia de la aplicación Vue

@@ -306,8 +306,8 @@ const formatDate = (timestamp: Timestamp) => {
 
 <style scoped>
 .ma-wrap {
-  min-height: calc(100vh - 54px);
-  background: #151515;
+  min-height: 100vh;
+  background: #080d1a;
   padding: 36px 20px 60px;
   max-width: 1100px;
   margin: 0 auto;
@@ -323,6 +323,19 @@ const formatDate = (timestamp: Timestamp) => {
   gap: 14px;
 }
 .ma-header-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.ma-back {
+  display: inline-flex;
+  align-items: center;
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #64748b;
+  text-decoration: none;
+  margin-bottom: 10px;
+  transition: color 0.2s;
+}
+.ma-back:hover { color: #60a5fa; }
+
 .ma-label {
   display: inline-block;
   font-family: 'Raleway', sans-serif;

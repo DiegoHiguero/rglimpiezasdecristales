@@ -1,6 +1,11 @@
 <template>
-  <div class="container-flex m-4">
-    <h2 class="mb-4 bg-white p-4 text-center">Registro Mensual de Limpiezas</h2>
+  <div class="container-flex">
+    <div class="lm-page-header">
+      <div>
+        <span class="lm-label">Panel Admin</span>
+        <h1 class="lm-title">Registro de <span class="lm-accent">Limpiezas</span></h1>
+      </div>
+    </div>
     <!-- Formulario para añadir nueva limpieza -->
     <div class="card mb-4">
       <div class="card-header">
@@ -2643,20 +2648,39 @@ onMounted(async () => {
 
 /* Contenedor principal */
 .container-flex {
-  background: var(--slate);
-  min-height: calc(100vh - 54px);
+  background: #080d1a;
+  min-height: 100vh;
   color: var(--text);
+  padding: 36px 24px 60px;
 }
 
-/* Títulos de página */
-h2.bg-white {
-  background: var(--white) !important;
-  color: var(--text) !important;
-  font-family: 'Anton', sans-serif;
-  border-radius: var(--r-md);
-  border: 1px solid var(--border);
-  box-shadow: var(--shadow-sm);
+/* Page header */
+.lm-page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 32px;
 }
+.lm-label {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #38bdf8;
+  background: rgba(56,189,248,0.1);
+  padding: 3px 10px;
+  border-radius: 20px;
+  margin-bottom: 6px;
+}
+.lm-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #e2e8f0;
+  margin: 0;
+  font-family: 'Raleway', sans-serif;
+}
+.lm-accent { color: #38bdf8; }
 h2, h3, h4 {
   font-family: 'Raleway', sans-serif;
   color: var(--text);

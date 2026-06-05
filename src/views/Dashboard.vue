@@ -86,14 +86,8 @@
     <div class="db-shortcuts">
       <div class="db-shortcuts-title">Accesos rápidos</div>
       <div class="db-shortcuts-grid">
-        <router-link to="/registro" class="db-shortcut">
-          <div class="db-shortcut-icon" style="background:rgba(96,165,250,0.12);color:#60a5fa">
-            <font-awesome-icon :icon="['fas', 'rectangle-list']" />
-          </div>
-          <span>Registro de limpiezas</span>
-        </router-link>
         <router-link to="/misClientes" class="db-shortcut">
-          <div class="db-shortcut-icon" style="background:rgba(52,211,153,0.12);color:#34d399">
+          <div class="db-shortcut-icon" style="background:rgba(96,165,250,0.12);color:#60a5fa">
             <font-awesome-icon :icon="['fas', 'address-card']" />
           </div>
           <span>Mis clientes</span>
@@ -107,23 +101,23 @@
             {{ userStore.unreadMessagesCount }}
           </span>
         </router-link>
+        <router-link to="/registro" class="db-shortcut">
+          <div class="db-shortcut-icon" style="background:rgba(52,211,153,0.12);color:#34d399">
+            <font-awesome-icon :icon="['fas', 'rectangle-list']" />
+          </div>
+          <span>Registro</span>
+        </router-link>
         <router-link to="/Register" class="db-shortcut">
           <div class="db-shortcut-icon" style="background:rgba(167,139,250,0.12);color:#a78bfa">
             <font-awesome-icon :icon="['fas', 'user']" />
           </div>
           <span>Nuevo cliente</span>
         </router-link>
-        <router-link to="/servicios" class="db-shortcut">
-          <div class="db-shortcut-icon" style="background:rgba(244,63,94,0.12);color:#f43f5e">
-            <font-awesome-icon :icon="['fas', 'broom']" />
-          </div>
-          <span>Servicios</span>
-        </router-link>
-        <router-link to="/contacto" class="db-shortcut">
+        <router-link to="/misFacturas" class="db-shortcut">
           <div class="db-shortcut-icon" style="background:rgba(34,211,238,0.12);color:#22d3ee">
-            <font-awesome-icon :icon="['fas', 'paper-plane']" />
+            <font-awesome-icon :icon="['fas', 'file-invoice']" />
           </div>
-          <span>Contacto</span>
+          <span>Facturas</span>
         </router-link>
       </div>
     </div>
@@ -231,9 +225,9 @@ onMounted(async () => {
 
 <style scoped>
 .db-wrap {
-  min-height: calc(100vh - 54px);
-  background: var(--slate);
-  padding: 36px 20px 60px;
+  min-height: 100vh;
+  background: #080d1a;
+  padding: 36px 24px 60px;
   max-width: 1200px;
   margin: 0 auto;
 }
@@ -421,7 +415,7 @@ onMounted(async () => {
 }
 .db-shortcuts-grid {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: 12px;
 }
 .db-shortcut {

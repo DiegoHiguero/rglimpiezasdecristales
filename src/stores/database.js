@@ -228,7 +228,7 @@ async deleteGasto(id) {
 
             // --- Chequeo de permisos (para esta operación sensible) ---
             const userStore = useUserStore();
-            if (!userStore.userData || (userStore.userData.email !== "higuerodiego@gmail.com" && userStore.userData.email !== "familiahiguero@gmail.com")) {
+            if (!userStore.userData || (userStore.userData.email !== "higuerodiego@gmail.com" && userStore.userData.email !== "roys.abreu@gmail.com")) {
                 console.warn("Firebase Permissions: Attempted to update payment status without admin privileges or valid user.");
                 this.updateLimpiezaError = new Error("No tienes permisos suficientes para actualizar el estado de pago.");
                 this.isUpdatingLimpieza = false;

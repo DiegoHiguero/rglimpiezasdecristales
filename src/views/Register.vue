@@ -218,9 +218,9 @@ const handleSubmit = async () => {
 
 <style scoped>
 .rg-wrap {
-  min-height: calc(100vh - 54px);
+  min-height: 100vh;
   padding: 40px 16px 72px;
-  background: var(--slate);
+  background: #080d1a;
   display: flex;
   justify-content: center;
 }
@@ -238,6 +238,19 @@ const handleSubmit = async () => {
 
 /* ── Header ── */
 .rg-header { margin-bottom: 28px; }
+.rg-back {
+  display: inline-flex;
+  align-items: center;
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #64748b;
+  text-decoration: none;
+  margin-bottom: 10px;
+  transition: color 0.2s;
+}
+.rg-back:hover { color: #60a5fa; }
+
 .rg-label {
   display: inline-block;
   font-family: 'Raleway', sans-serif;
