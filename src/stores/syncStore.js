@@ -44,7 +44,8 @@ export const useSyncStore = defineStore('sync', () => {
 
   function startAutoSync(intervalMinutes = 10) {
     if (_interval) return  // ya está corriendo, no reiniciar
-    refreshAll()
+    // Sin refresh inmediato — cada página carga sus propios datos al montarse.
+    // El intervalo sincroniza en background cada N minutos.
     _interval = setInterval(refreshAll, intervalMinutes * 60 * 1000)
   }
 

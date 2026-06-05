@@ -28,12 +28,10 @@ import CookieBanner from "./components/CookieBanner.vue";
 import AdminSidebar from "./components/AdminSidebar.vue";
 import { useUserStore } from "./stores/user";
 import { useSyncStore } from "./stores/syncStore";
-import { useSheetsStore } from "./stores/sheetsStore";
 
-const userStore   = useUserStore();
-const syncStore   = useSyncStore();
-const sheetsStore = useSheetsStore();
-const route = useRoute();
+const userStore = useUserStore();
+const syncStore = useSyncStore();
+const route     = useRoute();
 
 const adminPaths = ['/dashboard', '/Register', '/registro', '/misClientes', '/misFacturas', '/gastos', '/sheet/', '/admin/'];
 const isAdminRoute = computed(() => adminPaths.some(p => route.path === p || route.path.startsWith(p)));
@@ -49,8 +47,7 @@ watchEffect(() => {
 // Auto-sync: starts when admin is logged in, stops otherwise
 watchEffect(() => {
   if (isAdminRoute.value && userStore.userData?.uid && userStore.googleAccessToken) {
-    sheetsStore.loadTabs();      // carga pestañas para el sidebar dinámico
-    syncStore.startAutoSync(10); // every 10 minutes
+    syncStore.startAutoSync(10);
   } else if (!isAdminRoute.value) {
     syncStore.stopAutoSync();
   }

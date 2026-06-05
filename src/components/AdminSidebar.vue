@@ -95,7 +95,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { useUserStore } from '../stores/user';
 import { useSheetsStore } from '../stores/sheetsStore';
@@ -104,6 +104,13 @@ const route       = useRoute();
 const userStore   = useUserStore();
 const sheetsStore = useSheetsStore();
 const mobileOpen  = ref(false);
+
+// Carga las pestañas cuando el usuario tiene token (y solo una vez)
+watch(
+  () => userStore.googleAccessToken,
+  token => { if (token && !sheetsStore.tabs.length && !sheetsStore.loading) sheetsStore.loadTabs() },
+  { immediate: true }
+);
 
 // Tabs conocidos → rutas específicas ya existentes
 const KNOWN_ROUTES = {

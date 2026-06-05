@@ -220,11 +220,17 @@ function enc(s) {
   return encodeURIComponent(s)
 }
 
-// ─── Inicialización por colección (una sola vez) ──────────────────────────────
+// ─── Inicialización por colección (una sola vez por sesión) ──────────────────
 
-// Evita llamar ensureTabs+ensureHeader en cada lectura
-const _ready = new Set()
+const _SESSION_KEY = 'rc_sheets_ready'
+const _ready = new Set(
+  (() => { try { return JSON.parse(sessionStorage.getItem(_SESSION_KEY) || '[]') } catch { return [] } })()
+)
 const _readyPromises = {}
+
+function _persistReady() {
+  try { sessionStorage.setItem(_SESSION_KEY, JSON.stringify([..._ready])) } catch {}
+}
 
 async function initIfNeeded(key) {
   if (_ready.has(key)) return
@@ -233,6 +239,7 @@ async function initIfNeeded(key) {
     await ensureTabs([SCHEMA[key].tab])
     await ensureHeader(key)
     _ready.add(key)
+    _persistReady()
     delete _readyPromises[key]
   })()
   return _readyPromises[key]
@@ -339,6 +346,7 @@ export async function getTabNames() {
 export function invalidateMeta() {
   _meta = null
   _ready.clear()
+  try { sessionStorage.removeItem(_SESSION_KEY) } catch {}
 }
 
 /**
