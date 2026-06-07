@@ -33,7 +33,7 @@
   background: var(--navy);
   border-radius: var(--r-lg);
   padding: 30px 12px;
-  margin: 12px 15px;
+  margin: 12px 20px;
 }
 .advantage-item {
   padding: 18px 10px;

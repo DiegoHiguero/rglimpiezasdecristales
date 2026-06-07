@@ -26,7 +26,7 @@
             <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Frecuencia semanal o quincenal</li>
             <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Presupuesto personalizado gratis</li>
           </ul>
-          <router-link to="/contacto" class="svc-btn svc-btn--blue">Solicitar presupuesto</router-link>
+          <router-link to="/contacto" class="svc-btn svc-btn--blue">Consultar precio</router-link>
         </div>
       </div>
 
@@ -47,7 +47,7 @@
             <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Marcos, juntas y barandillas</li>
             <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Productos 100% ecológicos</li>
           </ul>
-          <router-link to="/contacto" class="svc-btn svc-btn--green">Solicitar presupuesto</router-link>
+          <router-link to="/contacto" class="svc-btn svc-btn--green">Consultar precio</router-link>
         </div>
       </div>
 
@@ -68,7 +68,7 @@
             <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Horarios adaptados a tu empresa</li>
             <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Factura para empresas</li>
           </ul>
-          <router-link to="/contacto" class="svc-btn svc-btn--purple">Solicitar presupuesto</router-link>
+          <router-link to="/contacto" class="svc-btn svc-btn--purple">Consultar precio</router-link>
         </div>
       </div>
 
@@ -92,7 +92,7 @@
             <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Fachadas, suelos y patios</li>
             <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Resultados inmediatos y visibles</li>
           </ul>
-          <router-link to="/contacto" class="svc-btn svc-btn--orange">Solicitar presupuesto</router-link>
+          <router-link to="/contacto" class="svc-btn svc-btn--orange">Consultar precio</router-link>
         </div>
       </div>
 
@@ -118,7 +118,7 @@
 <style scoped>
 .svc-section {
   background: var(--white);
-  margin: 12px 15px;
+  margin: 12px 20px;
   padding: 40px 28px 32px;
   border-radius: var(--r-lg);
 }

@@ -68,7 +68,7 @@ onMounted(() => {
 <style scoped>
 .testimonials-section {
   background: var(--white);
-  margin: 12px 15px;
+  margin: 12px 20px;
   border-radius: var(--r-lg);
   overflow: hidden;
 }

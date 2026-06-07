@@ -241,7 +241,7 @@ onUnmounted(() => {
 <style scoped>
 .galeria-wrap {
   background: var(--slate);
-  margin: 12px 15px;
+  margin: 12px 20px;
   padding: 40px 28px 28px;
   border-radius: var(--r-lg);
   overflow: hidden;

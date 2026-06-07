@@ -24,30 +24,17 @@
           <span class="ns-tag"><font-awesome-icon :icon="['fas', 'seedling']" class="me-1" />Productos eco</span>
           <span class="ns-tag"><font-awesome-icon :icon="['fas', 'heart']" class="me-1" />Trato personal</span>
         </div>
-        <a href="tel:+34696169435" class="ns-cta">
-          <font-awesome-icon :icon="['fas', 'phone']" class="me-2" />Llamar ahora
-        </a>
+        <router-link to="/contacto" class="ns-cta">
+          <font-awesome-icon :icon="['fas', 'paper-plane']" class="me-2" />Pedir presupuesto sin compromiso
+        </router-link>
       </div>
     </div>
   </div>
 
   <!-- Info cards -->
   <div class="info-cards">
-    <div class="row g-4">
-      <div class="col-md-4 animate-on-scroll">
-        <div class="ic-card ic-card--blue">
-          <img src="/src/assets/img/mapa.png" class="ic-img" alt="Mapa de cobertura" />
-          <h3 class="ic-title">¿Dónde trabajamos?</h3>
-          <p class="ic-text">Cubrimos Madrid capital y toda su periferia, con flexibilidad para zonas más lejanas.</p>
-          <ul class="ic-list">
-            <li>Madrid capital</li>
-            <li>Getafe · Leganés · Móstoles</li>
-            <li>Majadahonda · Pozuelo · Las Rozas</li>
-            <li>Griñón y más bajo consulta</li>
-          </ul>
-        </div>
-      </div>
-      <div class="col-md-4 animate-on-scroll">
+    <div class="row g-4 justify-content-center">
+      <div class="col-md-6 animate-on-scroll">
         <div class="ic-card ic-card--green">
           <img src="../../assets/img/logocarta.webp" class="ic-img" alt="Nuestra misión" />
           <h3 class="ic-title">Nuestra misión</h3>
@@ -60,7 +47,7 @@
           </ul>
         </div>
       </div>
-      <div class="col-md-4 animate-on-scroll">
+      <div class="col-md-6 animate-on-scroll">
         <div class="ic-card ic-card--orange">
           <img src="../../assets/img/materiales.webp" class="ic-img" alt="Materiales profesionales" />
           <h3 class="ic-title">Materiales de primera</h3>
@@ -85,7 +72,7 @@
 /* ── NOSOTROS ── */
 .texto-principal-nosotros {
   background: var(--white);
-  margin: 12px 15px 0;
+  margin: 12px 20px 0;
   padding: 40px 40px 28px;
   border-radius: var(--r-lg) var(--r-lg) 0 0;
   font-family: 'Raleway', sans-serif;
@@ -229,7 +216,7 @@
 /* ── INFO CARDS ── */
 .info-cards {
   background: var(--white);
-  margin: 0 15px;
+  margin: 0 20px;
   padding: 4px 28px 32px;
   border-radius: 0 0 var(--r-lg) var(--r-lg);
 }

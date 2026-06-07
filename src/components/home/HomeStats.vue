@@ -27,7 +27,7 @@
 <style scoped>
 .section3 {
   background: var(--white);
-  margin: 12px 15px;
+  margin: 12px 20px;
   padding: 4px 0;
   border-radius: var(--r-lg);
   border: 1px solid var(--border);

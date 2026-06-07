@@ -108,13 +108,13 @@
       </div>
     </div>
 
-    <!-- â”€â”€ SECCIONES â”€â”€ -->
+    <!-- ── SECCIONES ── -->
     <HomeStats />
     <HomeServicios />
-    <HomePrecios />
     <HomeGaleria />
     <HomeTestimonios />
     <HomeSobreMi />
+    <HomePrecios />
     <HomeVentajas />
     <HomeZonas />
     <HomeBlog />
@@ -257,7 +257,13 @@ function getCookie(cname: string): string {
 </script>
 
 <style scoped>
-/* â”€â”€ HERO â”€â”€ */
+/* ── WRAPPER ── */
+.padre {
+  max-width: 1440px;
+  margin: 0 auto;
+}
+
+/* ── HERO ── */
 .principal {
   background: url('../assets/img/office-buildings.webp') center/cover no-repeat;
   background-color: #0f1729;

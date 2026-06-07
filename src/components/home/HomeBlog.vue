@@ -49,7 +49,7 @@ import { articles } from '../../data/blog.js';
 <style scoped>
 .hb-section {
   background: var(--white);
-  margin: 12px 15px;
+  margin: 12px 20px;
   border-radius: var(--r-lg);
   padding: 40px 28px 36px;
 }
