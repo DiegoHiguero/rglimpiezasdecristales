@@ -183,6 +183,19 @@ router.afterEach((to) => {
 
     const canonical = document.querySelector('link[rel="canonical"]');
     if (canonical) canonical.setAttribute('href', 'https://royallclean.es' + to.path);
+
+    let metaKeywords = document.querySelector('meta[name="keywords"]');
+    if (!metaKeywords) {
+        metaKeywords = document.createElement('meta');
+        metaKeywords.setAttribute('name', 'keywords');
+        document.head.appendChild(metaKeywords);
+    }
+    if (to.meta?.dynamic && to.params?.slug) {
+        const kw = articles.find(a => a.slug === to.params.slug)?.keywords || '';
+        metaKeywords.setAttribute('content', kw);
+    } else {
+        metaKeywords.setAttribute('content', to.meta?.keywords || '');
+    }
 });
 
 export default router;
