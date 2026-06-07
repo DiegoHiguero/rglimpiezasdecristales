@@ -259,7 +259,7 @@ function getCookie(cname: string): string {
 <style scoped>
 /* ── WRAPPER ── */
 .padre {
-  max-width: 1440px;
+  max-width: 1200px;
   margin: 0 auto;
 }
 
