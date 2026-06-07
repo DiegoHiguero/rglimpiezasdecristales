@@ -90,7 +90,7 @@
 
             <button type="submit" class="f-submit" :disabled="isSubmitting || !isFormValid">
               <span v-if="!isSubmitting">
-                <font-awesome-icon :icon="['fas', 'paper-plane']" class="me-2" />Pedir presupuesto gratis
+                <font-awesome-icon :icon="['fas', 'paper-plane']" class="me-2" />Enviar consulta
               </span>
               <span v-else class="f-submit-loading">
                 <span class="f-spinner"></span>Enviando...
@@ -100,7 +100,7 @@
             <div class="f-trust">
               <span><font-awesome-icon :icon="['fas', 'lock']" class="me-1" />Sin compromiso</span>
               <span><font-awesome-icon :icon="['fas', 'clock']" class="me-1" />Respuesta en 24 h</span>
-              <span><font-awesome-icon :icon="['fas', 'check']" class="me-1" />Gratis</span>
+              <span><font-awesome-icon :icon="['fas', 'shield-halved']" class="me-1" />Datos protegidos</span>
             </div>
 
           </form>
