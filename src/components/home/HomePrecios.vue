@@ -56,7 +56,7 @@
           <div class="pc-band"></div>
           <div class="pc-inner">
             <div class="pc-top">
-              <div class="pc-icon-wrap"><i class="bi bi-building"></i></div>
+              <div class="pc-icon-wrap"><i class="bi bi-house-door"></i></div>
               <h4 class="pc-name">Local Grande</h4>
               <p class="pc-size">Fachada completa</p>
             </div>
