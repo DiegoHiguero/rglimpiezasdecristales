@@ -14,7 +14,7 @@
           <div class="pc-band"></div>
           <div class="pc-inner">
             <div class="pc-top">
-              <div class="pc-icon-wrap"><font-awesome-icon :icon="['fas', 'shop']" /></div>
+              <div class="pc-icon-wrap"><i class="bi bi-shop"></i></div>
               <h4 class="pc-name">Local Pequeño</h4>
               <p class="pc-size">1–2 escaparates</p>
             </div>
@@ -35,7 +35,7 @@
           <div class="pc-band"></div>
           <div class="pc-inner">
             <div class="pc-top">
-              <div class="pc-icon-wrap"><font-awesome-icon :icon="['fas', 'store']" /></div>
+              <div class="pc-icon-wrap"><i class="bi bi-shop-window"></i></div>
               <h4 class="pc-name">Local Mediano</h4>
               <p class="pc-size">3–5 escaparates</p>
             </div>
@@ -56,7 +56,7 @@
           <div class="pc-band"></div>
           <div class="pc-inner">
             <div class="pc-top">
-              <div class="pc-icon-wrap"><font-awesome-icon :icon="['fas', 'building']" /></div>
+              <div class="pc-icon-wrap"><i class="bi bi-building"></i></div>
               <h4 class="pc-name">Local Grande</h4>
               <p class="pc-size">Fachada completa</p>
             </div>
@@ -77,7 +77,7 @@
           <div class="pc-band"></div>
           <div class="pc-inner">
             <div class="pc-top">
-              <div class="pc-icon-wrap"><font-awesome-icon :icon="['fas', 'building-columns']" /></div>
+              <div class="pc-icon-wrap"><i class="bi bi-buildings"></i></div>
               <h4 class="pc-name">Apartamentos</h4>
               <p class="pc-size">Piso o apartamento</p>
             </div>
@@ -100,7 +100,7 @@
           </div>
           <div class="pc-inner">
             <div class="pc-top">
-              <div class="pc-icon-wrap"><font-awesome-icon :icon="['fas', 'house']" /></div>
+              <div class="pc-icon-wrap"><i class="bi bi-houses"></i></div>
               <h4 class="pc-name">Chalet</h4>
               <p class="pc-size">Unifamiliar con jardín</p>
             </div>
@@ -123,7 +123,7 @@
           <div class="pc-band"></div>
           <div class="pc-inner">
             <div class="pc-top">
-              <div class="pc-icon-wrap"><font-awesome-icon :icon="['fas', 'city']" /></div>
+              <div class="pc-icon-wrap"><i class="bi bi-building-fill"></i></div>
               <h4 class="pc-name">Hotel</h4>
               <p class="pc-size">Precio por habitación</p>
             </div>
@@ -248,10 +248,11 @@
   background: var(--cp);
   color: var(--cc);
   display: flex; align-items: center; justify-content: center;
-  font-size: 1.6rem;
+  font-size: 1.7rem;
   margin-bottom: 12px;
   transition: transform 0.2s;
 }
+.pc-icon-wrap i { line-height: 1; }
 .pc-card:hover .pc-icon-wrap { transform: scale(1.08); }
 .pc-name {
   font-family: 'Raleway', sans-serif; font-weight: 700;
