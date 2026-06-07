@@ -23,7 +23,7 @@
           <p class="svc-desc">Tiendas, cafeterías y locales siempre impecables, sin interrumpir tu actividad diaria.</p>
           <ul class="svc-list">
             <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Limpieza sin cerrar el negocio</li>
-            <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Frecuencia semanal o quincenal</li>
+            <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Frecuencia quincenal o mensual</li>
             <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Presupuesto personalizado gratis</li>
           </ul>
           <router-link to="/contacto" class="svc-btn svc-btn--blue">Consultar precio</router-link>
