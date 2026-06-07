@@ -1,8 +1,9 @@
-import imgInvierno  from '../assets/img/side-view-woman-cleaning-window.webp';
-import imgVerano    from '../assets/img/man-cleaning-windows.webp';
-import imgPrimavera from '../assets/img/housemaid-wearing.jpg';
-import imgOtono     from '../assets/img/hojas-otono.webp';
-import imgPaloma    from '../assets/img/paloma.webp';
+import imgInvierno     from '../assets/img/side-view-woman-cleaning-window.webp';
+import imgVerano       from '../assets/img/man-cleaning-windows.webp';
+import imgPrimavera    from '../assets/img/housemaid-wearing.jpg';
+import imgOtono        from '../assets/img/hojas-otono.webp';
+import imgPaloma       from '../assets/img/paloma.webp';
+import imgCintaAdhesiva from '../assets/img/cintaadhesiva.jpg';
 
 export const articles = [
   {
@@ -13,7 +14,7 @@ export const articles = [
     dateLabel: '7 de junio de 2026',
     season: 'Guía',
     icon: ['fas', 'spray-can'],
-    image: imgInvierno,
+    image: imgCintaAdhesiva,
     color: '#0891b2',
     colorPale: '#ecfeff',
     metaDescription: 'Aprende a quitar pegamento de un cristal paso a paso. Consejos profesionales para comercios, oficinas y comunidades de vecinos en Madrid.',
