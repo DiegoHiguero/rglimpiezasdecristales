@@ -6,6 +6,82 @@ import imgPaloma    from '../assets/img/paloma.webp';
 
 export const articles = [
   {
+    slug: 'como-quitar-pegamento-cristal',
+    title: 'Cómo quitar pegamento de un cristal: guía paso a paso',
+    excerpt: '¿Tienes restos de pegamento o adhesivos en tus cristales? Esta guía práctica te explica cómo eliminarlos sin rayar el vidrio, con productos que ya tienes en casa.',
+    date: '2026-06-07',
+    dateLabel: '7 de junio de 2026',
+    season: 'Guía',
+    icon: ['fas', 'spray-can'],
+    image: imgInvierno,
+    color: '#0891b2',
+    colorPale: '#ecfeff',
+    metaDescription: 'Aprende a quitar pegamento de un cristal paso a paso. Consejos profesionales para comercios, oficinas y comunidades de vecinos en Madrid.',
+    content: `
+      <h2>Por qué es tan común encontrar pegamento en los cristales esta primavera</h2>
+      <p>Con la llegada de la primavera, muchos comercios renuevan sus escaparates, las comunidades de vecinos limpian zonas comunes y las oficinas aprovechan para poner al día su imagen. Ese proceso casi siempre deja un rastro inevitable: <strong>restos de pegamento, cinta adhesiva o etiquetas</strong> pegadas en los cristales que parecen imposibles de retirar sin dañar el vidrio.</p>
+      <p>Lejos de ser un problema sin solución, quitar pegamento de un cristal es una tarea que se puede hacer de forma segura y eficaz si se siguen los pasos correctos y se usan los productos adecuados. En esta guía te lo explicamos todo.</p>
+      <h2>¿Qué tipos de adhesivos nos encontramos en los cristales?</h2>
+      <p>Antes de actuar, conviene identificar el tipo de residuo al que nos enfrentamos, porque no todos se eliminan de la misma manera:</p>
+      <ul>
+        <li><strong>Cinta adhesiva o de carrocero:</strong> deja un residuo gomoso que suele responder bien al calor o al alcohol.</li>
+        <li><strong>Etiquetas con adhesivo fuerte:</strong> habituales en escaparates y lunas de locales comerciales. Requieren productos disolventes suaves.</li>
+        <li><strong>Silicona o sellador:</strong> más rígida y gruesa; hay que retirarla mecánicamente antes de disolver el resto.</li>
+        <li><strong>Pegamento de contacto o supercola:</strong> el más difícil. Necesita acetona o disolventes específicos aplicados con mucho cuidado.</li>
+        <li><strong>Restos de vinilo o rotulación:</strong> frecuentes en comercios de Madrid que cambian su imagen de marca o campañas de temporada.</li>
+      </ul>
+      <h2>Materiales que necesitarás</h2>
+      <p>Antes de empezar, reúne todo lo que vas a necesitar para no interrumpir el proceso a mitad:</p>
+      <ul>
+        <li>Agua caliente y jabón lavavajillas</li>
+        <li>Alcohol isopropílico (de farmacia) o alcohol de 96°</li>
+        <li>Acetona (quitaesmalte sin color) para casos de supercola</li>
+        <li>Aceite de oliva o de bebé</li>
+        <li>Espátula de plástico o cuchilla de vidrio (con mucho cuidado)</li>
+        <li>Paños de microfibra limpios y secos</li>
+        <li>Secador de pelo o pistola de calor (opcional)</li>
+      </ul>
+      <p>Evita usar estropajos metálicos, lanas de acero o productos abrasivos: <strong>pueden rayar el cristal de forma permanente</strong> y arruinar el trabajo antes de empezar.</p>
+      <h2>Cómo quitar pegamento de un cristal paso a paso</h2>
+      <h3>Paso 1: Ablandar el adhesivo con calor</h3>
+      <p>El calor es tu mejor aliado en la mayoría de casos. Aplica el aire caliente del secador sobre la zona afectada durante 30 a 60 segundos, manteniendo una distancia de unos 10 cm. El adhesivo se ablandará y perderá adherencia. A continuación, intenta despegar el borde con la espátula de plástico haciendo movimientos suaves y constantes, sin presionar demasiado sobre el cristal.</p>
+      <p>Este método es especialmente eficaz con cintas adhesivas, etiquetas de papel y restos de vinilo. Si el adhesivo sigue resistiendo, repite la aplicación de calor antes de pasar al siguiente paso.</p>
+      <h3>Paso 2: Aplicar un disolvente adecuado</h3>
+      <p>Una vez retirada la mayor parte del adhesivo sólido, quedará un residuo gomoso o aceitoso en el cristal. Aquí es donde entran los disolventes:</p>
+      <ul>
+        <li><strong>Alcohol isopropílico:</strong> empapa un paño de microfibra y frota en círculos suaves sobre el residuo. Es seguro para la mayoría de cristales y no deja marcas.</li>
+        <li><strong>Aceite de oliva o de bebé:</strong> sorprendentemente eficaz con etiquetas y cintas adhesivas. Aplica, deja actuar 5 minutos y frota. Luego limpia con lavavajillas para eliminar la grasa.</li>
+        <li><strong>Acetona:</strong> reserva este producto para los casos de supercola o pegamento de contacto. Aplica solo en la zona afectada, déjalo actuar 1-2 minutos y retira con un paño. <strong>Evita el contacto prolongado con marcos de PVC o pinturas</strong> ya que puede dañarlos.</li>
+      </ul>
+      <h3>Paso 3: Retirar los restos con la espátula de vidrio</h3>
+      <p>Si tras aplicar el disolvente quedan todavía restos adheridos, puedes usar una cuchilla plana de vidrio (del tipo que se usa en cocinas de inducción) con mucho cuidado. El ángulo de ataque debe ser de unos 30 grados, siempre deslizando en una dirección, nunca con movimientos de sierra. Humedece ligeramente la superficie antes de pasar la cuchilla para reducir la fricción.</p>
+      <p>Este paso requiere práctica y paciencia. Si no te sientes seguro haciéndolo, es mejor parar aquí y llamar a un profesional: una mala pasada puede dejar un arañazo que no tiene reparación.</p>
+      <h3>Paso 4: Limpiar y pulir el cristal</h3>
+      <p>Una vez eliminado el pegamento, limpia toda la superficie con agua y lavavajillas para retirar cualquier resto de disolvente o grasa. Después, aplica un limpiacristales convencional o una solución de agua con un chorrito de vinagre blanco, y seca con un paño de microfibra en movimientos de arriba abajo.</p>
+      <p>El resultado debe ser un cristal completamente transparente, sin marcas ni halos. Si ves algún halo blanquecino, repite el paso con alcohol isopropílico.</p>
+      <h2>Errores comunes que debes evitar</h2>
+      <ul>
+        <li><strong>Usar lejía directamente:</strong> no disuelve el adhesivo y puede dejar manchas en los marcos.</li>
+        <li><strong>Frotar en seco:</strong> sin humedecer, el residuo se extiende y puede rayar el cristal.</li>
+        <li><strong>Aplicar acetona en exceso:</strong> puede dañar juntas, marcos de PVC y pinturas adyacentes.</li>
+        <li><strong>Usar objetos metálicos sin protección:</strong> cuchillas mal utilizadas son la causa más frecuente de arañazos irreparables.</li>
+        <li><strong>No probar el producto en una zona discreta:</strong> siempre testea en un rincón antes de aplicar en toda la superficie.</li>
+      </ul>
+      <h2>Cuándo es mejor llamar a un profesional</h2>
+      <p>Hay situaciones en las que el intento de retirar el pegamento por cuenta propia puede salir más caro que el problema original. Considera llamar a especialistas si:</p>
+      <ul>
+        <li>El adhesivo cubre una superficie grande, como la luna completa de un escaparate.</li>
+        <li>El cristal tiene tratamiento especial: antirreflejo, templado con lámina de seguridad o vidrio lacobel.</li>
+        <li>El residuo lleva mucho tiempo expuesto al sol y se ha endurecido o decolorado.</li>
+        <li>No tienes experiencia con cuchillas de vidrio y el riesgo de arañar es alto.</li>
+      </ul>
+      <p>En estos casos, un equipo profesional de limpiacristales con experiencia en locales comerciales, oficinas y comunidades de vecinos es la opción más segura y económica a largo plazo. En Madrid, donde muchos edificios tienen fachadas acristaladas de gran superficie, este tipo de trabajos requieren también las medidas de seguridad adecuadas.</p>
+      <h2>Royall Clean: limpieza profesional de cristales en Madrid</h2>
+      <p>En <strong>Royall Clean</strong> llevamos años ayudando a comercios, oficinas y comunidades de vecinos de Madrid a mantener sus cristales en perfecto estado durante todo el año. Desde la retirada de adhesivos y vinilos hasta la limpieza integral de fachadas y escaparates, nuestro equipo cuenta con los productos y la experiencia necesarios para cada tipo de superficie.</p>
+      <p>Si tienes cristales con restos de pegamento difíciles de quitar o simplemente quieres dejar esta tarea en manos de profesionales, <strong>llámanos al 696 169 435</strong>. Valoramos tu caso sin compromiso y te damos presupuesto en el mismo día.</p>
+    `,
+  },
+  {
     slug: 'limpieza-cristales-primavera-polen-pajaros-insectos',
     title: 'Limpieza de cristales en primavera: polen, pájaros e insectos',
     excerpt: 'La primavera trae tres enemigos al cristal de tu negocio: el polen, las heces de pájaros y los restos de insectos. Descubre cómo eliminar cada tipo de suciedad sin dañar la superficie y cuándo conviene llamar a los profesionales.',
