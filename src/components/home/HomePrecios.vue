@@ -14,7 +14,7 @@
           <div class="pc-band"></div>
           <div class="pc-inner">
             <div class="pc-top">
-              <div class="pc-icon-wrap"><font-awesome-icon :icon="['fas', 'store']" /></div>
+              <div class="pc-icon-wrap"><font-awesome-icon :icon="['fas', 'shop']" /></div>
               <h4 class="pc-name">Local Pequeño</h4>
               <p class="pc-size">1–2 escaparates</p>
             </div>
@@ -77,7 +77,7 @@
           <div class="pc-band"></div>
           <div class="pc-inner">
             <div class="pc-top">
-              <div class="pc-icon-wrap"><font-awesome-icon :icon="['fas', 'house']" /></div>
+              <div class="pc-icon-wrap"><font-awesome-icon :icon="['fas', 'building-columns']" /></div>
               <h4 class="pc-name">Apartamentos</h4>
               <p class="pc-size">Piso o apartamento</p>
             </div>

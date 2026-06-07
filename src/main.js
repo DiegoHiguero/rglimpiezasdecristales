@@ -93,6 +93,8 @@ import {
     faTriangleExclamation,
     faKey,
     faWandMagicSparkles,
+    faBuildingColumns,
+    faShop,
 } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
@@ -116,7 +118,7 @@ library.add(
     faComments, faComment, faBroom, faHandHoldingDollar,
     faChevronDown, faChevronUp, faChevronLeft, faChevronRight,
     faSolarPanel, faCalendarDays, faBell, faPlus,
-    faHouse, faBuilding, faStore,
+    faHouse, faBuilding, faBuildingColumns, faStore, faShop,
     faTag, faPaperPlane, faLock,
     faCirclePlay, faPlay,
     faStar, faHeart, faDroplet, faShieldHalved, faBolt,
