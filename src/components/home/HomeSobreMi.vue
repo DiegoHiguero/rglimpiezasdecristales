@@ -84,7 +84,7 @@
 <style scoped>
 /* ── NOSOTROS ── */
 .texto-principal-nosotros {
-  background: var(--slate);
+  background: var(--white);
   margin: 12px 15px 0;
   padding: 40px 40px 28px;
   border-radius: var(--r-lg) var(--r-lg) 0 0;
@@ -228,7 +228,7 @@
 
 /* ── INFO CARDS ── */
 .info-cards {
-  background: var(--slate);
+  background: var(--white);
   margin: 0 15px;
   padding: 4px 28px 32px;
   border-radius: 0 0 var(--r-lg) var(--r-lg);

@@ -108,7 +108,7 @@
 </script>
 
 <style scoped>
-.section2 { background: var(--slate); border-radius: var(--r-lg); margin: 12px 15px; }
+.section2 { background: var(--white); border-radius: var(--r-lg); margin: 12px 15px; }
 
 .svc-label {
   display: inline-block;

@@ -117,7 +117,7 @@
 
 <style scoped>
 .svc-section {
-  background: var(--slate);
+  background: var(--white);
   margin: 12px 15px;
   padding: 40px 28px 32px;
   border-radius: var(--r-lg);

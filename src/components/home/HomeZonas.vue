@@ -85,7 +85,7 @@ const zonas = [
 
 <style scoped>
 .zonas-section {
-  background: var(--slate);
+  background: var(--white);
   margin: 12px 15px;
   border-radius: var(--r-lg);
   overflow: hidden;
