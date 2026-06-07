@@ -386,7 +386,8 @@ gtag('config', 'G-PXB9NMPZQ0');
     <script>
       (function(){
         var s = localStorage.getItem('rc-theme');
-        if(s === 'dark') document.documentElement.setAttribute('data-theme','dark');
+        document.documentElement.setAttribute('data-theme', s === 'dark' ? 'dark' : 'light');
+        if (!s) localStorage.setItem('rc-theme', 'light');
       })();
     </script>
     <script type="module" src="/src/main.js"></script>

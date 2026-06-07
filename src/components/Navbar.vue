@@ -25,13 +25,13 @@
         </ul>
 
         <div class="nav-right">
-          <button class="icon-btn theme-toggle" @click="toggleTheme" :title="isDark ? 'Modo claro' : 'Modo oscuro'">
-            <font-awesome-icon :icon="['fas', isDark ? 'sun' : 'moon']" />
-          </button>
-
           <router-link to="/contacto" class="cta-btn" @click="closeNavbar">
             Presupuesto gratis
           </router-link>
+
+          <button class="icon-btn theme-toggle" @click="toggleTheme" :title="isDark ? 'Modo claro' : 'Modo oscuro'">
+            <font-awesome-icon :icon="['fas', isDark ? 'sun' : 'moon']" />
+          </button>
 
           <template v-if="userStore.userData?.email">
             <router-link v-if="isAdmin(userStore.userData.email)"
