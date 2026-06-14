@@ -1,8 +1,8 @@
 <template>
   <div class="svc-section" id="servicios">
 
+    <span class="svc-label">Lo que hacemos</span>
     <div class="svc-header">
-      <span class="svc-label">Lo que hacemos</span>
       <h2 class="svc-title">Limpieza <span class="svc-accent">profesional</span><br>para cada espacio</h2>
       <p class="svc-subtitle">Sin andamios, sin complicaciones — trabajamos sin interrumpir tu día a día</p>
     </div>

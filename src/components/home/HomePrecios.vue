@@ -2,8 +2,8 @@
   <section class="section2" id="precios">
     <div class="container py-3">
 
+      <span class="svc-label">Tarifas</span>
       <div class="pricing-header">
-        <span class="svc-label">Tarifas</span>
         <h2 class="pricing-title">Precios claros,<br><span class="pricing-accent">sin sorpresas</span></h2>
         <p class="pricing-sub">Tarifas orientativas — cada presupuesto es personalizado y gratuito.</p>
       </div>

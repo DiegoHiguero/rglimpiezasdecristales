@@ -1,10 +1,10 @@
 <template>
   <div class="galeria-wrap">
 
+    <span class="gl-label">
+      <font-awesome-icon :icon="['fas', 'images']" class="me-1" />Portfolio
+    </span>
     <div class="gl-header">
-      <span class="gl-label">
-        <font-awesome-icon :icon="['fas', 'images']" class="me-1" />Portfolio
-      </span>
       <h2 class="gl-title">Trabajos <span class="gl-accent">realizados</span></h2>
       <p class="gl-sub">Cada foto es un cliente satisfecho en Madrid y alrededores</p>
     </div>

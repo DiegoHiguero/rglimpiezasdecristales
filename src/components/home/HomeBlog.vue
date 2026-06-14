@@ -1,11 +1,11 @@
 <template>
   <section class="hb-section">
 
+    <span class="hb-label">
+      <font-awesome-icon :icon="['fas', 'book-open']" class="me-1" />
+      Blog &amp; Consejos
+    </span>
     <div class="hb-header">
-      <span class="hb-label">
-        <font-awesome-icon :icon="['fas', 'book-open']" class="me-1" />
-        Blog &amp; Consejos
-      </span>
       <h2 class="hb-title">Guías de <span class="hb-accent">limpieza de cristales</span></h2>
       <p class="hb-sub">Consejos profesionales para cada época del año</p>
     </div>

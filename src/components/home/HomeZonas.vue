@@ -1,11 +1,11 @@
 <template>
   <section class="zonas-section">
 
+    <span class="zonas-label">
+      <font-awesome-icon :icon="['fas', 'location-dot']" class="me-1" />
+      Cobertura geográfica
+    </span>
     <div class="zonas-header">
-      <span class="zonas-label">
-        <font-awesome-icon :icon="['fas', 'location-dot']" class="me-1" />
-        Cobertura geográfica
-      </span>
       <h2 class="zonas-title">Limpieza de cristales en <span class="zonas-accent">toda la Comunidad de Madrid</span></h2>
       <p class="zonas-sub">
         Realizamos limpieza de cristales y ventanas en Madrid capital y en todos los municipios del área metropolitana.
