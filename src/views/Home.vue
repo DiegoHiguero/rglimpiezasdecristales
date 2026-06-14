@@ -265,7 +265,7 @@ function getCookie(cname: string): string {
 
 /* ── HERO ── */
 .principal {
-  background: url('../assets/img/office-buildings.webp') center/cover no-repeat;
+  background: url('../assets/img/fondo_jabon.png') center/cover no-repeat;
   background-color: #0f1729;
   position: relative;
   overflow: hidden;
