@@ -234,9 +234,9 @@ onUnmounted(() => {
 }
 
 /* ── Header ── */
-.gl-header { text-align: left; margin-bottom: 28px; }
+.gl-header { text-align: center; margin-bottom: 28px; }
 .gl-label {
-  display: inline-flex; align-items: center;
+  display: flex; width: fit-content; align-items: center;
   background: var(--blue-pale); color: var(--blue);
   font-family: 'Raleway', sans-serif; font-size: 0.72rem;
   font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase;

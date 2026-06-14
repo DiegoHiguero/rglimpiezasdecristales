@@ -163,13 +163,14 @@
 .section2 { background: var(--white); border-radius: var(--r-lg); margin: 12px 20px; }
 
 .svc-label {
-  display: inline-block;
+  display: block;
+  width: fit-content;
   background: var(--blue-pale); color: var(--blue);
   font-family: 'Raleway', sans-serif; font-size: 0.72rem;
   font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase;
   padding: 5px 14px; border-radius: 20px; margin-bottom: 12px;
 }
-.pricing-header { text-align: left; padding: 40px 20px 24px; }
+.pricing-header { text-align: center; padding: 40px 20px 24px; }
 .pricing-title { font-family: 'Anton', sans-serif; font-size: 2.6rem; color: var(--text); line-height: 1.15; margin: 14px 0 16px; }
 .pricing-accent { color: var(--blue); }
 .pricing-sub { font-family: 'Raleway', sans-serif; font-size: 1rem; color: var(--text-muted); max-width: 540px; margin: 0 auto 28px; line-height: 1.7; }

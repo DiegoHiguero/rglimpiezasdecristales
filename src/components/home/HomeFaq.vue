@@ -39,9 +39,10 @@ const faqs = [
   padding: 40px 28px 32px;
   border-radius: var(--r-lg);
 }
-.faq-header { text-align: left; margin-bottom: 24px; }
+.faq-header { text-align: center; margin-bottom: 24px; }
 .svc-label {
-  display: inline-block;
+  display: block;
+  width: fit-content;
   background: var(--blue-pale);
   color: var(--blue);
   font-family: 'Raleway', sans-serif;

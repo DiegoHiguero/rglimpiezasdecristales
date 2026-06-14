@@ -94,12 +94,13 @@ const zonas = [
 
 /* ── Header ── */
 .zonas-header {
-  text-align: left;
+  text-align: center;
   margin-bottom: 36px;
 }
 
 .zonas-label {
-  display: inline-flex;
+  display: flex;
+  width: fit-content;
   align-items: center;
   gap: 6px;
   background: var(--blue-pale);

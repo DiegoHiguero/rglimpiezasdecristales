@@ -80,11 +80,11 @@ const latest = computed(() => articles.slice(0, 3));
 }
 
 .hb-header {
-  text-align: left;
+  text-align: center;
   margin-bottom: 32px;
 }
 .hb-label {
-  display: inline-flex; align-items: center; gap: 6px;
+  display: flex; width: fit-content; align-items: center; gap: 6px;
   background: var(--blue-pale); color: var(--blue);
   font-family: 'Raleway', sans-serif; font-size: 0.72rem;
   font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase;

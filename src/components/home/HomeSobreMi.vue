@@ -133,7 +133,8 @@
 }
 .ns-content { display: flex; flex-direction: column; }
 .ns-label {
-  display: inline-flex;
+  display: flex;
+  width: fit-content;
   align-items: center;
   background: var(--blue-pale);
   color: var(--blue);
