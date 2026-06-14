@@ -170,7 +170,7 @@
   font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase;
   padding: 5px 14px; border-radius: 20px; margin-bottom: 12px;
 }
-.pricing-header { text-align: center; padding: 40px 20px 24px; }
+.pricing-header { text-align: center; padding: 40px 0 24px; }
 .pricing-title { font-family: 'Anton', sans-serif; font-size: 2.6rem; color: var(--text); line-height: 1.15; margin: 14px 0 16px; }
 .pricing-accent { color: var(--blue); }
 .pricing-sub { font-family: 'Raleway', sans-serif; font-size: 1rem; color: var(--text-muted); max-width: 540px; margin: 0 auto 28px; line-height: 1.7; }
