@@ -28,6 +28,29 @@
 
       <div class="article-content" v-html="purify(article.content)"></div>
 
+      <div class="article-share">
+        <span class="share-label">Compartir</span>
+        <a :href="`https://wa.me/?text=${encodeURIComponent(article.title + ' — ' + pageUrl)}`"
+           target="_blank" rel="noopener noreferrer" class="share-btn share-btn--wa" aria-label="Compartir en WhatsApp">
+          <font-awesome-icon :icon="['fab', 'whatsapp']" />
+        </a>
+        <a :href="`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(pageUrl)}`"
+           target="_blank" rel="noopener noreferrer" class="share-btn share-btn--fb" aria-label="Compartir en Facebook">
+          <font-awesome-icon :icon="['fab', 'facebook-f']" />
+        </a>
+        <a :href="`https://twitter.com/intent/tweet?text=${encodeURIComponent(article.title)}&url=${encodeURIComponent(pageUrl)}`"
+           target="_blank" rel="noopener noreferrer" class="share-btn share-btn--x" aria-label="Compartir en X">
+          <font-awesome-icon :icon="['fab', 'x-twitter']" />
+        </a>
+        <a :href="`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(pageUrl)}`"
+           target="_blank" rel="noopener noreferrer" class="share-btn share-btn--li" aria-label="Compartir en LinkedIn">
+          <font-awesome-icon :icon="['fab', 'linkedin-in']" />
+        </a>
+        <button class="share-btn share-btn--copy" @click="copyLink" :aria-label="copied ? 'Enlace copiado' : 'Copiar enlace'">
+          <font-awesome-icon :icon="['fas', copied ? 'check' : 'link']" />
+        </button>
+      </div>
+
       <div class="article-cta">
         <div class="article-cta-inner">
           <h2 class="article-cta-title">¿Necesitas una limpieza profesional?</h2>
@@ -76,12 +99,20 @@
 </template>
 
 <script setup>
-import { computed, onMounted, onUnmounted, watch } from 'vue';
+import { computed, onMounted, onUnmounted, watch, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { articles, getArticleBySlug } from '../data/blog.js';
 import DOMPurify from 'dompurify';
 
 const purify = (html) => DOMPurify.sanitize(html, { USE_PROFILES: { html: true } });
+
+const pageUrl = computed(() => `https://royallclean.es/blog/${route.params.slug}`);
+const copied = ref(false);
+const copyLink = async () => {
+  await navigator.clipboard.writeText(pageUrl.value);
+  copied.value = true;
+  setTimeout(() => { copied.value = false; }, 2000);
+};
 
 const route = useRoute();
 const article = computed(() => getArticleBySlug(route.params.slug));
@@ -369,6 +400,40 @@ onUnmounted(() => { if (schemaEl) { schemaEl.remove(); schemaEl = null; } });
   margin-top: 2px;
 }
 
+/* ── Share ── */
+.article-share {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 20px 40px;
+  border-top: 1px solid var(--border);
+}
+.share-label {
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-right: 4px;
+}
+.share-btn {
+  width: 36px; height: 36px;
+  border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.9rem;
+  text-decoration: none;
+  border: none; cursor: pointer;
+  transition: transform 0.2s, opacity 0.2s;
+  color: #fff;
+}
+.share-btn:hover { transform: translateY(-2px); opacity: 0.88; }
+.share-btn--wa  { background: #25d366; }
+.share-btn--fb  { background: #1877f2; }
+.share-btn--x   { background: #000; }
+.share-btn--li  { background: #0a66c2; }
+.share-btn--copy { background: var(--blue-pale); color: var(--blue); }
+
 .article-notfound {
   text-align: center; padding: 80px 20px;
   font-family: 'Raleway', sans-serif; color: var(--text-muted);
@@ -382,6 +447,7 @@ onUnmounted(() => { if (schemaEl) { schemaEl.remove(); schemaEl = null; } });
   .article-cta { padding: 24px 20px; }
   .article-related { padding: 24px 20px 28px; }
   .article-btn { flex: 1; justify-content: center; }
+  .article-share { padding: 16px 20px; }
   .breadcrumb-current { max-width: 160px; }
 }
 </style>
