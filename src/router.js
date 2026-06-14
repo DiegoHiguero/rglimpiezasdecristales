@@ -38,7 +38,7 @@ const requiereAuth = async(to,from,next) => {
     }
 };
 
-// Guarda para rutas que requieren autenticación Y ser 'higuerodiego@gmail.com' o 'familiahiguero@gmail.com'
+// Guarda para rutas que requieren autenticación de administrador
 const requiereAuth2 = async(to,from,next) => {
     const userStore = useUserStore();
     const user = await userStore.currentUser(); // Esperamos a que el estado del usuario esté definido
@@ -46,10 +46,7 @@ const requiereAuth2 = async(to,from,next) => {
     // **MODIFICACIÓN CLAVE:**
     // Aseguramos que 'user' no sea null/undefined antes de intentar acceder a 'user.email'.
     // Los paréntesis son cruciales para que el 'OR' se evalúe correctamente dentro del 'AND'.
-    const isAllowedAdmin = user && (
-        user.email === "higuerodiego@gmail.com" ||
-        user.email === "roys.abreu@gmail.com"
-    );
+    const isAllowedAdmin = user && user.email === "roys.abreu@gmail.com";
 
     if(isAllowedAdmin){
         next(); // Usuario es un administrador permitido, permite el acceso

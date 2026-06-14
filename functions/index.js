@@ -11,7 +11,7 @@ exports.getTodayCalendarEvents = onCall(async (request) => {
     throw new HttpsError('unauthenticated', 'Se requiere autenticación.');
   }
 
-  const allowedEmails = ['higuerodiego@gmail.com', 'roys.abreu@gmail.com'];
+  const allowedEmails = ['roys.abreu@gmail.com'];
   const email = request.auth.token.email;
   if (!allowedEmails.includes(email)) {
     throw new HttpsError('permission-denied', 'Acceso no autorizado.');

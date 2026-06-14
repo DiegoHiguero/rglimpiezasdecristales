@@ -206,7 +206,7 @@ export const useUserStore = defineStore('userStore', {
         isAdminUser(user) {
             if (!user || !user.email) return false;
             // Asegúrate de que los emails coincidan con tus admins
-            return user.email === 'higuerodiego@gmail.com' || user.email === 'roys.abreu@gmail.com';
+            return user.email === 'roys.abreu@gmail.com';
         },
 
         // NUEVO: Acción para iniciar la escucha de mensajes no leídos

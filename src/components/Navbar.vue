@@ -87,7 +87,7 @@ const toggleTheme = () => {
 };
 
 const isAdmin = (email) =>
-  email === 'higuerodiego@gmail.com' || email === 'roys.abreu@gmail.com';
+  email === 'roys.abreu@gmail.com';
 
 const closeNavbar = () => {
   const menu = document.getElementById('navMenu');
