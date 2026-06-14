@@ -23,9 +23,12 @@ service cloud.firestore {
   allow read, update, delete, create: if isSignedInAsAdmin();
 }
     match /mensajes/{document} {
-      // Permite que cualquier usuario cree un documento (para el formulario de contacto público)
-      allow create;
-      // Solo los administradores pueden leer, actualizar o eliminar mensajes
+      allow create: if
+        request.resource.data.keys().hasAll(['nombre', 'email', 'mensaje']) &&
+        request.resource.data.nombre is string && request.resource.data.nombre.size() > 0 && request.resource.data.nombre.size() <= 100 &&
+        request.resource.data.email is string && request.resource.data.email.size() > 0 && request.resource.data.email.size() <= 200 &&
+        request.resource.data.mensaje is string && request.resource.data.mensaje.size() > 0 && request.resource.data.mensaje.size() <= 2000 &&
+        request.resource.data.keys().size() <= 6;
       allow read, update, delete: if isSignedInAsAdmin();
     }
   }

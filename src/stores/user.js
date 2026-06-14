@@ -262,7 +262,6 @@ export const useUserStore = defineStore('userStore', {
                         const result = await signInWithPopup(auth, provider);
                         const credential = GoogleAuthProvider.credentialFromResult(result);
                         this.googleAccessToken = credential.accessToken;
-                        console.log("DEBUG: Google Calendar accessToken re-adquirido.");
                     } catch (error) {
                         console.error("Error al re-adquirir accessToken:", error);
                         this.mensajeAlerta("No se pudo obtener el token de acceso de Google.");
@@ -298,9 +297,7 @@ export const useUserStore = defineStore('userStore', {
             try {
                 const functions = getFunctions();
                 const getEvents = httpsCallable(functions, 'getTodayCalendarEvents');
-                console.log("DEBUG: Llamando a Cloud Function...");
                 const result = await getEvents({ accessToken: this.googleAccessToken });
-                console.log("DEBUG: Eventos recibidos:", result.data);
                 return Array.isArray(result.data) ? result.data : [];
             } catch (error) {
                 console.error("Error al obtener eventos:", error);

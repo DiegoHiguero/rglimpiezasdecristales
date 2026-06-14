@@ -26,7 +26,7 @@
         <img :src="article.image" :alt="article.title" loading="eager" />
       </div>
 
-      <div class="article-content" v-html="article.content"></div>
+      <div class="article-content" v-html="purify(article.content)"></div>
 
       <div class="article-cta">
         <div class="article-cta-inner">
@@ -79,6 +79,9 @@
 import { computed, onMounted, onUnmounted, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { articles, getArticleBySlug } from '../data/blog.js';
+import DOMPurify from 'dompurify';
+
+const purify = (html) => DOMPurify.sanitize(html, { USE_PROFILES: { html: true } });
 
 const route = useRoute();
 const article = computed(() => getArticleBySlug(route.params.slug));

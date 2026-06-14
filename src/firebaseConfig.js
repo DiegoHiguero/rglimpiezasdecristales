@@ -46,7 +46,7 @@ if (!getApps().length) {
 } else {
   // Si ya hay una aplicación, la recuperamos.
   firebaseAppInstance = getApp();
-  console.log("DEBUG FirebaseConfig: Firebase App ya estaba inicializada, recuperando la instancia existente.");
+  // Firebase App ya estaba inicializada, recuperando la instancia existente.
 }
 
 // *** ¡Añadamos un console.log justo antes de la línea problematica! ***
