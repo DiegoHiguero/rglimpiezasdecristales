@@ -99,4 +99,18 @@ export default defineConfig({
     vue(),
     injectBlogHtmlPlugin(),
   ],
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes('firebase')) return 'firebase';
+          if (id.includes('mapbox')) return 'mapbox';
+          if (id.includes('jspdf') || id.includes('html2canvas')) return 'pdf';
+          if (id.includes('sweetalert') || id.includes('ant-design-vue') || id.includes('@syncfusion')) return 'ui-extra';
+          if (id.includes('@fortawesome') || id.includes('bootstrap-icons')) return 'icons';
+          if (id.includes('node_modules')) return 'vendor';
+        },
+      },
+    },
+  },
 })

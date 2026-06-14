@@ -43,7 +43,7 @@
           <h6 class="ft-heading">Páginas amigas</h6>
           <ul>
             <li class="ft-friend-item">
-              <a href="https://toucanet.fr/" target="_blank" rel="noopener noreferrer" class="ft-friend-link">
+              <a href="https://toucanet.fr/" target="_blank" rel="nofollow noopener noreferrer" class="ft-friend-link">
                 <img src="../assets/img/toucanet-logo.png" alt="Toucanet.fr" class="ft-friend-logo" />
                 <span>Toucanet.fr</span>
               </a>
