@@ -124,7 +124,7 @@ const enviarMensaje = async () => {
 
 <style scoped>
 .ct-wrap { min-height: calc(100vh - 54px); padding: 52px 16px 72px; background: #151515; display: flex; flex-direction: column; align-items: center; }
-.ct-header { text-align: center; max-width: 600px; margin-bottom: 40px; }
+.ct-header { text-align: left; max-width: 700px; margin-bottom: 40px; }
 .ct-label { display: inline-block; font-family: 'Raleway', sans-serif; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #60a5fa; background: rgba(96,165,250,0.1); border: 1px solid rgba(96,165,250,0.2); border-radius: 20px; padding: 4px 14px; margin-bottom: 16px; }
 .ct-title { font-family: 'Anton', sans-serif; font-size: 2.8rem; color: #fff; line-height: 1.1; margin: 0 0 14px; }
 .ct-accent { color: #60a5fa; }
