@@ -329,33 +329,38 @@ ul.navbar-nav {
 
   .navbar-collapse {
     position: absolute;
-    top: 54px;
-    left: 0;
-    right: 0;
-    background: rgba(12, 20, 38, 0.97);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-bottom: 1px solid rgba(255,255,255,0.07);
-    padding: 12px 16px 18px;
+    top: 60px;
+    right: 12px;
+    left: auto;
+    width: auto;
+    min-width: 230px;
+    background: rgba(10, 17, 34, 0.98);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 14px;
+    box-shadow: 0 16px 48px rgba(0,0,0,0.55);
+    padding: 10px 10px 12px;
   }
 
   ul.navbar-nav {
     flex-direction: column;
     align-items: stretch;
-    gap: 2px;
-    margin-bottom: 14px;
+    gap: 1px;
+    margin-bottom: 8px;
   }
 
   .nl {
-    padding: 11px 14px;
-    font-size: 0.95rem;
+    padding: 10px 14px;
+    font-size: 0.9rem;
     border-radius: 8px;
+    white-space: nowrap;
   }
 
   .nav-right {
     flex-wrap: wrap;
-    gap: 8px;
-    padding-top: 14px;
+    gap: 6px;
+    padding-top: 10px;
     border-top: 1px solid rgba(255, 255, 255, 0.07);
     margin-left: 0;
   }
@@ -363,13 +368,22 @@ ul.navbar-nav {
   .cta-btn {
     flex: 1;
     text-align: center;
-    padding: 10px 16px;
-    font-size: 0.9rem;
-    border-radius: 10px;
+    padding: 9px 14px;
+    font-size: 0.85rem;
+    border-radius: 9px;
   }
 
-  .icon-btn { width: 38px; height: 38px; font-size: 1rem; border-radius: 8px; }
+  .icon-btn { width: 36px; height: 36px; font-size: 0.95rem; border-radius: 8px; }
 
   .logo { height: 42px; }
+}
+
+@media (max-width: 400px) {
+  .navbar-collapse {
+    right: 8px;
+    left: 8px;
+    min-width: 0;
+    width: auto;
+  }
 }
 </style>
