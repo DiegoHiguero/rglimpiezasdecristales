@@ -53,7 +53,10 @@
       </div>
       <div class="ft-divider"></div>
       <div class="ft-bottom">
-        <span class="ft-copy">© 2026 Royall Clean · Todos los derechos reservados</span>
+        <span class="ft-copy">
+          © 2026 Royall Clean · Todos los derechos reservados
+          <router-link v-if="!userStore.userData" to="/login" class="ft-login-ghost" tabindex="-1">·</router-link>
+        </span>
 
         <div class="ft-weather" v-if="!loading && weatherInfo">
           <span class="ft-weather-emoji">{{ weatherInfo.emoji }}</span>
@@ -71,6 +74,9 @@
 <script setup>
 import { RouterLink } from 'vue-router';
 import { ref, onMounted, computed } from 'vue';
+import { useUserStore } from '../stores/user';
+
+const userStore = useUserStore();
 
 const temp = ref(null);
 const weatherCode = ref(null);
@@ -126,6 +132,8 @@ footer { margin: 0 15px 15px; font-family: 'Raleway', sans-serif; }
 .ft-divider { height: 1px; background: rgba(255,255,255,0.06); margin-bottom: 22px; }
 .ft-bottom { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
 .ft-copy, .ft-location { font-size: 0.75rem; color: #475569; }
+.ft-login-ghost { color: #1e293b; text-decoration: none; margin-left: 4px; transition: color 0.2s; }
+.ft-login-ghost:hover { color: #475569; }
 .ft-weather { display: flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07); border-radius: 20px; padding: 4px 12px; }
 .ft-weather-emoji { font-size: 0.95rem; line-height: 1; }
 .ft-weather-temp { font-size: 0.75rem; font-weight: 700; color: #94a3b8; }

@@ -53,9 +53,6 @@
             </button>
           </template>
 
-          <router-link v-else to="/login" class="icon-btn login-ghost">
-            <font-awesome-icon :icon="['fas', 'lock']" />
-          </router-link>
         </div>
       </div>
 
@@ -300,8 +297,6 @@ ul.navbar-nav {
 .theme-toggle { color: rgba(255,255,255,0.65); font-size: 0.9rem; }
 .theme-toggle:hover { color: #fbbf24; background: rgba(251,191,36,0.1); }
 
-.login-ghost { color: rgba(255,255,255,0.12); font-size: 0.7rem; }
-.login-ghost:hover { color: rgba(255,255,255,0.45); background: transparent; }
 
 
 .msg-btn { position: relative; }
