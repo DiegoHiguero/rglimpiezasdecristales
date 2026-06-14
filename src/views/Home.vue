@@ -5,27 +5,38 @@
     <div class="row d-flex justify-content-center ms-3 mx-3 bg-image principal mt-3 bg-body-tertiary rounded-4 align-items-md-stretch">
 
       <div class="col-md-6 p-3 d-flex flex-column justify-content-center">
+
+        <div class="hero-badge">
+          <font-awesome-icon :icon="['fas', 'shield-halved']" class="me-1" />
+          Empresa de confianza en Madrid
+        </div>
+
         <h1 class="display-4 p-3 fs-1">
           <span class="prof">Limpieza de cristales y ventanas en Madrid</span>
-          <span class="textAnimation d-block mt-2">Más de 10 años de experiencia profesional</span>
+          <span class="textAnimation d-block mt-2">Escaparates · ventanas · fachadas · comunidades</span>
         </h1>
-        <h2 class="p-3" style="color: #fff;">
-          EN ROYALL CLEAN HACEMOS LA DIFERENCIA.
-        </h2>
+
+        <p class="hero-desc px-3">
+          Dejamos tus cristales impecables en hogares, locales y comunidades de vecinos.<br>
+          Cubrimos toda la Comunidad de Madrid. Presupuesto gratis en menos de 24 h.
+        </p>
+
+        <div class="hero-proof px-3">
+          <div class="proof-stars">
+            <font-awesome-icon :icon="['fas', 'star']" v-for="i in 5" :key="i" />
+          </div>
+          <span class="proof-text"><strong>5/5 en Google</strong> · Más de 10 años de experiencia</span>
+        </div>
+
         <div class="p-3 d-flex flex-wrap gap-2">
           <a href="tel:+34696169435" class="btn btn-light fw-bold px-4">
-            <font-awesome-icon :icon="['fas', 'phone']" class="me-2" />Llamar ahora
+            <font-awesome-icon :icon="['fas', 'phone']" class="me-2" />696 169 435
           </a>
           <router-link to="/contacto" class="btn btn-outline-light fw-bold px-4">
             Presupuesto gratis
           </router-link>
         </div>
-        <div class="px-3 pb-3">
-          <span class="trust-badge">
-            <font-awesome-icon :icon="['fas', 'check']" class="me-1" />
-            Servicio profesional · Madrid y alrededores
-          </span>
-        </div>
+
       </div>
 
       <div class="col-md-6 d-flex align-items-center justify-content-center py-4" style="z-index:2;">
@@ -284,6 +295,47 @@ function getCookie(cname: string): string {
 }
 .principal > * { position: relative; z-index: 2; }
 .prof { color: #fff; text-shadow: 0 2px 18px rgba(0,0,0,0.8); }
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  background: rgba(37,99,235,0.18);
+  border: 1px solid rgba(96,165,250,0.3);
+  color: #93c5fd;
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 5px 14px;
+  border-radius: 20px;
+  margin: 0 0 4px 12px;
+  width: fit-content;
+}
+.hero-desc {
+  color: rgba(255,255,255,0.8);
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.97rem;
+  line-height: 1.7;
+  margin: 0 0 14px;
+}
+.hero-proof {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+.proof-stars {
+  color: #fbbf24;
+  font-size: 0.85rem;
+  display: flex;
+  gap: 2px;
+}
+.proof-text {
+  color: rgba(255,255,255,0.65);
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.82rem;
+}
+.proof-text strong { color: #fff; }
 .textAnimation {
   background: linear-gradient(90deg, #60a5fa 0%, #93c5fd 50%, #60a5fa 100%);
   background-size: 200% auto;
@@ -398,12 +450,6 @@ function getCookie(cname: string): string {
   font-size: 0.68rem; font-weight: 600;
 }
 
-.trust-badge {
-  display: inline-flex; align-items: center; gap: 6px;
-  background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.28);
-  color: #fff; padding: 5px 16px; border-radius: 20px;
-  font-size: 0.82rem; font-family: 'Raleway', sans-serif; backdrop-filter: blur(4px);
-}
 
 /* â”€â”€ FORMULARIO MODO CLARO â”€â”€ */
 :root:not([data-theme="dark"]) .formulario {
