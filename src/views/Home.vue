@@ -288,7 +288,7 @@ function getCookie(cname: string): string {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, rgba(15,23,41,0.75) 0%, rgba(37,99,235,0.35) 100%);
+  background: linear-gradient(135deg, rgba(15,23,41,0.88) 0%, rgba(37,99,235,0.35) 100%);
   border-radius: inherit;
   z-index: 1;
   pointer-events: none;
@@ -312,11 +312,12 @@ function getCookie(cname: string): string {
   width: fit-content;
 }
 .hero-desc {
-  color: rgba(255,255,255,0.8);
+  color: rgba(255,255,255,0.9);
   font-family: 'Raleway', sans-serif;
   font-size: 0.97rem;
   line-height: 1.7;
   margin: 0 0 14px;
+  text-shadow: 0 1px 8px rgba(0,0,0,0.6);
 }
 .hero-proof {
   display: flex;
