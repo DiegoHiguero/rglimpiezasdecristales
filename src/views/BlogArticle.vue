@@ -36,7 +36,7 @@
         </a>
         <a :href="`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(pageUrl)}`"
            target="_blank" rel="noopener noreferrer" class="share-btn share-btn--fb" aria-label="Compartir en Facebook">
-          <font-awesome-icon :icon="['fab', 'facebook-f']" />
+          <font-awesome-icon :icon="['fab', 'facebook']" />
         </a>
         <a :href="`https://twitter.com/intent/tweet?text=${encodeURIComponent(article.title)}&url=${encodeURIComponent(pageUrl)}`"
            target="_blank" rel="noopener noreferrer" class="share-btn share-btn--x" aria-label="Compartir en X">
@@ -44,7 +44,7 @@
         </a>
         <a :href="`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(pageUrl)}`"
            target="_blank" rel="noopener noreferrer" class="share-btn share-btn--li" aria-label="Compartir en LinkedIn">
-          <font-awesome-icon :icon="['fab', 'linkedin-in']" />
+          <font-awesome-icon :icon="['fab', 'linkedin']" />
         </a>
         <button class="share-btn share-btn--copy" @click="copyLink" :aria-label="copied ? 'Enlace copiado' : 'Copiar enlace'">
           <font-awesome-icon :icon="['fas', copied ? 'check' : 'link']" />
