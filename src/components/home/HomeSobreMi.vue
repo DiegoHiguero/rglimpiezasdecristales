@@ -1,6 +1,9 @@
 <template>
   <!-- Nosotros -->
   <div class="texto-principal-nosotros" id="texto-principal">
+    <span class="ns-label">
+      <font-awesome-icon :icon="['fas', 'user-tie']" class="me-2" />Sobre mí
+    </span>
     <div class="ns-grid">
       <div class="ns-img-wrap animate-on-scroll">
         <img class="ns-img" src="../../assets/img/yomismo.webp"
@@ -12,9 +15,6 @@
         </div>
       </div>
       <div class="ns-content animate-on-scroll">
-        <span class="ns-label">
-          <font-awesome-icon :icon="['fas', 'user-tie']" class="me-2" />Sobre mí
-        </span>
         <h2 class="ns-title">¡Hola, soy<br><span class="ns-title-accent">Roys Abreu!</span></h2>
         <p class="ns-role">Autónomo especializado · Royall Clean · Madrid y área metropolitana</p>
         <p class="ns-text">Soy un profesional autónomo con más de 10 años especializándome en la limpieza de cristales y fachadas. En Royall Clean me comprometo a ofrecer un servicio impecable, eficiente y de confianza, adaptado a cada cliente — residencial o empresarial. No solo obtienes limpieza: obtienes tranquilidad y resultados que se ven.</p>
@@ -135,7 +135,6 @@
 .ns-label {
   display: flex;
   width: fit-content;
-  align-self: flex-start;
   align-items: center;
   background: var(--blue-pale);
   color: var(--blue);
@@ -146,8 +145,7 @@
   text-transform: uppercase;
   padding: 5px 14px;
   border-radius: 20px;
-  margin-bottom: 18px;
-  width: fit-content;
+  margin-bottom: 24px;
 }
 .ns-title {
   font-family: 'Anton', sans-serif;
