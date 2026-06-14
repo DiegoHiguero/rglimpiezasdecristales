@@ -55,7 +55,7 @@
       <div class="ft-bottom">
         <span class="ft-copy">
           © 2026 Royall Clean · Todos los derechos reservados
-          <router-link v-if="!userStore.userData" to="/login" class="ft-login-ghost" tabindex="-1">
+          <router-link v-if="!userStore.userData?.email" to="/login" class="ft-login-ghost" tabindex="-1">
             <font-awesome-icon :icon="['fas', 'lock']" />
           </router-link>
         </span>
