@@ -288,7 +288,7 @@ function getCookie(cname: string): string {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, rgba(15,23,41,0.88) 0%, rgba(37,99,235,0.35) 100%);
+  background: linear-gradient(135deg, rgba(15,23,41,0.96) 0%, rgba(15,23,41,0.70) 100%);
   border-radius: inherit;
   z-index: 1;
   pointer-events: none;
