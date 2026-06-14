@@ -46,6 +46,9 @@
            target="_blank" rel="noopener noreferrer" class="share-btn share-btn--li" aria-label="Compartir en LinkedIn">
           <font-awesome-icon :icon="['fab', 'linkedin']" />
         </a>
+        <button class="share-btn share-btn--ig" @click="shareInstagram" aria-label="Compartir en Instagram">
+          <font-awesome-icon :icon="['fab', 'instagram']" />
+        </button>
         <button class="share-btn share-btn--copy" @click="copyLink" :aria-label="copied ? 'Enlace copiado' : 'Copiar enlace'">
           <font-awesome-icon :icon="['fas', copied ? 'check' : 'link']" />
         </button>
@@ -112,6 +115,17 @@ const copyLink = async () => {
   await navigator.clipboard.writeText(pageUrl.value);
   copied.value = true;
   setTimeout(() => { copied.value = false; }, 2000);
+};
+const shareInstagram = async () => {
+  if (navigator.share) {
+    try {
+      await navigator.share({ title: article.value?.title, url: pageUrl.value });
+    } catch { /* user cancelled */ }
+  } else {
+    await navigator.clipboard.writeText(pageUrl.value);
+    copied.value = true;
+    setTimeout(() => { copied.value = false; }, 2000);
+  }
 };
 
 const route = useRoute();
@@ -432,6 +446,7 @@ onUnmounted(() => { if (schemaEl) { schemaEl.remove(); schemaEl = null; } });
 .share-btn--fb  { background: #1877f2; }
 .share-btn--x   { background: #000; }
 .share-btn--li  { background: #0a66c2; }
+.share-btn--ig  { background: radial-gradient(circle at 30% 110%, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); }
 .share-btn--copy { background: var(--blue-pale); color: var(--blue); }
 
 .article-notfound {
