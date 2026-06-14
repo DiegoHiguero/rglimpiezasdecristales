@@ -135,6 +135,7 @@
 .ns-label {
   display: flex;
   width: fit-content;
+  align-self: flex-start;
   align-items: center;
   background: var(--blue-pale);
   color: var(--blue);
