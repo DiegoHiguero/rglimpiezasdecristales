@@ -80,7 +80,7 @@ const latest = computed(() => articles.slice(0, 3));
 }
 
 .hb-header {
-  text-align: center;
+  text-align: left;
   margin-bottom: 32px;
 }
 .hb-label {

@@ -234,7 +234,7 @@ onUnmounted(() => {
 }
 
 /* ── Header ── */
-.gl-header { text-align: center; margin-bottom: 28px; }
+.gl-header { text-align: left; margin-bottom: 28px; }
 .gl-label {
   display: inline-flex; align-items: center;
   background: var(--blue-pale); color: var(--blue);

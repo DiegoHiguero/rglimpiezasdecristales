@@ -124,7 +124,7 @@
 }
 
 /* ── Header ── */
-.svc-header { text-align: center; margin-bottom: 28px; }
+.svc-header { text-align: left; margin-bottom: 28px; }
 .svc-label {
   display: inline-block;
   background: var(--blue-pale);

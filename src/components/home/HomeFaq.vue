@@ -39,7 +39,7 @@ const faqs = [
   padding: 40px 28px 32px;
   border-radius: var(--r-lg);
 }
-.faq-header { text-align: center; margin-bottom: 24px; }
+.faq-header { text-align: left; margin-bottom: 24px; }
 .svc-label {
   display: inline-block;
   background: var(--blue-pale);

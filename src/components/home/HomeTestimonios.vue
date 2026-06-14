@@ -75,7 +75,7 @@ onMounted(() => {
 
 /* ── Header ── */
 .ti-header {
-  text-align: center;
+  text-align: left;
   padding: 40px 28px 28px;
   border-bottom: 1px solid var(--border);
 }

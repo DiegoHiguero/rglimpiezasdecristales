@@ -94,7 +94,7 @@ const zonas = [
 
 /* ── Header ── */
 .zonas-header {
-  text-align: center;
+  text-align: left;
   margin-bottom: 36px;
 }
 

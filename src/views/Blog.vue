@@ -113,7 +113,7 @@ const rest = computed(() => filtered.value.slice(1));
 
 /* ── Hero ── */
 .blog-hero {
-  text-align: left;
+  text-align: center;
   padding: 48px 20px 36px;
 }
 .blog-label {
@@ -142,7 +142,7 @@ const rest = computed(() => filtered.value.slice(1));
   font-size: 1rem;
   color: var(--text-muted);
   max-width: 560px;
-  margin: 0;
+  margin: 0 auto;
   line-height: 1.65;
 }
 

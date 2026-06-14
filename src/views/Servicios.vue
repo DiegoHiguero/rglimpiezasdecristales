@@ -303,9 +303,9 @@
 
 /* ── Header ── */
 .sv-header {
-  text-align: left;
+  text-align: center;
   max-width: 700px;
-  margin: 0 0 60px;
+  margin: 0 auto 60px;
 }
 .sv-label {
   display: inline-block;
