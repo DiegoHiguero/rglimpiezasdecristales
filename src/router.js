@@ -20,6 +20,7 @@ import GenerarArticulo from "./views/GenerarArticulo.vue";
 import SheetView from "./views/SheetView.vue";
 import Blog from "./views/Blog.vue";
 import BlogArticle from "./views/BlogArticle.vue";
+import NotFound from "./views/NotFound.vue";
 import { articles } from "./data/blog.js";
 
 // import Editar from "./views/Editar.vue";
@@ -123,6 +124,14 @@ const routes = [
         path: '/blog/:slug',
         component: BlogArticle,
         meta: { dynamic: true },
+    },
+    {
+        path: '/:pathMatch(.*)*',
+        component: NotFound,
+        meta: {
+            title: 'Página no encontrada | Royall Clean',
+            description: 'La página que buscas no existe. Vuelve al inicio de Royall Clean, empresa de limpieza de cristales en Madrid.',
+        },
     },
 ];
 
