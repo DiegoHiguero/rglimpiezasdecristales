@@ -1,6 +1,6 @@
 <template>
   <div class="faq-section">
-    <span class="svc-label">Preguntas frecuentes</span>
+    <span class="svc-label"><font-awesome-icon :icon="['fas', 'comments']" class="me-1" />Preguntas frecuentes</span>
     <div class="faq-header">
       <h2 class="faq-title">Lo que más nos <span class="faq-accent">preguntan</span></h2>
       <p class="faq-sub">Todo lo que necesitas saber antes de pedir tu presupuesto</p>

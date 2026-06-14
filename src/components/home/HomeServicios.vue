@@ -1,7 +1,7 @@
 <template>
   <div class="svc-section" id="servicios">
 
-    <span class="svc-label">Lo que hacemos</span>
+    <span class="svc-label"><font-awesome-icon :icon="['fas', 'hand-sparkles']" class="me-1" />Lo que hacemos</span>
     <div class="svc-header">
       <h2 class="svc-title">Limpieza <span class="svc-accent">profesional</span><br>para cada espacio</h2>
       <p class="svc-subtitle">Sin andamios, sin complicaciones — trabajamos sin interrumpir tu día a día</p>
