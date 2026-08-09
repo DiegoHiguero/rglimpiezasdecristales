@@ -66,7 +66,7 @@
       <div v-else-if="tabState.error" class="mf-empty mf-empty--error">
         <font-awesome-icon :icon="['fas', 'triangle-exclamation']" class="mf-empty-icon" />
         <p>Error al cargar los datos</p>
-        <button class="mf-retry-btn" @click="sheetsStore.loadTab('Registro')">Reintentar</button>
+        <button class="mf-retry-btn" @click="sheetsStore.loadTab('REGISTRO')">Reintentar</button>
       </div>
 
       <div v-else-if="filteredRecords.length === 0" class="mf-empty">
@@ -81,17 +81,17 @@
               <th>Factura</th>
               <th>Fecha</th>
               <th>Cliente</th>
-              <th class="text-right">Subtotal</th>
+              <th class="text-right">Base</th>
               <th class="text-right">Total</th>
               <th>Estado</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="r in filteredRecords" :key="r._row" class="mf-row">
-              <td><span class="mf-factura-num">{{ r['NºFactura'] }}</span></td>
+              <td><span class="mf-factura-num">{{ r['Nº Factura'] }}</span></td>
               <td>{{ r['Fecha'] }}</td>
               <td>{{ r['Cliente'] }}</td>
-              <td class="text-right">{{ r['Subtotal'] }}</td>
+              <td class="text-right">{{ r['Base'] }}</td>
               <td class="text-right"><strong>{{ r['Total'] }}</strong></td>
               <td>
                 <span class="mf-badge" :class="r['Estado'] === 'Pagada' ? 'mf-badge--paid' : 'mf-badge--pending'">
@@ -130,13 +130,14 @@ const years = Array.from({ length: 5 }, (_, i) => currentYear - i);
 const selectedMonth = ref('');
 const selectedYear  = ref('');
 
-onMounted(() => sheetsStore.loadTab('Registro'));
+onMounted(() => sheetsStore.loadTab('REGISTRO'));
 
-const tabState = computed(() => sheetsStore.tabData['Registro'] || { loading: true, error: null, records: [] });
+const tabState = computed(() => sheetsStore.tabData['REGISTRO'] || { loading: true, error: null, records: [] });
 
 function parseCurrency(str) {
   if (!str) return 0;
-  return parseFloat(String(str).replace(/[€\s]/g, '').replace(',', '.')) || 0;
+  // Formato español: "1.020,03 €" → quitar puntos de miles antes de convertir la coma decimal
+  return parseFloat(String(str).replace(/[€\s]/g, '').replace(/\./g, '').replace(',', '.')) || 0;
 }
 
 function parseDate(str) {
@@ -148,8 +149,8 @@ function parseDate(str) {
 
 const allRecords = computed(() =>
   (tabState.value.records || [])
-    .filter(r => r['NºFactura'])
-    .sort((a, b) => (b['NºFactura'] || '').localeCompare(a['NºFactura'] || ''))
+    .filter(r => r['Nº Factura'])
+    .sort((a, b) => (b['Nº Factura'] || '').localeCompare(a['Nº Factura'] || ''))
 );
 
 const filteredRecords = computed(() => {

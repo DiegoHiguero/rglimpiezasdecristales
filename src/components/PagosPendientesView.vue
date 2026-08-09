@@ -36,7 +36,6 @@
                 <th>Monto Bruto (€)</th>
                 <th>Monto Neto (€)</th> <!-- Nueva columna -->
                 <th>IVA (€)</th> <!-- Nueva columna -->
-                <th>Forma de Pago</th>
                 <th>Fecha de Pago (Registro)</th>
                 <th>Acciones</th>
               </tr>
@@ -57,18 +56,11 @@
                 <td>{{ formatCurrency(calculateCotizacion(limpieza.precioBruto)) }}</td>
                 <!-- Fin valores para las nuevas columnas -->
                 <td>
-                  <select v-model="editingStates[limpieza.id].formaPago" class="form-select form-select-sm">
-                    <option value="Efectivo">Efectivo</option>
-                    <option value="Cheque">Cheque</option>
-                    <option value="Giro Bancario">Giro Bancario</option>
-                  </select>
-                </td>
-                <td>
                   <input type="date" v-model="editingStates[limpieza.id].fechaPago" class="form-control form-control-sm" />
                 </td>
                 <td>
                   <button
-                    @click="handleUpdatePayment(limpieza.id, editingStates[limpieza.id].fechaPago, editingStates[limpieza.id].formaPago)"
+                    @click="handleUpdatePayment(limpieza.id, editingStates[limpieza.id].fechaPago)"
                     class="btn btn-success btn-sm d-flex align-items-center justify-content-center"
                     :disabled="editingStates[limpieza.id].isSaving || databaseStore.isUpdatingLimpieza || !editingStates[limpieza.id].fechaPago"
                   >
@@ -168,7 +160,6 @@ watchEffect(() => {
         if (!editingStates[limpieza.id]) {
             editingStates[limpieza.id] = {
                 fechaPago: dayjs().format('YYYY-MM-DD'),
-                formaPago: limpieza.formaPago || 'Efectivo',
                 isSaving: false,
             };
         }
@@ -185,7 +176,7 @@ watchEffect(() => {
 // Función para obtener el nombre completo del cliente
 const getClientName = (clientId) => {
     const client = databaseStore.getClientById(clientId);
-    return client ? `${client.nombre} ${client.apellido || ''}`.trim() : 'Cliente Desconocido';
+    return client ? client.nombre : (clientId || 'Cliente Desconocido');
 };
 
 // Función para calcular los días que lleva pendiente un pago
@@ -215,14 +206,14 @@ const formatEuropeanDate = (dateValue) => {
 
 
 // Maneja la acción de guardar el pago actualizado
-const handleUpdatePayment = async (limpiezaId, newFechaPago, newFormaPago) => {
+const handleUpdatePayment = async (limpiezaId, newFechaPago) => {
     if (!newFechaPago) {
         alert('Por favor, selecciona una fecha de pago para guardar.');
         return;
     }
     editingStates[limpiezaId].isSaving = true;
     try {
-        await databaseStore.updatePaymentStatus(limpiezaId, newFechaPago, newFormaPago);
+        await databaseStore.updatePaymentStatus(limpiezaId, newFechaPago);
         console.log(`Pago para la limpieza ${limpiezaId} registrado con éxito.`);
     } catch (error) {
         alert('Error al actualizar el pago: ' + error.message);

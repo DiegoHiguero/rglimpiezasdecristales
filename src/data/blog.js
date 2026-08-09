@@ -1,6 +1,6 @@
 import imgInvierno     from '../assets/img/side-view-woman-cleaning-window.webp';
 import imgVerano       from '../assets/img/man-cleaning-windows.webp';
-import imgPrimavera    from '../assets/img/housemaid-wearing.jpg';
+import imgPrimavera    from '../assets/img/housemaid-wearing.webp';
 import imgOtono        from '../assets/img/hojas-otono.webp';
 import imgPaloma       from '../assets/img/paloma.webp';
 import imgCintaAdhesiva from '../assets/img/cintaadhesiva.jpg';
@@ -15,7 +15,7 @@ export const articles = [
     season: 'Guía',
     icon: ['fas', 'spray-can'],
     image: imgCintaAdhesiva,
-    color: '#0891b2',
+    color: '#0e7490',
     colorPale: '#ecfeff',
     metaDescription: 'Aprende a quitar pegamento de un cristal como lo hacen los profesionales: con un rascador de vitrocerámica. Rápido, económico y sin rayar el vidrio.',
     keywords: 'quitar pegamento cristal, eliminar adhesivo vidrio, rascador vitroceramica cristal, cinta adhesiva escaparate, pegamento en cristal madrid, quitar etiquetas cristal, limpiar restos adhesivo cristal',
@@ -78,7 +78,7 @@ export const articles = [
     season: 'Primavera',
     icon: ['fas', 'leaf'],
     image: imgPaloma,
-    color: '#16a34a',
+    color: '#15803d',
     colorPale: '#f0fdf4',
     metaDescription: 'Limpieza de cristales en primavera: cómo eliminar el polen, heces de pájaros e insectos de escaparates y ventanas. Guía profesional para negocios en Madrid.',
     content: `
@@ -152,7 +152,7 @@ export const articles = [
     season: 'Invierno',
     icon: ['fas', 'snowflake'],
     image: imgInvierno,
-    color: '#2563eb',
+    color: '#1d4ed8',
     colorPale: '#eff6ff',
     metaDescription: 'Cómo limpiar cristales en invierno sin dejar marcas. Consejos contra la humedad, condensación y bajas temperaturas. Empresa de limpieza de cristales en Madrid.',
     content: `
@@ -192,7 +192,7 @@ export const articles = [
     season: 'Verano',
     icon: ['fas', 'sun'],
     image: imgVerano,
-    color: '#d97706',
+    color: '#b45309',
     colorPale: '#fffbeb',
     metaDescription: 'Cómo mantener los cristales limpios en verano. Elimina polvo, insectos y marcas de los escaparates. Limpieza profesional de cristales para comercios y empresas en Madrid.',
     content: `
@@ -242,7 +242,7 @@ export const articles = [
     season: 'Primavera',
     icon: ['fas', 'seedling'],
     image: imgPrimavera,
-    color: '#16a34a',
+    color: '#15803d',
     colorPale: '#f0fdf4',
     metaDescription: 'Cómo limpiar cristales después del invierno y eliminar el polen de escaparates. Guía de limpieza profesional de cristales en primavera para negocios y comercios en Madrid.',
     content: `
@@ -296,7 +296,7 @@ export const articles = [
     season: 'Otoño',
     icon: ['fas', 'leaf'],
     image: imgOtono,
-    color: '#ea580c',
+    color: '#c2410c',
     colorPale: '#fff7ed',
     metaDescription: 'Limpieza de cristales en otoño: elimina manchas de lluvia, hojas y humedad de escaparates y fachadas. Prepara tu negocio para Black Friday e invierno. Empresa en Madrid.',
     content: `

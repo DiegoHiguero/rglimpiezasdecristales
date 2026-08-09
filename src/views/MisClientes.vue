@@ -29,7 +29,7 @@
         <div class="mc-card-header">
           <h3 class="mc-card-title">
             <font-awesome-icon :icon="['fas', 'user']" class="me-2" />
-            {{ clienteSeleccionado.nombre }} {{ clienteSeleccionado.apellido }}
+            {{ clienteSeleccionado.nombre }}
           </h3>
           <button @click="clienteSeleccionado = null; historialLimpiezasCliente = []" class="mc-btn mc-btn--ghost">
             <font-awesome-icon :icon="['fas', 'xmark']" class="me-1" /> Cerrar
@@ -41,58 +41,51 @@
               <p class="mc-detail-label">Contacto</p>
               <p class="mc-detail-value"><font-awesome-icon :icon="['fas', 'phone']" class="me-1 mc-detail-icon" />{{ clienteSeleccionado.telefono || 'N/A' }}</p>
               <p class="mc-detail-value"><font-awesome-icon :icon="['fas', 'envelope']" class="me-1 mc-detail-icon" />{{ clienteSeleccionado.email || 'N/A' }}</p>
+              <p class="mc-detail-value" v-if="clienteSeleccionado.personaContacto"><font-awesome-icon :icon="['fas', 'address-card']" class="me-1 mc-detail-icon" />{{ clienteSeleccionado.personaContacto }}</p>
               <p class="mc-detail-value">
                 <font-awesome-icon :icon="['fas', 'clock']" class="me-1 mc-detail-icon" />
                 Última limpieza: <span :class="timeSinceLastCleaning.statusClass"><b>{{ timeSinceLastCleaning.text }}</b></span>
               </p>
             </div>
             <div class="mc-detail-block">
-              <p class="mc-detail-label">Dirección de Facturación</p>
-              <p class="mc-detail-value">{{ clienteSeleccionado.direccion }}</p>
-              <p class="mc-detail-value">{{ clienteSeleccionado.codigoPostal }} {{ clienteSeleccionado.ciudad }} ({{ clienteSeleccionado.provincia }})</p>
-            </div>
-            <div class="mc-detail-block" v-if="clienteSeleccionado.direccionIntervencion?.calle">
-              <p class="mc-detail-label">Dirección de Intervención</p>
-              <p class="mc-detail-value">{{ clienteSeleccionado.direccionIntervencion.calle }}</p>
-              <p class="mc-detail-value">{{ clienteSeleccionado.direccionIntervencion.codigoPostal }} {{ clienteSeleccionado.direccionIntervencion.ciudad }}</p>
+              <p class="mc-detail-label">Dirección · NIF/CIF</p>
+              <p class="mc-detail-value">{{ clienteSeleccionado.direccion || 'N/A' }}</p>
+              <p class="mc-detail-value">{{ clienteSeleccionado.nifCif || 'N/A' }}</p>
             </div>
             <div class="mc-detail-block">
-              <p class="mc-detail-label">Tarifas</p>
-              <p class="mc-detail-value">Exterior: <strong>{{ formatCurrency(clienteSeleccionado.precioExterior) }}</strong></p>
-              <p class="mc-detail-value">Interior: <strong>{{ formatCurrency(clienteSeleccionado.precioInterior) }}</strong></p>
+              <p class="mc-detail-label">Precio habitual</p>
+              <p class="mc-detail-value"><strong>{{ formatCurrency(clienteSeleccionado.precioHabitual) }}</strong></p>
+            </div>
+            <div class="mc-detail-block" v-if="clienteSeleccionado.notas">
+              <p class="mc-detail-label">Notas</p>
+              <p class="mc-detail-value">{{ clienteSeleccionado.notas }}</p>
             </div>
           </div>
 
-          <div class="mc-section-divider">Historial de Limpiezas</div>
+          <div class="mc-section-divider">Historial de Facturas</div>
           <div v-if="historialLimpiezasCliente.length > 0" class="mc-table-wrap">
             <table class="mc-table">
               <thead>
                 <tr>
                   <th>Factura</th>
-                  <th>Sem.1</th><th>Sem.2</th><th>Sem.3</th><th>Sem.4</th><th>Sem.5</th>
-                  <th>Bruto</th><th>Neto</th><th>Cot.</th>
-                  <th>Fecha Pago</th><th>Estado</th><th>Forma Pago</th>
+                  <th>Fecha</th>
+                  <th>Concepto</th>
+                  <th>Total</th>
+                  <th>Estado</th>
                 </tr>
               </thead>
               <tbody>
                 <tr v-for="limpieza in historialLimpiezasCliente" :key="limpieza.id">
                   <td>{{ limpieza.factura }}</td>
-                  <td class="text-center">{{ formatEuropeanDate(limpieza.semana1) }}<br v-if="limpieza.semana1Tipo" /><span v-if="limpieza.semana1Tipo === 'exterior' || limpieza.semana1Tipo === 'ambas'" class="mc-badge mc-badge--blue">E</span><span v-if="limpieza.semana1Tipo === 'interior' || limpieza.semana1Tipo === 'ambas'" class="mc-badge mc-badge--grey">I</span></td>
-                  <td class="text-center">{{ formatEuropeanDate(limpieza.semana2) }}<br v-if="limpieza.semana2Tipo" /><span v-if="limpieza.semana2Tipo === 'exterior' || limpieza.semana2Tipo === 'ambas'" class="mc-badge mc-badge--blue">E</span><span v-if="limpieza.semana2Tipo === 'interior' || limpieza.semana2Tipo === 'ambas'" class="mc-badge mc-badge--grey">I</span></td>
-                  <td class="text-center">{{ formatEuropeanDate(limpieza.semana3) }}<br v-if="limpieza.semana3Tipo" /><span v-if="limpieza.semana3Tipo === 'exterior' || limpieza.semana3Tipo === 'ambas'" class="mc-badge mc-badge--blue">E</span><span v-if="limpieza.semana3Tipo === 'interior' || limpieza.semana3Tipo === 'ambas'" class="mc-badge mc-badge--grey">I</span></td>
-                  <td class="text-center">{{ formatEuropeanDate(limpieza.semana4) }}<br v-if="limpieza.semana4Tipo" /><span v-if="limpieza.semana4Tipo === 'exterior' || limpieza.semana4Tipo === 'ambas'" class="mc-badge mc-badge--blue">E</span><span v-if="limpieza.semana4Tipo === 'interior' || limpieza.semana4Tipo === 'ambas'" class="mc-badge mc-badge--grey">I</span></td>
-                  <td class="text-center">{{ formatEuropeanDate(limpieza.semana5) }}<br v-if="limpieza.semana5Tipo" /><span v-if="limpieza.semana5Tipo === 'exterior' || limpieza.semana5Tipo === 'ambas'" class="mc-badge mc-badge--blue">E</span><span v-if="limpieza.semana5Tipo === 'interior' || limpieza.semana5Tipo === 'ambas'" class="mc-badge mc-badge--grey">I</span></td>
-                  <td>{{ formatCurrency(limpieza.precioBruto) }}</td>
-                  <td><strong>{{ formatCurrency(calculatePrecioNeto(limpieza.precioBruto)) }}</strong></td>
-                  <td>{{ formatCurrency(calculateCotizacion(limpieza.precioBruto)) }}</td>
-                  <td>{{ limpieza.fechaPago ? formatEuropeanDate(limpieza.fechaPago) : '—' }}</td>
-                  <td><span :class="limpieza.fechaPago ? 'mc-badge mc-badge--green' : 'mc-badge mc-badge--yellow'">{{ limpieza.fechaPago ? 'Pagado' : 'Pendiente' }}</span></td>
-                  <td>{{ limpieza.formaPago || '—' }}</td>
+                  <td>{{ formatEuropeanDate(limpieza.fechaPrincipalLimpieza) }}</td>
+                  <td>{{ limpieza.descripcion || '—' }}</td>
+                  <td><strong>{{ formatCurrency(limpieza.precioBruto) }}</strong></td>
+                  <td><span :class="limpieza.estado === 'Pagada' ? 'mc-badge mc-badge--green' : 'mc-badge mc-badge--yellow'">{{ limpieza.estado }}</span></td>
                 </tr>
               </tbody>
             </table>
           </div>
-          <p v-else class="mc-empty">No hay limpiezas registradas para este cliente.</p>
+          <p v-else class="mc-empty">No hay facturas registradas para este cliente.</p>
         </div>
       </div>
 
@@ -118,31 +111,30 @@
             <table class="mc-table">
               <thead>
                 <tr>
-                  <th>Nombre</th>
+                  <th>Nombre / Razón social</th>
+                  <th>NIF/CIF</th>
                   <th>Dirección</th>
                   <th>Contacto</th>
-                  <th>Ext. (€)</th>
-                  <th>Int. (€)</th>
-                  <th>Total (€)</th>
+                  <th>Precio habitual (€)</th>
                   <th>Acciones</th>
                 </tr>
               </thead>
               <tbody>
                 <tr v-for="cliente in databaseStore.clientes" :key="cliente.id">
-                  <td><strong>{{ cliente.nombre }} {{ cliente.apellido }}</strong></td>
-                  <td>{{ cliente.direccion }}<br><span class="mc-muted">{{ cliente.codigoPostal }} {{ cliente.ciudad }}</span></td>
+                  <td><strong>{{ cliente.nombre }}</strong></td>
+                  <td>{{ cliente.nifCif || '—' }}</td>
+                  <td>{{ cliente.direccion || '—' }}</td>
                   <td>
                     <span v-if="cliente.telefono">{{ cliente.telefono }}</span>
                     <br v-if="cliente.telefono && cliente.email" />
                     <span v-if="cliente.email" class="mc-muted">{{ cliente.email }}</span>
                   </td>
-                  <td>{{ formatCurrency(cliente.precioExterior) }}</td>
-                  <td>{{ formatCurrency(cliente.precioInterior) }}</td>
-                  <td><strong>{{ formatCurrency(cliente.precioExterior + cliente.precioInterior) }}</strong></td>
+                  <td><strong>{{ formatCurrency(cliente.precioHabitual) }}</strong></td>
                   <td>
                     <div class="mc-actions">
                       <button @click="selectClientForDetails(cliente)" class="mc-icon-btn mc-icon-btn--blue" title="Ver detalles"><font-awesome-icon :icon="['fas', 'eye']" /></button>
                       <button @click="openEditClientModal(cliente)" class="mc-icon-btn mc-icon-btn--teal" title="Editar"><font-awesome-icon :icon="['fas', 'file-pen']" /></button>
+                      <button @click="copyPortalLink(cliente)" class="mc-icon-btn mc-icon-btn--blue" title="Copiar enlace del portal" :disabled="generandoEnlace === cliente.nombre"><font-awesome-icon :icon="['fas', generandoEnlace === cliente.nombre ? 'rotate' : 'link']" :spin="generandoEnlace === cliente.nombre" /></button>
                       <button @click="confirmDeleteClient(cliente)" class="mc-icon-btn mc-icon-btn--red" title="Eliminar"><font-awesome-icon :icon="['fas', 'trash-can']" /></button>
                     </div>
                   </td>
@@ -163,12 +155,12 @@
           <div class="mc-charts-grid">
             <div>
               <p class="mc-chart-title">Ingresos Mensuales</p>
-              <apexchart v-if="monthlyIncomeSeries[0]?.data.length" type="line" :options="monthlyIncomeChartOptions" :series="monthlyIncomeSeries"></apexchart>
+              <VueApexCharts v-if="monthlyIncomeSeries[0]?.data.length" type="line" :options="monthlyIncomeChartOptions" :series="monthlyIncomeSeries"></VueApexCharts>
               <p v-else class="mc-empty">Sin datos mensuales.</p>
             </div>
             <div>
               <p class="mc-chart-title">Ingresos Anuales</p>
-              <apexchart v-if="yearlyIncomeSeries[0]?.data.length" type="bar" :options="yearlyIncomeChartOptions" :series="yearlyIncomeSeries"></apexchart>
+              <VueApexCharts v-if="yearlyIncomeSeries[0]?.data.length" type="bar" :options="yearlyIncomeChartOptions" :series="yearlyIncomeSeries"></VueApexCharts>
               <p v-else class="mc-empty">Sin datos anuales.</p>
             </div>
           </div>
@@ -199,80 +191,20 @@
         <form @submit.prevent="saveNewClient">
               <div class="row g-3">
                 <div class="col-12 mb-3">
-                  <h4 class="mb-0">Información Personal</h4>
+                  <h4 class="mb-0">Datos del cliente</h4>
                   <hr class="mt-2 mb-3">
                 </div>
                 <div class="col-md-6">
-                  <label for="new-client-nombre" class="form-label">Nombre</label>
+                  <label for="new-client-nombre" class="form-label">Nombre / Razón social</label>
                   <input type="text" class="form-control" id="new-client-nombre" v-model="newClient.nombre" required>
                 </div>
                 <div class="col-md-6">
-                  <label for="new-client-apellido" class="form-label">Apellido</label>
-                  <input type="text" class="form-control" id="new-client-apellido" v-model="newClient.apellido"
-                    required>
-                </div>
-
-                <div class="col-12 mt-4 mb-3">
-                  <h4 class="mb-0">Dirección de Facturación</h4>
-                  <hr class="mt-2 mb-3">
+                  <label for="new-client-nif" class="form-label">NIF/CIF</label>
+                  <input type="text" class="form-control" id="new-client-nif" v-model="newClient.nifCif">
                 </div>
                 <div class="col-12">
-                  <label for="new-client-direccion" class="form-label">Dirección (Calle y Número)</label>
-                  <input type="text" class="form-control" id="new-client-direccion" v-model="newClient.direccion"
-                    required>
-                </div>
-                 <div class="col-12">
-                  <label for="new-client-direccion" class="form-label">Dirección Complementaria (Opcional)</label>
-                  <input type="text" class="form-control" id="new-client-direccion" v-model="newClient.direccionComplementaria">
-                </div>
-                <div class="col-md-6">
-                  <label for="new-client-ciudad" class="form-label">Ciudad</label>
-                  <input type="text" class="form-control" id="new-client-ciudad" v-model="newClient.ciudad" required>
-                </div>
-                <div class="col-md-6">
-                  <label for="new-client-provincia" class="form-label">Provincia</label>
-                  <input type="text" class="form-control" id="new-client-provincia" v-model="newClient.provincia"
-                    required>
-                </div>
-                <div class="col-md-4">
-                  <label for="new-client-codigo-postal" class="form-label">Código Postal</label>
-                  <input type="text" class="form-control" id="new-client-codigo-postal"
-                    v-model="newClient.codigoPostal">
-                </div>
-
-                <div class="col-12 mt-4 mb-3">
-                  <h4 class="mb-0">Dirección de Intervención (Opcional)</h4>
-                  <hr class="mt-2 mb-3">
-                </div>
-                 <div class="col-12">
-                  <label for="new-client-intervencion-calle" class="form-label">Dirección (Calle y Número)</label>
-                  <input type="text" class="form-control" id="new-client-intervencion-calle"
-                    v-model="newClient.direccionIntervencion.calle">
-                </div>
-                <div class="col-12">
-                  <label for="new-client-intervencion-calle" class="form-label">Dirección (Calle y Número)</label>
-                  <input type="text" class="form-control" id="new-client-intervencion-calle"
-                    v-model="newClient.direccionIntervencion.calle">
-                </div>
-                <div class="col-md-6">
-                  <label for="new-client-intervencion-ciudad" class="form-label">Ciudad</label>
-                  <input type="text" class="form-control" id="new-client-intervencion-ciudad"
-                    v-model="newClient.direccionIntervencion.ciudad">
-                </div>
-                <div class="col-md-6">
-                  <label for="new-client-intervencion-provincia" class="form-label">Provincia</label>
-                  <input type="text" class="form-control" id="new-client-intervencion-provincia"
-                    v-model="newClient.direccionIntervencion.provincia">
-                </div>
-                <div class="col-md-4">
-                  <label for="new-client-intervencion-codigo-postal" class="form-label">Código Postal</label>
-                  <input type="text" class="form-control" id="new-client-intervencion-codigo-postal"
-                    v-model="newClient.codigoPostal">
-                </div>
-
-                <div class="col-12 mt-4 mb-3">
-                  <h4 class="mb-0">Información de Contacto</h4>
-                  <hr class="mt-2 mb-3">
+                  <label for="new-client-direccion" class="form-label">Dirección</label>
+                  <input type="text" class="form-control" id="new-client-direccion" v-model="newClient.direccion">
                 </div>
                 <div class="col-md-6">
                   <label for="new-client-telefono" class="form-label">Teléfono</label>
@@ -282,32 +214,18 @@
                   <label for="new-client-email" class="form-label">Email</label>
                   <input type="email" class="form-control" id="new-client-email" v-model="newClient.email">
                 </div>
-                <div class="col-12 mt-4 mb-3">
-                  <h4 class="mb-0">Tipo de Cliente</h4>
-                  <hr class="mt-2 mb-3">
+                <div class="col-md-6">
+                  <label for="new-client-persona-contacto" class="form-label">Persona de contacto</label>
+                  <input type="text" class="form-control" id="new-client-persona-contacto" v-model="newClient.personaContacto">
                 </div>
                 <div class="col-md-6">
-                  <label for="new-client-tipo" class="form-label">Tipo de Cliente</label>
-                  <select id="new-client-tipo" class="form-select" v-model="newClient.tipoCliente" required>
-                    <option value="" disabled>Seleccione un tipo</option>
-                    <option value="empresa">Empresa</option>
-                    <option value="cooperativa">Cooperativa</option>
-                    <option value="casa">Casa</option>
-                  </select>
+                  <label for="new-client-precio-habitual" class="form-label">Precio habitual (€)</label>
+                  <input type="number" class="form-control" id="new-client-precio-habitual"
+                    v-model.number="newClient.precioHabitual" step="0.01" min="0">
                 </div>
-                <div class="col-12 mt-4 mb-3">
-                  <h4 class="mb-0">Tarifas de Limpieza (€)</h4>
-                  <hr class="mt-2 mb-3">
-                </div>
-                <div class="col-md-6">
-                  <label for="new-client-precio-exterior" class="form-label">Precio por Limpieza Exterior</label>
-                  <input type="number" class="form-control" id="new-client-precio-exterior"
-                    v-model.number="newClient.precioExterior" step="0.01" min="0">
-                </div>
-                <div class="col-md-6">
-                  <label for="new-client-precio-interior" class="form-label">Precio por Limpieza Interior</label>
-                  <input type="number" class="form-control" id="new-client-precio-interior"
-                    v-model.number="newClient.precioInterior" step="0.01" min="0">
+                <div class="col-12">
+                  <label for="new-client-notas" class="form-label">Notas</label>
+                  <textarea class="form-control" id="new-client-notas" v-model="newClient.notas" rows="2"></textarea>
                 </div>
               </div>
             </form>
@@ -325,87 +243,27 @@
   <div v-if="isEditClientModalOpen" class="mc-modal-backdrop" @click.self="closeEditClientModal">
     <div class="mc-modal">
       <div class="mc-modal-header">
-        <h5>Editar: {{ editedClient.nombre }} {{ editedClient.apellido }}</h5>
+        <h5>Editar: {{ editedClient.nombre }}</h5>
         <button class="mc-modal-close" @click="closeEditClientModal"><font-awesome-icon :icon="['fas', 'xmark']" /></button>
       </div>
       <div class="mc-modal-body">
           <form @submit.prevent="saveEditedClient">
               <div class="row g-3">
                 <div class="col-12 mb-3">
-                  <h4 class="mb-0">Información Personal</h4>
+                  <h4 class="mb-0">Datos del cliente</h4>
                   <hr class="mt-2 mb-3">
                 </div>
                 <div class="col-md-6">
-                  <label for="edit-client-nombre" class="form-label">Nombre</label>
+                  <label for="edit-client-nombre" class="form-label">Nombre / Razón social</label>
                   <input type="text" class="form-control" id="edit-client-nombre" v-model="editedClient.nombre" required>
                 </div>
                 <div class="col-md-6">
-                  <label for="edit-client-apellido" class="form-label">Apellido</label>
-                  <input type="text" class="form-control" id="edit-client-apellido" v-model="editedClient.apellido"
-                    required>
-                </div>
-
-                <div class="col-12 mt-4 mb-3">
-                  <h4 class="mb-0">Dirección de Facturación</h4>
-                  <hr class="mt-2 mb-3">
+                  <label for="edit-client-nif" class="form-label">NIF/CIF</label>
+                  <input type="text" class="form-control" id="edit-client-nif" v-model="editedClient.nifCif">
                 </div>
                 <div class="col-12">
-                  <label for="edit-client-direccion" class="form-label">Dirección (Calle y Número)</label>
-                  <input type="text" class="form-control" id="edit-client-direccion" v-model="editedClient.direccion"
-                    required>
-                </div>
-                <div class="col-12">
-                  <label for="new-client-direccion" class="form-label">Dirección Complementaria (Opcional)</label>
-                  <input type="text" class="form-control" id="new-client-direccion" v-model="editedClient.direccionComplementaria">
-                </div>
-                <div class="col-md-6">
-                  <label for="edit-client-ciudad" class="form-label">Ciudad</label>
-                  <input type="text" class="form-control" id="edit-client-ciudad" v-model="editedClient.ciudad" required>
-                </div>
-                <div class="col-md-6">
-                  <label for="edit-client-provincia" class="form-label">Provincia</label>
-                  <input type="text" class="form-control" id="edit-client-provincia" v-model="editedClient.provincia"
-                    required>
-                </div>
-                <div class="col-md-4">
-                  <label for="edit-client-codigo-postal" class="form-label">Código Postal</label>
-                  <input type="text" class="form-control" id="edit-client-codigo-postal"
-                    v-model="editedClient.codigoPostal">
-                </div>
-
-                <div class="col-12 mt-4 mb-3">
-                  <h4 class="mb-0">Dirección de Intervención (Opcional)</h4>
-                  <hr class="mt-2 mb-3">
-                </div>
-                <div class="col-12">
-                  <label for="edit-client-intervencion-calle" class="form-label">Dirección (Calle y Número)</label>
-                  <input type="text" class="form-control" id="edit-client-intervencion-calle"
-                    v-model="editedClient.direccionIntervencion.calle">
-                </div>
-                 <div class="col-12">
-                  <label for="new-client-intervencion-calle" class="form-label">Dirección Complementaria (Opcional)</label>
-                  <input type="text" class="form-control" id="new-client-intervencion-calle"
-                    v-model="editedClient.direccionIntervencion.complementaria">
-                </div>
-                <div class="col-md-6">
-                  <label for="edit-client-intervencion-ciudad" class="form-label">Ciudad</label>
-                  <input type="text" class="form-control" id="edit-client-intervencion-ciudad"
-                    v-model="editedClient.direccionIntervencion.ciudad">
-                </div>
-                <div class="col-md-6">
-                  <label for="edit-client-intervencion-provincia" class="form-label">Provincia</label>
-                  <input type="text" class="form-control" id="edit-client-intervencion-provincia"
-                    v-model="editedClient.direccionIntervencion.provincia">
-                </div>
-                <div class="col-md-4">
-                  <label for="edit-client-intervencion-codigo-postal" class="form-label">Código Postal</label>
-                  <input type="text" class="form-control" id="edit-client-intervencion-codigo-postal"
-                    v-model="editedClient.codigoPostal">
-                </div>
-
-                <div class="col-12 mt-4 mb-3">
-                  <h4 class="mb-0">Información de Contacto</h4>
-                  <hr class="mt-2 mb-3">
+                  <label for="edit-client-direccion" class="form-label">Dirección</label>
+                  <input type="text" class="form-control" id="edit-client-direccion" v-model="editedClient.direccion">
                 </div>
                 <div class="col-md-6">
                   <label for="edit-client-telefono" class="form-label">Teléfono</label>
@@ -415,32 +273,18 @@
                   <label for="edit-client-email" class="form-label">Email</label>
                   <input type="email" class="form-control" id="edit-client-email" v-model="editedClient.email">
                 </div>
-                <div class="col-12 mt-4 mb-3">
-                  <h4 class="mb-0">Tipo de Cliente</h4>
-                  <hr class="mt-2 mb-3">
+                <div class="col-md-6">
+                  <label for="edit-client-persona-contacto" class="form-label">Persona de contacto</label>
+                  <input type="text" class="form-control" id="edit-client-persona-contacto" v-model="editedClient.personaContacto">
                 </div>
                 <div class="col-md-6">
-                  <label for="edit-client-tipo" class="form-label">Tipo de Cliente</label>
-                  <select id="edit-client-tipo" class="form-select" v-model="editedClient.tipoCliente" required>
-                    <option value="" disabled>Seleccione un tipo</option>
-                    <option value="empresa">Empresa</option>
-                    <option value="cooperativa">Cooperativa</option>
-                    <option value="casa">Casa</option>
-                  </select>
+                  <label for="edit-client-precio-habitual" class="form-label">Precio habitual (€)</label>
+                  <input type="number" class="form-control" id="edit-client-precio-habitual"
+                    v-model.number="editedClient.precioHabitual" step="0.01" min="0">
                 </div>
-                <div class="col-12 mt-4 mb-3">
-                  <h4 class="mb-0">Tarifas de Limpieza (€)</h4>
-                  <hr class="mt-2 mb-3">
-                </div>
-                <div class="col-md-6">
-                  <label for="edit-client-precio-exterior" class="form-label">Precio por Limpieza Exterior</label>
-                  <input type="number" class="form-control" id="edit-client-precio-exterior"
-                    v-model.number="editedClient.precioExterior" step="0.01" min="0">
-                </div>
-                <div class="col-md-6">
-                  <label for="edit-client-precio-interior" class="form-label">Precio por Limpieza Interior</label>
-                  <input type="number" class="form-control" id="edit-client-precio-interior"
-                    v-model.number="editedClient.precioInterior" step="0.01" min="0">
+                <div class="col-12">
+                  <label for="edit-client-notas" class="form-label">Notas</label>
+                  <textarea class="form-control" id="edit-client-notas" v-model="editedClient.notas" rows="2"></textarea>
                 </div>
               </div>
             </form>
@@ -465,6 +309,7 @@ import 'dayjs/locale/fr';
 import VueApexCharts from "vue3-apexcharts";
 import Mapa from '../components/Mapa.vue';
 import GastosTable from '../components/GastosTable.vue';
+import { ensurePortalToken } from '../services/portal';
 
 // --- ESTADOS LOCALES Y REFERENCES ---
 const databaseStore = useDatabaseStore();
@@ -474,14 +319,10 @@ const historialLimpiezasCliente = ref([]); // Para el historial de limpiezas del
 
 // ... (El resto de tus refs como newClient, editedClient, etc.)
 const newClient = ref({
-  id: null, nombre: '', apellido: '', direccion: '',direccionComplementaria:'', ciudad: '', provincia: '', codigoPostal: '',
-  direccionIntervencion: { calle: '',complementaria:'', ciudad: '', provincia: '', codigoPostal: '' },
-  telefono: '', email: '', precioExterior: 0.00, precioInterior: 0.00, tipoCliente: ''
+  nombre: '', nifCif: '', direccion: '', telefono: '', email: '', personaContacto: '', notas: '', precioHabitual: 0.00,
 });
 const editedClient = ref({
-  id: null, nombre: '', apellido: '', direccion: '', ciudad: '', provincia: '', codigoPostal: '',
-  direccionIntervencion: { calle: '',complementaria:'', ciudad: '', provincia: '', codigoPostal: '' },
-  telefono: '', email: '', precioExterior: 0.00, precioInterior: 0.00, tipoCliente: ''
+  id: null, nombre: '', nifCif: '', direccion: '', telefono: '', email: '', personaContacto: '', notas: '', precioHabitual: 0.00,
 });
 
 const isAddClientModalOpen = ref(false);
@@ -491,13 +332,29 @@ const isSavingEditedClient = ref(false);
 
 const clientCount = computed(() => databaseStore.clientes.length);
 
+// --- Enlace del portal de cliente ---
+const generandoEnlace = ref(null); // nombre del cliente cuyo enlace se está generando
+
+const copyPortalLink = async (cliente) => {
+  generandoEnlace.value = cliente.nombre;
+  try {
+    const token = await ensurePortalToken(cliente.nombre, cliente.email, cliente.direccion);
+    const url = `${window.location.origin}/portal/${token}`;
+    await navigator.clipboard.writeText(url);
+    alert(`Enlace copiado al portapapeles:\n${url}`);
+  } catch (error) {
+    console.error('Error al generar el enlace del portal:', error);
+    alert('No se pudo generar el enlace del portal.');
+  } finally {
+    generandoEnlace.value = null;
+  }
+};
+
 // --- Funciones para manejar los modales de cliente ---
 const openAddClientModal = () => {
   isAddClientModalOpen.value = true;
   Object.assign(newClient.value, {
-    nombre: '', apellido: '', direccion: '', ciudad: '', provincia: '', codigoPostal: '',
-    direccionIntervencion: { calle: '', ciudad: '', provincia: '', codigoPostal: '' },
-    telefono: '', email: '', precioExterior: 0.00, precioInterior: 0.00, tipoCliente: ''
+    nombre: '', nifCif: '', direccion: '', telefono: '', email: '', personaContacto: '', notas: '', precioHabitual: 0.00,
   });
 };
 
@@ -506,8 +363,8 @@ const closeAddClientModal = () => {
 };
 
 const saveNewClient = async () => {
-  if (!newClient.value.nombre || !newClient.value.apellido) {
-    alert('Por favor, ingresa el Nombre y Apellido del cliente.');
+  if (!newClient.value.nombre) {
+    alert('Por favor, ingresa el Nombre / Razón social del cliente.');
     return;
   }
   isSavingNewClient.value = true;
@@ -527,24 +384,18 @@ const openEditClientModal = (client) => {
   isEditClientModalOpen.value = true;
   // Copia profunda para no modificar el original directamente
   editedClient.value = JSON.parse(JSON.stringify(client));
-  // Asegurarse de que direccionIntervencion exista para evitar errores
-  if (!editedClient.value.direccionIntervencion) {
-    editedClient.value.direccionIntervencion = { calle: '', ciudad: '', provincia: '', codigoPostal: '' };
-  }
 };
 
 const closeEditClientModal = () => {
   isEditClientModalOpen.value = false;
   editedClient.value = {
-    id: null, nombre: '', apellido: '', direccion: '', ciudad: '', provincia: '', codigoPostal: '',
-    direccionIntervencion: { calle: '', ciudad: '', provincia: '', codigoPostal: '' },
-    telefono: '', email: '', precioExterior: 0.00, precioInterior: 0.00, tipoCliente: ''
+    id: null, nombre: '', nifCif: '', direccion: '', telefono: '', email: '', personaContacto: '', notas: '', precioHabitual: 0.00,
   };
 };
 
 const saveEditedClient = async () => {
-  if (!editedClient.value.nombre || !editedClient.value.apellido) {
-    alert('Por favor, ingresa el Nombre y Apellido del cliente.');
+  if (!editedClient.value.nombre) {
+    alert('Por favor, ingresa el Nombre / Razón social del cliente.');
     return;
   }
   isSavingEditedClient.value = true;
@@ -567,7 +418,7 @@ const saveEditedClient = async () => {
 };
 
 const confirmDeleteClient = async (client) => {
-  const isConfirmed = window.confirm(`¿Estás seguro de que quieres eliminar al cliente ${client.nombre} ${client.apellido}?`);
+  const isConfirmed = window.confirm(`¿Estás seguro de que quieres eliminar al cliente ${client.nombre}?`);
   if (isConfirmed) {
     try {
       await databaseStore.deleteClient(client.id);
@@ -627,57 +478,21 @@ const calculatePrecioNeto = (precioBruto) => {
 // --- Modificación de selectClientForDetails ---
 const selectClientForDetails = (client) => {
   clienteSeleccionado.value = client;
-  // Filtramos todas las limpiezas de la tienda que pertenecen a este cliente.
+  // Filtramos todas las facturas que pertenecen a este cliente (referenciado por nombre).
   historialLimpiezasCliente.value = databaseStore.limpiezas
-    .filter((limpieza) => limpieza.clienteId === client.id)
+    .filter((limpieza) => limpieza.clienteId === client.nombre)
     .sort((a, b) => {
-      // Ordenar por fecha principal de limpieza (la más reciente primero)
+      // Ordenar por fecha (la más reciente primero)
       const dateA = getRelevantCleaningDate(a) ? dayjs(getRelevantCleaningDate(a)) : dayjs('1900-01-01');
       const dateB = getRelevantCleaningDate(b) ? dayjs(getRelevantCleaningDate(b)) : dayjs('1900-01-01');
       return dateB.diff(dateA); // Orden descendente (más reciente primero)
     });
 };
 
-// Función para obtener la fecha más relevante de una limpieza (la más temprana de todas las fechas asociadas)
+// Fecha de la factura (ya viene resuelta desde la hoja como fechaPrincipalLimpieza)
 const getRelevantCleaningDate = (limpiezaData) => {
-  let relevantDate = null;
-
-  // Priorizar fechaPrincipalLimpieza si existe y es válida
-  if (limpiezaData.fechaPrincipalLimpieza) {
-    const principalDate = dayjs(limpiezaData.fechaPrincipalLimpieza);
-    if (principalDate.isValid()) {
-      relevantDate = principalDate;
-    }
-  }
-
-  // Si no hay fechaPrincipalLimpieza válida, buscar la fecha más temprana entre semanas
-  // Solo busca en semanas si no encontró una fecha principal que ya sea la más temprana.
-  for (let i = 1; i <= 5; i++) {
-    const dateString = limpiezaData[`semana${i}`];
-    if (dateString) {
-      const currentDate = dayjs(dateString);
-      if (currentDate.isValid()) {
-        if (!relevantDate || currentDate.isBefore(relevantDate)) {
-          relevantDate = currentDate;
-        }
-      }
-    }
-  }
-
-  // Luego, buscar en las limpiezas extra y actualizar si alguna es más temprana
-  if (limpiezaData.extraCleanings && limpiezaData.extraCleanings.length > 0) {
-    for (const extra of limpiezaData.extraCleanings) {
-      if (extra.date) {
-        const extraDate = dayjs(extra.date);
-        if (extraDate.isValid()) {
-          if (!relevantDate || extraDate.isBefore(relevantDate)) {
-            relevantDate = extraDate;
-          }
-        }
-      }
-    }
-  }
-  return relevantDate ? relevantDate.format('YYYY-MM-DD') : null;
+  const d = dayjs(limpiezaData.fechaPrincipalLimpieza);
+  return d.isValid() ? d.format('YYYY-MM-DD') : null;
 };
 
 

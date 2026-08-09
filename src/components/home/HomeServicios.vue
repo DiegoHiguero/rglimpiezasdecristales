@@ -7,6 +7,7 @@
       <p class="svc-subtitle">Sin andamios, sin complicaciones — trabajamos sin interrumpir tu día a día</p>
     </div>
 
+    <div class="svc-grid-wrap">
     <div class="svc-grid">
 
       <div class="svc-card animate-on-scroll">
@@ -26,6 +27,7 @@
             <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Frecuencia quincenal o mensual</li>
             <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Presupuesto personalizado gratis</li>
           </ul>
+          <router-link to="/limpieza-cristales-locales-comerciales" class="svc-btn-secondary">Saber más</router-link>
           <router-link to="/contacto" class="svc-btn svc-btn--blue">Consultar precio</router-link>
         </div>
       </div>
@@ -47,6 +49,7 @@
             <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Marcos, juntas y barandillas</li>
             <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Productos 100% ecológicos</li>
           </ul>
+          <router-link to="/limpieza-cristales-hogares" class="svc-btn-secondary">Saber más</router-link>
           <router-link to="/contacto" class="svc-btn svc-btn--green">Consultar precio</router-link>
         </div>
       </div>
@@ -92,10 +95,127 @@
             <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Fachadas, suelos y patios</li>
             <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Resultados inmediatos y visibles</li>
           </ul>
+          <router-link to="/limpieza-cristales-altura" class="svc-btn-secondary">Saber más</router-link>
           <router-link to="/contacto" class="svc-btn svc-btn--orange">Consultar precio</router-link>
         </div>
       </div>
 
+      <TransitionGroup name="svc-reveal">
+
+          <div class="svc-card svc-card--extra" data-stagger="1" v-if="showAll" key="comunidades">
+            <div class="svc-img-wrap">
+              <img src="../../assets/img/office-buildings.webp" class="svc-img" alt="Limpieza de cristales en comunidades de vecinos" />
+              <div class="svc-overlay"></div>
+              <span class="svc-tag svc-tag--purple">Comunidades</span>
+            </div>
+            <div class="svc-body">
+              <div class="svc-body-head">
+                <span class="svc-icon svc-icon--purple"><font-awesome-icon :icon="['fas', 'building-columns']" /></span>
+                <h3 class="svc-name">Comunidades de vecinos</h3>
+              </div>
+              <p class="svc-desc">Portales, escaleras y cristaleras de zonas comunes con mantenimiento periódico para la comunidad.</p>
+              <ul class="svc-list">
+                <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Factura para la comunidad</li>
+                <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Contrato de mantenimiento</li>
+                <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Presupuesto para administradores</li>
+              </ul>
+              <router-link to="/limpieza-cristales-comunidades" class="svc-btn-secondary">Saber más</router-link>
+              <router-link to="/contacto" class="svc-btn svc-btn--purple">Consultar precio</router-link>
+            </div>
+          </div>
+
+          <div class="svc-card svc-card--extra" data-stagger="2" v-if="showAll" key="placas">
+            <div class="svc-img-wrap">
+              <img src="../../assets/img/limpieza-panel-thumb.webp" class="svc-img" alt="Limpieza de placas solares" />
+              <div class="svc-overlay"></div>
+              <span class="svc-tag svc-tag--yellow">Placas solares</span>
+            </div>
+            <div class="svc-body">
+              <div class="svc-body-head">
+                <span class="svc-icon svc-icon--yellow"><font-awesome-icon :icon="['fas', 'solar-panel']" /></span>
+                <h3 class="svc-name">Placas solares</h3>
+              </div>
+              <p class="svc-desc">La suciedad acumulada puede reducir hasta un 25% la eficiencia. Limpieza con agua desmineralizada.</p>
+              <ul class="svc-list">
+                <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Agua desmineralizada sin rayas</li>
+                <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Sin productos químicos agresivos</li>
+                <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Mantenimiento periódico</li>
+              </ul>
+              <router-link to="/limpieza-placas-solares" class="svc-btn-secondary">Saber más</router-link>
+              <router-link to="/contacto" class="svc-btn svc-btn--yellow">Consultar precio</router-link>
+            </div>
+          </div>
+
+          <div class="svc-card svc-card--extra" data-stagger="3" v-if="showAll" key="obras">
+            <div class="svc-img-wrap">
+              <img src="../../assets/img/20260323_184851.webp" class="svc-img" alt="Limpieza de obras y fin de obra" />
+              <div class="svc-overlay"></div>
+              <span class="svc-tag svc-tag--cyan">Fin de obra</span>
+            </div>
+            <div class="svc-body">
+              <div class="svc-body-head">
+                <span class="svc-icon svc-icon--cyan"><font-awesome-icon :icon="['fas', 'broom']" /></span>
+                <h3 class="svc-name">Limpiezas de obras</h3>
+              </div>
+              <p class="svc-desc">Tras una reforma, dejamos el espacio listo para estrenar: polvo, pintura y adhesivos fuera.</p>
+              <ul class="svc-list">
+                <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Polvo y restos de construcción</li>
+                <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Eliminación de adhesivos y pintura</li>
+                <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Cristales, suelos y azulejos</li>
+              </ul>
+              <router-link to="/limpieza-fin-de-obra" class="svc-btn-secondary">Saber más</router-link>
+              <router-link to="/contacto" class="svc-btn svc-btn--cyan">Consultar precio</router-link>
+            </div>
+          </div>
+
+          <div class="svc-card svc-card--extra" data-stagger="4" v-if="showAll" key="grafitis">
+            <div class="svc-img-wrap">
+              <img src="../../assets/img/grafitis.webp" class="svc-img" alt="Limpieza y eliminación de grafitis" />
+              <div class="svc-overlay"></div>
+              <span class="svc-tag svc-tag--rose">Grafitis</span>
+            </div>
+            <div class="svc-body">
+              <div class="svc-body-head">
+                <span class="svc-icon svc-icon--rose"><font-awesome-icon :icon="['fas', 'spray-can']" /></span>
+                <h3 class="svc-name">Limpieza de grafitis</h3>
+              </div>
+              <p class="svc-desc">Eliminamos grafitis en fachadas, muros y mobiliario urbano sin dañar la superficie original.</p>
+              <ul class="svc-list">
+                <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Fachadas y muros</li>
+                <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Portales y zonas comunes</li>
+                <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Sin dañar la superficie</li>
+              </ul>
+              <router-link to="/limpieza-grafitis" class="svc-btn-secondary">Saber más</router-link>
+              <router-link to="/contacto" class="svc-btn svc-btn--rose">Consultar precio</router-link>
+            </div>
+          </div>
+
+          <div class="svc-card svc-card--extra" data-stagger="5" v-if="showAll" key="vinilos">
+            <div class="svc-img-wrap">
+              <img src="../../assets/img/vinilo.webp" class="svc-img" alt="Retirada de vinilos en escaparates y cristales" />
+              <div class="svc-overlay"></div>
+              <span class="svc-tag svc-tag--fuchsia">Vinilos</span>
+            </div>
+            <div class="svc-body">
+              <div class="svc-body-head">
+                <span class="svc-icon svc-icon--fuchsia"><font-awesome-icon :icon="['fas', 'scissors']" /></span>
+                <h3 class="svc-name">Retirada de vinilos</h3>
+              </div>
+              <p class="svc-desc">Retiramos vinilos de escaparates y cristaleras sin dejar residuos ni rayar el cristal.</p>
+              <ul class="svc-list">
+                <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Escaparates y lunas</li>
+                <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Sin rayar ni dañar el cristal</li>
+                <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Eliminación de restos de adhesivo</li>
+              </ul>
+              <router-link to="/retirada-de-vinilos" class="svc-btn-secondary">Saber más</router-link>
+              <router-link to="/contacto" class="svc-btn svc-btn--fuchsia">Consultar precio</router-link>
+            </div>
+          </div>
+
+      </TransitionGroup>
+    </div>
+
+    <div class="svc-fade-mask" :class="{ 'svc-fade-mask--hidden': showAll }"></div>
     </div>
 
     <div class="svc-footer">
@@ -103,16 +223,20 @@
         <font-awesome-icon :icon="['fas', 'arrow-up-from-water-pump']" />
       </div>
       <p class="svc-footer-text">¿Tienes un caso especial? También trabajamos en altura con pértigas telescópicas hasta 5 plantas, sin andamios.</p>
-      <router-link to="/servicios" class="svc-footer-link">
-        Ver todos los servicios
-        <font-awesome-icon :icon="['fas', 'arrow-right']" class="svc-arrow" />
-      </router-link>
+      <button type="button" class="svc-toggle-btn" :class="{ 'svc-toggle-btn--open': showAll }" @click="showAll = !showAll">
+        <span class="svc-toggle-text">{{ showAll ? 'Mostrar menos' : 'Ver más servicios' }}</span>
+        <span class="svc-toggle-badge" v-if="!showAll">+{{ extraCount }}</span>
+        <span class="svc-toggle-icon"><font-awesome-icon :icon="['fas', 'chevron-down']" /></span>
+      </button>
     </div>
 
   </div>
 </template>
 
 <script setup>
+import { ref } from 'vue';
+const showAll = ref(false);
+const extraCount = 5;
 </script>
 
 <style scoped>
@@ -129,7 +253,7 @@
   display: block;
   width: fit-content;
   background: var(--blue-pale);
-  color: var(--blue);
+  color: var(--blue-hover);
   font-family: 'Raleway', sans-serif;
   font-size: 0.72rem;
   font-weight: 700;
@@ -156,11 +280,23 @@
 }
 
 /* ── Grid ── */
+.svc-grid-wrap { position: relative; }
 .svc-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 16px;
 }
+
+.svc-fade-mask {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 70px;
+  background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, var(--white) 85%);
+  pointer-events: none;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+.svc-fade-mask--hidden { opacity: 0; }
 
 /* ── Card ── */
 .svc-card {
@@ -217,6 +353,10 @@
 .svc-tag--green  { color: #34d399; }
 .svc-tag--purple { color: #a78bfa; }
 .svc-tag--orange { color: #fb923c; }
+.svc-tag--yellow  { color: #facc15; }
+.svc-tag--cyan    { color: #22d3ee; }
+.svc-tag--rose    { color: #fb7185; }
+.svc-tag--fuchsia { color: #e879f9; }
 
 /* ── Body ── */
 .svc-body {
@@ -243,6 +383,10 @@
 .svc-icon--green  { background: rgba(52,211,153,0.15); color: #34d399; }
 .svc-icon--purple { background: rgba(167,139,250,0.15); color: #a78bfa; }
 .svc-icon--orange { background: rgba(251,146,60,0.15); color: #fb923c; }
+.svc-icon--yellow  { background: rgba(250,204,21,0.15);  color: #facc15; }
+.svc-icon--cyan    { background: rgba(34,211,238,0.15);  color: #22d3ee; }
+.svc-icon--rose    { background: rgba(251,113,133,0.15); color: #fb7185; }
+.svc-icon--fuchsia { background: rgba(232,121,249,0.15); color: #e879f9; }
 
 .svc-name {
   font-family: 'Raleway', sans-serif;
@@ -306,12 +450,32 @@
 .svc-btn--green  { color: #34d399; border-color: rgba(52,211,153,0.4);   background: rgba(52,211,153,0.07); }
 .svc-btn--purple { color: #a78bfa; border-color: rgba(167,139,250,0.4);  background: rgba(167,139,250,0.07); }
 .svc-btn--orange { color: #fb923c; border-color: rgba(251,146,60,0.4);   background: rgba(251,146,60,0.07); }
+.svc-btn--yellow  { color: #facc15; border-color: rgba(250,204,21,0.4);  background: rgba(250,204,21,0.07); }
+.svc-btn--cyan    { color: #22d3ee; border-color: rgba(34,211,238,0.4);  background: rgba(34,211,238,0.07); }
+.svc-btn--rose    { color: #fb7185; border-color: rgba(251,113,133,0.4); background: rgba(251,113,133,0.07); }
+.svc-btn--fuchsia { color: #e879f9; border-color: rgba(232,121,249,0.4); background: rgba(232,121,249,0.07); }
 
-.svc-btn--blue:hover   { background: #60a5fa; color: #fff; }
-.svc-btn--green:hover  { background: #34d399; color: #fff; }
-.svc-btn--purple:hover { background: #a78bfa; color: #fff; }
-.svc-btn--orange:hover { background: #fb923c; color: #fff; }
+.svc-btn--blue:hover    { background: #60a5fa; color: #fff; }
+.svc-btn--green:hover   { background: #34d399; color: #fff; }
+.svc-btn--purple:hover  { background: #a78bfa; color: #fff; }
+.svc-btn--orange:hover  { background: #fb923c; color: #fff; }
+.svc-btn--yellow:hover  { background: #facc15; color: #1e293b; }
+.svc-btn--cyan:hover    { background: #22d3ee; color: #1e293b; }
+.svc-btn--rose:hover    { background: #fb7185; color: #fff; }
+.svc-btn--fuchsia:hover { background: #e879f9; color: #1e293b; }
 .svc-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(0,0,0,0.25); }
+
+.svc-btn-secondary {
+  display: block;
+  text-align: center;
+  font-family: 'Raleway', sans-serif;
+  font-weight: 600;
+  font-size: 0.78rem;
+  color: rgba(255,255,255,0.55);
+  text-decoration: underline;
+  margin-bottom: 10px;
+}
+.svc-btn-secondary:hover { color: rgba(255,255,255,0.85); }
 
 /* ── Footer strip ── */
 .svc-footer {
@@ -329,7 +493,7 @@
   width: 40px; height: 40px;
   border-radius: 10px;
   background: var(--blue-pale);
-  color: var(--blue);
+  color: var(--blue-hover);
   display: flex; align-items: center; justify-content: center;
   font-size: 1rem;
   flex-shrink: 0;
@@ -342,21 +506,63 @@
   flex: 1;
   min-width: 200px;
 }
-.svc-footer-link {
+.svc-toggle-btn {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   font-family: 'Raleway', sans-serif;
   font-weight: 700;
   font-size: 0.87rem;
-  color: var(--blue);
-  text-decoration: none;
+  color: var(--blue-hover);
+  background: var(--blue-pale);
+  border: 1.5px solid rgba(37,99,235,0.2);
+  padding: 10px 20px;
+  border-radius: 30px;
+  cursor: pointer;
   white-space: nowrap;
-  transition: color 0.2s;
+  transition: background 0.2s, border-color 0.2s, color 0.2s, transform 0.15s, box-shadow 0.2s;
 }
-.svc-footer-link:hover { color: var(--blue-hover); }
-.svc-arrow { transition: transform 0.2s; }
-.svc-footer-link:hover .svc-arrow { transform: translateX(4px); }
+.svc-toggle-btn:hover {
+  background: var(--white);
+  border-color: var(--blue);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(37,99,235,0.18);
+}
+.svc-toggle-btn--open {
+  background: var(--white);
+  border-color: var(--border);
+  color: var(--text-muted);
+}
+.svc-toggle-btn--open:hover { border-color: var(--text-muted); box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
+.svc-toggle-badge {
+  background: var(--blue);
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 20px;
+  line-height: 1.5;
+}
+.svc-toggle-icon { display: flex; transition: transform 0.35s ease; }
+.svc-toggle-btn--open .svc-toggle-icon { transform: rotate(180deg); }
+
+/* ── Reveal transition (TransitionGroup) ── */
+.svc-reveal-enter-active {
+  transition: opacity 0.45s ease, transform 0.45s ease;
+}
+.svc-reveal-leave-active {
+  transition: opacity 0.22s ease, transform 0.22s ease;
+}
+.svc-reveal-enter-from,
+.svc-reveal-leave-to {
+  opacity: 0;
+  transform: translateY(16px) scale(0.98);
+}
+.svc-card--extra[data-stagger="1"].svc-reveal-enter-active { transition-delay: 0ms; }
+.svc-card--extra[data-stagger="2"].svc-reveal-enter-active { transition-delay: 60ms; }
+.svc-card--extra[data-stagger="3"].svc-reveal-enter-active { transition-delay: 120ms; }
+.svc-card--extra[data-stagger="4"].svc-reveal-enter-active { transition-delay: 180ms; }
+.svc-card--extra[data-stagger="5"].svc-reveal-enter-active { transition-delay: 240ms; }
 
 /* ── Responsive ── */
 @media (max-width: 768px) {
@@ -364,6 +570,6 @@
   .svc-title { font-size: 1.9rem; }
   .svc-grid { grid-template-columns: 1fr; gap: 12px; }
   .svc-footer { gap: 12px; padding: 16px; }
-  .svc-footer-link { width: 100%; justify-content: center; }
+  .svc-toggle-btn { width: 100%; justify-content: center; }
 }
 </style>

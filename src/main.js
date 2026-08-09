@@ -1,4 +1,6 @@
 import { createApp } from 'vue'
+import 'bootstrap/dist/css/bootstrap.min.css'
+import 'bootstrap/dist/js/bootstrap.bundle.min.js'
 import './style.css'
 import 'bootstrap-icons/font/bootstrap-icons.css'
 import App from './App.vue'
@@ -6,12 +8,9 @@ import router from './router'
 import { createPinia } from 'pinia'
 import './firebaseConfig';
 
-// Importación de VueApexCharts
-import VueApexCharts from "vue3-apexcharts"; // <-- ¡Añade esta línea!
-
 // Importaciones de Font Awesome
 import { library } from "@fortawesome/fontawesome-svg-core";
-import { faWaze, faWhatsapp, faFacebook, faInstagram, faLinkedin, faXTwitter } from "@fortawesome/free-brands-svg-icons";
+import { faWaze, faWhatsapp, faFacebook, faInstagram, faLinkedin, faXTwitter, faGoogle } from "@fortawesome/free-brands-svg-icons";
 import {
     faTrashCan,
     faEye,
@@ -97,11 +96,14 @@ import {
     faBuildingColumns,
     faShop,
     faLink,
+    faTrophy,
+    faRoute,
+    faPaintbrush,
+    faNewspaper,
+    faGaugeHigh,
+    faSignature,
 } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-
-// Importación de Vue3Signature
-import Vue3Signature from "vue3-signature";
 
 // Importación del userStore (que contiene initAuthListener y currentUser)
 import { useUserStore } from './stores/user';
@@ -109,7 +111,7 @@ import { useUserStore } from './stores/user';
 // 1. Configuración de Font Awesome Library
 library.add(
     faTrashCan, faFilePen, faEye,
-    faWaze, faWhatsapp, faFacebook, faInstagram, faLinkedin, faXTwitter,
+    faWaze, faWhatsapp, faFacebook, faInstagram, faLinkedin, faXTwitter, faGoogle,
     faFilePdf, faMagnifyingGlass, faMagnifyingGlassPlus,
     faCheck, faXmark,
     faArrowUpRightFromSquare, faArrowRight, faArrowUpFromWaterPump, faArrowDown,
@@ -132,7 +134,8 @@ library.add(
     faReply, faCopy, faCheckDouble, faInbox, faRotateLeft, faEnvelopeOpen,
     faTableCells, faArrowsRotate, faRotate, faUpload, faDownload,
     faDatabase, faTriangleExclamation, faKey, faWandMagicSparkles,
-    faLink,
+    faLink, faTrophy,
+    faRoute, faPaintbrush, faNewspaper, faGaugeHigh, faSignature,
 );
 
 // 2. Crear la instancia de la aplicación Vue
@@ -148,9 +151,7 @@ const userStore = useUserStore();
 userStore.initAuthListener();
 
 // 5. Configurar otros plugins y componentes globales en la instancia 'app'
-app.use(Vue3Signature); // Usa Vue3Signature
 app.component("font-awesome-icon", FontAwesomeIcon); // Registra el componente de Font Awesome
-app.use(VueApexCharts); // <-- ¡Añade esta línea para registrar ApexCharts globalmente!
 
 // 6. ESPERAR a que el estado de autenticación inicial de Firebase esté disponible
 // antes de montar el router y la aplicación.

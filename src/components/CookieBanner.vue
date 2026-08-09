@@ -94,7 +94,7 @@ const dismiss = () => {
 .cb-desc {
   font-family: 'Raleway', sans-serif;
   font-size: 0.82rem;
-  color: #64748b;
+  color: #94a3b8;
   line-height: 1.6;
   margin: 0;
 }

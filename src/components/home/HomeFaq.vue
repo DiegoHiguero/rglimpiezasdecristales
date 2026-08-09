@@ -44,7 +44,7 @@ const faqs = [
   display: block;
   width: fit-content;
   background: var(--blue-pale);
-  color: var(--blue);
+  color: var(--blue-hover);
   font-family: 'Raleway', sans-serif;
   font-size: 0.72rem;
   font-weight: 700;

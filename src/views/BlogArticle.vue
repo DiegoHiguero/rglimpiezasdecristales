@@ -138,13 +138,17 @@ const readTime = computed(() => {
   return Math.max(2, Math.ceil(words / 200));
 });
 
-let schemaEl = null;
-
+// El HTML estático (generado en build) ya incluye el schema Article+Breadcrumb
+// correcto para esta URL. Esto solo se usa para mantenerlo sincronizado si el
+// usuario navega de un artículo a otro sin recargar la página (navegación SPA):
+// borra cualquier schema dinámico previo (el del build o el de un artículo
+// anterior) y pone el que corresponde al artículo actual, evitando duplicados.
 function injectSchema(a) {
-  if (schemaEl) { schemaEl.remove(); schemaEl = null; }
+  document.querySelectorAll('script[data-dynamic-schema]').forEach((el) => el.remove());
   if (!a) return;
-  schemaEl = document.createElement('script');
+  const schemaEl = document.createElement('script');
   schemaEl.type = 'application/ld+json';
+  schemaEl.setAttribute('data-dynamic-schema', 'true');
   schemaEl.textContent = JSON.stringify({
     '@context': 'https://schema.org',
     '@graph': [
@@ -174,7 +178,7 @@ function injectSchema(a) {
 
 onMounted(() => injectSchema(article.value));
 watch(article, injectSchema);
-onUnmounted(() => { if (schemaEl) { schemaEl.remove(); schemaEl = null; } });
+onUnmounted(() => { document.querySelectorAll('script[data-dynamic-schema]').forEach((el) => el.remove()); });
 </script>
 
 <style scoped>
@@ -447,7 +451,7 @@ onUnmounted(() => { if (schemaEl) { schemaEl.remove(); schemaEl = null; } });
 .share-btn--x   { background: #000; }
 .share-btn--li  { background: #0a66c2; }
 .share-btn--ig  { background: radial-gradient(circle at 30% 110%, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); }
-.share-btn--copy { background: var(--blue-pale); color: var(--blue); }
+.share-btn--copy { background: var(--blue-pale); color: var(--blue-hover); }
 
 .article-notfound {
   text-align: center; padding: 80px 20px;

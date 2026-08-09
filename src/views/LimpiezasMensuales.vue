@@ -6,132 +6,6 @@
         <h1 class="lm-title">Registro de <span class="lm-accent">Limpiezas</span></h1>
       </div>
     </div>
-    <!-- Formulario para añadir nueva limpieza -->
-    <div class="card mb-4">
-      <div class="card-header">
-        <h3>Añadir Nueva Limpieza</h3> (Factura #{{ proximaFactura }})
-      </div>
-      <div class="card-body">
-        <form @submit.prevent="agregarLimpieza">
-          <div class="row g-3">
-            <div class="mt-3">
-              <div class="col-md-4">
-                <label for="cliente" class="form-label">Cliente</label>
-                <select id="cliente" class="form-select" v-model="nuevaLimpieza.clienteId" required>
-                  <option value="" disabled>Seleccione un cliente</option>
-                  <option v-if="databaseStore.isLoadingClientes">Cargando clientes...</option>
-                  <option v-if="databaseStore.errorClientes" disabled>Error al cargar clientes</option>
-                  <option v-for="cliente in databaseStore.clientes" :key="cliente.id" :value="cliente.id">
-                    {{ cliente.nombre }} {{ cliente.apellido }}
-                  </option>
-                </select>
-                <button type="button" class="btn btn-info text-white btn-sm mt-2" @click="openAddClientModal">
-                  Añadir Cliente
-                </button>
-              </div>
-            </div>
-
-            <!-- Sección para número de factura manual (nueva adición) -->
-            <div class="col-md-4 mt-3">
-              <label for="manualFactura" class="form-label">Número de Factura Manual (Opcional)</label>
-              <input type="text" class="form-control" id="manualFactura" v-model="manualFacturaInput"
-                placeholder="Dejar vacío para generar automáticamente" />
-              <small class="form-text text-muted">Si se deja vacío, se usará: {{ proximaFactura }}</small>
-            </div>
-            <!-- Fin de sección para número de factura manual -->
-
-            <div class="row justify-content-center mt-3">
-              <div class="col-md-3">
-                <label for="semana1" class="form-label">Semana 1 </label>
-                <input type="date" class="form-control mb-2" id="semana1" v-model="nuevaLimpieza.semana1">
-                <label for="semana1Notas" class="form-label">Notas</label>
-                <input type="text" class="form-control" id="semana1Notas" v-model="nuevaLimpieza.semana1Notas"
-                  placeholder="Notas para Semana 1">
-              </div>
-              <div class="col-md-3">
-                <label for="semana2" class="form-label">Semana 2 </label>
-                <input type="date" class="form-control mb-2" id="semana2" v-model="nuevaLimpieza.semana2">
-                <label for="semana2Notas" class="form-label">Notas</label>
-                <input type="text" class="form-control" id="semana2Notas" v-model="nuevaLimpieza.semana2Notas"
-                  placeholder="Notas para Semana 2">
-              </div>
-              <div class="col-md-3">
-                <label for="semana3" class="form-label">Semana 3 </label>
-                <input type="date" class="form-control mb-2" id="semana3" v-model="nuevaLimpieza.semana3">
-                <label for="semana3Notas" class="form-label">Notas</label>
-                <input type="text" class="form-control" id="semana3Notas" v-model="nuevaLimpieza.semana3Notas"
-                  placeholder="Notas para Semana 3">
-              </div>
-              <div class="col-md-3">
-                <label for="semana4" class="form-label">Semana 4 </label>
-                <input type="date" class="form-control mb-2" id="semana4" v-model="nuevaLimpieza.semana4">
-                <label for="semana4Notas" class="form-label">Notas</label>
-                <input type="text" class="form-control" id="semana4Notas" v-model="nuevaLimpieza.semana4Notas"
-                  placeholder="Notas para Semana 4">
-              </div>
-            </div>
-            <div class="row g-3 mt-4">
-            <h4>Limpiezas Extra</h4>
-            <div v-for="(extra, index) in nuevaLimpieza.extraCleanings" :key="index" class="col-12">
-              <div class="row g-2 align-items-end mb-2">
-                <div class="col-md-3">
-                  <label :for="'extra-desc-' + index" class="form-label">Descripcion</label>
-                  <input type="text" :id="'extra-desc-' + index" class="form-control" v-model="extra.description">
-                </div>
-                <div class="col-md-2">
-                  <label :for="'extra-date-' + index" class="form-label">Fecha</label>
-                  <input type="date" :id="'extra-date-' + index" class="form-control" v-model="extra.date">
-                </div>
-                <div class="col-md-2">
-                  <label :for="'extra-qty-' + index" class="form-label">Cantidad</label>
-                  <input type="number" :id="'extra-qty-' + index" class="form-control" v-model.number="extra.quantity" min="1">
-                </div>
-                <div class="col-md-2">
-                  <label :for="'extra-price-' + index" class="form-label">Precio Unidad (€)</label>
-                  <input type="number" :id="'extra-price-' + index" class="form-control" v-model.number="extra.unitPrice" step="0.01" min="0">
-                </div>
-                <div class="col-md-2">
-                  <label class="form-label">Total (€)</label>
-                  <input type="text" class="form-control" :value="(Number(extra.quantity) * Number(extra.unitPrice) || 0).toFixed(2)" readonly>
-                </div>
-                <div class="col-md-1">
-                  <button type="button" class="btn btn-danger btn-sm" @click="removeExtraCleaning(index)">X</button>
-                </div>
-              </div>
-            </div>
-            <div class="col-12">
-              <button type="button" class="btn btn-success btn-sm" @click="addExtraCleaningLine">Añadir Línea Extra</button>
-            </div>
-          </div>
-            <div class="row justify-content-center mt-4">
-              <div class="col-md-3">
-                <label for="precioBruto" class="form-label">Precio Bruto (€)</label>
-                <input type="number" step="0.01" class="form-control" id="precioBruto"
-                  :value="calculatedPrecioBrutoNueva" readonly>
-              </div>
-              <div class="col-md-3">
-                <label for="formaPago" class="form-label">Forma de Pago</label>
-                <select id="formaPago" class="form-select" v-model="nuevaLimpieza.formaPago">
-                  <option value="Efectivo">Efectivo</option>
-                  <option value="Cheque">Cheque</option>
-                  <option value="Giro Bancario">Giro Bancario</option>
-                </select>
-              </div>
-              <div class="col-md-3">
-                <label for="fechaPago" class="form-label">Fecha de Pago</label>
-                <input type="date" class="form-control" id="fechaPago" v-model="nuevaLimpieza.fechaPago">
-              </div>
-              <div class="col-12 justify-content-center mt-2">
-                <button type="submit" class="btn btn-primary" :disabled="isLoading">
-                  {{ isLoading ? 'Guardando...' : 'Añadir Registro' }}
-                </button>
-              </div>
-            </div>
-          </div>
-        </form>
-      </div>
-    </div>
-
     <!-- Sección de Filtrar Registros -->
     <div class="card mb-4">
       <div class="card-header">
@@ -437,6 +311,21 @@
                   <label for="edit-fechaPago" class="form-label">Fecha de Pago</label>
                   <input type="date" class="form-control" id="edit-fechaPago" v-model="editedLimpieza.fechaPago">
                 </div>
+                <div class="col-12 mt-3">
+                  <label class="form-label">Firmas de este cliente a vincular ({{ firmasSeleccionadasEdit.length }} seleccionadas)</label>
+                  <div v-if="cargandoFirmasEdit" class="form-text">Cargando firmas...</div>
+                  <div v-else-if="firmasPendientesEdit.length === 0" class="form-text">
+                    Este cliente no tiene firmas sin facturar. Captúralas desde "Registro de Firmas".
+                  </div>
+                  <div v-else class="d-flex flex-wrap gap-2 mt-1">
+                    <label v-for="f in firmasPendientesEdit" :key="f.id" style="cursor:pointer;text-align:center;">
+                      <input type="checkbox" :value="f.id" v-model="firmasSeleccionadasEdit" style="display:block;margin:0 auto 4px;">
+                      <img :src="f.url" alt="firma"
+                        :style="{ height: '60px', borderRadius: '6px', background: '#fff', border: firmasSeleccionadasEdit.includes(f.id) ? '3px solid #2563eb' : '1px solid #ccc' }">
+                      <small class="d-block text-muted">{{ formatEuropeanDate(f.fecha) }}</small>
+                    </label>
+                  </div>
+                </div>
                         <div class="row g-3 mt-4">
           <h4>Limpiezas Extra</h4>
           <div v-for="(extra, index) in editedLimpieza.extraCleanings" :key="index" class="col-12">
@@ -491,144 +380,6 @@
       </div>
     </div>
     <div v-if="isEditModalOpen" class="modal-backdrop fade show"></div>
-    <!-- Estructura del Modal para Añadir Cliente -->
-    <div v-if="isAddClientModalOpen" class="modal fade show" style="display: block;" tabindex="-1"
-      aria-labelledby="addClientModalLabel" aria-modal="true" role="dialog">
-      <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="addClientModalLabel">Añadir Nuevo Cliente</h5>
-            <button type="button" class="btn-close" @click="closeAddClientModal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <form @submit.prevent="saveNewClient">
-              <div class="row g-3">
-                <div class="col-12 mb-3">
-                  <h4 class="mb-0">Información Personal</h4>
-                  <hr class="mt-2 mb-3">
-                </div>
-                <div class="col-md-6">
-                  <label for="new-client-nombre" class="form-label">Nombre</label>
-                  <input type="text" class="form-control" id="new-client-nombre" v-model="newClient.nombre" required>
-                </div>
-                <div class="col-md-6">
-                  <label for="new-client-apellido" class="form-label">Apellido</label>
-                  <input type="text" class="form-control" id="new-client-apellido" v-model="newClient.apellido"
-                    required>
-                </div>
-
-                <div class="col-12 mt-4 mb-3">
-                  <h4 class="mb-0">Dirección de Facturación</h4>
-                  <hr class="mt-2 mb-3">
-                </div>
-                <div class="col-12">
-                  <label for="new-client-direccion" class="form-label">Dirección (Calle y Número)</label>
-                  <input type="text" class="form-control" id="new-client-direccion" v-model="newClient.direccion"
-                    required>
-                </div>
-                <div class="col-12">
-                  <label for="new-client-direccion" class="form-label">Dirección Complementaria (Opcional)</label>
-                  <input type="text" class="form-control" id="new-client-direccion" v-model="newClient.direccionComplementaria">
-                </div>
-                <div class="col-md-6">
-                  <label for="new-client-ciudad" class="form-label">Ciudad</label>
-                  <input type="text" class="form-control" id="new-client-ciudad" v-model="newClient.ciudad" required>
-                </div>
-                <div class="col-md-6">
-                  <label for="new-client-provincia" class="form-label">Provincia</label>
-                  <input type="text" class="form-control" id="new-client-provincia" v-model="newClient.provincia"
-                    required>
-                </div>
-                <div class="col-md-4">
-                  <label for="new-client-codigo-postal" class="form-label">Código Postal</label>
-                  <input type="text" class="form-control" id="new-client-codigo-postal"
-                    v-model="newClient.codigoPostal">
-                </div>
-
-                <div class="col-12 mt-4 mb-3">
-                  <h4 class="mb-0">Dirección de Intervención (Opcional)</h4>
-                  <hr class="mt-2 mb-3">
-                </div>
-                <div class="col-12">
-                  <label for="new-client-intervencion-calle" class="form-label">Dirección (Calle y Número)</label>
-                  <input type="text" class="form-control" id="new-client-intervencion-calle"
-                    v-model="newClient.direccionIntervencion.calle">
-                </div>
-                <div class="col-12">
-                  <label for="new-client-intervencion-calle" class="form-label">Dirección Complementaria (Opcional)</label>
-                  <input type="text" class="form-control" id="new-client-intervencion-calle"
-                    v-model="newClient.direccionIntervencion.complementaria">
-                </div>
-                
-                <div class="col-md-6">
-                  <label for="new-client-intervencion-ciudad" class="form-label">Ciudad</label>
-                  <input type="text" class="form-control" id="new-client-intervencion-ciudad"
-                    v-model="newClient.direccionIntervencion.ciudad">
-                </div>
-                <div class="col-md-6">
-                  <label for="new-client-intervencion-provincia" class="form-label">Provincia</label>
-                  <input type="text" class="form-control" id="new-client-intervencion-provincia"
-                    v-model="newClient.direccionIntervencion.provincia">
-                </div>
-                <div class="col-md-4">
-                  <label for="new-client-intervencion-codigo-postal" class="form-label">Código Postal</label>
-                  <input type="text" class="form-control" id="new-client-intervencion-codigo-postal"
-                    v-model="newClient.direccionIntervencion.codigoPostal">
-                </div>
-
-                <div class="col-12 mt-4 mb-3">
-                  <h4 class="mb-0">Información de Contacto</h4>
-                  <hr class="mt-2 mb-3">
-                </div>
-                <div class="col-md-6">
-                  <label for="new-client-telefono" class="form-label">Teléfono</label>
-                  <input type="tel" class="form-control" id="new-client-telefono" v-model="newClient.telefono">
-                </div>
-                <div class="col-md-6">
-                  <label for="new-client-email" class="form-label">Email</label>
-                  <input type="email" class="form-control" id="new-client-email" v-model="newClient.email">
-                </div>
-                <div class="col-12 mt-4 mb-3">
-                  <h4 class="mb-0">Tipo de Cliente</h4>
-                  <hr class="mt-2 mb-3">
-                </div>
-                <div class="col-md-6">
-                  <label for="new-client-tipo" class="form-label">Tipo de Cliente</label>
-                  <select id="new-client-tipo" class="form-select" v-model="newClient.tipoCliente" required>
-                    <option value="" disabled>Seleccione un tipo</option>
-                    <option value="empresa">Empresa</option>
-                    <option value="casa">Casa</option>
-                  </select>
-                </div>
-                <div class="col-12 mt-4 mb-3">
-                  <h4 class="mb-0">Tarifas de Limpieza (€)</h4>
-                  <hr class="mt-2 mb-3">
-                </div>
-                <!-- INICIO: CAMBIO SOLICITADO -->
-                <div class="col-md-6">
-                  <label for="new-client-precio-neto" class="form-label">Precio Neto (€)</label>
-                  <input type="number" class="form-control" id="new-client-precio-neto"
-                    v-model.number="newClient.precioNeto" step="0.01" min="0">
-                </div>
-                <div class="col-md-6">
-                  <label for="new-client-precio-con-iva" class="form-label">Precio con IVA 21% (€)</label>
-                  <input type="text" class="form-control" id="new-client-precio-con-iva"
-                    :value="calculatedNewClientPrecioConIva" readonly>
-                </div>
-                <!-- FIN: CAMBIO SOLICITADO -->
-              </div>
-            </form>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" @click="closeAddClientModal">Cancelar</button>
-            <button type="button" class="btn btn-primary" @click="saveNewClient" :disabled="isSavingNewClient">
-              {{ isSavingNewClient ? 'Guardando...' : 'Guardar Cliente' }}
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div v-if="isAddClientModalOpen" class="modal-backdrop fade show"></div>
 
     <!-- INICIO: INTEGRACIÓN DEL NUEVO MODAL InvoiceEditorModal -->
     <InvoiceEditorModal
@@ -671,7 +422,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted, computed, watch } from 'vue';
 import { useDatabaseStore } from "../stores/database";
 import { jsPDF } from "jspdf";
 import dayjs from "dayjs";
@@ -680,11 +431,8 @@ import 'dayjs/locale/fr';
 
 import PagosPendientesView from '../components/PagosPendientesView.vue';
 import InvoiceEditorModal from '../components/InvoiceEditorModal.vue';
-import logo from '../assets/img/ROYAL_CLEAN_2025_BLANCO.png';
-import phoneIcon from '../assets/img/mobile.png';
-import emailIcon from '../assets/img/envelope.png';
-import webIcon from '../assets/img/globe.png';
-import locationIcon from '../assets/img/location.png';
+import { buildInvoicePdf } from '../utils/invoicePdf';
+import { ensurePortalToken, mirrorFacturaToPortal, getFirmasCliente, linkFirmasToFactura } from '../services/portal';
 import { useUserStore } from "../stores/user"
 import {
     addDoc,
@@ -711,7 +459,6 @@ const databaseStore = useDatabaseStore();
 
 const userStore = useUserStore()
 const isGeneratingPdf = ref(false); // Estado para el spinner del PDF resumen
-const manualFacturaInput = ref('');
 
 // --- NUEVOS ESTADOS PARA EL EDITOR DE FACTURAS ---
 const isInvoiceEditorModalOpen = ref(false); // Controla la visibilidad del modal del editor de facturas
@@ -1193,24 +940,6 @@ const totalPendienteMesActual = computed(() => {
   }
   return sum;
 });
-const nuevaLimpieza = ref({
-  cliente: '',
-  clienteId: null,
-  semana1: '',
-  semana1Notas: '',
-  semana2: '',
-  semana2Notas: '',
-  semana3: '',
-  semana3Notas: '',
-  semana4: '',
-  semana4Notas: '',
-  // ... (propiedades de semana existentes con solo fecha y notas) ...
-  extraCleanings: [{ description: '', date: '', quantity: 1, unitPrice: 0 }],
-  formaPago: 'Efectivo',
-  fechaPago: null,
-  basePriceNeto: 0, // <-- NUEVO: Para guardar el precio neto base del cliente
-});
-
 const editedLimpieza = ref({
   id: null, factura: null, cliente: '', clienteId: null,
   semana1: '', semana1Notas: '',
@@ -1223,38 +952,27 @@ const editedLimpieza = ref({
   basePriceNeto: 0, // <-- NUEVO: Para guardar el precio neto base del cliente
 });
 
+// ── Firmas pendientes (capturadas por separado en "Registro de Firmas") ──────
+const firmasPendientesEdit = ref([]);
+const firmasSeleccionadasEdit = ref([]);
+const cargandoFirmasEdit = ref(false);
 
-const newClient = ref({
-  nombre: '', apellido: '', direccion: '',direccionComplementaria:'', ciudad: '', provincia: '', codigoPostal: '',
-  direccionIntervencion: { calle: '',complementaria:'', ciudad: '', provincia: '', codigoPostal: '' },
-  telefono: '', email: '', tipoCliente: '',
-  precioNeto: 0.00 
-});
-// ...otras propiedades computadas existentes...
-
-// Calculado para el Precio con IVA en el formulario de nuevo cliente
-const calculatedNewClientPrecioConIva = computed(() => {
-  const neto = Number(newClient.value.precioNeto);
-  if (isNaN(neto) || neto < 0) return formatCurrency(0);
-  return formatCurrency(neto * 1.21); // Suponiendo un 21% de IVA
-});
-
-// ...resto del código de propiedades computadas...
-
-
-// Metodos para limpiezas extra en el formulario de NUEVA limpieza
-const addExtraCleaningLine = () => {
-  nuevaLimpieza.value.extraCleanings.push({
-    description: '',
-    date: '',
-    quantity: 1,
-    unitPrice: 0,
-  });
-};
-
-const removeExtraCleaning = (index) => {
-  nuevaLimpieza.value.extraCleanings.splice(index, 1);
-};
+async function cargarFirmasPendientes(clienteNombre, targetPendientes, targetCargando) {
+  targetPendientes.value = [];
+  if (!clienteNombre) return;
+  const cliente = databaseStore.clientes.find(c => c.nombre === clienteNombre);
+  if (!cliente) return;
+  targetCargando.value = true;
+  try {
+    const token = await ensurePortalToken(cliente.nombre, cliente.email, cliente.direccion);
+    const firmas = await getFirmasCliente(token);
+    targetPendientes.value = firmas.filter(f => !f.facturaId);
+  } catch (error) {
+    console.error('Error al cargar las firmas pendientes del cliente:', error);
+  } finally {
+    targetCargando.value = false;
+  }
+}
 
 // Metodos para limpiezas extra en el formulario de EDICION
 const addExtraCleaningLineEdited = () => {
@@ -1272,12 +990,10 @@ const removeExtraCleaningEdited = (index) => {
 
 // Estados para el control de modales
 const isEditModalOpen = ref(false);
-const isAddClientModalOpen = ref(false);
 const isPreviewModalOpen = ref(false); // Este es para la previsualización del PDF genérico, no el editor
 
 // Estados de carga específicos para este componente
 const isLoadingEdit = ref(false);
-const isSavingNewClient = ref(false);
 
 // IDs para edición/previsualización
 const editingLimpiezaId = ref(null);
@@ -1293,13 +1009,8 @@ const selectedYear = ref(now.getFullYear().toString());
 const isLoading = computed(() => databaseStore.isLoadingLimpiezas);
 const error = computed(() => databaseStore.errorLimpiezas);
 
-const proximaFactura = computed(() => databaseStore.nextFacturaFormatted);
-
-const selectedClientForNueva = computed(() => {
-  return databaseStore.clientes.find(c => c.id === nuevaLimpieza.value.clienteId) || null;
-});
 const selectedClientForEdited = computed(() => {
-  return databaseStore.clientes.find(c => c.id === editedLimpieza.value.clienteId) || null;
+  return databaseStore.clientes.find(c => c.nombre === editedLimpieza.value.clienteId) || null;
 });
 
 const calculatePrecioBruto = (limpiezaData, clientData) => {
@@ -1330,17 +1041,6 @@ const calculatePrecioBruto = (limpiezaData, clientData) => {
   }
   return parseFloat(total.toFixed(2));
 };
-
-// Computed para el total de limpiezas extra en el formulario de NUEVA limpieza
-const calculatedExtraCleaningsTotalNueva = computed(() => {
-  let total = 0;
-  for (const extra of nuevaLimpieza.value.extraCleanings) {
-    if (extra.quantity && extra.unitPrice) {
-      total += (Number(extra.quantity) * Number(extra.unitPrice));
-    }
-  }
-  return parseFloat(total.toFixed(2));
-});
 
 // Computed para el total de limpiezas extra en el formulario de EDICION
 const calculatedExtraCleaningsTotalEdited = computed(() => {
@@ -1516,25 +1216,11 @@ const calculatePrecioNeto = (precioBruto) => {
   // Para obtener el precio neto del precio bruto: Precio Bruto / 1.21
   return parseFloat((brute / 1.21).toFixed(2));
 };
-// NUEVA: Propiedad computada para el precio neto base del cliente seleccionado (para la creación)
-const baseNetPriceNueva = computed(() => {
-  const client = selectedClientForNueva.value;
-  return client ? (client.precioNeto || 0) : 0;
-});
-
 // NUEVA: Propiedad computada para el precio neto base del cliente seleccionado (para la edición)
 const baseNetPriceEdited = computed(() => {
   const client = selectedClientForEdited.value;
   // Si no hay cliente seleccionado en el modal de edición, usa el valor ya almacenado en editedLimpieza
-  return client ? (client.precioNeto || 0) : (editedLimpieza.value.basePriceNeto || 0);
-});
-
-// Calculado para el formulario de NUEVA limpieza
-const calculatedPrecioBrutoNueva = computed(() => {
-  // Suma el precio neto base del cliente y el total de limpiezas extra
-  const totalNetoBase = baseNetPriceNueva.value + calculatedExtraCleaningsTotalNueva.value;
-  // Calcula el precio bruto aplicando el 21% de IVA
-  return parseFloat((totalNetoBase * 1.21).toFixed(2));
+  return client ? (client.precioHabitual || 0) : (editedLimpieza.value.basePriceNeto || 0);
 });
 
 // Calculado para el formulario de EDICION
@@ -1590,6 +1276,9 @@ const openEditModal = (limpieza) => {
   editedLimpieza.value = tempEditedLimpieza;
   isEditModalOpen.value = true;
   databaseStore.updateLimpiezaError = null;
+
+  firmasSeleccionadasEdit.value = [];
+  cargarFirmasPendientes(tempEditedLimpieza.clienteId, firmasPendientesEdit, cargandoFirmasEdit);
 };
 
 
@@ -1611,28 +1300,11 @@ const closeEditModal = () => {
     basePriceNeto: 0, // Resetear basePriceNeto
   });
   databaseStore.updateLimpiezaError = null;
+  firmasSeleccionadasEdit.value = [];
+  firmasPendientesEdit.value = [];
 };
 
 
-
-/**
- * Abre el modal para añadir un nuevo cliente y resetea el formulario.
- */
-const openAddClientModal = () => {
-  isAddClientModalOpen.value = true;
-  Object.assign(newClient.value, {
-    nombre: '', apellido: '', direccion: '',direccionComplementaria:"", ciudad: '', provincia: '', codigoPostal: '',
-    direccionIntervencion: { calle: '',complementaria:'', ciudad: '', provincia: '', codigoPostal: '' },
-    telefono: '', email: '',precioNeto:'',
-  });
-};
-
-/**
- * Cierra el modal de añadir cliente.
- */
-const closeAddClientModal = () => {
-  isAddClientModalOpen.value = false;
-};
 
 /**
  * Cierra el modal de vista previa del PDF genérico.
@@ -1646,81 +1318,24 @@ const closePreviewModal = () => {
 // --- CRUD DE LIMPIEZAS ---
 
 /**
- * Añade un nuevo registro de limpieza.
+ * Espeja la factura al portal público del cliente y vincula las firmas
+ * seleccionadas (ya capturadas antes desde "Registro de Firmas"). No
+ * bloquea ni deshace el guardado real en la hoja si falla — solo avisa en
+ * consola, ya que la factura en sí ya quedó guardada.
  */
-const agregarLimpieza = async () => {
-  if (!nuevaLimpieza.value.clienteId) { alert('Por favor, selecciona un cliente.'); return; }
-  const client = selectedClientForNueva.value;
-  if (!client) { alert('Error: Cliente no encontrado con el ID seleccionado.'); return; }
-
-  let algunaSemanaConFecha = false; // Ahora solo necesitamos saber si hay alguna fecha
-  for (let i = 1; i <= 4; i++) { // Cambiado de 5 a 4 si no tienes semana 5 en la UI
-    if (nuevaLimpieza.value[`semana${i}`]) {
-      algunaSemanaConFecha = true;
-      break;
-    }
-  }
-  // También consideramos las limpiezas extra como un indicador de "algo que guardar"
-  const hasExtraCleanings = nuevaLimpieza.value.extraCleanings.some(
-    extra => extra.description && extra.unitPrice && extra.quantity > 0
-  );
-
-  if (!algunaSemanaConFecha && !hasExtraCleanings) {
-    alert('Por favor, completa al menos una fecha de limpieza o añade una limpieza extra.');
-    return;
-  }
-
-  const limpiezaParaGuardar = { ...nuevaLimpieza.value };
-
-  limpiezaParaGuardar.factura = manualFacturaInput.value.trim() !== ''
-    ? manualFacturaInput.value.trim()
-    : proximaFactura.value;
-
-  // IMPORTANT: Almacenar el precio neto base del cliente en el registro de limpieza
-  limpiezaParaGuardar.basePriceNeto = baseNetPriceNueva.value; // Usa la propiedad computada
-
-  // El precioBruto ahora se calcula directamente desde el baseNetPriceNueva + extras
-  limpiezaParaGuardar.precioBruto = calculatedPrecioBrutoNueva.value;
-
-  limpiezaParaGuardar.clienteId = nuevaLimpieza.value.clienteId;
-  limpiezaParaGuardar.cliente = `${client.nombre} ${(client.apellido || '')}`.trim();
-  limpiezaParaGuardar.fechaPago = nuevaLimpieza.value.fechaPago || null;
-
-  // Asegurar que las fechas de semana sean null si están vacías, sin lógica de tipo/precio
-  limpiezaParaGuardar.semana1 = limpiezaParaGuardar.semana1 || null;
-  limpiezaParaGuardar.semana1Notas = limpiezaParaGuardar.semana1Notas || null;
-  limpiezaParaGuardar.semana2 = limpiezaParaGuardar.semana2 || null;
-  limpiezaParaGuardar.semana2Notas = limpiezaParaGuardar.semana2Notas || null;
-  limpiezaParaGuardar.semana3 = limpiezaParaGuardar.semana3 || null;
-  limpiezaParaGuardar.semana3Notas = limpiezaParaGuardar.semana3Notas || null;
-  limpiezaParaGuardar.semana4 = limpiezaParaGuardar.semana4 || null;
-  limpiezaParaGuardar.semana4Notas = limpiezaParaGuardar.semana4Notas || null;
-  // Elimina cualquier referencia a semanaXExterior, semanaXInterior, semanaXprecio, semanaXTipo
-
-  // Guardamos solo las extraCleanings válidas
-  limpiezaParaGuardar.extraCleanings = limpiezaParaGuardar.extraCleanings.filter(
-    extra => extra.description && extra.unitPrice && extra.quantity > 0
-  );
-
-  limpiezaParaGuardar.fechaPrincipalLimpieza = getEarliestSemanaDate(limpiezaParaGuardar);
-
+const mirrorFacturaConFirmas = async (client, limpiezaGuardada, firmaIds) => {
   try {
-    await databaseStore.addLimpieza(limpiezaParaGuardar);
-    alert('Registro añadido con éxito!');
-    // Reiniciar el formulario
-    Object.assign(nuevaLimpieza.value, {
-      cliente: '', clienteId: null,
-      semana1: '', semana1Notas: '',
-      semana2: '', semana2Notas: '',
-      semana3: '', semana3Notas: '',
-      semana4: '', semana4Notas: '',
-      extraCleanings: [{ description: '', date: '', quantity: 1, unitPrice: 0 }], // Reset extraCleanings
-      formaPago: 'Efectivo', fechaPago: null, basePriceNeto: 0, // Reiniciar basePriceNeto
+    const token = await ensurePortalToken(client.nombre, client.email, client.direccion);
+    await mirrorFacturaToPortal(token, {
+      numeroFactura: limpiezaGuardada.factura,
+      fecha: limpiezaGuardada.fechaPrincipalLimpieza,
+      concepto: 'Limpieza de cristales',
+      total: limpiezaGuardada.precioBruto,
+      estado: limpiezaGuardada.fechaPago ? 'Pagada' : 'Pendiente',
     });
-    manualFacturaInput.value = '';
+    await linkFirmasToFactura(token, limpiezaGuardada.factura, firmaIds);
   } catch (err) {
-    alert('Error al añadir el registro: ' + (databaseStore.addLimpiezaError?.message || 'Desconocido'));
-    console.error("Error al añadir limpieza en componente:", err);
+    console.error('Error al espejar la factura/firmas al portal del cliente:', err);
   }
 };
 
@@ -1740,7 +1355,7 @@ const saveEditedLimpieza = async () => {
   const dataToUpdate = {
     factura: editedLimpieza.value.factura,
     clienteId: editedLimpieza.value.clienteId,
-    cliente: `${client.nombre} ${(client.apellido || '')}`.trim(),
+    cliente: client.nombre,
     formaPago: editedLimpieza.value.formaPago,
     fechaPago: editedLimpieza.value.fechaPago || null,
     basePriceNeto: baseNetPriceEdited.value, // Actualizar basePriceNeto desde la propiedad computada
@@ -1765,10 +1380,14 @@ const saveEditedLimpieza = async () => {
     extra => extra.description && extra.unitPrice && extra.quantity > 0
   );
 
+  const firmasAVincular = [...firmasSeleccionadasEdit.value];
+
   try {
     await databaseStore.updateLimpieza(editingLimpiezaId.value, dataToUpdate);
     console.log("Limpieza actualizada con éxito.");
     closeEditModal();
+
+    mirrorFacturaConFirmas(client, dataToUpdate, firmasAVincular);
   } catch (err) {
     alert('Error al guardar los cambios: ' + (databaseStore.updateLimpiezaError?.message || 'Desconocido'));
     console.error("Error guardando la limpieza editada:", err);
@@ -1791,30 +1410,6 @@ const confirmDelete = async (limpieza) => {
       alert('Error al eliminar el registro: ' + (databaseStore.deleteLimpiezaError?.message || 'Desconocido'));
       console.error("Error al eliminar el registro:", err);
     }
-  }
-};
-
-// --- CRUD DE CLIENTES ---
-
-/**
- * Guarda un nuevo cliente añadido desde el modal.
- */
-const saveNewClient = async () => {
-  if (!newClient.value.nombre || !newClient.value.apellido) {
-    alert('Por favor, ingresa el Nombre y Apellido del cliente.');
-    return;
-  }
-  isSavingNewClient.value = true;
-  try {
-    await databaseStore.addClient(newClient.value);
-    alert('Cliente añadido con éxito!');
-    closeAddClientModal();
-    await databaseStore.fetchClientes();
-  } catch (error) {
-    alert('Error al añadir el cliente: ' + (databaseStore.addClientError?.message || 'Desconocido'));
-    console.error("Error al guardar el nuevo cliente:", error);
-  } finally {
-    isSavingNewClient.value = false;
   }
 };
 
@@ -1850,210 +1445,14 @@ const generateInvoicePdfContent = async (invoiceData) => {
     return null;
   }
 
-  const doc = new jsPDF();
-
   const clientDetails = invoiceData.clientDetails;
-  const clientName = `${clientDetails.nombre || ''} ${clientDetails.apellido || ''}`;
-  const clientAddress = clientDetails.direccion || 'N/A';
-  const invoiceNumber = invoiceData.factura.toString();
-  // Usa el locale configurado globalmente para dayjs, que aquí es 'fr'
-  const currentDate = dayjs().format('DD/MM/YYYY');
-
-  // --- LOGO ---
-  doc.addImage(logo, 'PNG', 20, 20, 50, 20);
-
-  // --- Encabezado ---
-  doc.setFont("helvetica", "bold");
-  doc.setFontSize(20);
-  doc.text("FACTURA", 150, 40);
-
-  // --- Info cliente ---
-  doc.setFontSize(8);
-  doc.setTextColor("#4970B6");
-  doc.setFont("helvetica", "bold");
-  doc.text("EXPEDIDA A:", 20, 70);
-
-  doc.setFont("helvetica", "normal");
-  doc.setTextColor("black");
-  doc.text(clientName, 20, 75);
-  doc.text(clientAddress, 20, 80);
-
-  // --- FACT# y FECHA ---
-  doc.setFont("helvetica", "bold");
-  doc.setTextColor("#4970B6");
-  doc.setFontSize(9);
-  doc.text("FACT#:", 150, 70);
-  doc.text("FECHA:", 150, 77);
-
-  doc.setFont("helvetica", "normal");
-  doc.setTextColor("black");
-  doc.text(invoiceNumber, 190, 70, { align: "right" });
-  doc.text(currentDate, 190, 77, { align: "right" });
-
-  // --- Tabla de ítems ---
-  let tableY = 95;
-  const headerHeight = 9;
-  // Altura para las dos líneas de contenido (descripción + detalles)
-  const contentLinesHeight = 15; 
-
-  doc.setDrawColor("#4970B6");
-  doc.setFillColor("#4970B6");
-  doc.rect(20, tableY, 170, headerHeight, "F");
-
-  doc.setTextColor("white");
-  doc.setFont("helvetica", "bold");
-  doc.setFontSize(12);
-  doc.text("Descripción de servicio", 35, tableY + 6);
-  doc.text("Cant.", 130, tableY + 6, { align: "center" });
-  doc.text("Precio u.", 155, tableY + 6, { align: "center" });
-  doc.text("Importe", 185, tableY + 6, { align: "right" });
-
-  doc.setTextColor("black");
-  doc.setFont("helvetica", "normal");
-  doc.setFontSize(10);
-
-  let currentItemY = tableY + headerHeight + 5;
-  let subtotal = 0;
-  let itemsDrawn = 0;
-
-  for (const item of invoiceData.invoiceItems) {
-    if (item.totalHT && item.totalHT > 0) {
-      // Calculamos la posición Y para el rectángulo de la fila
-      const itemRectY = currentItemY + (itemsDrawn * (rowHeight + 5)) - 5;
-      doc.rect(20, itemRectY, 170, rowHeight); // Dibuja el rectángulo de la fila
-
-      // Calculamos la línea base vertical para el texto, para que esté centrado en el rowHeight
-      const textBaselineY = itemRectY + rowHeight / 2;
-
-      const description = item.description || '';
-      const defaultTextStartX = 23; // Posición X por defecto para la alineación a la izquierda
-      
-      // Ancho aproximado de la columna de descripción para centrar
-      const descriptionColStartX = 20;
-      const descriptionColWidthForCentering = 110; // Ancho desde 20 hasta 130 para centrar
-
-      // Regex para detectar "Limpieza de cristales" seguido de fechas entre paréntesis
-      const windowCleaningWithDatesPattern = /^(Limpieza de cristales)\s*\((.+)\)$/;
-      const match = description.match(windowCleaningWithDatesPattern);
-
-      if (match) {
-        // --- Caso: "Limpieza de cristales (fechas)" ---
-        const baseText = match[1]; // "Limpieza de cristales"
-        const rawDatesContent = `(${match[2]})`; // Contenido de las fechas, con paréntesis incluidos
-
-        // Define una nueva posición de inicio X para este caso, más a la derecha que defaultTextStartX
-        const dynamicTextStartXWithDates = 35; // Ajusta este valor (ej: 30, 35, 40) para moverlo más a la derecha
-
-        // 1. Imprime "Limpieza de cristales" con tamaño 9
-        doc.setFontSize(9);
-        doc.text(baseText, dynamicTextStartXWithDates, textBaselineY);
-
-        // 2. Calcula dónde deben empezar las fechas
-        // Es crucial calcular el ancho del texto base *con el tamaño de fuente actual (9)*
-        const baseTextWidth = doc.getTextWidth(baseText); 
-
-        // 3. Imprime las fechas inmediatamente después, con tamaño 7 (más pequeño)
-        doc.setFontSize(7); 
-        // La posición X para las fechas es la posición del texto base + su ancho + un pequeño espacio
-        doc.text(rawDatesContent, dynamicTextStartXWithDates + baseTextWidth + 1, textBaselineY);
-
-      } else if (description === 'Limpieza de cristales') {
-        // --- Caso: "Limpieza de cristales" SIN fechas ---
-        // Se ejecuta si 'openInvoiceEditor' lo identificó como limpieza de cristales,
-        // pero no se encontraron fechas en las propiedades 'semanaX'.
-        doc.setFontSize(10); // Tamaño 10 como solicitado
-        const textWidth = doc.getTextWidth(description);
-        const centerX = descriptionColStartX + (descriptionColWidthForCentering / 2) - (textWidth / 2);
-        doc.text(description, centerX, textBaselineY); // Centrado, como solicitado
-      } else {
-        // --- Caso: "Limpieza Mensual" o cualquier otra descripción ---
-        doc.setFontSize(9); // Tamaño base para otras descripciones
-        doc.text(description, defaultTextStartX, textBaselineY); // Alineado a la izquierda por defecto
-      }
-
-      // Restauramos el tamaño de fuente para el resto de las columnas (Cantidad, Precio u., Importe)
-      doc.setFontSize(10); 
-      doc.text(String(item.qty || 0), 130, textBaselineY, { align: "center" });
-      doc.text(formatCurrency(item.unitPrice || 0), 155, textBaselineY, { align: "center" });
-      doc.text(formatCurrency(item.totalHT), 185, textBaselineY, { align: "right" });
-      
-      subtotal += item.totalHT;
-      itemsDrawn++;
-    }
-  }
-
-  const dynamicHeight = itemsDrawn * contentLinesHeight;
-  let totalsY = currentItemY + dynamicHeight + 5;
-
-  const iva = subtotal * 0.21;
-  const total = subtotal + iva;
-
-  // --- Totales alineados con columna Importe ---
-  const rowHeightTotal = 7;
-  const rowSpacing = 1;
-  const totalLabels = ["Subtotal", "IVA 21%", "TOTAL"];
-  const totalValues = [subtotal, iva, total];
-
-  for (let i = 0; i < totalLabels.length; i++) {
-    const y = totalsY + i * (rowHeightTotal + rowSpacing);
-
-    // Label centrado vertical
-    doc.setFillColor("#4970B6");
-    doc.setDrawColor("#4970B6");
-    doc.rect(120, y - 6, 40, rowHeightTotal, "FD");
-    doc.setTextColor("white");
-    doc.setFont("helvetica", "bold");
-    doc.text(totalLabels[i], 140, y - 1, { align: 'center' });
-
-    // Valores alineados a la derecha sobre el borde de "Importe"
-    doc.setFillColor("white");
-    doc.setDrawColor("#4970B6");
-    doc.rect(160, y - 6, 30, rowHeightTotal, "FD");
-    doc.setTextColor("black");
-
-    if (i === 2) { // TOTAL
-        doc.setFont("helvetica", "bold");
-        doc.setFontSize(12); // <--- tamaño más grande para TOTAL
-    } else {
-        doc.setFont("helvetica", "normal");
-        doc.setFontSize(10);
-    }
-
-    doc.text(formatCurrency(totalValues[i]), 190, y - 1, { align: "right" });
-  }
-
-  totalsY += totalLabels.length * (rowHeightTotal + rowSpacing) + 10;
-
-  // --- Datos de pago ---
-  let paymentY = totalsY;
-  doc.setTextColor("#4970B6");
-  doc.setFont("helvetica", "bold");
-  doc.setFontSize(15);
-  doc.text("DATOS DE PAGO", 20, paymentY);
-
-  paymentY += 10;
-  doc.setFontSize(10);
-  doc.setTextColor("black");
-  doc.setFont("helvetica", "normal");
-  doc.text("DNI: 50349726-N", 25, paymentY);
-  paymentY += 5;
-  doc.text("N/C: ROYS GREGORY ABREU REINOSO", 25, paymentY);
-  paymentY += 5;
-  doc.text("IBAN:ES69 1465 0340 53 1718233167", 25, paymentY);
-  paymentY += 7;
-  doc.addImage(phoneIcon, 'PNG', 25, paymentY - 3, 5, 5);
-  doc.text("696169435", 32, paymentY);
-  paymentY += 7;
-  doc.addImage(emailIcon, 'PNG', 25, paymentY - 3, 5, 5);
-  doc.text("roys.abreu@hotmail.es", 32, paymentY);
-  paymentY += 7;
-  doc.addImage(webIcon, 'PNG', 25, paymentY - 3, 5, 5);
-  doc.text("www.royallclean.es", 32, paymentY);
-  paymentY += 7;
-  doc.addImage(locationIcon, 'PNG', 25, paymentY - 3, 5, 5);
-  doc.text("Av. Segunda República, 17 1D, 28905 (Madrid)", 32, paymentY);
-
-  return doc;
+  return buildInvoicePdf({
+    factura: invoiceData.factura.toString(),
+    fecha: dayjs().format('DD/MM/YYYY'),
+    clientName: clientDetails.nombre || '',
+    clientAddress: clientDetails.direccion || 'N/A',
+    items: invoiceData.invoiceItems,
+  });
 };
 
 
@@ -2489,7 +1888,6 @@ onMounted(async () => {
 
   await databaseStore.fetchLimpiezas(currentMonth, currentYear);
   await databaseStore.fetchClientes();
-  await databaseStore.fetchNextFacturaFormattedNumber();
 });
 </script>
 

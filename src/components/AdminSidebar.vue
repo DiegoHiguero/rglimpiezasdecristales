@@ -23,9 +23,25 @@
         <span class="as-icon"><font-awesome-icon :icon="['fas', 'compass']" /></span>
         Panel principal
       </router-link>
+      <router-link to="/hoja-de-ruta" class="as-link" :class="{ 'as-active': route.path === '/hoja-de-ruta' }" @click="mobileOpen = false">
+        <span class="as-icon"><font-awesome-icon :icon="['fas', 'route']" /></span>
+        Hoja de ruta
+      </router-link>
+      <router-link to="/firmas" class="as-link" :class="{ 'as-active': route.path === '/firmas' }" @click="mobileOpen = false">
+        <span class="as-icon"><font-awesome-icon :icon="['fas', 'signature']" /></span>
+        Registro de Firmas
+      </router-link>
       <router-link to="/Register" class="as-link" :class="{ 'as-active': route.path === '/Register' }" @click="mobileOpen = false">
         <span class="as-icon"><font-awesome-icon :icon="['fas', 'user']" /></span>
         Nuevo cliente
+      </router-link>
+      <router-link to="/nueva-factura" class="as-link" :class="{ 'as-active': route.path === '/nueva-factura' }" @click="mobileOpen = false">
+        <span class="as-icon"><font-awesome-icon :icon="['fas', 'plus']" /></span>
+        Nueva Factura
+      </router-link>
+      <router-link to="/pagos-pendientes" class="as-link" :class="{ 'as-active': route.path === '/pagos-pendientes' }" @click="mobileOpen = false">
+        <span class="as-icon"><font-awesome-icon :icon="['fas', 'hand-holding-dollar']" /></span>
+        Pagos Pendientes
       </router-link>
       <router-link to="/misFacturas" class="as-link" :class="{ 'as-active': route.path === '/misFacturas' }" @click="mobileOpen = false">
         <span class="as-icon"><font-awesome-icon :icon="['fas', 'file-invoice']" /></span>
@@ -33,34 +49,46 @@
       </router-link>
     </nav>
 
-    <!-- Google Sheets (dinámico) -->
+    <!-- Google Sheets (dinámico, plegable) -->
     <div class="as-divider"></div>
-    <div class="as-section-label as-section-label--sheets">
+    <button type="button" class="as-section-label as-section-label--sheets as-section-toggle" @click="sheetsExpanded = !sheetsExpanded">
+      <span class="as-toggle-chevron" :class="{ 'as-toggle-chevron--open': sheetsExpanded }">
+        <font-awesome-icon :icon="['fas', 'chevron-right']" />
+      </span>
       Google Sheets
-      <button class="as-refresh-btn" @click="reloadTabs" :disabled="sheetsStore.loading" title="Recargar pestañas">
-        <font-awesome-icon :icon="['fas', 'arrows-rotate']" :class="{ 'as-spin': sheetsStore.loading }" />
-      </button>
-    </div>
-
-    <!-- Cargando tabs -->
-    <div v-if="sheetsStore.loading && !sheetsStore.tabs.length" class="as-tabs-loading">
-      <div class="as-dot-spin"></div>
-      <span>Cargando hojas...</span>
-    </div>
-
-    <nav v-else class="as-nav">
-      <router-link
-        v-for="tab in sheetsStore.tabs"
-        :key="tab"
-        :to="tabPath(tab)"
-        class="as-link"
-        :class="{ 'as-active': isTabActive(tab) }"
-        @click="mobileOpen = false"
+      <span
+        class="as-refresh-btn"
+        :class="{ 'as-refresh-btn--disabled': sheetsStore.loading }"
+        role="button"
+        tabindex="0"
+        @click.stop="!sheetsStore.loading && reloadTabs()"
+        title="Recargar pestañas"
       >
-        <span class="as-icon"><font-awesome-icon :icon="['fas', tabIcon(tab)]" /></span>
-        {{ tab }}
-      </router-link>
-    </nav>
+        <font-awesome-icon :icon="['fas', 'arrows-rotate']" :class="{ 'as-spin': sheetsStore.loading }" />
+      </span>
+    </button>
+
+    <template v-if="sheetsExpanded">
+      <!-- Cargando tabs -->
+      <div v-if="sheetsStore.loading && !sheetsStore.tabs.length" class="as-tabs-loading">
+        <div class="as-dot-spin"></div>
+        <span>Cargando hojas...</span>
+      </div>
+
+      <nav v-else class="as-nav">
+        <router-link
+          v-for="tab in sheetsStore.tabs"
+          :key="tab"
+          :to="tabPath(tab)"
+          class="as-link"
+          :class="{ 'as-active': isTabActive(tab) }"
+          @click="mobileOpen = false"
+        >
+          <span class="as-icon"><font-awesome-icon :icon="['fas', tabIcon(tab)]" /></span>
+          {{ tab }}
+        </router-link>
+      </nav>
+    </template>
 
     <!-- Mensajes (Firestore, no Sheets) -->
     <div class="as-divider"></div>
@@ -109,6 +137,10 @@ const userStore   = useUserStore();
 const sheetsStore = useSheetsStore();
 const mobileOpen  = ref(false);
 
+// Sección "Google Sheets" plegable — se abre sola si ya estás en una de esas páginas
+const SHEET_LINKED_PATHS = ['/registro', '/misClientes', '/gastos', '/misFacturas'];
+const sheetsExpanded = ref(SHEET_LINKED_PATHS.includes(route.path) || route.path.startsWith('/sheet/'));
+
 // Carga las pestañas cuando el usuario tiene token (y solo una vez)
 watch(
   () => userStore.googleAccessToken,
@@ -118,21 +150,22 @@ watch(
 
 // Tabs conocidos → rutas específicas ya existentes
 const KNOWN_ROUTES = {
-  'Limpiezas': '/registro',
-  'Clientes':  '/misClientes',
-  'Gastos':    '/gastos',
+  'REGISTRO':          '/registro',
+  'CLIENTES':          '/misClientes',
+  'GASTOS':            '/gastos',
+  'REG.PRESUPUESTOS':  '/misFacturas',
 };
 
 // Iconos por tab conocido, genérico para el resto
 const KNOWN_ICONS = {
-  'Limpiezas':        'rectangle-list',
-  'Clientes':         'address-card',
-  'Gastos':           'hand-holding-dollar',
-  'Servicios':        'broom',
-  'Configuracion':    'circle-info',
-  'Configuración':    'circle-info',
-  'Resumen':          'calendar-days',
-  'Resumen Mensual':  'calendar-days',
+  'REGISTRO':          'rectangle-list',
+  'CLIENTES':          'address-card',
+  'GASTOS':            'hand-holding-dollar',
+  'REG.PRESUPUESTOS':  'file-invoice',
+  'SERVICIOS':         'broom',
+  'CONFIG':            'circle-info',
+  'IMPUESTOS':         'calendar-days',
+  'INICIO':            'house',
 };
 
 function tabPath(tab) {
@@ -190,7 +223,7 @@ const userInitial = computed(() => userName.value.charAt(0).toUpperCase());
   margin-bottom: 6px;
 }
 .as-brand-link { display: block; }
-.as-logo { height: 36px; width: auto; }
+.as-logo { height: 56px; width: auto; max-width: 100%; }
 
 /* ── Section label ── */
 .as-section-label {
@@ -206,6 +239,23 @@ const userInitial = computed(() => userName.value.charAt(0).toUpperCase());
   justify-content: space-between;
 }
 
+/* Cuando el label es un <button> plegable (Google Sheets) */
+.as-section-toggle {
+  width: 100%;
+  background: none;
+  border: none;
+  cursor: pointer;
+  gap: 6px;
+  transition: color 0.15s;
+}
+.as-section-toggle:hover { color: #60a5fa; }
+.as-toggle-chevron {
+  font-size: 0.6rem;
+  transition: transform 0.2s;
+  flex-shrink: 0;
+}
+.as-toggle-chevron--open { transform: rotate(90deg); }
+
 .as-refresh-btn {
   background: none;
   border: none;
@@ -215,9 +265,10 @@ const userInitial = computed(() => userName.value.charAt(0).toUpperCase());
   border-radius: 4px;
   font-size: 0.7rem;
   transition: color 0.15s;
+  margin-left: auto;
 }
-.as-refresh-btn:hover:not(:disabled) { color: #60a5fa; }
-.as-refresh-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.as-refresh-btn:hover { color: #60a5fa; }
+.as-refresh-btn--disabled { opacity: 0.4; cursor: not-allowed; pointer-events: none; }
 
 /* ── Loading state for tabs ── */
 .as-tabs-loading {

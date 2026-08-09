@@ -104,7 +104,7 @@ const zonas = [
   align-items: center;
   gap: 6px;
   background: var(--blue-pale);
-  color: var(--blue);
+  color: var(--blue-hover);
   font-family: 'Raleway', sans-serif;
   font-size: 0.72rem;
   font-weight: 700;
@@ -248,11 +248,11 @@ const zonas = [
 }
 .zonas-btn--whatsapp {
   background: #25D366;
-  color: #fff;
+  color: var(--navy);
 }
 .zonas-btn--whatsapp:hover {
   background: #1ebe5d;
-  color: #fff;
+  color: var(--navy);
   transform: translateY(-2px);
   box-shadow: 0 6px 18px rgba(37,211,102,0.35);
 }

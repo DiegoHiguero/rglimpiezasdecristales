@@ -34,31 +34,25 @@
         <table class="mc-table">
           <thead>
             <tr>
-              <th>Tipo</th>
+              <th>Proveedor</th>
+              <th>Categoría</th>
               <th>Fecha</th>
               <th>Nº Factura</th>
-              <th>Sin IVA (€)</th>
+              <th>Base (€)</th>
               <th>IVA (€)</th>
-              <th>Con IVA (€)</th>
-              <th>Notas</th>
-              <th>Verificado</th>
+              <th>Total (€)</th>
               <th>Acciones</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="gasto in gastosFiltrados" :key="gasto.id">
+              <td>{{ gasto.proveedor }}</td>
               <td>{{ gasto.tipo }}</td>
               <td>{{ gasto.fechaFactura }}</td>
               <td>{{ gasto.numeroFactura }}</td>
               <td>{{ gasto.precioSinIVA?.toFixed(2) }}</td>
               <td>{{ gasto.iva?.toFixed(2) }}</td>
               <td><strong>{{ gasto.precioConIVA?.toFixed(2) }}</strong></td>
-              <td>{{ gasto.notas }}</td>
-              <td>
-                <button class="mc-icon-btn" :class="gasto.verificado ? 'mc-icon-btn--green' : 'mc-icon-btn--grey'" @click="toggleVerificado(gasto)" :title="gasto.verificado ? 'Verificado' : 'Sin verificar'">
-                  <font-awesome-icon :icon="['fas', 'check']" />
-                </button>
-              </td>
               <td>
                 <div class="mc-actions">
                   <button class="mc-icon-btn mc-icon-btn--teal" @click="openModal(gasto)" title="Editar"><font-awesome-icon :icon="['fas', 'file-pen']" /></button>
@@ -69,11 +63,11 @@
           </tbody>
           <tfoot>
             <tr class="gt-totals">
-              <td colspan="3">Totales</td>
+              <td colspan="4">Totales</td>
               <td>{{ totalSinIVA.toFixed(2) }}</td>
               <td>{{ totalIVA.toFixed(2) }}</td>
               <td><strong>{{ totalConIVA.toFixed(2) }}</strong></td>
-              <td colspan="3"></td>
+              <td></td>
             </tr>
           </tfoot>
         </table>
@@ -82,7 +76,7 @@
       <!-- Gráfica -->
       <div class="gt-chart">
         <p class="mc-chart-title">Comparativa: Ingresos vs Gastos</p>
-        <apexchart width="100%" height="320" type="bar" :options="chartOptions" :series="chartSeries"></apexchart>
+        <VueApexCharts width="100%" height="320" type="bar" :options="chartOptions" :series="chartSeries"></VueApexCharts>
       </div>
 
     </div>
@@ -97,11 +91,27 @@
           <button class="mc-modal-close" @click="closeModal"><font-awesome-icon :icon="['fas', 'xmark']" /></button>
         </div>
         <div class="mc-modal-body">
-          <div class="gt-field">
-            <label>Tipo de Gasto</label>
-            <select v-model="editingGasto.tipo">
-              <option v-for="tipo in tiposGasto" :key="tipo" :value="tipo">{{ tipo }}</option>
-            </select>
+          <div class="gt-row">
+            <div class="gt-field">
+              <label>Proveedor</label>
+              <input type="text" v-model="editingGasto.proveedor" placeholder="Nombre del proveedor" />
+            </div>
+            <div class="gt-field">
+              <label>NIF</label>
+              <input type="text" v-model="editingGasto.nif" placeholder="Opcional" />
+            </div>
+          </div>
+          <div class="gt-row">
+            <div class="gt-field">
+              <label>Categoría</label>
+              <select v-model="editingGasto.tipo">
+                <option v-for="tipo in tiposGasto" :key="tipo" :value="tipo">{{ tipo }}</option>
+              </select>
+            </div>
+            <div class="gt-field">
+              <label>Concepto</label>
+              <input type="text" v-model="editingGasto.concepto" placeholder="Ej. GASOLINA" />
+            </div>
           </div>
           <div class="gt-row">
             <div class="gt-field">
@@ -117,17 +127,6 @@
             <label>Precio con IVA (€)</label>
             <input type="number" v-model.number="editingGasto.precioConIVA" @input="calcularPrecios(editingGasto)" placeholder="0.00" />
           </div>
-          <div class="gt-field">
-            <label>Notas</label>
-            <textarea v-model="editingGasto.notas" rows="3" placeholder="Observaciones..."></textarea>
-          </div>
-          <label class="gt-check-label">
-            <input type="checkbox" v-model="editingGasto.verificado" />
-            <span class="gt-check-box">
-              <font-awesome-icon :icon="['fas', 'check']" class="gt-check-tick" />
-            </span>
-            <span>Verificado</span>
-          </label>
         </div>
         <div class="mc-modal-footer">
           <button class="mc-btn mc-btn--ghost" @click="closeModal">Cancelar</button>
@@ -140,20 +139,20 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
+import VueApexCharts from 'vue3-apexcharts'
 import { useDatabaseStore } from '../stores/database'
-import { getAll, addRecord, updateRecord, removeRecord } from '../services/sheetDB'
 
 const dbStore = useDatabaseStore()
 const gastos = ref([])
 const gastosFiltrados = ref([])
 const selectedMonth = ref('')
 const selectedYear = ref(new Date().getFullYear())
-const tiposGasto = ref(['Gasolina', 'Coche', 'Teléfono', 'Material', 'Otros'])
+const tiposGasto = ref(['Vehículo / Combustible', 'Material / Herramientas', 'Teléfono / Internet', 'Otros'])
 const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']
 const years = Array.from({ length: 6 }, (_, i) => new Date().getFullYear() - i)
 const modalOpen = ref(false)
 
-const emptyGasto = () => ({ id: null, tipo: 'Gasolina', fechaFactura: '', numeroFactura: '', precioSinIVA: 0, iva: 0, precioConIVA: 0, notas: '', verificado: false })
+const emptyGasto = () => ({ id: null, proveedor: '', nif: '', tipo: 'Otros', concepto: '', fechaFactura: '', numeroFactura: '', precioSinIVA: 0, iva: 0, precioConIVA: 0 })
 const editingGasto = ref(emptyGasto())
 
 const openModal = (gasto = null) => {
@@ -171,9 +170,9 @@ const saveGasto = async () => {
   try {
     const { id, ...data } = editingGasto.value
     if (id) {
-      await updateRecord('gastos', id, data)
+      await dbStore.updateGasto(id, data)
     } else {
-      await addRecord('gastos', data)
+      await dbStore.addGasto(data)
     }
     await fetchGastos()
     closeModal()
@@ -183,18 +182,14 @@ const saveGasto = async () => {
 const deleteGasto = async (id) => {
   if (!confirm('¿Seguro que quieres borrar este gasto?')) return
   try {
-    await removeRecord('gastos', id)
+    await dbStore.deleteGasto(id)
     await fetchGastos()
   } catch (e) { console.error('[GastosTable] deleteGasto:', e) }
 }
 
-const toggleVerificado = async (gasto) => {
-  gasto.verificado = !gasto.verificado
-  await updateRecord('gastos', gasto.id, { verificado: gasto.verificado })
-}
-
 const fetchGastos = async () => {
-  gastos.value = await getAll('gastos')
+  await dbStore.fetchGastos()
+  gastos.value = dbStore.gastos
   filterGastos()
 }
 
@@ -415,7 +410,4 @@ onMounted(async () => {
 .gt-check-tick { color: #fff; font-size: 0.65rem; opacity: 0; transition: opacity 0.15s; }
 .gt-check-label input:checked ~ .gt-check-box { background: #2563eb; border-color: #2563eb; }
 .gt-check-label input:checked ~ .gt-check-box .gt-check-tick { opacity: 1; }
-
-.mc-icon-btn--green { background: rgba(34,197,94,0.15); color: #4ade80; }
-.mc-icon-btn--grey  { background: rgba(100,116,139,0.15); color: #64748b; }
 </style>

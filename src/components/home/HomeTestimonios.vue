@@ -71,12 +71,13 @@ onMounted(() => {
   margin: 12px 20px;
   border-radius: var(--r-lg);
   overflow: hidden;
+  padding: 40px 28px 0;
 }
 
 /* ── Header ── */
 .ti-header {
   text-align: center;
-  padding: 40px 28px 28px;
+  padding: 0 0 28px;
   border-bottom: 1px solid var(--border);
 }
 
@@ -86,7 +87,7 @@ onMounted(() => {
   align-items: center;
   gap: 7px;
   background: var(--blue-pale);
-  color: var(--blue);
+  color: var(--blue-hover);
   font-family: 'Raleway', sans-serif;
   font-size: 0.72rem;
   font-weight: 700;
@@ -166,8 +167,8 @@ onMounted(() => {
 }
 
 @media (max-width: 768px) {
-  .testimonials-section { margin: 10px 10px; border-radius: var(--r-md); }
-  .ti-header { padding: 36px 16px 28px; }
+  .testimonials-section { margin: 10px 10px; border-radius: var(--r-md); padding: 36px 16px 0; }
+  .ti-header { padding: 0 0 28px; }
   .ti-title { font-size: 1.7rem; }
   .ti-summary { flex-direction: column; gap: 14px; }
   .ti-review-btn { width: 100%; justify-content: center; }

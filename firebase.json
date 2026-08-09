@@ -6,6 +6,7 @@
   "hosting": {
     "site": "royal-clean-services",
     "public": "dist",
+    "cleanUrls": true,
     "ignore": [
       "firebase.json",
       "**/.*",
@@ -36,6 +37,31 @@
             "value": "camera=(), microphone=(), geolocation=(), payment=()"
           }
         ]
+      },
+      {
+        "source": "/assets/**",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "public, max-age=31536000, immutable"
+          }
+        ]
+      },
+      {
+        "source": "**/*.@(webp|png|jpg|jpeg|svg|ico|woff|woff2|mp4)",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "public, max-age=604800"
+          }
+        ]
+      }
+    ],
+    "redirects": [
+      {
+        "source": "/servicios",
+        "destination": "/",
+        "type": 301
       }
     ],
     "rewrites": [

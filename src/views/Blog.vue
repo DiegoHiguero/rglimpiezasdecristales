@@ -119,7 +119,7 @@ const rest = computed(() => filtered.value.slice(1));
 .blog-label {
   display: inline-block;
   background: var(--blue-pale);
-  color: var(--blue);
+  color: var(--blue-hover);
   font-family: 'Raleway', sans-serif;
   font-size: 0.72rem;
   font-weight: 700;

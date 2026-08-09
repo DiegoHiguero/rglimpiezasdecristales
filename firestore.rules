@@ -21,6 +21,34 @@ service cloud.firestore {
   }match /gastos/{id} {
   allow read, update, delete, create: if isSignedInAsAdmin();
 }
+    // Portal público de clientes: acceso por token (enlace único) o por
+    // email verificado (login con Google). Escritura solo por el admin
+    // (se rellena al guardar una factura desde el panel).
+    match /facturasPublicas/{token} {
+      allow get: if true;   // hace falta conocer el token exacto para leer
+      allow list: if false; // nadie puede enumerar todos los clientes
+      allow write: if isSignedInAsAdmin();
+      match /facturas/{facturaId} {
+        allow read: if true;  // ya acotado al token conocido del padre
+        allow write: if isSignedInAsAdmin();
+      }
+      // Firmas sueltas capturadas en cada visita; se vinculan a una
+      // factura (o no) mediante el campo facturaId. Solo el admin captura,
+      // vincula o borra — la lectura pública usa el mismo criterio que
+      // 'facturas' (ya acotada al token conocido).
+      match /firmas/{firmaId} {
+        allow read: if true;
+        allow write: if isSignedInAsAdmin();
+      }
+    }
+    match /clientePortalTokens/{nameSlug} {
+      allow read, write: if isSignedInAsAdmin();
+    }
+    match /clientePortalIndex/{emailSlug} {
+      allow read: if request.auth != null && request.auth.token.email == resource.data.clienteEmail;
+      allow write: if isSignedInAsAdmin();
+    }
+
     match /mensajes/{document} {
       allow create: if
         request.resource.data.keys().hasAll(['nombre', 'email', 'mensaje']) &&

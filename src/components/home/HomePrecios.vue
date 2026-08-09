@@ -1,8 +1,10 @@
 <template>
   <section class="section2" id="precios">
-    <div class="container py-3">
 
-      <span class="svc-label"><font-awesome-icon :icon="['fas', 'tag']" class="me-1" />Tarifas</span>
+    <span class="svc-label"><font-awesome-icon :icon="['fas', 'tag']" class="me-1" />Tarifas</span>
+
+    <div class="container pb-3">
+
       <div class="pricing-header">
         <h2 class="pricing-title">Precios claros,<br><span class="pricing-accent">sin sorpresas</span></h2>
         <p class="pricing-sub">Tarifas orientativas — cada presupuesto es personalizado y gratuito.</p>
@@ -15,7 +17,7 @@
           <div class="pc-inner">
             <div class="pc-top">
               <div class="pc-icon-wrap"><i class="bi bi-shop"></i></div>
-              <h4 class="pc-name">Local Pequeño</h4>
+              <h3 class="pc-name">Local Pequeño</h3>
               <p class="pc-size">1–2 escaparates</p>
             </div>
             <div class="pc-price-wrap">
@@ -27,7 +29,7 @@
               <li><font-awesome-icon :icon="['fas', 'check']" class="pc-check" />Limpieza de puertas</li>
               <li><font-awesome-icon :icon="['fas', 'check']" class="pc-check" />Desinfección de cristales</li>
             </ul>
-            <router-link to="/contacto" class="pc-btn">Pedir presupuesto</router-link>
+            <router-link to="/contacto" class="pc-btn">Elegir esta tarifa<font-awesome-icon :icon="['fas', 'arrow-right']" class="pc-btn-arrow" /></router-link>
           </div>
         </div>
 
@@ -36,7 +38,7 @@
           <div class="pc-inner">
             <div class="pc-top">
               <div class="pc-icon-wrap"><i class="bi bi-shop-window"></i></div>
-              <h4 class="pc-name">Local Mediano</h4>
+              <h3 class="pc-name">Local Mediano</h3>
               <p class="pc-size">3–5 escaparates</p>
             </div>
             <div class="pc-price-wrap">
@@ -48,7 +50,7 @@
               <li><font-awesome-icon :icon="['fas', 'check']" class="pc-check" />Limpieza de puertas</li>
               <li><font-awesome-icon :icon="['fas', 'check']" class="pc-check" />Desinfección de cristales</li>
             </ul>
-            <router-link to="/contacto" class="pc-btn">Pedir presupuesto</router-link>
+            <router-link to="/contacto" class="pc-btn">Elegir esta tarifa<font-awesome-icon :icon="['fas', 'arrow-right']" class="pc-btn-arrow" /></router-link>
           </div>
         </div>
 
@@ -57,7 +59,7 @@
           <div class="pc-inner">
             <div class="pc-top">
               <div class="pc-icon-wrap"><i class="bi bi-house-door"></i></div>
-              <h4 class="pc-name">Local Grande</h4>
+              <h3 class="pc-name">Local Grande</h3>
               <p class="pc-size">Fachada completa</p>
             </div>
             <div class="pc-price-wrap">
@@ -69,7 +71,7 @@
               <li><font-awesome-icon :icon="['fas', 'check']" class="pc-check" />Limpieza de puertas</li>
               <li><font-awesome-icon :icon="['fas', 'check']" class="pc-check" />Desinfección de cristales</li>
             </ul>
-            <router-link to="/contacto" class="pc-btn">Pedir presupuesto</router-link>
+            <router-link to="/contacto" class="pc-btn">Elegir esta tarifa<font-awesome-icon :icon="['fas', 'arrow-right']" class="pc-btn-arrow" /></router-link>
           </div>
         </div>
 
@@ -78,7 +80,7 @@
           <div class="pc-inner">
             <div class="pc-top">
               <div class="pc-icon-wrap"><i class="bi bi-buildings"></i></div>
-              <h4 class="pc-name">Apartamentos</h4>
+              <h3 class="pc-name">Apartamentos</h3>
               <p class="pc-size">Piso o apartamento</p>
             </div>
             <div class="pc-price-wrap">
@@ -90,7 +92,7 @@
               <li><font-awesome-icon :icon="['fas', 'check']" class="pc-check" />Limpieza de balcones</li>
               <li><font-awesome-icon :icon="['fas', 'check']" class="pc-check" />Desinfección de cristales</li>
             </ul>
-            <router-link to="/contacto" class="pc-btn">Pedir presupuesto</router-link>
+            <router-link to="/contacto" class="pc-btn">Elegir esta tarifa<font-awesome-icon :icon="['fas', 'arrow-right']" class="pc-btn-arrow" /></router-link>
           </div>
         </div>
 
@@ -101,7 +103,7 @@
           <div class="pc-inner">
             <div class="pc-top">
               <div class="pc-icon-wrap"><i class="bi bi-houses"></i></div>
-              <h4 class="pc-name">Chalet</h4>
+              <h3 class="pc-name">Chalet</h3>
               <p class="pc-size">Unifamiliar con jardín</p>
             </div>
             <div class="pc-price-wrap">
@@ -115,7 +117,7 @@
               <li><font-awesome-icon :icon="['fas', 'check']" class="pc-check" />Limpieza de barandillas</li>
               <li><font-awesome-icon :icon="['fas', 'check']" class="pc-check" />Desinfección de cristales</li>
             </ul>
-            <router-link to="/contacto" class="pc-btn pc-btn--filled">Pedir presupuesto</router-link>
+            <router-link to="/contacto" class="pc-btn pc-btn--filled">Elegir esta tarifa<font-awesome-icon :icon="['fas', 'arrow-right']" class="pc-btn-arrow" /></router-link>
           </div>
         </div>
 
@@ -124,7 +126,7 @@
           <div class="pc-inner">
             <div class="pc-top">
               <div class="pc-icon-wrap"><i class="bi bi-building-fill"></i></div>
-              <h4 class="pc-name">Hotel</h4>
+              <h3 class="pc-name">Hotel</h3>
               <p class="pc-size">Precio por habitación</p>
             </div>
             <div class="pc-price-wrap">
@@ -138,7 +140,7 @@
               <li><font-awesome-icon :icon="['fas', 'check']" class="pc-check" />Limpieza de barandillas</li>
               <li><font-awesome-icon :icon="['fas', 'check']" class="pc-check" />Desinfección de cristales</li>
             </ul>
-            <router-link to="/contacto" class="pc-btn">Pedir presupuesto</router-link>
+            <router-link to="/contacto" class="pc-btn">Elegir esta tarifa<font-awesome-icon :icon="['fas', 'arrow-right']" class="pc-btn-arrow" /></router-link>
           </div>
         </div>
 
@@ -160,17 +162,17 @@
 .pc-card--orange { --cc: #f97316; --cp: #fff7ed; }
 
 /* ── Section ── */
-.section2 { background: var(--white); border-radius: var(--r-lg); margin: 12px 20px; }
+.section2 { background: var(--white); border-radius: var(--r-lg); margin: 12px 20px; padding: 40px 28px 0; }
 
 .svc-label {
   display: block;
   width: fit-content;
-  background: var(--blue-pale); color: var(--blue);
+  background: var(--blue-pale); color: var(--blue-hover);
   font-family: 'Raleway', sans-serif; font-size: 0.72rem;
   font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase;
   padding: 5px 14px; border-radius: 20px; margin-bottom: 12px;
 }
-.pricing-header { text-align: center; padding: 40px 0 24px; }
+.pricing-header { text-align: center; padding: 12px 0 24px; }
 .pricing-title { font-family: 'Anton', sans-serif; font-size: 2.6rem; color: var(--text); line-height: 1.15; margin: 14px 0 16px; }
 .pricing-accent { color: var(--blue); }
 .pricing-sub { font-family: 'Raleway', sans-serif; font-size: 1rem; color: var(--text-muted); max-width: 540px; margin: 0 auto 28px; line-height: 1.7; }
@@ -303,18 +305,22 @@
 
 /* ── Button ── */
 .pc-btn {
-  display: block; text-align: center;
-  font-family: 'Raleway', sans-serif; font-weight: 700; font-size: 0.85rem;
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  font-family: 'Raleway', sans-serif; font-weight: 700; font-size: 0.83rem;
   color: var(--cc);
-  border: 1.5px solid var(--cc);
   background: transparent;
-  padding: 10px 12px; border-radius: 10px;
+  padding: 6px 0 0;
   text-decoration: none;
-  transition: background 0.2s, color 0.2s;
+  transition: gap 0.2s, color 0.2s;
 }
-.pc-btn:hover { background: var(--cc); color: #fff; }
-.pc-btn--filled { background: var(--cc); color: #fff; }
+.pc-btn-arrow { font-size: 0.7rem; transition: transform 0.2s; }
+.pc-btn:hover .pc-btn-arrow { transform: translateX(3px); }
+.pc-btn--filled {
+  background: var(--cc); color: #fff;
+  padding: 9px 12px; border-radius: 10px;
+}
 .pc-btn--filled:hover { opacity: 0.9; }
+.pc-btn--filled:hover .pc-btn-arrow { transform: translateX(3px); }
 
 /* ── Responsive ── */
 @media (max-width: 900px) { .pc-grid { grid-template-columns: repeat(2, 1fr); } }

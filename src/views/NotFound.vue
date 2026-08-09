@@ -17,7 +17,7 @@
       </div>
 
       <div class="nf-links">
-        <router-link to="/servicios">Servicios</router-link>
+        <router-link to="/#servicios">Servicios</router-link>
         <span>·</span>
         <router-link to="/blog">Blog</router-link>
         <span>·</span>

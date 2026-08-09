@@ -42,14 +42,14 @@
     <!-- ── Vídeos ── -->
     <div v-if="tab === 'videos'" class="video-grid">
       <div class="video-item animate-on-scroll">
-        <video src="../../assets/img/videoplayback.mp4" autoplay muted loop playsinline></video>
+        <video ref="videoA" src="../../assets/img/videoplayback.mp4" muted loop playsinline></video>
         <div class="video-overlay">
           <span class="gl-play-badge"><font-awesome-icon :icon="['fas', 'play']" /></span>
           <span class="gallery-tag">En acción</span>
         </div>
       </div>
       <div class="video-item animate-on-scroll">
-        <video src="../../assets/img/VID-20251022-WA0013.mp4" autoplay muted loop playsinline></video>
+        <video ref="videoB" src="../../assets/img/VID-20251022-WA0013.mp4" muted loop playsinline></video>
         <div class="video-overlay">
           <span class="gl-play-badge"><font-awesome-icon :icon="['fas', 'play']" /></span>
           <span class="gallery-tag">Octubre 2025</span>
@@ -122,7 +122,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref, onMounted, onUnmounted, nextTick, watch } from 'vue';
 import img2024Feb    from '../../assets/img/2024-02-19.webp';
 import img2024Jul    from '../../assets/img/2024-07-08.webp';
 import img2023Ene    from '../../assets/img/20230119_110356.webp';
@@ -150,6 +150,23 @@ import img20260528c  from '../../assets/img/20260528_140712.webp';
 import img20260528d  from '../../assets/img/20260528_141113.webp';
 
 const tab = ref('fotos');
+const videoA = ref(null);
+const videoB = ref(null);
+
+const playVideos = () => {
+  [videoA.value, videoB.value].forEach(v => {
+    if (!v) return;
+    v.muted = true;
+    v.play().catch(() => {});
+  });
+};
+
+watch(tab, async (val) => {
+  if (val === 'videos') {
+    await nextTick();
+    playVideos();
+  }
+});
 
 const photos = [
   { src: imgLimpiando,   label: 'Pértiga telescópica en acción' },
@@ -237,7 +254,7 @@ onUnmounted(() => {
 .gl-header { text-align: center; margin-bottom: 28px; }
 .gl-label {
   display: flex; width: fit-content; align-items: center;
-  background: var(--blue-pale); color: var(--blue);
+  background: var(--blue-pale); color: var(--blue-hover);
   font-family: 'Raleway', sans-serif; font-size: 0.72rem;
   font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase;
   padding: 5px 14px; border-radius: 20px; margin-bottom: 14px;
@@ -269,7 +286,7 @@ onUnmounted(() => {
   padding: 1px 8px; border-radius: 20px;
   background: rgba(0,0,0,0.12);
 }
-.gl-tab.active .gl-tab-count { background: rgba(255,255,255,0.25); }
+.gl-tab.active .gl-tab-count { background: rgba(0,0,0,0.2); }
 
 /* ── Photo grid ── */
 .gallery-grid {

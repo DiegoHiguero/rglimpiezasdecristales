@@ -1,19 +1,21 @@
 <template>
   <Navbar v-if="!isAdminRoute" />
   <AdminSidebar v-if="isAdminRoute" />
-  <div v-if="isAdminRoute" class="admin-wrap">
+  <main v-if="isAdminRoute" class="admin-wrap">
     <router-view v-if="!userStore.loadingSesion"></router-view>
     <div v-else class="d-flex justify-content-center align-items-center" style="height:60vh">
       <div class="spinner-grow text-primary" style="width:3rem;height:3rem" role="status"></div>
     </div>
-  </div>
+  </main>
   <template v-else>
-    <router-view v-if="!userStore.loadingSesion"></router-view>
-    <div v-else class="d-flex justify-content-center">
-      <div class="spinner-grow text-success" style="width: 4rem; height: 4rem" role="status">
-        <span class="sr-only"></span>
+    <main>
+      <router-view v-if="!userStore.loadingSesion"></router-view>
+      <div v-else class="d-flex justify-content-center">
+        <div class="spinner-grow text-success" style="width: 4rem; height: 4rem" role="status">
+          <span class="sr-only"></span>
+        </div>
       </div>
-    </div>
+    </main>
     <Footer />
   </template>
   <CookieBanner />
@@ -33,7 +35,7 @@ const userStore = useUserStore();
 const syncStore = useSyncStore();
 const route     = useRoute();
 
-const adminPaths = ['/dashboard', '/Register', '/registro', '/misClientes', '/misFacturas', '/gastos', '/sheet/', '/admin/'];
+const adminPaths = ['/dashboard', '/Register', '/registro', '/misClientes', '/misFacturas', '/gastos', '/sheet/', '/admin/', '/hoja-de-ruta', '/firmas', '/pagos-pendientes', '/nueva-factura'];
 const isAdminRoute = computed(() => adminPaths.some(p => route.path === p || route.path.startsWith(p)));
 
 watchEffect(() => {

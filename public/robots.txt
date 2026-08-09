@@ -8,6 +8,7 @@ Disallow: /misFacturas
 Disallow: /registro
 Disallow: /Register
 Disallow: /login
+Disallow: /portal
 
 # Sitemap
 Sitemap: https://royallclean.es/sitemap.xml

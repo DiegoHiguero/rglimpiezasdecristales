@@ -3,25 +3,31 @@
 import { createRouter,createWebHistory } from "vue-router";
 
 import Home from "./views/Home.vue";
-import Login from "./views/Login.vue";
-import Register from "./views/Register.vue";
-import MisClientes from "./views/MisClientes.vue";
-import MisFacturas from "./views/MisFacturas.vue";
-import Contacto from "./views/Contacto.vue";
-import Servicios from "./views/Servicios.vue";
-import Confidentialite from "./views/Confidentialite.vue";
-import MentionsLegales from "./views/MentionsLegales.vue";
-import LimpiezasMensuales from "./views/LimpiezasMensuales.vue";
-import Dashboard from "./views/Dashboard.vue";
-// ¡NUEVA IMPORTACIÓN AQUÍ!
-import MensajesAdmin from "./views/MensajesAdmin.vue";
-import GastosView from "./views/GastosView.vue";
-import GenerarArticulo from "./views/GenerarArticulo.vue";
-import SheetView from "./views/SheetView.vue";
 import Blog from "./views/Blog.vue";
 import BlogArticle from "./views/BlogArticle.vue";
+import ServicioDetalle from "./views/ServicioDetalle.vue";
 import NotFound from "./views/NotFound.vue";
+
+const Login             = () => import("./views/Login.vue");
+const Register          = () => import("./views/Register.vue");
+const MisClientes       = () => import("./views/MisClientes.vue");
+const MisFacturas       = () => import("./views/MisFacturas.vue");
+const Contacto          = () => import("./views/Contacto.vue");
+const Confidentialite   = () => import("./views/Confidentialite.vue");
+const MentionsLegales   = () => import("./views/MentionsLegales.vue");
+const LimpiezasMensuales = () => import("./views/LimpiezasMensuales.vue");
+const Dashboard         = () => import("./views/Dashboard.vue");
+const MensajesAdmin     = () => import("./views/MensajesAdmin.vue");
+const GastosView        = () => import("./views/GastosView.vue");
+const Roadmap           = () => import("./views/Roadmap.vue");
+const PortalCliente     = () => import("./views/PortalCliente.vue");
+const RegistroFirmas    = () => import("./views/RegistroFirmas.vue");
+const PagosPendientes   = () => import("./views/PagosPendientes.vue");
+const NuevaFactura      = () => import("./views/NuevaFactura.vue");
+const GenerarArticulo   = () => import("./views/GenerarArticulo.vue");
+const SheetView         = () => import("./views/SheetView.vue");
 import { articles } from "./data/blog.js";
+import { getServicioBySlug } from "./data/servicios.js";
 
 // import Editar from "./views/Editar.vue";
 
@@ -66,8 +72,8 @@ const routes = [
         path: '/',
         component: Home,
         meta: {
-            title: 'Limpieza de Cristales en Madrid | Royall Clean — Presupuesto Gratis',
-            description: 'Limpieza de cristales y ventanas en Madrid para hogares, comunidades y locales. Servicio profesional con más de 10 años de experiencia. ¡Presupuesto gratis en 24 h! ☎ 696 169 435',
+            title: BASE_TITLE,
+            description: BASE_DESC,
         },
     },
     { path: '/login', component: Login },
@@ -83,14 +89,15 @@ const routes = [
             description: 'Pide tu presupuesto gratuito de limpieza de cristales y ventanas en Madrid. Sin compromiso, respuesta en menos de 24 horas. ☎ 696 169 435',
         },
     },
-    {
-        path: '/servicios',
-        component: Servicios,
-        meta: {
-            title: 'Servicios de Limpieza de Cristales y Ventanas en Madrid | Royall Clean',
-            description: 'Limpieza de cristales y ventanas en Madrid para hogares, comunidades y locales. También escaparates, fachadas, placas solares y grafitis. Solicita tu presupuesto.',
-        },
-    },
+    { path: '/servicios', redirect: '/' },
+    { path: '/limpieza-cristales-hogares', component: ServicioDetalle, meta: { servicio: 'limpieza-cristales-hogares' } },
+    { path: '/limpieza-cristales-comunidades', component: ServicioDetalle, meta: { servicio: 'limpieza-cristales-comunidades' } },
+    { path: '/limpieza-cristales-locales-comerciales', component: ServicioDetalle, meta: { servicio: 'limpieza-cristales-locales-comerciales' } },
+    { path: '/limpieza-cristales-altura', component: ServicioDetalle, meta: { servicio: 'limpieza-cristales-altura' } },
+    { path: '/limpieza-placas-solares', component: ServicioDetalle, meta: { servicio: 'limpieza-placas-solares' } },
+    { path: '/limpieza-fin-de-obra', component: ServicioDetalle, meta: { servicio: 'limpieza-fin-de-obra' } },
+    { path: '/limpieza-grafitis', component: ServicioDetalle, meta: { servicio: 'limpieza-grafitis' } },
+    { path: '/retirada-de-vinilos', component: ServicioDetalle, meta: { servicio: 'retirada-de-vinilos' } },
     {
         path: '/politica-privacidad',
         component: Confidentialite,
@@ -111,6 +118,18 @@ const routes = [
     { path: '/admin/mensajes', component: MensajesAdmin, beforeEnter: requiereAuth2 },
     { path: '/admin/generar', component: GenerarArticulo, beforeEnter: requiereAuth2 },
     { path: '/gastos', component: GastosView, beforeEnter: requiereAuth2 },
+    { path: '/hoja-de-ruta', component: Roadmap, beforeEnter: requiereAuth2 },
+    { path: '/firmas', component: RegistroFirmas, beforeEnter: requiereAuth2 },
+    { path: '/pagos-pendientes', component: PagosPendientes, beforeEnter: requiereAuth2 },
+    { path: '/nueva-factura', component: NuevaFactura, beforeEnter: requiereAuth2 },
+    {
+        path: '/portal/:token?',
+        component: PortalCliente,
+        meta: {
+            title: 'Portal de clientes | Royall Clean',
+            description: 'Consulta tus facturas y firmas de servicio de Royall Clean.',
+        },
+    },
     { path: '/sheet/:tab', component: SheetView, beforeEnter: requiereAuth2 },
     {
         path: '/blog',
@@ -150,15 +169,24 @@ const router = createRouter({
 });
 
 router.afterEach((to) => {
+    const article  = (to.meta?.dynamic && to.params?.slug) ? articles.find(a => a.slug === to.params.slug) : null;
+    const servicio = to.meta?.servicio ? getServicioBySlug(to.meta.servicio) : null;
+
     let title = to.meta?.title || BASE_TITLE;
     let desc  = to.meta?.description || BASE_DESC;
+    let keywords = to.meta?.keywords || '';
+    let image = 'https://royallclean.es/og-image.webp';
 
-    if (to.meta?.dynamic && to.params?.slug) {
-        const article = articles.find(a => a.slug === to.params.slug);
-        if (article) {
-            title = `${article.title} | Royall Clean`;
-            desc  = article.metaDescription;
-        }
+    if (article) {
+        title = `${article.title} | Royall Clean`;
+        desc  = article.metaDescription;
+        keywords = article.keywords || '';
+        image = article.image ? window.location.origin + article.image : image;
+    } else if (servicio) {
+        title = `${servicio.metaTitle} | Royall Clean`;
+        desc  = servicio.metaDescription;
+        keywords = servicio.keywords || '';
+        image = servicio.image ? window.location.origin + servicio.image : image;
     }
 
     document.title = title;
@@ -176,16 +204,7 @@ router.afterEach((to) => {
     if (ogUrl) ogUrl.setAttribute('content', 'https://royallclean.es' + to.path);
 
     const ogImage = document.querySelector('meta[property="og:image"]');
-    if (ogImage) {
-        if (to.meta?.dynamic && to.params?.slug) {
-            const imgArticle = articles.find(a => a.slug === to.params.slug);
-            ogImage.setAttribute('content', imgArticle?.image
-                ? window.location.origin + imgArticle.image
-                : 'https://royallclean.es/og-royallclean.jpg');
-        } else {
-            ogImage.setAttribute('content', 'https://royallclean.es/og-royallclean.jpg');
-        }
-    }
+    if (ogImage) ogImage.setAttribute('content', image);
 
     const canonical = document.querySelector('link[rel="canonical"]');
     if (canonical) canonical.setAttribute('href', 'https://royallclean.es' + to.path);
@@ -196,12 +215,7 @@ router.afterEach((to) => {
         metaKeywords.setAttribute('name', 'keywords');
         document.head.appendChild(metaKeywords);
     }
-    if (to.meta?.dynamic && to.params?.slug) {
-        const kw = articles.find(a => a.slug === to.params.slug)?.keywords || '';
-        metaKeywords.setAttribute('content', kw);
-    } else {
-        metaKeywords.setAttribute('content', to.meta?.keywords || '');
-    }
+    metaKeywords.setAttribute('content', keywords);
 });
 
 export default router;

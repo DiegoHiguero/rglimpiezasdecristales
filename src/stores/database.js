@@ -1,33 +1,208 @@
 /**
  * database.js — Store de datos principal.
- * Usa Google Sheets como base de datos (via sheetDB.js).
- * Colecciones: limpiezas, clientes, gastos.
+ * Lee/escribe directamente sobre las pestañas reales de la hoja de facturación
+ * (CLIENTES, REGISTRO, GASTOS) vía sheetDB.js genérico
+ * (getSheetRaw/appendSheetRow/updateSheetRow/deleteSheetRow), sin columna de ID:
+ * cada fila se identifica por su número de fila (_row), expuesto también como `id`.
  * Mensajes se gestionan en Firestore (formulario público).
  */
 
 import { defineStore } from 'pinia'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
-import { getAll, addRecord, updateRecord, removeRecord } from '../services/sheetDB'
+import { getSheetRaw, appendSheetRow, updateSheetRow, deleteSheetRow } from '../services/sheetDB'
 import { saveCache, loadCache, hasChanges } from '../services/localCache'
 
 dayjs.extend(relativeTime)
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
+// ─── Pestañas y cabeceras reales ───────────────────────────────────────────────
 
-function matchesMonthYear(dateStr, month, year) {
-  if (!dateStr) return false
-  const d = dayjs(dateStr)
+const TAB = {
+  clientes:  'CLIENTES',
+  facturas:  'REGISTRO',
+  gastos:    'GASTOS',
+}
+
+const CLIENTES_HEADERS = ['Nombre / Razón social', 'NIF/CIF', 'Dirección', 'Teléfono', 'Email', 'Persona contacto', 'Notas', 'Precio habitual']
+const FACTURAS_HEADERS = ['Nº Factura', 'Fecha', 'Cliente', 'NIF', 'Concepto', 'Base', 'IVA', 'Total', 'Estado', 'F. cobro', 'Trim.', 'Enlace PDF', 'Notas']
+const GASTOS_HEADERS   = ['Fecha', 'Proveedor', 'NIF', 'Concepto', 'Categoría', 'Base', 'IVA sop.', 'Total', '% Ded.', 'IVA deduc.', 'Base deduc.', 'Trim.', 'Recibo (foto)', 'Nº Factura']
+
+// ─── Helpers de formato (la hoja usa formato español: 1.234,56 € y DD/MM/AAAA) ──
+
+function parseEuroNumber(str) {
+  if (str === null || str === undefined || str === '') return 0
+  if (typeof str === 'number') return str
+  const s = String(str).replace(/[€\s]/g, '').trim()
+  if (!s) return 0
+  const n = parseFloat(s.replace(/\./g, '').replace(',', '.'))
+  return isNaN(n) ? 0 : n
+}
+
+function formatEuroNumber(n) {
+  return (Number(n) || 0).toFixed(2).replace('.', ',')
+}
+
+function isoToEuDate(iso) {
+  if (!iso) return ''
+  const d = dayjs(iso)
+  return d.isValid() ? d.format('DD/MM/YYYY') : String(iso)
+}
+
+function euDateToIso(eu) {
+  if (!eu) return ''
+  const [d, m, y] = String(eu).trim().split('/')
+  if (!d || !m || !y) return ''
+  return `${y}-${m.padStart(2, '0')}-${d.padStart(2, '0')}`
+}
+
+function quarterOf(iso) {
+  if (!iso) return ''
+  const d = dayjs(iso)
+  return d.isValid() ? `T${Math.floor(d.month() / 3) + 1}` : ''
+}
+
+function computeNextFactura(limpiezas) {
+  const year   = new Date().getFullYear()
+  const prefix = `F-${year}-`
+  let maxSeq = 0
+  for (const l of limpiezas) {
+    if (l.factura?.startsWith(prefix)) {
+      const n = parseInt(l.factura.slice(prefix.length)) || 0
+      if (n > maxSeq) maxSeq = n
+    }
+  }
+  return `${prefix}${String(maxSeq + 1).padStart(3, '0')}`
+}
+
+function matchesMonthYear(isoDateStr, month, year) {
+  if (!isoDateStr) return false
+  const d = dayjs(isoDateStr)
   const yearOk  = !year  || d.year()  === parseInt(year)
   const monthOk = month === '' || d.month() === parseInt(month)
   return yearOk && monthOk
+}
+
+// ─── Mapeo fila ↔ objeto ────────────────────────────────────────────────────────
+
+function clienteFromRow(r) {
+  return {
+    id:              r._row,
+    _row:            r._row,
+    nombre:          r['Nombre / Razón social'] || '',
+    nifCif:          r['NIF/CIF'] || '',
+    direccion:       r['Dirección'] || '',
+    telefono:        r['Teléfono'] || '',
+    email:           r['Email'] || '',
+    personaContacto: r['Persona contacto'] || '',
+    notas:           r['Notas'] || '',
+    precioHabitual:  parseEuroNumber(r['Precio habitual']),
+  }
+}
+
+function clienteToRow(d) {
+  return {
+    'Nombre / Razón social': d.nombre || '',
+    'NIF/CIF':               d.nifCif || '',
+    'Dirección':             d.direccion || '',
+    'Teléfono':               d.telefono || '',
+    'Email':                 d.email || '',
+    'Persona contacto':      d.personaContacto || '',
+    'Notas':                 d.notas || '',
+    'Precio habitual':       d.precioHabitual ? formatEuroNumber(d.precioHabitual) : '',
+  }
+}
+
+function facturaFromRow(r) {
+  const fechaIso = euDateToIso(r['Fecha'])
+  const estado   = r['Estado'] || 'Pendiente'
+  return {
+    id:                     r._row,
+    _row:                   r._row,
+    factura:                r['Nº Factura'] || '',
+    fechaPrincipalLimpieza: fechaIso,
+    clienteId:              r['Cliente'] || '',   // nombre del cliente — hace de clave de referencia
+    cliente:                r['Cliente'] || '',    // alias de solo lectura para mostrar en tablas
+    nif:                    r['NIF'] || '',
+    descripcion:            r['Concepto'] || '',
+    base:                   parseEuroNumber(r['Base']),
+    iva:                    parseEuroNumber(r['IVA']),
+    precioBruto:            parseEuroNumber(r['Total']),
+    importe:                parseEuroNumber(r['Total']),
+    estado,
+    fechaPago:              estado === 'Pagada' ? (euDateToIso(r['F. cobro']) || fechaIso) : null,
+    trimestre:              r['Trim.'] || '',
+    enlacePDF:              r['Enlace PDF'] || '',
+    notas:                  r['Notas'] || '',
+  }
+}
+
+function facturaToRow(d) {
+  const total = Number(d.precioBruto ?? d.importe ?? 0)
+  const base  = d.base != null ? Number(d.base) : total / 1.21
+  const iva   = d.iva  != null ? Number(d.iva)  : total - base
+  const fecha = d.fechaPrincipalLimpieza || ''
+  return {
+    'Nº Factura': d.factura || '',
+    'Fecha':      isoToEuDate(fecha),
+    'Cliente':    d.clienteId || '',
+    'NIF':        d.nif || '',
+    'Concepto':   d.descripcion || 'LIMPIEZA DE CRISTALES',
+    'Base':       formatEuroNumber(base),
+    'IVA':        formatEuroNumber(iva),
+    'Total':      formatEuroNumber(total),
+    'Estado':     d.estado || (d.fechaPago ? 'Pagada' : 'Pendiente'),
+    'F. cobro':   d.fechaPago ? isoToEuDate(d.fechaPago) : '',
+    'Trim.':      d.trimestre || quarterOf(fecha),
+    'Enlace PDF': d.enlacePDF || '',
+    'Notas':      d.notas || '',
+  }
+}
+
+function gastoFromRow(r) {
+  return {
+    id:            r._row,
+    _row:          r._row,
+    fechaFactura:  euDateToIso(r['Fecha']),
+    proveedor:     r['Proveedor'] || '',
+    nif:           r['NIF'] || '',
+    tipo:          r['Categoría'] || 'Otros',
+    concepto:      r['Concepto'] || '',
+    precioSinIVA:  parseEuroNumber(r['Base']),
+    iva:           parseEuroNumber(r['IVA sop.']),
+    precioConIVA:  parseEuroNumber(r['Total']),
+    trimestre:     r['Trim.'] || '',
+    numeroFactura: r['Nº Factura'] || '',
+  }
+}
+
+function gastoToRow(d) {
+  const total = Number(d.precioConIVA ?? 0)
+  const base  = total / 1.21
+  const ivaSop = total - base
+  const fecha = d.fechaFactura || ''
+  return {
+    'Fecha':          isoToEuDate(fecha),
+    'Proveedor':      d.proveedor || '',
+    'NIF':            d.nif || '',
+    'Concepto':       d.concepto || d.tipo || '',
+    'Categoría':      d.tipo || 'Otros',
+    'Base':           formatEuroNumber(base),
+    'IVA sop.':       formatEuroNumber(ivaSop),
+    'Total':          formatEuroNumber(total),
+    '% Ded.':         '100%',
+    'IVA deduc.':     formatEuroNumber(ivaSop),
+    'Base deduc.':    formatEuroNumber(base),
+    'Trim.':          d.trimestre || quarterOf(fecha),
+    'Recibo (foto)':  d.recibo || '',
+    'Nº Factura':     d.numeroFactura || '',
+  }
 }
 
 // ─── Store ────────────────────────────────────────────────────────────────────
 
 export const useDatabaseStore = defineStore('database', {
   state: () => ({
-    // Limpiezas
+    // Limpiezas / Facturas
     limpiezas:          [],
     _allLimpiezas:      [],       // caché sin filtrar
     nextFacturaFormatted: 'Calculando...',
@@ -73,11 +248,11 @@ export const useDatabaseStore = defineStore('database', {
   getters: {
     pendingLimpiezas: (state) =>
       state._allLimpiezas
-        .filter(l => !l.fechaPago)
+        .filter(l => l.estado !== 'Pagada')
         .sort((a, b) => new Date(a.fechaPrincipalLimpieza || 0) - new Date(b.fechaPrincipalLimpieza || 0)),
 
-    getClientById: (state) => (id) =>
-      state.clientes.find(c => c.id === id) || null,
+    getClientById: (state) => (nombre) =>
+      state.clientes.find(c => c.nombre === nombre) || null,
 
     totalBrutoLimpiezas: (state) =>
       state.limpiezas.reduce((s, l) => s + (Number(l.precioBruto) || 0), 0),
@@ -116,34 +291,26 @@ export const useDatabaseStore = defineStore('database', {
 
   actions: {
 
-    // ── Factura numbering ──────────────────────────────────────────────────
+    // ── Factura numbering (esquema real: F-AAAA-NNN, secuencia continua por año) ──
 
+    /**
+     * Lee la hoja EN VIVO (no la caché local) y calcula el siguiente número
+     * de factura. Es la fuente autoritativa que se usa justo antes de
+     * escribir una factura nueva, para no duplicar números aunque la
+     * caché en memoria esté desactualizada (otra pestaña, otro día, etc.).
+     */
     async fetchNextFacturaFormattedNumber() {
-      const now   = new Date()
-      const year  = now.getFullYear()
-      const month = String(now.getMonth() + 1).padStart(2, '0')
-      const prefix = `F${year}-${month}-`
-
-      const source = this._allLimpiezas.length ? this._allLimpiezas : await getAll('limpiezas')
-
-      let maxSeq = 0
-      for (const l of source) {
-        if (l.factura?.startsWith(prefix)) {
-          const parts = l.factura.split('-')
-          const n = parseInt(parts[parts.length - 1]) || 0
-          if (n > maxSeq) maxSeq = n
-        }
-      }
-      this.nextFacturaFormatted = `${prefix}${String(maxSeq + 1).padStart(3, '0')}`
+      const { records } = await getSheetRaw(TAB.facturas)
+      this.nextFacturaFormatted = computeNextFactura(records.map(facturaFromRow))
+      return this.nextFacturaFormatted
     },
 
-    // ── Limpiezas ──────────────────────────────────────────────────────────
+    // ── Limpiezas / Facturas ───────────────────────────────────────────────
 
     async fetchLimpiezas(month = '', year = '') {
       this.selectedMonth = month
       this.selectedYear  = year
 
-      // Hidratar desde caché local si aún no hay datos en memoria
       if (!this._allLimpiezas.length) {
         const cached = loadCache('limpiezas')
         if (cached?.records?.length) {
@@ -151,20 +318,22 @@ export const useDatabaseStore = defineStore('database', {
           this.limpiezas = this._filterLimpiezas(cached.records, month, year)
         }
       } else {
-        // Re-filtrar por el nuevo mes/año sin esperar la red
         this.limpiezas = this._filterLimpiezas(this._allLimpiezas, month, year)
       }
 
       this.isLoadingLimpiezas = true
       this.errorLimpiezas     = null
       try {
-        const fresh = await getAll('limpiezas')
+        const { records } = await getSheetRaw(TAB.facturas)
+        const fresh = records.map(facturaFromRow)
         if (hasChanges(this._allLimpiezas, fresh)) {
           this._allLimpiezas = fresh
           saveCache('limpiezas', fresh)
           this.limpiezas = this._filterLimpiezas(fresh, month, year)
-          await this.fetchNextFacturaFormattedNumber()
         }
+        // Vista previa del próximo número — barata (ya tenemos "fresh" en memoria)
+        // y siempre se recalcula, para que nunca se quede en "Calculando...".
+        this.nextFacturaFormatted = computeNextFactura(fresh)
       } catch (e) {
         this.errorLimpiezas = e
         console.error('[DB] fetchLimpiezas:', e)
@@ -185,18 +354,20 @@ export const useDatabaseStore = defineStore('database', {
       this.isAddingLimpieza = true
       this.addLimpiezaError = null
       try {
-        // Auto-factura si no se proporcionó
         let factura = data.factura?.trim()
         if (!factura) {
-          await this.fetchNextFacturaFormattedNumber()
-          factura = this.nextFacturaFormatted
+          // Autoritativo: lee la hoja en vivo justo antes de guardar, no la
+          // caché en memoria — evita duplicar el número si ha pasado tiempo
+          // desde la última carga (u otra factura se creó mientras tanto).
+          factura = await this.fetchNextFacturaFormattedNumber()
         }
-        // Resolver nombre del cliente para columna display
-        const c = this.clientes.find(cl => cl.id === data.clienteId)
-        const clienteName = c ? `${c.nombre || ''} ${c.apellido || ''}`.trim() : ''
+        const c = this.clientes.find(cl => cl.nombre === data.clienteId)
 
-        await addRecord('limpiezas', { ...data, factura, clienteName })
+        await appendSheetRow(TAB.facturas, FACTURAS_HEADERS, facturaToRow({
+          ...data, factura, nif: c?.nifCif || '',
+        }))
         await this.fetchLimpiezas(this.selectedMonth, this.selectedYear)
+        return factura
       } catch (e) {
         this.addLimpiezaError = e
         console.error('[DB] addLimpieza:', e)
@@ -206,17 +377,14 @@ export const useDatabaseStore = defineStore('database', {
       }
     },
 
-    async updateLimpieza(id, data) {
+    async updateLimpieza(row, data) {
       this.isUpdatingLimpieza  = true
       this.updateLimpiezaError = null
       try {
-        // Recalcular nombre si cambió clienteId
-        const patch = { ...data }
-        if (data.clienteId) {
-          const c = this.clientes.find(cl => cl.id === data.clienteId)
-          patch.clienteName = c ? `${c.nombre || ''} ${c.apellido || ''}`.trim() : ''
-        }
-        await updateRecord('limpiezas', id, patch)
+        const existing = this._allLimpiezas.find(l => l._row === row) || {}
+        const c = this.clientes.find(cl => cl.nombre === (data.clienteId ?? existing.clienteId))
+        const merged = { ...existing, ...data, nif: c?.nifCif || existing.nif }
+        await updateSheetRow(TAB.facturas, row, FACTURAS_HEADERS, facturaToRow(merged))
         await this.fetchLimpiezas(this.selectedMonth, this.selectedYear)
       } catch (e) {
         this.updateLimpiezaError = e
@@ -227,13 +395,13 @@ export const useDatabaseStore = defineStore('database', {
       }
     },
 
-    async deleteLimpieza(id) {
+    async deleteLimpieza(row) {
       this.isDeletingLimpieza  = true
       this.deleteLimpiezaError = null
       try {
-        await removeRecord('limpiezas', id)
-        this.limpiezas     = this.limpiezas.filter(l => l.id !== id)
-        this._allLimpiezas = this._allLimpiezas.filter(l => l.id !== id)
+        await deleteSheetRow(TAB.facturas, row)
+        this.limpiezas     = this.limpiezas.filter(l => l._row !== row)
+        this._allLimpiezas = this._allLimpiezas.filter(l => l._row !== row)
       } catch (e) {
         this.deleteLimpiezaError = e
         console.error('[DB] deleteLimpieza:', e)
@@ -243,11 +411,13 @@ export const useDatabaseStore = defineStore('database', {
       }
     },
 
-    async updatePaymentStatus(id, newFechaPago, newFormaPago) {
+    async updatePaymentStatus(row, newFechaPago) {
       this.isUpdatingLimpieza  = true
       this.updateLimpiezaError = null
       try {
-        await updateRecord('limpiezas', id, { fechaPago: newFechaPago || '', formaPago: newFormaPago || '' })
+        const existing = this._allLimpiezas.find(l => l._row === row) || {}
+        const merged = { ...existing, fechaPago: newFechaPago || null, estado: newFechaPago ? 'Pagada' : 'Pendiente' }
+        await updateSheetRow(TAB.facturas, row, FACTURAS_HEADERS, facturaToRow(merged))
         await this.fetchLimpiezas(this.selectedMonth, this.selectedYear)
       } catch (e) {
         this.updateLimpiezaError = e
@@ -261,7 +431,6 @@ export const useDatabaseStore = defineStore('database', {
     // ── Clientes ──────────────────────────────────────────────────────────
 
     async fetchClientes() {
-      // Hidratar desde caché local si aún no hay datos
       if (!this.clientes.length) {
         const cached = loadCache('clientes')
         if (cached?.records?.length) {
@@ -272,7 +441,8 @@ export const useDatabaseStore = defineStore('database', {
       this.isLoadingClientes = true
       this.errorClientes     = null
       try {
-        const fresh = await getAll('clientes')
+        const { records } = await getSheetRaw(TAB.clientes)
+        const fresh = records.map(clienteFromRow)
         if (hasChanges(this.clientes, fresh)) {
           this.clientes = this._sortClientes(fresh)
           saveCache('clientes', fresh)
@@ -290,19 +460,19 @@ export const useDatabaseStore = defineStore('database', {
       return [...records].sort((a, b) => (a.nombre || '').localeCompare(b.nombre || '', 'es'))
     },
 
-    async fetchClientById(id) {
-      if (!id) return null
-      const cached = this.clientes.find(c => c.id === id)
+    async fetchClientById(nombre) {
+      if (!nombre) return null
+      const cached = this.clientes.find(c => c.nombre === nombre)
       if (cached) return cached
       await this.fetchClientes()
-      return this.clientes.find(c => c.id === id) || null
+      return this.clientes.find(c => c.nombre === nombre) || null
     },
 
     async addClient(data) {
       this.isAddingClient = true
       this.addClientError = null
       try {
-        await addRecord('clientes', data)
+        await appendSheetRow(TAB.clientes, CLIENTES_HEADERS, clienteToRow(data))
         await this.fetchClientes()
       } catch (e) {
         this.addClientError = e
@@ -313,12 +483,13 @@ export const useDatabaseStore = defineStore('database', {
       }
     },
 
-    async updateClient(id, data) {
+    async updateClient(row, data) {
       this.isUpdatingClient  = true
       this.updateClientError = null
       try {
-        await updateRecord('clientes', id, data)
-        const idx = this.clientes.findIndex(c => c.id === id)
+        const existing = this.clientes.find(c => c._row === row) || {}
+        await updateSheetRow(TAB.clientes, row, CLIENTES_HEADERS, clienteToRow({ ...existing, ...data }))
+        const idx = this.clientes.findIndex(c => c._row === row)
         if (idx !== -1) this.clientes[idx] = { ...this.clientes[idx], ...data }
       } catch (e) {
         this.updateClientError = e
@@ -329,12 +500,12 @@ export const useDatabaseStore = defineStore('database', {
       }
     },
 
-    async deleteClient(id) {
+    async deleteClient(row) {
       this.isDeletingClient  = true
       this.deleteClientError = null
       try {
-        await removeRecord('clientes', id)
-        this.clientes = this.clientes.filter(c => c.id !== id)
+        await deleteSheetRow(TAB.clientes, row)
+        this.clientes = this.clientes.filter(c => c._row !== row)
       } catch (e) {
         this.deleteClientError = e
         console.error('[DB] deleteClient:', e)
@@ -350,7 +521,6 @@ export const useDatabaseStore = defineStore('database', {
       this.selectedMonthGastos = month
       this.selectedYearGastos  = year
 
-      // Hidratar desde caché local si aún no hay datos
       if (!this.gastos.length) {
         const cached = loadCache('gastos')
         if (cached?.records?.length) {
@@ -364,7 +534,8 @@ export const useDatabaseStore = defineStore('database', {
       this.isLoadingGastos = true
       this.errorGastos     = null
       try {
-        const fresh = await getAll('gastos')
+        const { records } = await getSheetRaw(TAB.gastos)
+        const fresh = records.map(gastoFromRow)
         if (hasChanges(this._allGastos || this.gastos, fresh)) {
           this._allGastos = fresh
           saveCache('gastos', fresh)
@@ -387,7 +558,7 @@ export const useDatabaseStore = defineStore('database', {
       this.isAddingGasto = true
       this.addGastoError = null
       try {
-        await addRecord('gastos', data)
+        await appendSheetRow(TAB.gastos, GASTOS_HEADERS, gastoToRow(data))
         await this.fetchGastos(this.selectedMonthGastos, this.selectedYearGastos)
       } catch (e) {
         this.addGastoError = e
@@ -398,11 +569,12 @@ export const useDatabaseStore = defineStore('database', {
       }
     },
 
-    async updateGasto(id, data) {
+    async updateGasto(row, data) {
       this.isUpdatingGasto  = true
       this.updateGastoError = null
       try {
-        await updateRecord('gastos', id, data)
+        const existing = this._allGastos.find(g => g._row === row) || {}
+        await updateSheetRow(TAB.gastos, row, GASTOS_HEADERS, gastoToRow({ ...existing, ...data }))
         await this.fetchGastos(this.selectedMonthGastos, this.selectedYearGastos)
       } catch (e) {
         this.updateGastoError = e
@@ -413,13 +585,13 @@ export const useDatabaseStore = defineStore('database', {
       }
     },
 
-    async deleteGasto(id) {
+    async deleteGasto(row) {
       this.isDeletingGasto  = true
       this.deleteGastoError = null
       try {
-        await removeRecord('gastos', id)
-        this.gastos     = this.gastos.filter(g => g.id !== id)
-        this._allGastos = this._allGastos.filter(g => g.id !== id)
+        await deleteSheetRow(TAB.gastos, row)
+        this.gastos     = this.gastos.filter(g => g._row !== row)
+        this._allGastos = this._allGastos.filter(g => g._row !== row)
         saveCache('gastos', this._allGastos)
       } catch (e) {
         this.deleteGastoError = e

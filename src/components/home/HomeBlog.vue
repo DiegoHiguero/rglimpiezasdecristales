@@ -85,7 +85,7 @@ const latest = computed(() => articles.slice(0, 3));
 }
 .hb-label {
   display: flex; width: fit-content; align-items: center; gap: 6px;
-  background: var(--blue-pale); color: var(--blue);
+  background: var(--blue-pale); color: var(--blue-hover);
   font-family: 'Raleway', sans-serif; font-size: 0.72rem;
   font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase;
   padding: 5px 14px; border-radius: 20px; margin-bottom: 16px;

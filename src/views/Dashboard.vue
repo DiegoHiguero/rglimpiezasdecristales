@@ -8,19 +8,27 @@
         <h1 class="db-title">Bienvenido, <span class="db-accent">{{ firstName }}</span></h1>
         <p class="db-sub">{{ todayFormatted }}</p>
       </div>
-      <img src="../assets/img/ROYAL_CLEAN_2025_BLANCO.png" class="db-logo" alt="Royall Clean" />
+      <div class="db-header-right">
+        <router-link to="/registro" class="db-new-invoice-btn">
+          <font-awesome-icon :icon="['fas', 'plus']" />
+          Nueva factura
+        </router-link>
+      </div>
     </div>
 
     <!-- Stats -->
     <div class="db-stats">
-      <div class="db-stat db-stat--blue">
+      <router-link to="/misClientes" class="db-stat db-stat--blue">
         <div class="db-stat-icon"><font-awesome-icon :icon="['fas', 'address-card']" /></div>
         <div class="db-stat-body">
-          <span class="db-stat-value">{{ databaseStore.clientes.length }}</span>
+          <span class="db-stat-value">
+            <span v-if="databaseStore.isLoadingClientes && !databaseStore.clientes.length" class="db-stat-loading">—</span>
+            <span v-else>{{ databaseStore.clientes.length }}</span>
+          </span>
           <span class="db-stat-label">Clientes</span>
         </div>
-      </div>
-      <div class="db-stat db-stat--red">
+      </router-link>
+      <router-link to="/pagos-pendientes" class="db-stat db-stat--red">
         <div class="db-stat-icon"><font-awesome-icon :icon="['fas', 'hand-holding-dollar']" /></div>
         <div class="db-stat-body">
           <span class="db-stat-value">
@@ -29,33 +37,41 @@
           </span>
           <span class="db-stat-label">Pendiente de cobro</span>
         </div>
-      </div>
+      </router-link>
       <div class="db-stat db-stat--green">
         <div class="db-stat-icon"><font-awesome-icon :icon="['fas', 'hand-holding-dollar']" /></div>
         <div class="db-stat-body">
-          <span class="db-stat-value">{{ formatCurrency(totalCobradoAnio) }}</span>
+          <span class="db-stat-value">
+            <span v-if="registroLoading && !registroRecords.length" class="db-stat-loading">—</span>
+            <span v-else>{{ formatCurrency(totalCobradoAnio) }}</span>
+          </span>
           <span class="db-stat-label">Cobrado {{ dayjs().year() }}</span>
         </div>
       </div>
-      <div class="db-stat db-stat--yellow">
+      <router-link to="/admin/mensajes" class="db-stat db-stat--yellow">
         <div class="db-stat-icon"><font-awesome-icon :icon="['fas', 'file-invoice']" /></div>
         <div class="db-stat-body">
           <span class="db-stat-value">{{ userStore.unreadMessagesCount }}</span>
           <span class="db-stat-label">Mensajes sin leer</span>
         </div>
-      </div>
+      </router-link>
     </div>
 
     <!-- Contenido principal -->
-    <div class="db-main">
+    <div class="db-main db-main--single">
 
       <!-- Gráfico de ingresos -->
       <div class="db-card db-card--chart">
         <div class="db-card-head">
-          <span class="db-card-title">Ingresos mensuales</span>
-          <span class="db-card-sub">Últimos 6 meses · Bruto (€)</span>
+          <span class="db-card-title">Ingresos vs. gastos</span>
+          <span class="db-card-sub">
+            Últimos 6 meses
+            <span v-if="monthOverMonthChange !== null" :class="monthOverMonthChange >= 0 ? 'db-trend--up' : 'db-trend--down'">
+              · {{ monthOverMonthChange >= 0 ? '+' : '' }}{{ monthOverMonthChange }}% vs. mes anterior
+            </span>
+          </span>
         </div>
-        <apexchart
+        <VueApexCharts
           type="bar"
           height="220"
           :options="chartOptions"
@@ -63,43 +79,69 @@
         />
       </div>
 
-      <!-- Pagos pendientes recientes -->
-      <div class="db-card db-card--pending">
+    </div>
+
+    <!-- Top clientes / Clientes inactivos -->
+    <div class="db-main">
+      <div class="db-card">
         <div class="db-card-head">
-          <span class="db-card-title">Pagos pendientes</span>
-          <router-link to="/registro" class="db-card-link">Ver todos</router-link>
+          <span class="db-card-title">Top clientes</span>
+          <span class="db-card-sub">Por facturación total</span>
         </div>
-
-        <!-- Cargando -->
-        <div v-if="registroLoading && !registroRecords.length" class="db-empty">
-          <div class="db-mini-spinner"></div>
-          Cargando...
-        </div>
-
-        <!-- Error -->
-        <div v-else-if="registroError && !registroRecords.length" class="db-empty db-empty--error">
-          <font-awesome-icon :icon="['fas', 'triangle-exclamation']" class="me-2" />
-          Error al cargar
-          <button class="db-retry-btn" @click="sheetsStore.loadTab('Registro')">Reintentar</button>
-        </div>
-
-        <!-- Sin pendientes -->
-        <div v-else-if="pendingLimpiezas.length === 0" class="db-empty">
-          <font-awesome-icon :icon="['fas', 'check']" class="me-2" />No hay pagos pendientes
-        </div>
-
-        <!-- Lista -->
+        <div v-if="topClientes.length === 0" class="db-empty">Sin datos todavía</div>
         <div v-else class="db-pending-list">
-          <div v-for="r in pendingTop" :key="r._row" class="db-pending-item">
+          <div v-for="(c, i) in topClientes" :key="c.nombre" class="db-pending-item">
             <div class="db-pending-info">
-              <span class="db-pending-name">{{ r['Cliente'] }}</span>
-              <span class="db-pending-date">Fac. {{ r['NºFactura'] }}</span>
+              <span class="db-pending-name">{{ i + 1 }}. {{ c.nombre }}</span>
             </div>
-            <span class="db-pending-amount">{{ r['Total'] }}</span>
+            <span class="db-pending-amount db-pending-amount--positive">{{ formatCurrency(c.total) }}</span>
           </div>
         </div>
       </div>
 
+      <div class="db-card">
+        <div class="db-card-head">
+          <span class="db-card-title">Clientes inactivos</span>
+          <span class="db-card-sub">Sin factura hace +60 días</span>
+        </div>
+        <div v-if="clientesInactivos.length === 0" class="db-empty">
+          <font-awesome-icon :icon="['fas', 'check']" class="me-2" />Todos con actividad reciente
+        </div>
+        <div v-else class="db-pending-list">
+          <div v-for="c in clientesInactivos" :key="c.nombre" class="db-pending-item">
+            <div class="db-pending-info">
+              <span class="db-pending-name">{{ c.nombre }}</span>
+            </div>
+            <span class="db-pending-amount">{{ c.dias !== null ? `${c.dias} días` : 'Sin facturas' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Resumen fiscal del trimestre -->
+    <div class="db-fiscal">
+      <div class="db-card-head">
+        <span class="db-card-title">Resumen fiscal · {{ currentTrimestre }} {{ currentYear }}</span>
+        <span class="db-card-sub">Calculado desde Registro y Gastos</span>
+      </div>
+      <div class="db-fiscal-grid">
+        <div class="db-fiscal-item">
+          <span class="db-fiscal-label">Base facturada</span>
+          <span class="db-fiscal-value">{{ formatCurrency(baseFacturadaTrimestre) }}</span>
+        </div>
+        <div class="db-fiscal-item">
+          <span class="db-fiscal-label">IVA repercutido</span>
+          <span class="db-fiscal-value">{{ formatCurrency(ivaRepercutido) }}</span>
+        </div>
+        <div class="db-fiscal-item">
+          <span class="db-fiscal-label">IVA soportado</span>
+          <span class="db-fiscal-value">{{ formatCurrency(ivaSoportado) }}</span>
+        </div>
+        <div class="db-fiscal-item db-fiscal-item--highlight">
+          <span class="db-fiscal-label">A ingresar</span>
+          <span class="db-fiscal-value">{{ formatCurrency(resultadoTrimestre) }}</span>
+        </div>
+      </div>
     </div>
 
     <!-- Google Sheets — Base de datos -->
@@ -121,16 +163,12 @@
         </div>
       </div>
       <div class="db-sync-actions">
-        <button class="db-sync-btn db-sync-btn--full" @click="syncStore.refreshAll()" :disabled="syncStore.isSyncing || migrating">
+        <button class="db-sync-btn db-sync-btn--full" @click="handleRefresh" :disabled="syncStore.isSyncing">
           <font-awesome-icon :icon="['fas', 'arrows-rotate']" :spin="syncStore.isSyncing" />
           Actualizar datos
         </button>
-        <button class="db-sync-btn db-sync-btn--migrate" @click="showMigrateModal = true" :disabled="syncStore.isSyncing || migrating">
-          <font-awesome-icon :icon="['fas', 'database']" />
-          Migrar desde Firestore
-        </button>
         <a
-          href="https://docs.google.com/spreadsheets/d/1Fo2Tu0Y3buEFB9Elvo_SrjjkvwTISYO4cahvkaUmwO8/edit"
+          href="https://docs.google.com/spreadsheets/d/1agb2ZG15SDYtrGD7fyi3hzRuHnj7uTwZP716_h5Qpro/edit"
           target="_blank" rel="noopener"
           class="db-sync-btn db-sync-btn--sheet"
         >
@@ -139,79 +177,6 @@
         </a>
       </div>
     </div>
-
-    <!-- Modal de migración -->
-    <Teleport to="body">
-      <div v-if="showMigrateModal" class="mg-overlay" @click.self="!migrating && (showMigrateModal = false)">
-        <div class="mg-modal">
-
-          <!-- Header -->
-          <div class="mg-header">
-            <div class="mg-header-icon">
-              <font-awesome-icon :icon="['fas', migrating ? 'rotate' : 'database']" :spin="migrating" />
-            </div>
-            <div>
-              <div class="mg-header-title">Migrar datos a Google Sheets</div>
-              <div class="mg-header-sub">Copia todos tus datos de Firestore a la hoja de cálculo</div>
-            </div>
-          </div>
-
-          <!-- Info -->
-          <div v-if="!migrating && migrateResult === null" class="mg-info">
-            <p>Esta operación copiará <strong>todos los datos actuales de Firestore</strong> a las pestañas de tu Google Sheet:</p>
-            <ul>
-              <li><font-awesome-icon :icon="['fas', 'check']" class="mg-li-icon" /> Limpiezas (colección <code>limpiezasMensuales</code>)</li>
-              <li><font-awesome-icon :icon="['fas', 'check']" class="mg-li-icon" /> Clientes (colección <code>clientes</code>)</li>
-              <li><font-awesome-icon :icon="['fas', 'check']" class="mg-li-icon" /> Gastos (colecciones <code>gastos</code> y <code>gastosMensuales</code>)</li>
-            </ul>
-            <div class="mg-warning">
-              <font-awesome-icon :icon="['fas', 'triangle-exclamation']" />
-              Si la hoja ya tiene datos, serán <strong>sobreescritos</strong>. Haz una copia de seguridad si es necesario.
-            </div>
-          </div>
-
-          <!-- Progreso -->
-          <div v-if="migrating" class="mg-progress-wrap">
-            <div class="mg-progress-bar">
-              <div class="mg-progress-fill" :style="{ width: migrateProgress + '%' }"></div>
-            </div>
-            <div class="mg-progress-msg">{{ migrateMsg }}</div>
-          </div>
-
-          <!-- Resultado -->
-          <div v-if="migrateResult !== null && !migrating" class="mg-result">
-            <div class="mg-result-icon">✓</div>
-            <div class="mg-result-title">¡Migración completada!</div>
-            <div class="mg-result-stats">
-              <div class="mg-stat"><span>{{ migrateResult.limpiezas }}</span> limpiezas</div>
-              <div class="mg-stat"><span>{{ migrateResult.clientes }}</span> clientes</div>
-              <div class="mg-stat"><span>{{ migrateResult.gastos }}</span> gastos</div>
-            </div>
-            <p class="mg-result-note">Todos tus datos están ahora en Google Sheets. A partir de ahora, el dashboard lee y escribe directamente en la hoja.</p>
-          </div>
-
-          <!-- Acciones -->
-          <div class="mg-footer">
-            <button v-if="!migrating" class="mg-btn mg-btn--ghost" @click="showMigrateModal = false; migrateResult = null">
-              {{ migrateResult !== null ? 'Cerrar' : 'Cancelar' }}
-            </button>
-            <button
-              v-if="migrateResult === null && !migrating"
-              class="mg-btn mg-btn--primary"
-              @click="runMigration"
-            >
-              <font-awesome-icon :icon="['fas', 'play']" />
-              Iniciar migración
-            </button>
-            <button v-if="migrateResult !== null && !migrating" class="mg-btn mg-btn--primary" @click="afterMigration">
-              <font-awesome-icon :icon="['fas', 'check']" />
-              Cargar datos migrados
-            </button>
-          </div>
-
-        </div>
-      </div>
-    </Teleport>
 
     <!-- Accesos rápidos -->
     <div class="db-shortcuts">
@@ -258,11 +223,12 @@
 
 <script setup>
 import { computed, onMounted, ref } from 'vue';
+import VueApexCharts from 'vue3-apexcharts';
 import { useDatabaseStore } from '../stores/database';
 import { useUserStore } from '../stores/user';
 import { useSyncStore } from '../stores/syncStore';
 import { useSheetsStore } from '../stores/sheetsStore';
-import { migrateFromFirestore } from '../services/migrateFB';
+import Swal from 'sweetalert2';
 import dayjs from 'dayjs';
 import 'dayjs/locale/es';
 dayjs.locale('es');
@@ -272,40 +238,12 @@ const userStore     = useUserStore();
 const syncStore     = useSyncStore();
 const sheetsStore   = useSheetsStore();
 
-// Migración
-const showMigrateModal = ref(false);
-const migrating        = ref(false);
-const migrateProgress  = ref(0);
-const migrateMsg       = ref('');
-const migrateResult    = ref(null);
-
-async function runMigration() {
-  migrating.value  = true;
-  migrateResult.value = null;
-  try {
-    const result = await migrateFromFirestore((msg, pct) => {
-      migrateMsg.value      = msg;
-      migrateProgress.value = pct;
-    });
-    migrateResult.value = result;
-  } catch (e) {
-    migrateMsg.value = `Error: ${e.message}`;
-  } finally {
-    migrating.value = false;
-  }
-}
-
-async function afterMigration() {
-  showMigrateModal.value = false;
-  migrateResult.value    = null;
-  await syncStore.refreshAll();
-}
-
 const firstName = computed(() => {
-  const email = userStore.userData?.email || '';
-  if (email.includes('roys')) return 'Roys';
-  if (email.includes('diego') || email.includes('higuero')) return 'Diego';
-  return 'Admin';
+  const displayName = userStore.userData?.displayName;
+  if (displayName) return displayName.split(' ')[0];
+  const local = (userStore.userData?.email || '').split('@')[0];
+  const clean = local.replace(/[._-]+/g, ' ').trim();
+  return clean ? clean.charAt(0).toUpperCase() + clean.slice(1) : 'Admin';
 });
 
 const todayFormatted = computed(() =>
@@ -319,7 +257,8 @@ const formatCurrency = (v) =>
 
 function parseCurrency(str) {
   if (!str) return 0;
-  return parseFloat(String(str).replace(/[€\s]/g, '').replace(',', '.')) || 0;
+  // Formato español: "1.020,03 €" → quitar puntos de miles antes de convertir la coma decimal
+  return parseFloat(String(str).replace(/[€\s]/g, '').replace(/\./g, '').replace(',', '.')) || 0;
 }
 
 function parseDate(str) {
@@ -330,10 +269,10 @@ function parseDate(str) {
 }
 
 const registroRecords = computed(() =>
-  (sheetsStore.tabData['Registro']?.records || []).filter(r => r['NºFactura'])
+  (sheetsStore.tabData['REGISTRO']?.records || []).filter(r => r['Nº Factura'])
 );
-const registroLoading = computed(() => sheetsStore.tabData['Registro']?.loading ?? true);
-const registroError   = computed(() => sheetsStore.tabData['Registro']?.error ?? null);
+const registroLoading = computed(() => sheetsStore.tabData['REGISTRO']?.loading ?? true);
+const registroError   = computed(() => sheetsStore.tabData['REGISTRO']?.error ?? null);
 
 const pendingLimpiezas = computed(() =>
   registroRecords.value
@@ -343,8 +282,6 @@ const pendingLimpiezas = computed(() =>
       return (da?.valueOf() ?? 0) - (db?.valueOf() ?? 0);
     })
 );
-
-const pendingTop = computed(() => pendingLimpiezas.value.slice(0, 6));
 
 const totalPendiente = computed(() =>
   pendingLimpiezas.value.reduce((s, r) => s + parseCurrency(r['Total']), 0)
@@ -361,20 +298,62 @@ const totalCobradoAnio = computed(() => {
     .reduce((s, r) => s + parseCurrency(r['Total']), 0);
 });
 
-// Chart — últimos 6 meses (por fecha de servicio)
+// ── Resumen fiscal del trimestre actual (Base/IVA de REGISTRO y GASTOS) ──────
+const gastosRecords = computed(() => sheetsStore.tabData['GASTOS']?.records || []);
+const currentTrimestre = computed(() => `T${Math.floor(dayjs().month() / 3) + 1}`);
+const currentYear = computed(() => dayjs().year());
+
+function isCurrentQuarter(r) {
+  if (r['Trim.'] !== currentTrimestre.value) return false;
+  const d = parseDate(r['Fecha']);
+  return d ? d.year() === currentYear.value : true;
+}
+
+const baseFacturadaTrimestre = computed(() =>
+  registroRecords.value.filter(isCurrentQuarter).reduce((s, r) => s + parseCurrency(r['Base']), 0)
+);
+const ivaRepercutido = computed(() =>
+  registroRecords.value.filter(isCurrentQuarter).reduce((s, r) => s + parseCurrency(r['IVA']), 0)
+);
+const ivaSoportado = computed(() =>
+  gastosRecords.value.filter(isCurrentQuarter).reduce((s, r) => s + parseCurrency(r['IVA sop.']), 0)
+);
+const resultadoTrimestre = computed(() => ivaRepercutido.value - ivaSoportado.value);
+
+// Chart — últimos 6 meses (por fecha de servicio/gasto): ingresos vs. gastos
 const chartSeries = computed(() => {
-  const data = [];
+  const ingresos = [];
+  const gastos = [];
   for (let i = 5; i >= 0; i--) {
     const d = dayjs().subtract(i, 'month');
-    const total = registroRecords.value
+    const totalIngresos = registroRecords.value
       .filter(r => {
         const rd = parseDate(r['Fecha']);
         return rd && rd.month() === d.month() && rd.year() === d.year();
       })
       .reduce((s, r) => s + parseCurrency(r['Total']), 0);
-    data.push(parseFloat(total.toFixed(2)));
+    const totalGastos = gastosRecords.value
+      .filter(r => {
+        const rd = parseDate(r['Fecha']);
+        return rd && rd.month() === d.month() && rd.year() === d.year();
+      })
+      .reduce((s, r) => s + parseCurrency(r['Total']), 0);
+    ingresos.push(parseFloat(totalIngresos.toFixed(2)));
+    gastos.push(parseFloat(totalGastos.toFixed(2)));
   }
-  return [{ name: 'Ingresos (€)', data }];
+  return [
+    { name: 'Ingresos (€)', data: ingresos },
+    { name: 'Gastos (€)', data: gastos },
+  ];
+});
+
+// % de variación del mes actual vs. el mes anterior (ingresos)
+const monthOverMonthChange = computed(() => {
+  const data = chartSeries.value[0]?.data || [];
+  const actual = data[data.length - 1] ?? 0;
+  const anterior = data[data.length - 2] ?? 0;
+  if (!anterior) return null;
+  return Math.round(((actual - anterior) / anterior) * 100);
 });
 
 const chartCategories = computed(() => {
@@ -388,8 +367,9 @@ const chartCategories = computed(() => {
 const chartOptions = computed(() => ({
   chart: { toolbar: { show: false }, background: 'transparent', fontFamily: 'Raleway, sans-serif' },
   theme: { mode: 'dark' },
-  colors: ['#2563eb'],
-  plotOptions: { bar: { borderRadius: 6, columnWidth: '50%' } },
+  colors: ['#2563eb', '#f87171'],
+  plotOptions: { bar: { borderRadius: 6, columnWidth: '55%' } },
+  legend: { show: true, fontFamily: 'Raleway, sans-serif', fontSize: '0.75rem', labels: { colors: '#94a3b8' } },
   dataLabels: { enabled: false },
   xaxis: {
     categories: chartCategories.value,
@@ -407,9 +387,52 @@ const chartOptions = computed(() => ({
   tooltip: { y: { formatter: v => formatCurrency(v) } },
 }));
 
+// ── Top clientes / clientes inactivos ────────────────────────────────────────
+const topClientes = computed(() => {
+  const totals = {};
+  registroRecords.value.forEach(r => {
+    const nombre = r['Cliente'];
+    if (!nombre) return;
+    totals[nombre] = (totals[nombre] || 0) + parseCurrency(r['Total']);
+  });
+  return Object.entries(totals)
+    .map(([nombre, total]) => ({ nombre, total }))
+    .sort((a, b) => b.total - a.total)
+    .slice(0, 5);
+});
+
+const clientesInactivos = computed(() => {
+  const lastByClient = {};
+  registroRecords.value.forEach(r => {
+    const nombre = r['Cliente'];
+    const d = parseDate(r['Fecha']);
+    if (!nombre || !d) return;
+    if (!lastByClient[nombre] || d.isAfter(lastByClient[nombre])) lastByClient[nombre] = d;
+  });
+  return databaseStore.clientes
+    .map(c => {
+      const last = lastByClient[c.nombre];
+      return { nombre: c.nombre, dias: last ? dayjs().diff(last, 'day') : null };
+    })
+    .filter(c => c.dias === null || c.dias > 60)
+    .sort((a, b) => (b.dias ?? 99999) - (a.dias ?? 99999))
+    .slice(0, 5);
+});
+
+// ── Actualizar datos con notificación ────────────────────────────────────────
+async function handleRefresh() {
+  await syncStore.refreshAll();
+  if (syncStore.status === 'success') {
+    Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: 'Datos actualizados', showConfirmButton: false, timer: 2500, timerProgressBar: true });
+  } else if (syncStore.status === 'error') {
+    Swal.fire({ toast: true, position: 'top-end', icon: 'error', title: syncStore.message || 'Error al actualizar', showConfirmButton: false, timer: 3500, timerProgressBar: true });
+  }
+}
+
 onMounted(async () => {
   await Promise.all([
-    sheetsStore.loadTab('Registro'),
+    sheetsStore.loadTab('REGISTRO'),
+    sheetsStore.loadTab('GASTOS'),
     databaseStore.fetchClientes(),
   ]);
   userStore.startUnreadMessagesListener();
@@ -462,12 +485,29 @@ onMounted(async () => {
   margin: 0;
   text-transform: capitalize;
 }
-.db-logo {
-  height: 40px;
-  width: auto;
-  opacity: 0.85;
+.db-header-right {
+  display: flex;
+  align-items: center;
+  gap: 18px;
   flex-shrink: 0;
 }
+.db-new-invoice-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Raleway', sans-serif;
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: #fff;
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  border-radius: 10px;
+  padding: 10px 18px;
+  text-decoration: none;
+  white-space: nowrap;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.db-new-invoice-btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); color: #fff; }
 
 /* ── Stats ── */
 .db-stats {
@@ -486,8 +526,10 @@ onMounted(async () => {
   gap: 16px;
   box-shadow: var(--shadow-sm);
   transition: transform 0.2s, box-shadow 0.2s;
+  text-decoration: none;
+  color: inherit;
 }
-.db-stat:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+.db-stat:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); color: inherit; }
 .db-stat-icon {
   width: 44px; height: 44px;
   border-radius: 12px;
@@ -525,6 +567,7 @@ onMounted(async () => {
   gap: 14px;
   margin-bottom: 24px;
 }
+.db-main--single { grid-template-columns: 1fr; }
 .db-card {
   background: var(--white);
   border: 1px solid var(--border);
@@ -549,15 +592,8 @@ onMounted(async () => {
   font-size: 0.75rem;
   color: var(--text-muted);
 }
-.db-card-link {
-  font-family: 'Raleway', sans-serif;
-  font-size: 0.78rem;
-  font-weight: 700;
-  color: var(--blue);
-  text-decoration: none;
-  transition: opacity 0.2s;
-}
-.db-card-link:hover { opacity: 0.75; }
+.db-trend--up   { color: #16a34a; font-weight: 700; }
+.db-trend--down { color: #ef4444; font-weight: 700; }
 
 .db-empty {
   font-family: 'Raleway', sans-serif;
@@ -570,28 +606,6 @@ onMounted(async () => {
   align-items: center;
   gap: 10px;
 }
-.db-empty--error { color: #f87171; }
-.db-mini-spinner {
-  width: 20px; height: 20px;
-  border: 2px solid rgba(96,165,250,0.2);
-  border-top-color: #60a5fa;
-  border-radius: 50%;
-  animation: db-spin 0.8s linear infinite;
-}
-@keyframes db-spin { to { transform: rotate(360deg); } }
-.db-retry-btn {
-  font-family: 'Raleway', sans-serif;
-  font-size: 0.75rem;
-  font-weight: 700;
-  background: rgba(248,113,113,0.1);
-  border: 1px solid rgba(248,113,113,0.25);
-  color: #f87171;
-  border-radius: 6px;
-  padding: 4px 12px;
-  cursor: pointer;
-  transition: background 0.15s;
-}
-.db-retry-btn:hover { background: rgba(248,113,113,0.18); }
 .db-stat-loading { color: var(--text-muted); font-size: 1rem; }
 
 .db-pending-list { display: flex; flex-direction: column; gap: 8px; }
@@ -611,16 +625,53 @@ onMounted(async () => {
   font-weight: 700;
   color: var(--text);
 }
-.db-pending-date {
-  font-family: 'Raleway', sans-serif;
-  font-size: 0.72rem;
-  color: var(--text-muted);
-}
 .db-pending-amount {
   font-family: 'Raleway', sans-serif;
   font-size: 0.88rem;
   font-weight: 700;
   color: #ef4444;
+}
+.db-pending-amount--positive { color: #16a34a; }
+
+/* ── Resumen fiscal ── */
+.db-fiscal {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  padding: 22px 24px;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 24px;
+}
+.db-fiscal-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+}
+.db-fiscal-item {
+  background: var(--slate);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.db-fiscal-item--highlight {
+  background: var(--blue-pale);
+  border-color: rgba(37,99,235,0.25);
+}
+.db-fiscal-label {
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.db-fiscal-value {
+  font-family: 'Anton', sans-serif;
+  font-size: 1.15rem;
+  color: var(--text);
 }
 
 /* ── Google Sheets Sync ── */
@@ -785,195 +836,6 @@ onMounted(async () => {
   padding: 0 4px;
 }
 
-/* ── Botón migrar ── */
-.db-sync-btn--migrate {
-  background: rgba(251,191,36,0.1);
-  border-color: rgba(251,191,36,0.3);
-  color: #fbbf24;
-}
-.db-sync-btn--migrate:hover:not(:disabled) {
-  background: rgba(251,191,36,0.18);
-}
-
-/* ── Modal de migración ── */
-.mg-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.7);
-  z-index: 9999;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 16px;
-}
-.mg-modal {
-  background: #0f1729;
-  border: 1px solid rgba(100,116,139,0.3);
-  border-radius: 16px;
-  width: 100%;
-  max-width: 520px;
-  padding: 32px;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-}
-.mg-header {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  margin-bottom: 24px;
-}
-.mg-header-icon {
-  width: 48px; height: 48px;
-  background: rgba(251,191,36,0.1);
-  color: #fbbf24;
-  border-radius: 12px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 1.3rem;
-  flex-shrink: 0;
-}
-.mg-header-title {
-  font-family: 'Raleway', sans-serif;
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: #e2e8f0;
-}
-.mg-header-sub {
-  font-family: 'Raleway', sans-serif;
-  font-size: 0.8rem;
-  color: #64748b;
-  margin-top: 2px;
-}
-.mg-info {
-  font-family: 'Raleway', sans-serif;
-  font-size: 0.875rem;
-  color: #94a3b8;
-  line-height: 1.6;
-  margin-bottom: 20px;
-}
-.mg-info ul {
-  padding-left: 0;
-  list-style: none;
-  margin: 12px 0;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-.mg-info li {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.mg-info code {
-  background: rgba(100,116,139,0.2);
-  padding: 1px 6px;
-  border-radius: 4px;
-  font-size: 0.78rem;
-  color: #38bdf8;
-}
-.mg-li-icon { color: #34d399; font-size: 0.75rem; }
-.mg-warning {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  background: rgba(251,191,36,0.08);
-  border: 1px solid rgba(251,191,36,0.2);
-  border-radius: 8px;
-  padding: 12px 14px;
-  color: #fbbf24;
-  font-size: 0.8rem;
-  margin-top: 12px;
-}
-.mg-progress-wrap { margin-bottom: 20px; }
-.mg-progress-bar {
-  height: 6px;
-  background: rgba(100,116,139,0.2);
-  border-radius: 3px;
-  overflow: hidden;
-  margin-bottom: 10px;
-}
-.mg-progress-fill {
-  height: 100%;
-  background: linear-gradient(90deg, #2563eb, #34d399);
-  border-radius: 3px;
-  transition: width 0.4s ease;
-}
-.mg-progress-msg {
-  font-family: 'Raleway', sans-serif;
-  font-size: 0.82rem;
-  color: #94a3b8;
-  text-align: center;
-}
-.mg-result { text-align: center; padding: 8px 0 16px; }
-.mg-result-icon {
-  font-size: 2.5rem;
-  color: #34d399;
-  margin-bottom: 8px;
-}
-.mg-result-title {
-  font-family: 'Raleway', sans-serif;
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: #34d399;
-  margin-bottom: 16px;
-}
-.mg-result-stats {
-  display: flex;
-  justify-content: center;
-  gap: 24px;
-  margin-bottom: 16px;
-}
-.mg-stat {
-  font-family: 'Raleway', sans-serif;
-  font-size: 0.8rem;
-  color: #64748b;
-  text-align: center;
-}
-.mg-stat span {
-  display: block;
-  font-family: 'Anton', sans-serif;
-  font-size: 1.6rem;
-  color: #e2e8f0;
-  line-height: 1;
-}
-.mg-result-note {
-  font-family: 'Raleway', sans-serif;
-  font-size: 0.78rem;
-  color: #64748b;
-  line-height: 1.5;
-  margin: 0;
-}
-.mg-footer {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  margin-top: 24px;
-  border-top: 1px solid rgba(100,116,139,0.15);
-  padding-top: 20px;
-}
-.mg-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-family: 'Raleway', sans-serif;
-  font-size: 0.82rem;
-  font-weight: 700;
-  padding: 9px 18px;
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
-  transition: background 0.2s, opacity 0.2s;
-}
-.mg-btn:disabled { opacity: 0.45; cursor: not-allowed; }
-.mg-btn--ghost {
-  background: rgba(100,116,139,0.12);
-  color: #94a3b8;
-}
-.mg-btn--ghost:hover { background: rgba(100,116,139,0.2); }
-.mg-btn--primary {
-  background: #2563eb;
-  color: #fff;
-}
-.mg-btn--primary:hover { background: #1d4ed8; }
-
 /* ── Responsive ── */
 @media (max-width: 1100px) {
   .db-shortcuts-grid { grid-template-columns: repeat(3, 1fr); }
@@ -981,12 +843,16 @@ onMounted(async () => {
 @media (max-width: 800px) {
   .db-stats { grid-template-columns: repeat(2, 1fr); }
   .db-main { grid-template-columns: 1fr; }
+  .db-fiscal-grid { grid-template-columns: repeat(2, 1fr); }
   .db-shortcuts-grid { grid-template-columns: repeat(2, 1fr); }
   .db-title { font-size: 1.8rem; }
 }
 @media (max-width: 480px) {
   .db-wrap { padding: 24px 12px 48px; }
   .db-stats { grid-template-columns: 1fr 1fr; }
+  .db-fiscal-grid { grid-template-columns: 1fr 1fr; }
   .db-shortcuts-grid { grid-template-columns: repeat(2, 1fr); }
+  .db-header { flex-wrap: wrap; }
+  .db-header-right { width: 100%; justify-content: space-between; }
 }
 </style>

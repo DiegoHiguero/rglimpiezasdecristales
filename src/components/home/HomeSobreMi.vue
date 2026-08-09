@@ -36,28 +36,42 @@
     <div class="row g-4 justify-content-center">
       <div class="col-md-6 animate-on-scroll">
         <div class="ic-card ic-card--green">
-          <img src="../../assets/img/logocarta.webp" class="ic-img" alt="Nuestra misión" />
-          <h3 class="ic-title">Nuestra misión</h3>
-          <p class="ic-text">Resultados impecables, sin complicaciones. Tu satisfacción es nuestra garantía.</p>
-          <ul class="ic-list">
-            <li>Máxima calidad garantizada</li>
-            <li>Altos estándares de seguridad</li>
-            <li>Profesional de confianza</li>
-            <li>Satisfacción o lo repetimos</li>
-          </ul>
+          <div class="ic-band"></div>
+          <div class="ic-content">
+          <div class="ic-img-wrap">
+            <img src="../../assets/img/logocarta.webp" class="ic-img" alt="Nuestra misión" />
+          </div>
+          <div class="ic-body">
+            <h3 class="ic-title">Nuestra misión</h3>
+            <p class="ic-text">Resultados impecables, sin complicaciones. Tu satisfacción es nuestra garantía.</p>
+            <ul class="ic-list">
+              <li>Máxima calidad garantizada</li>
+              <li>Altos estándares de seguridad</li>
+              <li>Profesional de confianza</li>
+              <li>Satisfacción o lo repetimos</li>
+            </ul>
+          </div>
+          </div>
         </div>
       </div>
       <div class="col-md-6 animate-on-scroll">
         <div class="ic-card ic-card--orange">
-          <img src="../../assets/img/materiales.webp" class="ic-img" alt="Materiales profesionales" />
-          <h3 class="ic-title">Materiales de primera</h3>
-          <p class="ic-text">Herramientas profesionales Unger, reconocidas internacionalmente por su precisión.</p>
-          <ul class="ic-list">
-            <li>Pértigas telescópicas Unger</li>
-            <li>Sistema de agua pura</li>
-            <li>Microfibra de alto rendimiento</li>
-            <li>Productos 100% ecológicos</li>
-          </ul>
+          <div class="ic-band"></div>
+          <div class="ic-content">
+          <div class="ic-img-wrap">
+            <img src="../../assets/img/materiales.webp" class="ic-img" alt="Materiales profesionales" />
+          </div>
+          <div class="ic-body">
+            <h3 class="ic-title">Materiales de primera</h3>
+            <p class="ic-text">Herramientas profesionales Unger, reconocidas internacionalmente por su precisión.</p>
+            <ul class="ic-list">
+              <li>Pértigas telescópicas Unger</li>
+              <li>Sistema de agua pura</li>
+              <li>Microfibra de alto rendimiento</li>
+              <li>Productos 100% ecológicos</li>
+            </ul>
+          </div>
+          </div>
         </div>
       </div>
     </div>
@@ -137,7 +151,7 @@
   width: fit-content;
   align-items: center;
   background: var(--blue-pale);
-  color: var(--blue);
+  color: var(--blue-hover);
   font-family: 'Raleway', sans-serif;
   font-size: 0.72rem;
   font-weight: 700;
@@ -220,37 +234,58 @@
   padding: 4px 28px 32px;
   border-radius: 0 0 var(--r-lg) var(--r-lg);
 }
+
 .ic-card {
   background: var(--white);
   border-radius: var(--r-md);
-  padding: 20px 18px;
   height: 100%;
   border: 1.5px solid var(--border);
-  position: relative;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
   transition: transform 0.25s, box-shadow 0.25s;
 }
-.ic-card::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 4px;
-  border-radius: var(--r-md) var(--r-md) 0 0;
-}
-.ic-card--blue::before  { background: var(--blue); }
-.ic-card--green::before { background: #10b981; }
-.ic-card--orange::before { background: #f59e0b; }
 .ic-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-lg); }
-.ic-img {
-  width: 56px;
-  height: 56px;
-  object-fit: contain;
-  margin-bottom: 12px;
-  border-radius: 10px;
-  padding: 5px;
-  background: var(--white);
-  border: 1.5px solid var(--border);
+
+.ic-band {
+  height: 5px;
+  flex-shrink: 0;
 }
+.ic-card--green .ic-band  { background: #10b981; }
+.ic-card--orange .ic-band { background: #f59e0b; }
+
+.ic-content {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+  overflow: hidden;
+}
+
+.ic-img-wrap {
+  width: 150px;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+.ic-card--green .ic-img-wrap  { background: #f0fdf4; }
+.ic-card--orange .ic-img-wrap { background: #fffbeb; }
+
+.ic-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 16px;
+  display: block;
+  transition: transform 0.35s;
+}
+.ic-card:hover .ic-img { transform: scale(1.05); }
+
+.ic-body {
+  padding: 20px 18px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
 .ic-title {
   font-family: 'Anton', sans-serif;
   color: var(--text);
@@ -261,9 +296,9 @@
 .ic-text {
   font-family: 'Raleway', sans-serif;
   color: var(--text-muted);
-  font-size: 0.84rem;
+  font-size: 0.83rem;
   line-height: 1.6;
-  margin: 0 0 16px;
+  margin: 0 0 14px;
 }
 .ic-list {
   list-style: none;
@@ -272,24 +307,22 @@
 }
 .ic-list li {
   font-family: 'Raleway', sans-serif;
-  font-size: 0.82rem;
+  font-size: 0.81rem;
   color: var(--text);
-  padding: 7px 0;
+  padding: 6px 0;
   border-bottom: 1px solid var(--border);
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 9px;
 }
 .ic-list li:last-child { border-bottom: none; }
 .ic-list li::before {
   content: '';
-  width: 6px;
-  height: 6px;
+  width: 6px; height: 6px;
   border-radius: 50%;
   flex-shrink: 0;
 }
-.ic-card--blue  .ic-list li::before { background: var(--blue); }
-.ic-card--green .ic-list li::before { background: #10b981; }
+.ic-card--green  .ic-list li::before { background: #10b981; }
 .ic-card--orange .ic-list li::before { background: #f59e0b; }
 
 /* ── RESPONSIVE ── */
@@ -301,6 +334,13 @@
 }
 @media (max-width: 768px) {
   .texto-principal-nosotros { margin: 10px 10px 0; }
+  .info-cards { margin: 0 10px; padding: 8px 10px 28px; }
+  .ic-card { flex-direction: column; }
+  .ic-content { flex-direction: column; }
+  .ic-img-wrap { width: 100%; height: 180px; }
+  .ic-body { border-left: none; border-top: 4px solid transparent; }
+  .ic-card--green .ic-body  { border-top-color: #10b981; }
+  .ic-card--orange .ic-body { border-top-color: #f59e0b; }
   .info-cards { margin: 0 10px; padding: 8px 10px 28px; }
 }
 </style>

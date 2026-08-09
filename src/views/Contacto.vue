@@ -34,55 +34,96 @@
 
     <!-- Formulario -->
     <div class="ct-form-wrap">
-      <div v-if="feedback.msg" class="ct-feedback" :class="feedback.ok ? 'ct-feedback--ok' : 'ct-feedback--err'">
-        <font-awesome-icon :icon="['fas', feedback.ok ? 'check' : 'xmark']" class="me-2" />
-        {{ feedback.msg }}
+
+      <div class="fh">
+        <span class="fh-badge"><font-awesome-icon :icon="['fas', 'paper-plane']" class="me-1" />Presupuesto gratuito</span>
+        <h2 class="fh-title">Cuéntanos tu <span class="fh-accent">proyecto</span></h2>
+        <p class="fh-sub">Respondemos en menos de 24 h, sin compromiso</p>
       </div>
+
+      <div class="f-success" v-if="feedback.msg && feedback.ok">
+        <font-awesome-icon :icon="['fas', 'check']" class="me-2" />{{ feedback.msg }}
+      </div>
+      <div class="ff-error" v-if="feedback.msg && !feedback.ok">
+        <font-awesome-icon :icon="['fas', 'xmark']" class="me-2" />{{ feedback.msg }}
+      </div>
+
       <form @submit.prevent="enviarMensaje" novalidate>
-        <div class="ct-row">
-          <div class="cf" :class="{ 'cf--ok': prenom.length > 1, 'cf--err': errors.prenom }">
-            <div class="cf-icon"><font-awesome-icon :icon="['fas', 'user']" /></div>
-            <div class="cf-body">
-              <label>Nombre</label>
-              <input type="text" placeholder="¿Cómo te llamas?" v-model.trim="prenom" />
+
+        <div class="ff-row">
+          <div class="ff" :class="{ 'ff--ok': prenom.length > 0 && !errors.prenom, 'ff--err': errors.prenom }">
+            <div class="ff-icon"><font-awesome-icon :icon="['fas', 'user']" /></div>
+            <div class="ff-body">
+              <label>Nombre completo</label>
+              <input type="text" placeholder="¿Cómo te llamas?" v-model.trim="prenom" @blur="validatePrenom" @input="validatePrenom" autocomplete="name" />
+              <span class="ff-msg" v-if="errors.prenom">{{ errors.prenom }}</span>
+              <span class="ff-msg ff-msg--ok" v-else-if="prenom.length > 0">¡Perfecto!</span>
             </div>
           </div>
-          <div class="cf" :class="{ 'cf--ok': emailOk, 'cf--err': errors.email }">
-            <div class="cf-icon"><font-awesome-icon :icon="['fas', 'envelope']" /></div>
-            <div class="cf-body">
-              <label>Email</label>
-              <input type="email" placeholder="tu@email.com" v-model.trim="email" />
+          <div class="ff" :class="{ 'ff--ok': email.length > 0 && !errors.email, 'ff--err': errors.email }">
+            <div class="ff-icon"><font-awesome-icon :icon="['fas', 'envelope']" /></div>
+            <div class="ff-body">
+              <label>Correo</label>
+              <input type="email" placeholder="tu@email.com" v-model.trim="email" @blur="validateEmail" @input="validateEmail" autocomplete="email" />
+              <span class="ff-msg" v-if="errors.email">{{ errors.email }}</span>
+              <span class="ff-msg ff-msg--ok" v-else-if="email.length > 0">¡Perfecto!</span>
             </div>
           </div>
         </div>
-        <div class="ct-row">
-          <div class="cf" :class="{ 'cf--ok': phone.length > 8, 'cf--err': errors.phone }">
-            <div class="cf-icon"><font-awesome-icon :icon="['fas', 'phone']" /></div>
-            <div class="cf-body">
+
+        <div class="ff-row">
+          <div class="ff" :class="{ 'ff--ok': phone.length > 0 && !errors.phone, 'ff--err': errors.phone }">
+            <div class="ff-icon"><font-awesome-icon :icon="['fas', 'phone']" /></div>
+            <div class="ff-body">
               <label>Teléfono</label>
-              <input type="tel" placeholder="+34 600 000 000" v-model.trim="phone" />
+              <input type="tel" placeholder="6XX XXX XXX" v-model.trim="phone" @blur="validatePhone" @input="validatePhone" autocomplete="tel" />
+              <span class="ff-msg" v-if="errors.phone">{{ errors.phone }}</span>
+              <span class="ff-msg ff-msg--ok" v-else-if="phone.length > 0">¡Perfecto!</span>
             </div>
           </div>
-          <div class="cf" :class="{ 'cf--ok': subjet.length > 2 }">
-            <div class="cf-icon"><font-awesome-icon :icon="['fas', 'tag']" /></div>
-            <div class="cf-body">
-              <label>Asunto</label>
-              <input type="text" placeholder="¿En qué podemos ayudarte?" v-model.trim="subjet" />
+          <div class="ff">
+            <div class="ff-icon"><font-awesome-icon :icon="['fas', 'house']" /></div>
+            <div class="ff-body">
+              <label>Tipo de espacio</label>
+              <select v-model="tipoServicio">
+                <option value="">Selecciona una opción</option>
+                <option value="Vivienda">Vivienda</option>
+                <option value="Negocio o local">Negocio o local</option>
+                <option value="Comunidad de vecinos">Comunidad de vecinos</option>
+                <option value="Otro">Otro</option>
+              </select>
             </div>
           </div>
         </div>
-        <div class="cf cf--textarea" :class="{ 'cf--ok': message.length > 9, 'cf--err': errors.message }">
-          <div class="cf-icon cf-icon--top"><font-awesome-icon :icon="['fas', 'comments']" /></div>
-          <div class="cf-body">
-            <label>Mensaje</label>
-            <textarea placeholder="Cuéntanos los detalles de tu proyecto..." v-model="message" rows="5"></textarea>
+
+        <div class="ff">
+          <div class="ff-icon"><font-awesome-icon :icon="['fas', 'location-dot']" /></div>
+          <div class="ff-body">
+            <label>Zona o dirección aproximada</label>
+            <input type="text" placeholder="Ej: Getafe, Madrid centro..." v-model.trim="zona" />
           </div>
         </div>
-        <button type="submit" class="ct-submit" :disabled="sending">
-          <span v-if="!sending"><font-awesome-icon :icon="['fas', 'paper-plane']" class="me-2" />Enviar mensaje</span>
-          <span v-else class="ct-spinner"></span>
+
+        <div class="ff" :class="{ 'ff--ok': message.length > 0 && !errors.message, 'ff--err': errors.message }">
+          <div class="ff-icon ff-icon--top"><font-awesome-icon :icon="['fas', 'comments']" /></div>
+          <div class="ff-body">
+            <label>¿Qué necesitas limpiar?</label>
+            <textarea rows="4" placeholder="Cuéntanos los detalles: número de ventanas, altura, frecuencia deseada..." v-model="message" @blur="validateMessage" @input="validateMessage"></textarea>
+            <span class="ff-msg" v-if="errors.message">{{ errors.message }}</span>
+            <span class="ff-msg ff-msg--ok" v-else-if="message.length > 0">¡Perfecto!</span>
+          </div>
+        </div>
+
+        <button type="submit" class="f-submit" :disabled="sending || !isFormValid">
+          <span v-if="!sending"><font-awesome-icon :icon="['fas', 'paper-plane']" class="me-2" />Enviar consulta</span>
+          <span v-else class="f-submit-loading"><span class="f-spinner"></span>Enviando...</span>
         </button>
-        <p class="ct-trust"><font-awesome-icon :icon="['fas', 'lock']" class="me-1" />Tu información está segura. Nunca compartimos tus datos.</p>
+
+        <div class="f-trust">
+          <span><font-awesome-icon :icon="['fas', 'lock']" class="me-1" />Sin compromiso</span>
+          <span><font-awesome-icon :icon="['fas', 'clock']" class="me-1" />Respuesta en 24 h</span>
+          <span><font-awesome-icon :icon="['fas', 'shield-halved']" class="me-1" />Datos protegidos</span>
+        </div>
       </form>
     </div>
 
@@ -92,75 +133,177 @@
 <script setup>
 import { ref, computed } from 'vue';
 import emailjs from '@emailjs/browser';
-import { useUserStore } from '../stores/user';
 
-const userStore = useUserStore();
+const prenom        = ref('');
+const email         = ref('');
+const phone         = ref('');
+const tipoServicio  = ref('');
+const zona          = ref('');
+const message       = ref('');
+const sending       = ref(false);
+const feedback      = ref({ msg: '', ok: false });
+const errors        = ref({ prenom: '', email: '', phone: '', message: '' });
 
-const prenom  = ref('');
-const email   = ref('');
-const phone   = ref('');
-const subjet  = ref('');
-const message = ref('');
-const sending = ref(false);
-const feedback = ref({ msg: '', ok: false });
-const errors = ref({ prenom: false, email: false, phone: false, message: false });
+const validatePrenom = () => {
+  errors.value.prenom = prenom.value.trim() ? '' : 'El nombre es obligatorio.';
+  return !errors.value.prenom;
+};
+const validateEmail = () => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!email.value.trim()) errors.value.email = 'Se requiere un correo electrónico.';
+  else if (!emailRegex.test(email.value)) errors.value.email = 'Introduce un correo válido.';
+  else errors.value.email = '';
+  return !errors.value.email;
+};
+const validatePhone = () => {
+  if (!phone.value.trim()) errors.value.phone = 'Se requiere un teléfono.';
+  else if (phone.value.trim().replace(/[\s\-()]/g, '').length < 9) errors.value.phone = 'El teléfono debe tener al menos 9 dígitos.';
+  else errors.value.phone = '';
+  return !errors.value.phone;
+};
+const validateMessage = () => {
+  if (!message.value.trim()) errors.value.message = 'El mensaje es obligatorio.';
+  else if (message.value.trim().length < 10) errors.value.message = 'Cuéntanos un poco más (mínimo 10 caracteres).';
+  else errors.value.message = '';
+  return !errors.value.message;
+};
 
-const emailOk = computed(() => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value));
+const isFormValid = computed(() =>
+  prenom.value.trim() !== '' && !errors.value.prenom &&
+  email.value.trim()  !== '' && !errors.value.email &&
+  phone.value.trim()  !== '' && !errors.value.phone &&
+  message.value.trim() !== '' && !errors.value.message
+);
 
 const enviarMensaje = async () => {
-  errors.value = { prenom: !prenom.value, email: !emailOk.value, phone: phone.value.length < 9, message: !message.value };
-  if (Object.values(errors.value).some(Boolean)) { feedback.value = { msg: 'Rellena todos los campos correctamente.', ok: false }; return; }
+  const ok = validatePrenom() && validateEmail() && validatePhone() && validateMessage();
+  if (!ok) { feedback.value = { msg: 'Corrige los campos marcados antes de enviar.', ok: false }; return; }
+
   sending.value = true;
   feedback.value = { msg: '', ok: false };
   try {
-    await emailjs.send('service_iytm8yl','template_7yngfsa',{ prenom: prenom.value, email: email.value, message: message.value, phone: phone.value },'IF1Sn503DHVPja4II');
+    await emailjs.send('service_iytm8yl', 'template_7yngfsa', {
+      prenom: prenom.value,
+      email: email.value,
+      phone: phone.value,
+      message: message.value,
+      tipoServicio: tipoServicio.value,
+      zona: zona.value,
+    }, 'IF1Sn503DHVPja4II');
     feedback.value = { msg: '¡Mensaje enviado! Te respondemos en menos de 24 h.', ok: true };
-    prenom.value = email.value = phone.value = subjet.value = message.value = '';
-    errors.value = { prenom: false, email: false, phone: false, message: false };
-  } catch { feedback.value = { msg: 'Hubo un problema al enviar. Inténtalo de nuevo.', ok: false }; }
-  finally { sending.value = false; }
+    prenom.value = email.value = phone.value = zona.value = message.value = tipoServicio.value = '';
+    errors.value = { prenom: '', email: '', phone: '', message: '' };
+  } catch {
+    feedback.value = { msg: 'Hubo un problema al enviar. Inténtalo de nuevo.', ok: false };
+  } finally {
+    sending.value = false;
+  }
 };
 </script>
 
 <style scoped>
-.ct-wrap { min-height: calc(100vh - 54px); padding: 52px 16px 72px; background: #151515; display: flex; flex-direction: column; align-items: center; }
+.ct-wrap { min-height: calc(100vh - 54px); padding: 52px 16px 72px; background: var(--slate); display: flex; flex-direction: column; align-items: center; }
 .ct-header { text-align: center; max-width: 600px; margin-bottom: 40px; }
-.ct-label { display: inline-block; font-family: 'Raleway', sans-serif; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #60a5fa; background: rgba(96,165,250,0.1); border: 1px solid rgba(96,165,250,0.2); border-radius: 20px; padding: 4px 14px; margin-bottom: 16px; }
-.ct-title { font-family: 'Anton', sans-serif; font-size: 2.8rem; color: #fff; line-height: 1.1; margin: 0 0 14px; }
-.ct-accent { color: #60a5fa; }
-.ct-sub { font-family: 'Raleway', sans-serif; font-size: 0.95rem; color: #64748b; line-height: 1.75; margin: 0; }
+.ct-label { display: inline-block; font-family: 'Raleway', sans-serif; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--blue); background: var(--blue-pale); border: 1px solid rgba(37,99,235,0.2); border-radius: 20px; padding: 4px 14px; margin-bottom: 16px; }
+.ct-title { font-family: 'Anton', sans-serif; font-size: 2.8rem; color: var(--text); line-height: 1.1; margin: 0 0 14px; }
+.ct-accent { color: var(--blue); }
+.ct-sub { font-family: 'Raleway', sans-serif; font-size: 0.95rem; color: var(--text-muted); line-height: 1.75; margin: 0; }
 .ct-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; width: 100%; max-width: 860px; margin-bottom: 40px; }
-.ct-card { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 8px; background: #0f1729; border: 1px solid rgba(255,255,255,0.07); border-radius: 16px; padding: 22px 14px; text-decoration: none; transition: border-color 0.2s, transform 0.2s, background 0.2s; }
-a.ct-card:hover { background: rgba(96,165,250,0.05); border-color: rgba(96,165,250,0.25); transform: translateY(-3px); }
-.ct-card-icon { width: 42px; height: 42px; border-radius: 12px; background: rgba(96,165,250,0.1); border: 1px solid rgba(96,165,250,0.2); display: flex; align-items: center; justify-content: center; color: #60a5fa; font-size: 1rem; }
-.ct-card-icon--wa { background: rgba(37,211,102,0.1); border-color: rgba(37,211,102,0.2); color: #25d366; }
-.ct-card--wa:hover { border-color: rgba(37,211,102,0.3) !important; background: rgba(37,211,102,0.04) !important; }
-.ct-card-label { font-family: 'Raleway', sans-serif; font-size: 0.67rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #475569; }
-.ct-card-value { font-family: 'Raleway', sans-serif; font-size: 0.85rem; font-weight: 600; color: #cbd5e1; }
-.ct-form-wrap { width: 100%; max-width: 860px; background: #0f1729; border: 1px solid rgba(255,255,255,0.07); border-radius: 20px; padding: 36px 40px 32px; box-shadow: 0 20px 60px rgba(0,0,0,0.4); }
-.ct-feedback { font-family: 'Raleway', sans-serif; font-size: 0.84rem; border-radius: 10px; padding: 10px 14px; margin-bottom: 20px; display: flex; align-items: center; }
-.ct-feedback--ok  { background: rgba(52,211,153,0.1);  border: 1px solid rgba(52,211,153,0.3);  color: #6ee7b7; }
-.ct-feedback--err { background: rgba(239,68,68,0.1);   border: 1px solid rgba(239,68,68,0.3);   color: #fca5a5; }
-.ct-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
-.cf { display: flex; align-items: center; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.09); border-radius: 12px; padding: 0 14px; transition: border-color 0.2s, background 0.2s; }
-.ct-row + .cf { margin-bottom: 12px; }
-.cf:focus-within { border-color: rgba(96,165,250,0.5); background: rgba(96,165,250,0.04); }
-.cf--ok  { border-color: rgba(52,211,153,0.35); }
-.cf--err { border-color: rgba(239,68,68,0.4); background: rgba(239,68,68,0.04); }
-.cf--textarea { align-items: flex-start; margin-bottom: 16px; }
-.cf-icon { color: #475569; font-size: 0.85rem; width: 18px; flex-shrink: 0; margin-right: 12px; transition: color 0.2s; }
-.cf-icon--top { margin-top: 14px; }
-.cf:focus-within .cf-icon { color: #60a5fa; }
-.cf-body { flex: 1; padding: 10px 0; }
-.cf-body label { display: block; font-family: 'Raleway', sans-serif; font-size: 0.67rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #64748b; margin-bottom: 2px; }
-.cf-body input, .cf-body textarea { width: 100%; background: transparent; border: none; outline: none; color: #f1f5f9; font-family: 'Raleway', sans-serif; font-size: 0.9rem; padding: 0; resize: none; }
-.cf-body input::placeholder, .cf-body textarea::placeholder { color: #334155; }
-.ct-submit { width: 100%; padding: 14px; background: linear-gradient(135deg, #2563eb, #1d4ed8); color: #fff; font-family: 'Raleway', sans-serif; font-weight: 700; font-size: 0.95rem; border: none; border-radius: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; min-height: 50px; transition: opacity 0.2s, transform 0.2s, box-shadow 0.2s; }
-.ct-submit:hover:not(:disabled) { opacity: 0.9; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(37,99,235,0.45); }
-.ct-submit:disabled { opacity: 0.5; cursor: not-allowed; }
-.ct-spinner { width: 20px; height: 20px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.7s linear infinite; }
-@keyframes spin { to { transform: rotate(360deg); } }
-.ct-trust { font-family: 'Raleway', sans-serif; font-size: 0.75rem; color: #334155; text-align: center; margin: 14px 0 0; }
-@media (max-width: 860px) { .ct-cards { grid-template-columns: repeat(2, 1fr); } .ct-form-wrap { padding: 28px 24px 24px; } }
-@media (max-width: 540px) { .ct-title { font-size: 2.1rem; } .ct-cards { grid-template-columns: repeat(2, 1fr); gap: 8px; } .ct-card { padding: 16px 10px; } .ct-row { grid-template-columns: 1fr; gap: 0; margin-bottom: 0; } .ct-row .cf { margin-bottom: 12px; } .ct-form-wrap { padding: 22px 16px 20px; border-radius: 16px; } .ct-wrap { padding: 32px 12px 56px; } }
+.ct-card { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 8px; background: var(--white); border: 1px solid var(--border); border-radius: 16px; padding: 22px 14px; text-decoration: none; transition: border-color 0.2s, transform 0.2s, background 0.2s; }
+a.ct-card:hover { background: var(--blue-pale); border-color: rgba(37,99,235,0.3); transform: translateY(-3px); }
+.ct-card-icon { width: 42px; height: 42px; border-radius: 12px; background: var(--blue-pale); border: 1px solid rgba(37,99,235,0.2); display: flex; align-items: center; justify-content: center; color: var(--blue); font-size: 1rem; }
+.ct-card-icon--wa { background: rgba(37,211,102,0.12); border-color: rgba(37,211,102,0.25); color: #25d366; }
+.ct-card--wa:hover { border-color: rgba(37,211,102,0.3) !important; background: rgba(37,211,102,0.06) !important; }
+.ct-card-label { font-family: 'Raleway', sans-serif; font-size: 0.67rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); }
+.ct-card-value { font-family: 'Raleway', sans-serif; font-size: 0.85rem; font-weight: 600; color: var(--text); }
+
+/* ── Formulario (estilo home) ── */
+.ct-form-wrap {
+  width: 100%; max-width: 860px;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 36px 36px 28px;
+  box-shadow: var(--shadow-lg);
+}
+.fh { text-align: center; margin-bottom: 26px; }
+.fh-badge { display: inline-flex; align-items: center; background: var(--blue-pale); border: 1px solid rgba(37,99,235,0.25); color: var(--blue); font-family: 'Raleway', sans-serif; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; padding: 4px 12px; border-radius: 20px; margin-bottom: 14px; }
+.fh-title { font-family: 'Anton', sans-serif; color: var(--text); font-size: 1.8rem; line-height: 1.2; margin: 0 0 8px; }
+.fh-accent { color: var(--blue); }
+.fh-sub { color: var(--text-muted); font-family: 'Raleway', sans-serif; font-size: 0.85rem; margin: 0; }
+
+.ff { display: flex; gap: 12px; margin-bottom: 16px; }
+.ff-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 16px; }
+.ff-row .ff { margin-bottom: 0; }
+.ff-icon {
+  width: 36px; min-width: 36px; height: 36px;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--blue-pale); border: 1px solid rgba(37,99,235,0.18);
+  border-radius: 9px; color: var(--blue); font-size: 0.85rem;
+  margin-top: 20px; flex-shrink: 0;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+}
+.ff-icon--top { align-self: flex-start; margin-top: 20px; }
+.ff:focus-within .ff-icon { background: rgba(37,99,235,0.22); border-color: rgba(37,99,235,0.5); color: var(--blue-hover); }
+.ff--ok .ff-icon { border-color: rgba(52,211,153,0.4); color: #10b981; background: rgba(16,185,129,0.1); }
+.ff--err .ff-icon { border-color: rgba(239,68,68,0.4); color: #ef4444; background: rgba(239,68,68,0.08); }
+
+.ff-body { flex: 1; min-width: 0; }
+.ff-body label { display: block; font-family: 'Raleway', sans-serif; font-weight: 700; font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 6px; }
+.ff-body input, .ff-body textarea, .ff-body select {
+  width: 100%; background: var(--slate);
+  border: 1px solid var(--border); border-radius: 9px;
+  padding: 10px 12px; color: var(--text);
+  font-family: 'Raleway', sans-serif; font-size: 0.9rem;
+  outline: none; transition: border-color 0.2s, background 0.2s, box-shadow 0.2s; resize: none;
+}
+.ff-body select { appearance: none; cursor: pointer; }
+.ff-body select option { background: var(--white); color: var(--text); }
+.ff-body input::placeholder, .ff-body textarea::placeholder { color: var(--text-muted); opacity: 0.6; }
+.ff-body input:focus, .ff-body textarea:focus, .ff-body select:focus {
+  border-color: rgba(37,99,235,0.5); background: var(--white);
+  box-shadow: 0 0 0 3px rgba(37,99,235,0.15);
+}
+.ff--ok .ff-body input, .ff--ok .ff-body textarea { border-color: rgba(16,185,129,0.5); }
+.ff--err .ff-body input, .ff--err .ff-body textarea { border-color: rgba(239,68,68,0.5); box-shadow: 0 0 0 3px rgba(239,68,68,0.1); }
+
+.ff-msg { display: block; font-family: 'Raleway', sans-serif; font-size: 0.72rem; font-weight: 600; margin-top: 5px; color: #ef4444; }
+.ff-msg--ok { color: #10b981; }
+
+.f-success {
+  background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.3);
+  border-radius: 9px; color: #059669; font-family: 'Raleway', sans-serif;
+  font-size: 0.85rem; font-weight: 600; padding: 12px 16px; margin-bottom: 18px; text-align: center;
+}
+.ff-error {
+  background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3);
+  border-radius: 9px; color: #dc2626; font-family: 'Raleway', sans-serif;
+  font-size: 0.85rem; font-weight: 600; padding: 12px 16px; margin-bottom: 18px; text-align: center;
+}
+
+.f-submit {
+  width: 100%; background: linear-gradient(135deg, var(--blue) 0%, var(--blue-hover) 100%);
+  color: #fff; font-family: 'Raleway', sans-serif; font-weight: 700; font-size: 0.95rem;
+  padding: 15px 20px; border: none; border-radius: 12px; cursor: pointer;
+  position: relative; overflow: hidden;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  margin-bottom: 16px; transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
+}
+.f-submit:not(:disabled):hover { transform: translateY(-2px); box-shadow: 0 8px 26px rgba(37,99,235,0.45); }
+.f-submit:disabled { opacity: 0.45; cursor: not-allowed; }
+.f-submit-loading { display: flex; align-items: center; gap: 8px; }
+.f-spinner { width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: ct-spin 0.7s linear infinite; display: inline-block; }
+@keyframes ct-spin { to { transform: rotate(360deg); } }
+.f-trust { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; color: var(--text-muted); font-family: 'Raleway', sans-serif; font-size: 0.7rem; font-weight: 600; }
+
+@media (max-width: 860px) { .ct-cards { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 640px) {
+  .ct-title { font-size: 2.1rem; }
+  .ct-cards { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .ct-card { padding: 16px 10px; }
+  .ct-form-wrap { padding: 26px 20px 22px; border-radius: 16px; }
+  .ff-row { grid-template-columns: 1fr; gap: 0; }
+  .ff-row .ff { margin-bottom: 16px; }
+  .ct-wrap { padding: 32px 12px 56px; }
+}
 </style>
