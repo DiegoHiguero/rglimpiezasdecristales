@@ -6,6 +6,24 @@
       <p class="rf-sub">Captura la firma de cada visita, sin necesidad de tener la factura todavía.</p>
     </div>
 
+    <!-- Migración única (temporal): consolida datos antiguos de las
+         subcolecciones facturas/firmas en los nuevos campos array del
+         portal público, tras el fix de seguridad. Bórrame cuando ya se
+         haya ejecutado una vez. -->
+    <div class="rf-card">
+      <div class="rf-card-head">Migración del portal (una sola vez)</div>
+      <div class="rf-card-body">
+        <p class="rf-hint">
+          Consolida las facturas/firmas antiguas del portal de clientes en el nuevo formato seguro.
+          Es seguro pulsarlo varias veces.
+        </p>
+        <button class="rf-migrate-btn" @click="onMigrar" :disabled="migrando">
+          {{ migrando ? 'Migrando...' : 'Migrar datos antiguos del portal' }}
+        </button>
+        <p v-if="migracionResultado" class="rf-hint">{{ migracionResultado }}</p>
+      </div>
+    </div>
+
     <!-- Captura -->
     <div class="rf-card">
       <div class="rf-card-head">Nueva firma</div>
@@ -75,10 +93,26 @@
 import { ref, computed, watch, onMounted } from 'vue';
 import { useDatabaseStore } from '../stores/database';
 import SignaturePad from '../components/SignaturePad.vue';
-import { ensurePortalToken, captureFirma, getFirmasCliente, deleteFirma } from '../services/portal';
+import { ensurePortalToken, captureFirma, getFirmasCliente, deleteFirma, migrateAllPortalSubcollections } from '../services/portal';
 import dayjs from 'dayjs';
 
 const databaseStore = useDatabaseStore();
+
+const migrando = ref(false);
+const migracionResultado = ref('');
+async function onMigrar() {
+  migrando.value = true;
+  migracionResultado.value = '';
+  try {
+    const n = await migrateAllPortalSubcollections();
+    migracionResultado.value = n > 0 ? `Listo: ${n} cliente(s) migrado(s).` : 'Listo: no había nada pendiente de migrar.';
+  } catch (error) {
+    console.error('Error migrando el portal:', error);
+    migracionResultado.value = 'Error al migrar. Revisa la consola.';
+  } finally {
+    migrando.value = false;
+  }
+}
 
 const clienteSeleccionado = ref('');
 const clienteQuery = ref('');
@@ -263,6 +297,22 @@ async function onDeleteFirma(firma) {
 .rf-dropdown-item--empty:hover { background: none; }
 
 .rf-hint { font-family: 'Raleway', sans-serif; font-size: 0.84rem; color: #64748b; }
+
+.rf-migrate-btn {
+  font-family: 'Raleway', sans-serif;
+  font-weight: 700;
+  font-size: 0.84rem;
+  background: rgba(96,165,250,0.15);
+  color: #60a5fa;
+  border: 1px solid rgba(96,165,250,0.3);
+  border-radius: 10px;
+  padding: 9px 16px;
+  cursor: pointer;
+  margin: 6px 0;
+  transition: opacity 0.2s;
+}
+.rf-migrate-btn:hover { opacity: 0.85; }
+.rf-migrate-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
 .rf-firmas-grid { display: flex; flex-wrap: wrap; gap: 14px; }
 .rf-firma-item {

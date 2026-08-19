@@ -28,17 +28,22 @@ service cloud.firestore {
       allow get: if true;   // hace falta conocer el token exacto para leer
       allow list: if false; // nadie puede enumerar todos los clientes
       allow write: if isSignedInAsAdmin();
+
+      // Legado: antes 'facturas' y 'firmas' vivían como subcolecciones con
+      // `allow read: if true`, asumiendo que solo se podían leer conociendo
+      // el token del padre. Eso era falso: Firestore evalúa las reglas de
+      // subcolecciones por forma de ruta, no por cómo se llegó a ellas, así
+      // que una collection-group query (`collectionGroup(db,'facturas')`)
+      // podía leer los datos de TODOS los clientes sin conocer ningún
+      // token. Ahora 'facturas' y 'firmas' se guardan como campos array en
+      // el propio documento padre (protegido por el `allow get` de arriba,
+      // que sí exige el token exacto). Estas subcolecciones solo quedan
+      // para que el admin migre datos antiguos una única vez.
       match /facturas/{facturaId} {
-        allow read: if true;  // ya acotado al token conocido del padre
-        allow write: if isSignedInAsAdmin();
+        allow read, write: if isSignedInAsAdmin();
       }
-      // Firmas sueltas capturadas en cada visita; se vinculan a una
-      // factura (o no) mediante el campo facturaId. Solo el admin captura,
-      // vincula o borra — la lectura pública usa el mismo criterio que
-      // 'facturas' (ya acotada al token conocido).
       match /firmas/{firmaId} {
-        allow read: if true;
-        allow write: if isSignedInAsAdmin();
+        allow read, write: if isSignedInAsAdmin();
       }
     }
     match /clientePortalTokens/{nameSlug} {

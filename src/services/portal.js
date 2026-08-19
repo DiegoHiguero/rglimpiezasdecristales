@@ -7,7 +7,7 @@
  */
 
 import { db, storage } from '../firebaseConfig'
-import { doc, getDoc, getDocs, setDoc, updateDoc, deleteDoc, collection } from 'firebase/firestore'
+import { doc, getDoc, getDocs, setDoc, updateDoc, deleteDoc, collection, arrayUnion, runTransaction } from 'firebase/firestore'
 import { ref, uploadString, getDownloadURL, deleteObject } from 'firebase/storage'
 
 function slugify(str) {
@@ -43,11 +43,31 @@ export async function ensurePortalToken(clienteNombre, clienteEmail = '', client
 /**
  * Crea/actualiza el espejo público de una factura (se llama tras guardarla
  * en la hoja de cálculo real).
+ *
+ * `facturas` y `firmas` viven como campos array dentro del propio documento
+ * `facturasPublicas/{token}` (no como subcolecciones). Firestore no puede
+ * distinguir, a nivel de reglas, entre "listar la subcolección de un padre
+ * ya conocido" y "listar vía collection-group query sin conocer ningún
+ * token" — un `allow read: if true` en una subcolección anidada se aplica
+ * igual a ambos casos, así que una subcolección pública habría permitido
+ * leer los datos de TODOS los clientes sin conocer ningún enlace. Guardar
+ * estos datos como campos del documento padre (protegido por `allow get`
+ * con el token exacto) cierra esa vía por diseño.
  */
 export async function mirrorFacturaToPortal(portalToken, { numeroFactura, fecha, concepto, total, estado }) {
   if (!portalToken || !numeroFactura) return
-  const facturaRef = doc(db, 'facturasPublicas', portalToken, 'facturas', String(numeroFactura))
-  await setDoc(facturaRef, { fecha: fecha || '', concepto: concepto || '', total: total ?? 0, estado: estado || 'Pendiente' }, { merge: true })
+  const parentRef = doc(db, 'facturasPublicas', portalToken)
+  const id = String(numeroFactura)
+  const entry = { id, fecha: fecha || '', concepto: concepto || '', total: total ?? 0, estado: estado || 'Pendiente' }
+
+  await runTransaction(db, async (tx) => {
+    const snap = await tx.get(parentRef)
+    const facturas = (snap.exists() ? snap.data().facturas : []) || []
+    const idx = facturas.findIndex((f) => f.id === id)
+    if (idx >= 0) facturas[idx] = { ...facturas[idx], ...entry }
+    else facturas.push(entry)
+    tx.set(parentRef, { facturas }, { merge: true })
+  })
 }
 
 // ─── Firmas (independientes de la factura, se vinculan después) ────────────
@@ -63,37 +83,43 @@ export async function captureFirma(portalToken, dataUrl) {
   await uploadString(storageRef, dataUrl, 'data_url')
   const url = await getDownloadURL(storageRef)
 
-  await setDoc(doc(db, 'facturasPublicas', portalToken, 'firmas', firmaId), {
-    url,
-    fecha: new Date().toISOString(),
-    facturaId: null,
-  })
+  const nuevaFirma = { id: firmaId, url, fecha: new Date().toISOString(), facturaId: null }
+  await updateDoc(doc(db, 'facturasPublicas', portalToken), { firmas: arrayUnion(nuevaFirma) })
   return { id: firmaId, url }
 }
 
 /** Todas las firmas de un cliente (vinculadas o no), más recientes primero. */
 export async function getFirmasCliente(portalToken) {
   if (!portalToken) return []
-  const snap = await getDocs(collection(db, 'facturasPublicas', portalToken, 'firmas'))
-  return snap.docs
-    .map((d) => ({ id: d.id, ...d.data() }))
-    .sort((a, b) => (b.fecha || '').localeCompare(a.fecha || ''))
+  const snap = await getDoc(doc(db, 'facturasPublicas', portalToken))
+  if (!snap.exists()) return []
+  return [...(snap.data().firmas || [])].sort((a, b) => (b.fecha || '').localeCompare(a.fecha || ''))
 }
 
 /** Vincula una o varias firmas sueltas a una factura ya emitida. */
 export async function linkFirmasToFactura(portalToken, numeroFactura, firmaIds) {
   if (!portalToken || !numeroFactura || !firmaIds?.length) return
-  await Promise.all(
-    firmaIds.map((id) =>
-      updateDoc(doc(db, 'facturasPublicas', portalToken, 'firmas', id), { facturaId: String(numeroFactura) })
+  const parentRef = doc(db, 'facturasPublicas', portalToken)
+  await runTransaction(db, async (tx) => {
+    const snap = await tx.get(parentRef)
+    if (!snap.exists()) return
+    const firmas = (snap.data().firmas || []).map((f) =>
+      firmaIds.includes(f.id) ? { ...f, facturaId: String(numeroFactura) } : f
     )
-  )
+    tx.update(parentRef, { firmas })
+  })
 }
 
 /** Borra una firma suelta (pensado para corregir capturas por error). */
 export async function deleteFirma(portalToken, firmaId, storageUrl) {
   if (!portalToken || !firmaId) return
-  await deleteDoc(doc(db, 'facturasPublicas', portalToken, 'firmas', firmaId))
+  const parentRef = doc(db, 'facturasPublicas', portalToken)
+  await runTransaction(db, async (tx) => {
+    const snap = await tx.get(parentRef)
+    if (!snap.exists()) return
+    const firmas = (snap.data().firmas || []).filter((f) => f.id !== firmaId)
+    tx.update(parentRef, { firmas })
+  })
   if (storageUrl) {
     try { await deleteObject(ref(storage, storageUrl)) } catch { /* si ya no existe, no pasa nada */ }
   }
@@ -112,22 +138,66 @@ export async function getPortalData(token) {
   const clienteSnap = await getDoc(doc(db, 'facturasPublicas', token))
   if (!clienteSnap.exists()) return null
 
-  const [facturasSnap, firmasSnap] = await Promise.all([
-    getDocs(collection(db, 'facturasPublicas', token, 'facturas')),
-    getDocs(collection(db, 'facturasPublicas', token, 'firmas')),
-  ])
+  const { facturas: rawFacturas, firmas: rawFirmas, ...clienteInfo } = clienteSnap.data()
 
   const firmasPorFactura = {}
-  firmasSnap.docs.forEach((d) => {
-    const data = d.data()
-    if (!data.facturaId) return
-    if (!firmasPorFactura[data.facturaId]) firmasPorFactura[data.facturaId] = []
-    firmasPorFactura[data.facturaId].push({ id: d.id, ...data })
+  ;(rawFirmas || []).forEach((f) => {
+    if (!f.facturaId) return
+    if (!firmasPorFactura[f.facturaId]) firmasPorFactura[f.facturaId] = []
+    firmasPorFactura[f.facturaId].push(f)
   })
 
-  const facturas = facturasSnap.docs
-    .map((d) => ({ id: d.id, ...d.data(), firmas: firmasPorFactura[d.id] || [] }))
+  const facturas = (rawFacturas || [])
+    .map((f) => ({ ...f, firmas: firmasPorFactura[f.id] || [] }))
     .sort((a, b) => (b.fecha || '').localeCompare(a.fecha || ''))
 
-  return { ...clienteSnap.data(), facturas }
+  return { ...clienteInfo, facturas }
+}
+
+/**
+ * Migración única: consolida las subcolecciones `facturas`/`firmas` legadas
+ * (de antes de este cambio) dentro de los campos array del documento padre.
+ * Solo el admin puede ejecutarla (así lo exigen las reglas de Firestore
+ * sobre esas subcolecciones). Idempotente — se puede ejecutar varias veces
+ * sin duplicar datos.
+ */
+export async function migrateAllPortalSubcollections() {
+  const tokensSnap = await getDocs(collection(db, 'clientePortalTokens'))
+  let migrados = 0
+
+  for (const tDoc of tokensSnap.docs) {
+    const token = tDoc.data().token
+    if (!token) continue
+
+    const parentRef = doc(db, 'facturasPublicas', token)
+    const parentSnap = await getDoc(parentRef)
+    if (!parentSnap.exists()) continue
+
+    const current = parentSnap.data()
+    const facturasById = new Map((current.facturas || []).map((f) => [f.id, f]))
+    const firmasById = new Map((current.firmas || []).map((f) => [f.id, f]))
+
+    const [facturasSnap, firmasSnap] = await Promise.all([
+      getDocs(collection(db, 'facturasPublicas', token, 'facturas')),
+      getDocs(collection(db, 'facturasPublicas', token, 'firmas')),
+    ])
+
+    let cambios = false
+    facturasSnap.docs.forEach((d) => {
+      if (!facturasById.has(d.id)) { facturasById.set(d.id, { id: d.id, ...d.data() }); cambios = true }
+    })
+    firmasSnap.docs.forEach((d) => {
+      if (!firmasById.has(d.id)) { firmasById.set(d.id, { id: d.id, ...d.data() }); cambios = true }
+    })
+
+    if (cambios) {
+      await setDoc(parentRef, {
+        facturas: Array.from(facturasById.values()),
+        firmas: Array.from(firmasById.values()),
+      }, { merge: true })
+      migrados++
+    }
+  }
+
+  return migrados
 }
