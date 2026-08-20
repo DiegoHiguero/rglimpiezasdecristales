@@ -96,6 +96,20 @@ export async function getFirmasCliente(portalToken) {
   return [...(snap.data().firmas || [])].sort((a, b) => (b.fecha || '').localeCompare(a.fecha || ''))
 }
 
+/** Cambia la fecha/hora de una firma (por si se capturó tarde o se olvidó ese día). */
+export async function updateFirmaFecha(portalToken, firmaId, nuevaFechaISO) {
+  if (!portalToken || !firmaId || !nuevaFechaISO) return
+  const parentRef = doc(db, 'facturasPublicas', portalToken)
+  await runTransaction(db, async (tx) => {
+    const snap = await tx.get(parentRef)
+    if (!snap.exists()) return
+    const firmas = (snap.data().firmas || []).map((f) =>
+      f.id === firmaId ? { ...f, fecha: nuevaFechaISO } : f
+    )
+    tx.update(parentRef, { firmas })
+  })
+}
+
 /** Vincula una o varias firmas sueltas a una factura ya emitida. */
 export async function linkFirmasToFactura(portalToken, numeroFactura, firmaIds) {
   if (!portalToken || !numeroFactura || !firmaIds?.length) return
@@ -123,6 +137,37 @@ export async function deleteFirma(portalToken, firmaId, storageUrl) {
   if (storageUrl) {
     try { await deleteObject(ref(storage, storageUrl)) } catch { /* si ya no existe, no pasa nada */ }
   }
+}
+
+/** Facturas espejadas de un cliente (solo lo necesario para vincular firmas), más recientes primero. */
+export async function getFacturasCliente(portalToken) {
+  if (!portalToken) return []
+  const snap = await getDoc(doc(db, 'facturasPublicas', portalToken))
+  if (!snap.exists()) return []
+  return [...(snap.data().facturas || [])].sort((a, b) => (b.fecha || '').localeCompare(a.fecha || ''))
+}
+
+/**
+ * Todas las firmas sin facturar, de todos los clientes que ya tienen enlace
+ * de portal creado. Sirve para ver de un vistazo el trabajo atrasado sin
+ * tener que buscar cliente por cliente. Requiere admin (lista
+ * `clientePortalTokens`, que las reglas restringen a `isSignedInAsAdmin()`).
+ */
+export async function getAllPendingFirmas() {
+  const tokensSnap = await getDocs(collection(db, 'clientePortalTokens'))
+  const pendientes = []
+
+  await Promise.all(tokensSnap.docs.map(async (tDoc) => {
+    const { token, clienteNombre } = tDoc.data()
+    if (!token) return
+    const snap = await getDoc(doc(db, 'facturasPublicas', token))
+    if (!snap.exists()) return
+    ;(snap.data().firmas || [])
+      .filter((f) => !f.facturaId)
+      .forEach((f) => pendientes.push({ ...f, clienteNombre, token }))
+  }))
+
+  return pendientes.sort((a, b) => (a.fecha || '').localeCompare(b.fecha || ''))
 }
 
 /** Login por Google: busca el token de portal a partir del email verificado. */
