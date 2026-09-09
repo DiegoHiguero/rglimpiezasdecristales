@@ -11,6 +11,12 @@
 
     <div class="mc-card-body">
 
+      <!-- Gráfica -->
+      <div class="gt-chart">
+        <p class="mc-chart-title">Comparativa: Ingresos vs Gastos</p>
+        <VueApexCharts width="100%" height="320" type="bar" :options="chartOptions" :series="chartSeries"></VueApexCharts>
+      </div>
+
       <!-- Filtros -->
       <div class="gt-filters">
         <div class="gt-filter-group">
@@ -71,12 +77,6 @@
             </tr>
           </tfoot>
         </table>
-      </div>
-
-      <!-- Gráfica -->
-      <div class="gt-chart">
-        <p class="mc-chart-title">Comparativa: Ingresos vs Gastos</p>
-        <VueApexCharts width="100%" height="320" type="bar" :options="chartOptions" :series="chartSeries"></VueApexCharts>
       </div>
 
     </div>
@@ -347,7 +347,7 @@ onMounted(async () => {
   padding: 10px 12px;
 }
 
-.gt-chart { margin-top: 28px; }
+.gt-chart { margin-bottom: 28px; }
 
 /* Modal fields */
 .gt-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
