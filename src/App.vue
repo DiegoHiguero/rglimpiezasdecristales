@@ -35,7 +35,7 @@ const userStore = useUserStore();
 const syncStore = useSyncStore();
 const route     = useRoute();
 
-const adminPaths = ['/dashboard', '/Register', '/registro', '/misClientes', '/misFacturas', '/gastos', '/sheet/', '/admin/', '/hoja-de-ruta', '/firmas', '/pagos-pendientes', '/nueva-factura'];
+const adminPaths = ['/dashboard', '/Register', '/registro', '/misClientes', '/misFacturas', '/gastos', '/sheet/', '/admin/', '/hoja-de-ruta', '/firmas', '/pagos-pendientes', '/nueva-factura', '/evolucion-ingresos', '/mapa-clientes'];
 const isAdminRoute = computed(() => adminPaths.some(p => route.path === p || route.path.startsWith(p)));
 
 watchEffect(() => {

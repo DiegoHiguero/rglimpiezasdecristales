@@ -24,6 +24,8 @@ const PortalCliente     = () => import("./views/PortalCliente.vue");
 const RegistroFirmas    = () => import("./views/RegistroFirmas.vue");
 const PagosPendientes   = () => import("./views/PagosPendientes.vue");
 const NuevaFactura      = () => import("./views/NuevaFactura.vue");
+const EvolucionIngresos = () => import("./views/EvolucionIngresos.vue");
+const MapaClientes      = () => import("./views/MapaClientes.vue");
 const GenerarArticulo   = () => import("./views/GenerarArticulo.vue");
 const SheetView         = () => import("./views/SheetView.vue");
 import { articles } from "./data/blog.js";
@@ -122,6 +124,8 @@ const routes = [
     { path: '/firmas', component: RegistroFirmas, beforeEnter: requiereAuth2 },
     { path: '/pagos-pendientes', component: PagosPendientes, beforeEnter: requiereAuth2 },
     { path: '/nueva-factura', component: NuevaFactura, beforeEnter: requiereAuth2 },
+    { path: '/evolucion-ingresos', component: EvolucionIngresos, beforeEnter: requiereAuth2 },
+    { path: '/mapa-clientes', component: MapaClientes, beforeEnter: requiereAuth2 },
     {
         path: '/portal/:token?',
         component: PortalCliente,

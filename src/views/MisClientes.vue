@@ -146,35 +146,9 @@
         </div>
       </div>
 
-      <!-- Gráficos -->
-      <div id="ingresos-evolucion" class="mc-card mb-4">
-        <div class="mc-card-header">
-          <h2 class="mc-card-title">Evolución de Ingresos</h2>
-        </div>
-        <div class="mc-card-body">
-          <div class="mc-charts-grid">
-            <div>
-              <p class="mc-chart-title">Ingresos Mensuales</p>
-              <VueApexCharts v-if="monthlyIncomeSeries[0]?.data.length" type="line" :options="monthlyIncomeChartOptions" :series="monthlyIncomeSeries"></VueApexCharts>
-              <p v-else class="mc-empty">Sin datos mensuales.</p>
-            </div>
-            <div>
-              <p class="mc-chart-title">Ingresos Anuales</p>
-              <VueApexCharts v-if="yearlyIncomeSeries[0]?.data.length" type="bar" :options="yearlyIncomeChartOptions" :series="yearlyIncomeSeries"></VueApexCharts>
-              <p v-else class="mc-empty">Sin datos anuales.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
       <!-- Gastos -->
       <div class="mc-card mb-4">
         <GastosTable />
-      </div>
-
-      <!-- Mapa -->
-      <div id="mapa-clientes" class="mc-card mb-4">
-        <Mapa />
       </div>
 
     </div>
@@ -337,8 +311,6 @@ import dayjs from "dayjs";
 import 'dayjs/locale/es'; // ¡Importante para que 'fromNow' se muestre en español!
 import 'dayjs/locale/fr';
 
-import VueApexCharts from "vue3-apexcharts";
-import Mapa from '../components/Mapa.vue';
 import GastosTable from '../components/GastosTable.vue';
 import { ensurePortalToken } from '../services/portal';
 
@@ -514,19 +486,6 @@ const formatEuropeanDate = (dateValue) => {
   return date.format('DD/MM/YYYY');
 };
 
-const calculateCotizacion = (precioBruto) => {
-  const brute = Number(precioBruto);
-  if (isNaN(brute) || brute <= 0) return 0;
-  return parseFloat((brute * 0.21).toFixed(2));
-};
-
-const calculatePrecioNeto = (precioBruto) => {
-  const brute = Number(precioBruto);
-  if (isNaN(brute) || brute <= 0) return 0;
-  const cotizacion = calculateCotizacion(brute);
-  return parseFloat((brute - cotizacion).toFixed(2));
-};
-
 // --- Modificación de selectClientForDetails ---
 const selectClientForDetails = (client) => {
   clienteSeleccionado.value = client;
@@ -587,125 +546,6 @@ const timeSinceLastCleaning = computed(() => {
 
   return { text: formattedText, statusClass: statusClass };
 });
-
-
-// --- Gráficos - MODIFICADO PARA USAR PRECIO NETO ---
-const monthlyIncomeChartOptions = computed(() => ({
-  chart: {
-    id: 'monthly-income-chart',
-    toolbar: { show: false },
-    background: 'transparent',
-  },
-  theme: { mode: 'dark' },
-  xaxis: {
-    categories: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
-    title: { text: 'Mes' }
-  },
-  yaxis: {
-    title: { text: 'Ingresos Netos (€)' },
-  },
-  dataLabels: {
-    enabled: true,
-    formatter: function (val) { return formatCurrency(val); }
-  },
-  tooltip: {
-    y: {
-      formatter: function (val) { return formatCurrency(val); }
-    }
-  },
-  grid: { borderColor: 'rgba(255,255,255,0.06)' },
-  colors: ['#34d399'],
-}));
-
-const monthlyIncomeSeries = computed(() => {
-  const data = Array(12).fill(0); // Inicializar 12 meses con 0
-  databaseStore.limpiezas.forEach(limpieza => {
-    if (limpieza.fechaPago && limpieza.precioBruto) {
-      const month = dayjs(limpieza.fechaPago).month(); // 0-11
-      // *** CAMBIO AQUÍ: Usar calculatePrecioNeto ***
-      data[month] += calculatePrecioNeto(limpieza.precioBruto);
-    }
-  });
-  return [{ name: 'Ingresos Netos', data: data.map(val => parseFloat(val.toFixed(2))) }]; // Nombre actualizado
-});
-
-const yearlyIncomeDataAndCategories = computed(() => {
-    const incomeByYear = {};
-    let minYear = new Date().getFullYear();
-    let maxYear = new Date().getFullYear();
-
-    databaseStore.limpiezas.forEach(limpieza => {
-        if (limpieza.fechaPago && limpieza.precioBruto) {
-            const year = dayjs(limpieza.fechaPago).year();
-            minYear = Math.min(minYear, year);
-            maxYear = Math.max(maxYear, year);
-
-            if (!incomeByYear[year]) {
-                incomeByYear[year] = 0;
-            }
-            // *** CAMBIO AQUÍ: Usar calculatePrecioNeto ***
-            incomeByYear[year] += calculatePrecioNeto(limpieza.precioBruto);
-        }
-    });
-
-    if (Object.keys(incomeByYear).length === 0 && databaseStore.limpiezas.length === 0) {
-        incomeByYear[new Date().getFullYear()] = 0;
-        minYear = new Date().getFullYear();
-        maxYear = new Date().getFullYear();
-    }
-    if (!incomeByYear[new Date().getFullYear()]) {
-      incomeByYear[new Date().getFullYear()] = 0;
-      minYear = Math.min(minYear, new Date().getFullYear());
-      maxYear = Math.max(maxYear, new Date().getFullYear());
-    }
-
-    const categories = [];
-    const data = [];
-    for (let year = minYear; year <= maxYear; year++) {
-        categories.push(year.toString());
-        data.push(parseFloat((incomeByYear[year] || 0).toFixed(2)));
-    }
-
-    return { categories, data };
-});
-
-const yearlyIncomeSeries = computed(() => {
-    return [{ name: 'Ingresos Netos', data: yearlyIncomeDataAndCategories.value.data }]; // Nombre actualizado
-});
-
-const yearlyIncomeChartOptions = computed(() => ({
-  chart: {
-    id: 'yearly-income-chart',
-    toolbar: { show: false },
-    background: 'transparent',
-  },
-  theme: { mode: 'dark' },
-  plotOptions: {
-    bar: {
-      horizontal: false,
-      columnWidth: '55%',
-      borderRadius: 4,
-    },
-  },
-  xaxis: {
-    categories: yearlyIncomeDataAndCategories.value.categories,
-    title: { text: 'Año' }
-  },
-  yaxis: {
-    title: { text: 'Ingresos Netos (€)' },
-  },
-  dataLabels: {
-    enabled: true,
-    formatter: function (val) { return formatCurrency(val); }
-  },
-  tooltip: {
-    y: {
-      formatter: function (val) { return formatCurrency(val); }
-    }
-  },
-  grid: { borderColor: 'rgba(255,255,255,0.06)' },
-  colors: ['#60a5fa'],
-}));
 
 
 // --- LIFECYCLE HOOKS ---
@@ -827,9 +667,6 @@ onMounted(async () => {
 .mc-icon-btn--teal { background: rgba(20,184,166,0.2);  color: #2dd4bf; }
 .mc-icon-btn--red  { background: rgba(239,68,68,0.2);   color: #f87171; }
 
-.mc-charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
-.mc-chart-title { font-family: 'Raleway', sans-serif; font-size: 0.88rem; font-weight: 700; color: #94a3b8; margin-bottom: 12px; }
-
 .mc-modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 500; display: flex; align-items: center; justify-content: center; padding: 16px; }
 .mc-modal { background: #0f1729; border: 1px solid rgba(255,255,255,0.1); border-radius: 18px; width: 100%; max-width: 720px; max-height: 90vh; display: flex; flex-direction: column; box-shadow: 0 24px 80px rgba(0,0,0,0.6); }
 .mc-modal-header { display: flex; align-items: center; justify-content: space-between; padding: 18px 24px; border-bottom: 1px solid rgba(255,255,255,0.07); }
@@ -863,7 +700,6 @@ onMounted(async () => {
 :deep(hr) { border-color: rgba(255,255,255,0.07); }
 
 @media (max-width: 768px) {
-  .mc-charts-grid { grid-template-columns: 1fr; }
   .mc-card-body { padding: 14px; }
   .mc-wrap { padding: 20px 12px 48px; }
 }
