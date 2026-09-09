@@ -17,25 +17,13 @@
 
       <form @submit.prevent="handleSubmit" novalidate>
 
-        <!-- Sección: Datos de acceso -->
-        <p class="rg-section-title">Datos de acceso</p>
-        <div class="rg-row">
-          <div class="rf">
-            <div class="rf-icon"><font-awesome-icon :icon="['fas', 'envelope']" /></div>
-            <div class="rf-body">
-              <label>Email</label>
-              <input type="email" placeholder="cliente@email.com" v-model.trim="email" />
-            </div>
-          </div>
-        </div>
-
         <!-- Sección: Datos personales -->
         <p class="rg-section-title">Datos personales</p>
         <div class="rg-row rg-row--3">
-          <div class="rf">
+          <div class="rf" :class="{ 'rf--error': errors.nombre }">
             <div class="rf-icon"><font-awesome-icon :icon="['fas', 'user']" /></div>
             <div class="rf-body">
-              <label>Nombre</label>
+              <label>Nombre <span class="rg-required">*</span></label>
               <input type="text" placeholder="Nombre" v-model="nombre" />
             </div>
           </div>
@@ -46,11 +34,20 @@
               <input type="text" placeholder="Apellido" v-model="apellido" />
             </div>
           </div>
-          <div class="rf">
-            <div class="rf-icon"><font-awesome-icon :icon="['fas', 'address-card']" /></div>
+          <div class="rf" :class="{ 'rf--error': errors.telephone }">
+            <div class="rf-icon"><font-awesome-icon :icon="['fas', 'phone']" /></div>
             <div class="rf-body">
-              <label>Usuario</label>
-              <input type="text" placeholder="Nombre de usuario" v-model="nombreUsuario" />
+              <label>Teléfono <span class="rg-required">*</span></label>
+              <input type="tel" placeholder="+34 600 000 000" v-model="telephone" />
+            </div>
+          </div>
+        </div>
+        <div class="rg-row">
+          <div class="rf" :class="{ 'rf--error': errors.email }">
+            <div class="rf-icon"><font-awesome-icon :icon="['fas', 'envelope']" /></div>
+            <div class="rf-body">
+              <label>Email</label>
+              <input type="email" placeholder="cliente@email.com" v-model.trim="email" />
             </div>
           </div>
         </div>
@@ -58,29 +55,22 @@
         <!-- Sección: Ubicación -->
         <p class="rg-section-title">Ubicación</p>
         <div class="rg-row">
-          <div class="rf">
+          <div class="rf" :class="{ 'rf--error': errors.direccion }">
             <div class="rf-icon"><font-awesome-icon :icon="['fas', 'location-dot']" /></div>
             <div class="rf-body">
-              <label>Dirección</label>
+              <label>Dirección <span class="rg-required">*</span></label>
               <input type="text" placeholder="Calle y número" v-model="direccion" />
             </div>
           </div>
-          <div class="rf">
-            <div class="rf-icon"><font-awesome-icon :icon="['fas', 'phone']" /></div>
+          <div class="rf" :class="{ 'rf--error': errors.ciudad }">
+            <div class="rf-icon"><font-awesome-icon :icon="['fas', 'house']" /></div>
             <div class="rf-body">
-              <label>Teléfono</label>
-              <input type="tel" placeholder="+34 600 000 000" v-model="telephone" />
+              <label>Ciudad <span class="rg-required">*</span></label>
+              <input type="text" placeholder="Ciudad" v-model="ciudad" />
             </div>
           </div>
         </div>
         <div class="rg-row rg-row--3">
-          <div class="rf">
-            <div class="rf-icon"><font-awesome-icon :icon="['fas', 'house']" /></div>
-            <div class="rf-body">
-              <label>Ciudad</label>
-              <input type="text" placeholder="Ciudad" v-model="ciudad" />
-            </div>
-          </div>
           <div class="rf">
             <div class="rf-icon"><font-awesome-icon :icon="['fas', 'location-dot']" /></div>
             <div class="rf-body">
@@ -95,26 +85,28 @@
               <input type="text" placeholder="28001" v-model="codigoPostal" />
             </div>
           </div>
-        </div>
-
-        <!-- Sección: Servicio -->
-        <p class="rg-section-title">Servicio</p>
-        <div class="rg-row">
           <div class="rf">
             <div class="rf-icon"><font-awesome-icon :icon="['fas', 'tag']" /></div>
             <div class="rf-body">
-              <label>Precio (€)</label>
+              <label>Precio habitual (€)</label>
               <input type="number" placeholder="0.00" v-model="precio" />
             </div>
           </div>
-          <div class="rf-check">
-            <label class="rg-check-label">
-              <input type="checkbox" v-model="casa" class="rg-checkbox" />
-              <span class="rg-check-box">
-                <font-awesome-icon :icon="['fas', 'check']" class="rg-check-tick" />
-              </span>
-              <span>Es un particular</span>
-            </label>
+        </div>
+
+        <!-- Sección: Tipo de cliente -->
+        <p class="rg-section-title">Tipo de cliente</p>
+        <div class="rg-row">
+          <div class="rf">
+            <div class="rf-icon"><font-awesome-icon :icon="['fas', 'building']" /></div>
+            <div class="rf-body">
+              <label>Categoría</label>
+              <select v-model="tipoCliente" class="rg-select">
+                <option value="casa">Particular</option>
+                <option value="empresa">Empresa</option>
+                <option value="cooperativa">Cooperativa</option>
+              </select>
+            </div>
           </div>
         </div>
 
@@ -127,8 +119,8 @@
           </label>
         </div>
 
-        <button type="submit" class="rg-submit" :disabled="userStore.loadingUser">
-          <span v-if="!userStore.loadingUser">
+        <button type="submit" class="rg-submit" :disabled="saving">
+          <span v-if="!saving">
             <font-awesome-icon :icon="['fas', 'check']" class="me-2" />
             Crear cliente
           </span>
@@ -144,7 +136,8 @@
 import { ref } from 'vue';
 import { useUserStore } from '../stores/user';
 import { useRouter } from 'vue-router';
-import { useDatabaseStore } from '../stores/database';
+import { db } from '../firebaseConfig';
+import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import mapboxgl from 'mapbox-gl';
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import mapboxSdk from '@mapbox/mapbox-sdk/services/geocoding';
@@ -152,22 +145,20 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
 
 const userStore = useUserStore();
-const databaseStore = useDatabaseStore();
 const router = useRouter();
 
 const email        = ref('');
-const password     = ref('');
 const nombre       = ref('');
 const apellido     = ref('');
-const nombreUsuario = ref('');
 const direccion    = ref('');
 const telephone    = ref('');
 const ciudad       = ref('');
 const provincia    = ref('');
 const codigoPostal = ref('');
 const precio       = ref('');
-const casa         = ref('');
-const creacion     = ref('');
+const tipoCliente  = ref('casa');
+const saving       = ref(false);
+const errors       = ref({});
 const diasLimpieza = ref([]);
 
 const dias = [
@@ -188,31 +179,74 @@ const fechaCreacion = () => {
 mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN;
 const mapboxClient = mapboxSdk({ accessToken: mapboxgl.accessToken });
 
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+// Antes esto comprobaba una contraseña que el formulario nunca pedía (venía
+// de cuando esta vista era un registro de usuario con email/contraseña), así
+// que la validación fallaba siempre sin importar lo que se rellenara.
+// Ahora valida de verdad los campos que el cliente necesita.
+const validate = () => {
+  errors.value = {};
+  if (!nombre.value.trim())    errors.value.nombre    = true;
+  if (!telephone.value.trim()) errors.value.telephone = true;
+  if (!direccion.value.trim()) errors.value.direccion = true;
+  if (!ciudad.value.trim())    errors.value.ciudad    = true;
+  if (email.value && !EMAIL_RE.test(email.value)) errors.value.email = true;
+  return Object.keys(errors.value).length === 0;
+};
+
 const handleSubmit = async () => {
-  if (!email.value || password.value.length < 6) {
-    userStore.mensajeAlerta('Rellena todos los campos obligatorios');
+  if (!validate()) {
+    userStore.mensajeAlerta('Completa los campos obligatorios marcados en rojo.');
     return;
   }
-  let coordinatesData = null;
+
+  saving.value = true;
   try {
-    const response = await mapboxClient.forwardGeocode({
-      query: `${direccion.value}, ${ciudad.value}`,
-      autocomplete: false,
-      limit: 1,
-    }).send();
-    if (response?.body?.features?.length > 0) {
-      coordinatesData = response.body.features[0].center;
+    let coordinatesData = null;
+    try {
+      const response = await mapboxClient.forwardGeocode({
+        query: `${direccion.value}, ${ciudad.value}`,
+        autocomplete: false,
+        limit: 1,
+      }).send();
+      if (response?.body?.features?.length > 0) {
+        coordinatesData = response.body.features[0].center;
+      }
+    } catch (e) {
+      console.error('Geocoding error:', e);
     }
+
+    // Antes se llamaba a databaseStore.addCliente(...), un método que no
+    // existe en el store (se quitó en algún refactor y esta vista se quedó
+    // sin actualizar) — nunca llegaba a guardar nada, sólo lanzaba un error
+    // en consola que la validación rota de arriba ni dejaba alcanzar.
+    // Mismo esquema de campos que usa sheetsSync.js al crear clientes.
+    await addDoc(collection(db, 'clientes'), {
+      nombre:        nombre.value.trim(),
+      apellido:      apellido.value.trim(),
+      telefono:      telephone.value.trim(),
+      email:         email.value.trim(),
+      direccion:     direccion.value.trim(),
+      ciudad:        ciudad.value.trim(),
+      provincia:     provincia.value.trim(),
+      codigoPostal:  codigoPostal.value.trim(),
+      precio:        precio.value ? Number(precio.value) : null,
+      tipoCliente:   tipoCliente.value,
+      diasLimpieza:  diasLimpieza.value,
+      coordenadas:   coordinatesData,
+      fechaCreacion: fechaCreacion(),
+      createdAt:     serverTimestamp(),
+    });
+
+    alert('Cliente creado con éxito.');
+    router.push('/misClientes');
   } catch (e) {
-    console.error('Geocoding error:', e);
+    console.error('Error al crear el cliente:', e);
+    userStore.mensajeAlerta('No se pudo guardar el cliente: ' + (e.message || 'Error desconocido'));
+  } finally {
+    saving.value = false;
   }
-  databaseStore.addCliente(
-    apellido.value, ciudad.value, codigoPostal.value, diasLimpieza.value,
-    direccion.value, telephone.value, email.value, nombre.value,
-    nombreUsuario.value, precio.value, casa.value, provincia.value,
-    fechaCreacion(), coordinatesData,
-  );
-  router.push('/misClientes');
 };
 </script>
 
@@ -328,6 +362,11 @@ const handleSubmit = async () => {
   border-color: var(--blue);
   background: var(--blue-pale);
 }
+.rf--error {
+  border-color: #ef4444;
+  background: rgba(239,68,68,0.05);
+}
+.rg-required { color: #ef4444; }
 .rf-icon {
   color: var(--text-muted);
   font-size: 0.82rem;
@@ -359,43 +398,17 @@ const handleSubmit = async () => {
   padding: 0;
 }
 .rf-body input::placeholder { color: var(--text-muted); opacity: 0.5; }
-
-/* ── Checkbox ── */
-.rf-check {
-  display: flex;
-  align-items: center;
-  margin-bottom: 12px;
-}
-.rg-check-label {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  cursor: pointer;
+.rg-select {
+  width: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--text);
   font-family: 'Raleway', sans-serif;
   font-size: 0.88rem;
-  font-weight: 600;
-  color: var(--text-muted);
-  user-select: none;
+  padding: 0;
+  cursor: pointer;
 }
-.rg-check-label input { display: none; }
-.rg-check-box {
-  width: 20px;
-  height: 20px;
-  border-radius: 6px;
-  border: 2px solid var(--border);
-  background: var(--slate);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  transition: background 0.2s, border-color 0.2s;
-}
-.rg-check-tick { color: #fff; font-size: 0.65rem; opacity: 0; transition: opacity 0.15s; }
-.rg-check-label input:checked ~ .rg-check-box {
-  background: var(--blue);
-  border-color: var(--blue);
-}
-.rg-check-label input:checked ~ .rg-check-box .rg-check-tick { opacity: 1; }
 
 /* ── Days ── */
 .rg-days {
