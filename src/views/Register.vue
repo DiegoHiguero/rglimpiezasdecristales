@@ -135,6 +135,7 @@
 <script setup>
 import { ref } from 'vue';
 import { useUserStore } from '../stores/user';
+import { useDatabaseStore } from '../stores/database';
 import { useRouter } from 'vue-router';
 import { db } from '../firebaseConfig';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
@@ -145,6 +146,7 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
 
 const userStore = useUserStore();
+const databaseStore = useDatabaseStore();
 const router = useRouter();
 
 const email        = ref('');
@@ -203,41 +205,59 @@ const handleSubmit = async () => {
 
   saving.value = true;
   try {
-    let coordinatesData = null;
-    try {
-      const response = await mapboxClient.forwardGeocode({
-        query: `${direccion.value}, ${ciudad.value}`,
-        autocomplete: false,
-        limit: 1,
-      }).send();
-      if (response?.body?.features?.length > 0) {
-        coordinatesData = response.body.features[0].center;
-      }
-    } catch (e) {
-      console.error('Geocoding error:', e);
-    }
-
-    // Antes se llamaba a databaseStore.addCliente(...), un método que no
-    // existe en el store (se quitó en algún refactor y esta vista se quedó
-    // sin actualizar) — nunca llegaba a guardar nada, sólo lanzaba un error
-    // en consola que la validación rota de arriba ni dejaba alcanzar.
-    // Mismo esquema de campos que usa sheetsSync.js al crear clientes.
-    await addDoc(collection(db, 'clientes'), {
-      nombre:        nombre.value.trim(),
-      apellido:      apellido.value.trim(),
-      telefono:      telephone.value.trim(),
-      email:         email.value.trim(),
-      direccion:     direccion.value.trim(),
-      ciudad:        ciudad.value.trim(),
-      provincia:     provincia.value.trim(),
-      codigoPostal:  codigoPostal.value.trim(),
-      precio:        precio.value ? Number(precio.value) : null,
-      tipoCliente:   tipoCliente.value,
-      diasLimpieza:  diasLimpieza.value,
-      coordenadas:   coordinatesData,
-      fechaCreacion: fechaCreacion(),
-      createdAt:     serverTimestamp(),
+    // El cliente "real" — el que ven Mis Clientes, Nueva Factura, Registro
+    // de Firmas, Facturas y el portal del cliente — vive en la hoja de
+    // cálculo (pestaña CLIENTES), no en Firestore. Este es el guardado que
+    // importa: si falla, no se considera creado el cliente.
+    const nombreCompleto = apellido.value.trim()
+      ? `${nombre.value.trim()} ${apellido.value.trim()}`
+      : nombre.value.trim();
+    await databaseStore.addClient({
+      nombre:         nombreCompleto,
+      telefono:       telephone.value.trim(),
+      email:          email.value.trim(),
+      direccion:      direccion.value.trim(),
+      precioHabitual: precio.value ? Number(precio.value) : 0,
     });
+
+    // Además se guarda (con geocodificación) en Firestore, que es de donde
+    // lee el Mapa para pintar los marcadores — una base de datos aparte,
+    // solo para esa vista. Si esto falla no se deshace el alta de arriba,
+    // el cliente ya existe para facturar; solo no aparecería en el Mapa.
+    try {
+      let coordinatesData = null;
+      try {
+        const response = await mapboxClient.forwardGeocode({
+          query: `${direccion.value}, ${ciudad.value}`,
+          autocomplete: false,
+          limit: 1,
+        }).send();
+        if (response?.body?.features?.length > 0) {
+          coordinatesData = response.body.features[0].center;
+        }
+      } catch (e) {
+        console.error('Geocoding error:', e);
+      }
+
+      await addDoc(collection(db, 'clientes'), {
+        nombre:        nombre.value.trim(),
+        apellido:      apellido.value.trim(),
+        telefono:      telephone.value.trim(),
+        email:         email.value.trim(),
+        direccion:     direccion.value.trim(),
+        ciudad:        ciudad.value.trim(),
+        provincia:     provincia.value.trim(),
+        codigoPostal:  codigoPostal.value.trim(),
+        precio:        precio.value ? Number(precio.value) : null,
+        tipoCliente:   tipoCliente.value,
+        diasLimpieza:  diasLimpieza.value,
+        coordenadas:   coordinatesData,
+        fechaCreacion: fechaCreacion(),
+        createdAt:     serverTimestamp(),
+      });
+    } catch (e) {
+      console.error('Error al guardar el cliente para el Mapa (no bloqueante):', e);
+    }
 
     alert('Cliente creado con éxito.');
     router.push('/misClientes');
