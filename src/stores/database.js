@@ -489,8 +489,12 @@ export const useDatabaseStore = defineStore('database', {
       try {
         const existing = this.clientes.find(c => c._row === row) || {}
         await updateSheetRow(TAB.clientes, row, CLIENTES_HEADERS, clienteToRow({ ...existing, ...data }))
-        const idx = this.clientes.findIndex(c => c._row === row)
-        if (idx !== -1) this.clientes[idx] = { ...this.clientes[idx], ...data }
+        // Recarga desde la hoja en vez de parchear en memoria: si antes se
+        // borró un cliente en esta sesión, las filas de los que venían
+        // detrás quedaron desfasadas (_row) hasta el próximo fetch — parchear
+        // localmente con un _row obsoleto podría escribir en la fila de otro
+        // cliente. Releer siempre corrige esto.
+        await this.fetchClientes()
       } catch (e) {
         this.updateClientError = e
         console.error('[DB] updateClient:', e)
@@ -505,7 +509,11 @@ export const useDatabaseStore = defineStore('database', {
       this.deleteClientError = null
       try {
         await deleteSheetRow(TAB.clientes, row)
-        this.clientes = this.clientes.filter(c => c._row !== row)
+        // Borrar una fila desplaza hacia arriba todas las siguientes en la
+        // hoja real; recargar en vez de filtrar en memoria evita que el
+        // resto de clientes se queden con un _row obsoleto (que apuntaría a
+        // la fila de otro cliente en la siguiente edición o borrado).
+        await this.fetchClientes()
       } catch (e) {
         this.deleteClientError = e
         console.error('[DB] deleteClient:', e)

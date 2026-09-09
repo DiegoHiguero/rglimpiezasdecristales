@@ -13,17 +13,29 @@ const BASE = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}`
 
 // ─── Gestión del token OAuth2 ────────────────────────────────────────────────
 
+// Varias vistas piden datos de Sheets a la vez al cargar la página (clientes,
+// limpiezas, gastos...). Sin esto, cada una encontraba el token vacío al mismo
+// tiempo y abría su propia ventana de login de Google — varios popups a la
+// vez, y cada popup completado pisaba el token del anterior a medias.
+// Igual que getMeta(), una sola promesa en curso se comparte entre todas.
+let _tokenPromise = null
+
 async function getToken() {
   const userStore = useUserStore()
   if (userStore.googleAccessToken) return userStore.googleAccessToken
 
-  const provider = new GoogleAuthProvider()
-  provider.addScope('https://www.googleapis.com/auth/spreadsheets')
-  const result = await signInWithPopup(auth, provider)
-  const cred = GoogleAuthProvider.credentialFromResult(result)
-  if (!cred?.accessToken) throw new Error('No se pudo obtener el token de Google Sheets.')
-  userStore.googleAccessToken = cred.accessToken
-  return cred.accessToken
+  if (!_tokenPromise) {
+    _tokenPromise = (async () => {
+      const provider = new GoogleAuthProvider()
+      provider.addScope('https://www.googleapis.com/auth/spreadsheets')
+      const result = await signInWithPopup(auth, provider)
+      const cred = GoogleAuthProvider.credentialFromResult(result)
+      if (!cred?.accessToken) throw new Error('No se pudo obtener el token de Google Sheets.')
+      userStore.googleAccessToken = cred.accessToken
+      return cred.accessToken
+    })().finally(() => { _tokenPromise = null })
+  }
+  return _tokenPromise
 }
 
 // ─── API wrapper ─────────────────────────────────────────────────────────────
