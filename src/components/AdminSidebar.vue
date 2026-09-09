@@ -47,6 +47,18 @@
         <span class="as-icon"><font-awesome-icon :icon="['fas', 'file-invoice']" /></span>
         Facturas
       </router-link>
+      <router-link to="/gastos" class="as-link" :class="{ 'as-active': route.path === '/gastos' }" @click="mobileOpen = false">
+        <span class="as-icon"><font-awesome-icon :icon="['fas', 'building-columns']" /></span>
+        Gestión de Gastos
+      </router-link>
+      <router-link to="/misClientes#ingresos-evolucion" class="as-link" :class="{ 'as-active': route.path === '/misClientes' && route.hash === '#ingresos-evolucion' }" @click="mobileOpen = false">
+        <span class="as-icon"><font-awesome-icon :icon="['fas', 'chart-line']" /></span>
+        Evolución de Ingresos
+      </router-link>
+      <router-link to="/misClientes#mapa-clientes" class="as-link" :class="{ 'as-active': route.path === '/misClientes' && route.hash === '#mapa-clientes' }" @click="mobileOpen = false">
+        <span class="as-icon"><font-awesome-icon :icon="['fas', 'map-location-dot']" /></span>
+        Mapa de Clientes
+      </router-link>
     </nav>
 
     <!-- Google Sheets (dinámico, plegable) -->

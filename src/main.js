@@ -102,6 +102,8 @@ import {
     faNewspaper,
     faGaugeHigh,
     faSignature,
+    faChartLine,
+    faMapLocationDot,
 } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
@@ -136,6 +138,7 @@ library.add(
     faDatabase, faTriangleExclamation, faKey, faWandMagicSparkles,
     faLink, faTrophy,
     faRoute, faPaintbrush, faNewspaper, faGaugeHigh, faSignature,
+    faChartLine, faMapLocationDot,
 );
 
 // 2. Crear la instancia de la aplicación Vue

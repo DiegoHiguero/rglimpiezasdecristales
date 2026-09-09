@@ -135,7 +135,7 @@
                       <button @click="selectClientForDetails(cliente)" class="mc-icon-btn mc-icon-btn--blue" title="Ver detalles"><font-awesome-icon :icon="['fas', 'eye']" /></button>
                       <button @click="openEditClientModal(cliente)" class="mc-icon-btn mc-icon-btn--teal" title="Editar"><font-awesome-icon :icon="['fas', 'file-pen']" /></button>
                       <button @click="copyPortalLink(cliente)" class="mc-icon-btn mc-icon-btn--blue" title="Copiar enlace del portal" :disabled="generandoEnlace === cliente.nombre"><font-awesome-icon :icon="['fas', generandoEnlace === cliente.nombre ? 'rotate' : 'link']" :spin="generandoEnlace === cliente.nombre" /></button>
-                      <button @click="confirmDeleteClient(cliente)" class="mc-icon-btn mc-icon-btn--red" title="Eliminar"><font-awesome-icon :icon="['fas', 'trash-can']" /></button>
+                      <button @click="openDeleteModal(cliente)" class="mc-icon-btn mc-icon-btn--red" title="Eliminar"><font-awesome-icon :icon="['fas', 'trash-can']" /></button>
                     </div>
                   </td>
                 </tr>
@@ -147,7 +147,7 @@
       </div>
 
       <!-- Gráficos -->
-      <div class="mc-card mb-4">
+      <div id="ingresos-evolucion" class="mc-card mb-4">
         <div class="mc-card-header">
           <h2 class="mc-card-title">Evolución de Ingresos</h2>
         </div>
@@ -173,7 +173,7 @@
       </div>
 
       <!-- Mapa -->
-      <div class="mc-card mb-4">
+      <div id="mapa-clientes" class="mc-card mb-4">
         <Mapa />
       </div>
 
@@ -293,6 +293,37 @@
         <button class="mc-btn mc-btn--ghost" @click="closeEditClientModal">Cancelar</button>
         <button class="mc-btn mc-btn--primary" @click="saveEditedClient" :disabled="databaseStore.isUpdatingClient">
           {{ databaseStore.isUpdatingClient ? 'Guardando...' : 'Guardar Cambios' }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Eliminar Cliente: requiere escribir el nombre para autorizar -->
+  <div v-if="isDeleteModalOpen" class="mc-modal-backdrop" @click.self="closeDeleteModal">
+    <div class="mc-modal mc-modal--danger">
+      <div class="mc-modal-header">
+        <h5><font-awesome-icon :icon="['fas', 'triangle-exclamation']" class="me-2" />Eliminar cliente</h5>
+        <button class="mc-modal-close" @click="closeDeleteModal"><font-awesome-icon :icon="['fas', 'xmark']" /></button>
+      </div>
+      <div class="mc-modal-body">
+        <p class="mc-delete-warning">
+          Vas a eliminar a <strong>{{ clienteAEliminar?.nombre }}</strong> de forma permanente de la hoja de clientes.
+          No se puede deshacer. No borra sus facturas ya emitidas ni su portal, pero dejará de aparecer en el sistema.
+        </p>
+        <label class="mc-delete-label">Escribe el nombre del cliente para confirmar:</label>
+        <input
+          type="text"
+          class="form-control"
+          v-model="confirmacionTexto"
+          :placeholder="clienteAEliminar?.nombre"
+          autocomplete="off"
+          @keyup.enter="eliminarClienteConfirmado"
+        />
+      </div>
+      <div class="mc-modal-footer">
+        <button class="mc-btn mc-btn--ghost" @click="closeDeleteModal">Cancelar</button>
+        <button class="mc-btn mc-btn--danger" :disabled="!puedeEliminar || databaseStore.isDeletingClient" @click="eliminarClienteConfirmado">
+          {{ databaseStore.isDeletingClient ? 'Eliminando...' : 'Eliminar definitivamente' }}
         </button>
       </div>
     </div>
@@ -417,20 +448,41 @@ const saveEditedClient = async () => {
   }
 };
 
-const confirmDeleteClient = async (client) => {
-  const isConfirmed = window.confirm(`¿Estás seguro de que quieres eliminar al cliente ${client.nombre}?`);
-  if (isConfirmed) {
-    try {
-      await databaseStore.deleteClient(client.id);
-      alert('Cliente eliminado con éxito!');
-      if (clienteSeleccionado.value && clienteSeleccionado.value.id === client.id) {
-        clienteSeleccionado.value = null; // Limpiar detalles si el cliente eliminado era el seleccionado
-        historialLimpiezasCliente.value = []; // Limpiar historial también
-      }
-    } catch (error) {
-      alert('Error al eliminar el cliente: ' + (databaseStore.deleteClientError?.message || 'Desconocido'));
-      console.error("Error al eliminar el cliente:", error);
+// --- Eliminar cliente: exige escribir su nombre exacto como autorización,
+// en vez de un simple confirm() del navegador que se puede pulsar sin querer.
+const isDeleteModalOpen = ref(false);
+const clienteAEliminar = ref(null);
+const confirmacionTexto = ref('');
+
+const puedeEliminar = computed(() =>
+  !!clienteAEliminar.value && confirmacionTexto.value.trim() === clienteAEliminar.value.nombre
+);
+
+const openDeleteModal = (client) => {
+  clienteAEliminar.value = client;
+  confirmacionTexto.value = '';
+  isDeleteModalOpen.value = true;
+};
+
+const closeDeleteModal = () => {
+  isDeleteModalOpen.value = false;
+  clienteAEliminar.value = null;
+  confirmacionTexto.value = '';
+};
+
+const eliminarClienteConfirmado = async () => {
+  if (!puedeEliminar.value || !clienteAEliminar.value) return;
+  const client = clienteAEliminar.value;
+  try {
+    await databaseStore.deleteClient(client.id);
+    if (clienteSeleccionado.value && clienteSeleccionado.value.id === client.id) {
+      clienteSeleccionado.value = null; // Limpiar detalles si el cliente eliminado era el seleccionado
+      historialLimpiezasCliente.value = []; // Limpiar historial también
     }
+    closeDeleteModal();
+  } catch (error) {
+    alert('Error al eliminar el cliente: ' + (databaseStore.deleteClientError?.message || 'Desconocido'));
+    console.error("Error al eliminar el cliente:", error);
   }
 };
 
@@ -765,6 +817,8 @@ onMounted(async () => {
 .mc-btn:hover { opacity: 0.85; transform: translateY(-1px); }
 .mc-btn--primary { background: linear-gradient(135deg, #2563eb, #1d4ed8); color: #fff; }
 .mc-btn--ghost   { background: rgba(255,255,255,0.06); color: #94a3b8; border: 1px solid rgba(255,255,255,0.1); }
+.mc-btn--danger  { background: linear-gradient(135deg, #ef4444, #b91c1c); color: #fff; }
+.mc-btn--danger:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
 
 .mc-actions { display: flex; gap: 6px; }
 .mc-icon-btn { width: 30px; height: 30px; border-radius: 7px; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.78rem; transition: opacity 0.2s; }
@@ -784,6 +838,13 @@ onMounted(async () => {
 .mc-modal-close:hover { color: #fff; }
 .mc-modal-body { padding: 24px; overflow-y: auto; flex: 1; }
 .mc-modal-footer { display: flex; justify-content: flex-end; gap: 10px; padding: 16px 24px; border-top: 1px solid rgba(255,255,255,0.07); }
+
+.mc-modal--danger { max-width: 480px; border-color: rgba(239,68,68,0.25); }
+.mc-modal--danger .mc-modal-header { border-bottom-color: rgba(239,68,68,0.15); }
+.mc-modal--danger .mc-modal-header h5 { color: #f87171; display: flex; align-items: center; }
+.mc-delete-warning { font-family: 'Raleway', sans-serif; font-size: 0.86rem; color: #94a3b8; line-height: 1.5; margin: 0 0 16px; }
+.mc-delete-warning strong { color: #f1f5f9; }
+.mc-delete-label { display: block; font-family: 'Raleway', sans-serif; font-size: 0.75rem; font-weight: 600; color: #64748b; margin-bottom: 6px; }
 
 :deep(.form-control), :deep(.form-select) {
   background: rgba(255,255,255,0.05) !important;
