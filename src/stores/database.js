@@ -442,7 +442,11 @@ export const useDatabaseStore = defineStore('database', {
       this.errorClientes     = null
       try {
         const { records } = await getSheetRaw(TAB.clientes)
-        const fresh = records.map(clienteFromRow)
+        // Filas con validación de datos preparadas para futuros clientes
+        // (u otra fila sin rellenar) pueden tener algo en alguna columna sin
+        // ser un cliente real todavía — solo cuenta como cliente si tiene
+        // Nombre / Razón social.
+        const fresh = records.map(clienteFromRow).filter(c => c.nombre)
         if (hasChanges(this.clientes, fresh)) {
           this.clientes = this._sortClientes(fresh)
           saveCache('clientes', fresh)
