@@ -146,11 +146,6 @@
         </div>
       </div>
 
-      <!-- Gastos -->
-      <div class="mc-card mb-4">
-        <GastosTable />
-      </div>
-
     </div>
   </div>
 
@@ -311,7 +306,6 @@ import dayjs from "dayjs";
 import 'dayjs/locale/es'; // ¡Importante para que 'fromNow' se muestre en español!
 import 'dayjs/locale/fr';
 
-import GastosTable from '../components/GastosTable.vue';
 import { ensurePortalToken } from '../services/portal';
 
 // --- ESTADOS LOCALES Y REFERENCES ---
