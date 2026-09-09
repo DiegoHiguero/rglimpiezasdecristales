@@ -43,6 +43,13 @@
           </div>
         </div>
         <div class="rg-row">
+          <div class="rf" :class="{ 'rf--error': errors.dni }">
+            <div class="rf-icon"><font-awesome-icon :icon="['fas', 'address-card']" /></div>
+            <div class="rf-body">
+              <label>DNI/NIF <span class="rg-required">*</span></label>
+              <input type="text" placeholder="12345678A" v-model="dni" />
+            </div>
+          </div>
           <div class="rf" :class="{ 'rf--error': errors.email }">
             <div class="rf-icon"><font-awesome-icon :icon="['fas', 'envelope']" /></div>
             <div class="rf-body">
@@ -150,6 +157,7 @@ const databaseStore = useDatabaseStore();
 const router = useRouter();
 
 const email        = ref('');
+const dni          = ref('');
 const nombre       = ref('');
 const apellido     = ref('');
 const direccion    = ref('');
@@ -190,6 +198,7 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const validate = () => {
   errors.value = {};
   if (!nombre.value.trim())    errors.value.nombre    = true;
+  if (!dni.value.trim())       errors.value.dni       = true;
   if (!telephone.value.trim()) errors.value.telephone = true;
   if (!direccion.value.trim()) errors.value.direccion = true;
   if (!ciudad.value.trim())    errors.value.ciudad    = true;
@@ -214,6 +223,7 @@ const handleSubmit = async () => {
       : nombre.value.trim();
     await databaseStore.addClient({
       nombre:         nombreCompleto,
+      nifCif:         dni.value.trim(),
       telefono:       telephone.value.trim(),
       email:          email.value.trim(),
       direccion:      direccion.value.trim(),
@@ -242,6 +252,7 @@ const handleSubmit = async () => {
       await addDoc(collection(db, 'clientes'), {
         nombre:        nombre.value.trim(),
         apellido:      apellido.value.trim(),
+        dni:           dni.value.trim(),
         telefono:      telephone.value.trim(),
         email:         email.value.trim(),
         direccion:     direccion.value.trim(),
