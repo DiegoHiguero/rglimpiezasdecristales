@@ -196,9 +196,9 @@
                   <label for="new-client-categoria" class="form-label">Categoría (para el mapa)</label>
                   <select class="form-select" id="new-client-categoria" v-model="newClient.tipoCliente">
                     <option value="">Sin especificar</option>
-                    <option value="casa">Particular</option>
+                    <option value="chalet">Chalet</option>
+                    <option value="piso">Piso</option>
                     <option value="empresa">Empresa</option>
-                    <option value="cooperativa">Cooperativa</option>
                   </select>
                 </div>
                 <div class="col-12">
@@ -264,9 +264,9 @@
                   <label for="edit-client-categoria" class="form-label">Categoría (para el mapa)</label>
                   <select class="form-select" id="edit-client-categoria" v-model="editedClient.tipoCliente">
                     <option value="">Sin especificar</option>
-                    <option value="casa">Particular</option>
+                    <option value="chalet">Chalet</option>
+                    <option value="piso">Piso</option>
                     <option value="empresa">Empresa</option>
-                    <option value="cooperativa">Cooperativa</option>
                   </select>
                 </div>
                 <div class="col-12">

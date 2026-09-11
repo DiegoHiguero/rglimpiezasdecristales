@@ -109,9 +109,9 @@
             <div class="rf-body">
               <label>Categoría</label>
               <select v-model="tipoCliente" class="rg-select">
-                <option value="casa">Particular</option>
+                <option value="chalet">Chalet</option>
+                <option value="piso">Piso</option>
                 <option value="empresa">Empresa</option>
-                <option value="cooperativa">Cooperativa</option>
               </select>
             </div>
           </div>
@@ -166,7 +166,7 @@ const ciudad       = ref('');
 const provincia    = ref('');
 const codigoPostal = ref('');
 const precio       = ref('');
-const tipoCliente  = ref('casa');
+const tipoCliente  = ref('chalet');
 const saving       = ref(false);
 const errors       = ref({});
 const diasLimpieza = ref([]);

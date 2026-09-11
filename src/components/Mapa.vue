@@ -36,22 +36,22 @@
           Todos
         </button>
         <button
-          @click="setClientTypeFilter('casa')"
-          :class="{ active: selectedClientType === 'casa', 'filter-casa': true }"
+          @click="setClientTypeFilter('chalet')"
+          :class="{ active: selectedClientType === 'chalet', 'filter-chalet': true }"
         >
-          Particular
+          Chalet
+        </button>
+        <button
+          @click="setClientTypeFilter('piso')"
+          :class="{ active: selectedClientType === 'piso', 'filter-piso': true }"
+        >
+          Piso
         </button>
         <button
           @click="setClientTypeFilter('empresa')"
           :class="{ active: selectedClientType === 'empresa', 'filter-empresa': true }"
         >
           Empresa
-        </button>
-        <button
-          @click="setClientTypeFilter('cooperativa')"
-          :class="{ active: selectedClientType === 'cooperativa', 'filter-cooperativa': true }"
-        >
-          Cooperativa
         </button>
       </div>
     </div>
@@ -92,7 +92,7 @@ const trafficEnabled = ref(false);
 const allClientsProcessedData = ref<any[]>([]); // Coordenadas ya geocodificadas de cada cliente
 const activeMarkers = ref<mapboxgl.Marker[]>([]); // Instancias de los marcadores actualmente en el mapa
 const isMenuOpen = ref(false);
-const selectedClientType = ref('all'); // 'all', 'casa', 'empresa', 'cooperativa'
+const selectedClientType = ref('all'); // 'all', 'chalet', 'piso', 'empresa'
 
 // Función para alternar el menú
 const toggleMenu = () => {
@@ -330,17 +330,28 @@ const toggleTrafficLayer = () => {
 // --- RENDERIZADO DE MARCADORES ---
 
 const MARKER_COLORS: Record<string, string> = {
-  empresa: '#4970B6',      // Azul para empresas
-  cooperativa: 'orange',   // Naranja para cooperativas
-  casa: 'pink',            // Rosa para particulares
+  empresa: '#4970B6',   // Azul para empresas
+  piso: 'orange',       // Naranja para pisos
+  chalet: 'pink',       // Rosa para chalets
 };
 const DEFAULT_MARKER_COLOR = 'gray'; // Sin categoría asignada
 
 const TYPE_LABELS: Record<string, string> = {
   empresa: 'Empresa',
-  cooperativa: 'Cooperativa',
-  casa: 'Particular',
+  piso: 'Piso',
+  chalet: 'Chalet',
 };
+
+// Normaliza la categoría: acepta tanto el valor interno ('chalet') como si
+// alguien escribió directamente en la hoja el nombre visible ('Chalet'),
+// sin distinguir mayúsculas/acentos/espacios.
+function normalizeTipoCliente(raw: string): string {
+  const v = (raw || '').trim().toLowerCase();
+  if (v === 'chalet') return 'chalet';
+  if (v === 'piso') return 'piso';
+  if (v === 'empresa') return 'empresa';
+  return '';
+}
 
 const renderMarkers = () => {
   if (!map) return;
@@ -349,7 +360,7 @@ const renderMarkers = () => {
   activeMarkers.value = [];
 
   allClientsProcessedData.value.forEach(({ coordinates, clientData }) => {
-    const clientType = clientData.tipoCliente;
+    const clientType = normalizeTipoCliente(clientData.tipoCliente);
     const shouldDisplay = selectedClientType.value === 'all' || clientType === selectedClientType.value;
     if (!shouldDisplay) return;
 
@@ -728,7 +739,7 @@ onMounted(() => {
   font-weight: 700;
 }
 
-.client-type-filter-buttons button.active:not(.filter-empresa):not(.filter-casa):not(.filter-cooperativa) {
+.client-type-filter-buttons button.active:not(.filter-empresa):not(.filter-chalet):not(.filter-piso) {
   background-color: #2563eb;
   border-color: #2563eb;
 }
@@ -741,18 +752,18 @@ onMounted(() => {
   border-color: #4970B6;
 }
 
-.client-type-filter-buttons button.filter-casa {
+.client-type-filter-buttons button.filter-chalet {
   border-color: rgba(255,105,180,0.4);
 }
-.client-type-filter-buttons button.filter-casa.active {
+.client-type-filter-buttons button.filter-chalet.active {
   background-color: #e05c9f;
   border-color: #e05c9f;
 }
 
-.client-type-filter-buttons button.filter-cooperativa {
+.client-type-filter-buttons button.filter-piso {
   border-color: rgba(255,165,0,0.4);
 }
-.client-type-filter-buttons button.filter-cooperativa.active {
+.client-type-filter-buttons button.filter-piso.active {
   background-color: #d97706;
   border-color: #d97706;
 }

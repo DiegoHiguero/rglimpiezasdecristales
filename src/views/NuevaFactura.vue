@@ -168,9 +168,9 @@
                   <label>Categoría (para el mapa)</label>
                   <select v-model="newClient.tipoCliente">
                     <option value="">Sin especificar</option>
-                    <option value="casa">Particular</option>
+                    <option value="chalet">Chalet</option>
+                    <option value="piso">Piso</option>
                     <option value="empresa">Empresa</option>
-                    <option value="cooperativa">Cooperativa</option>
                   </select>
                 </div>
               </div>
