@@ -192,6 +192,15 @@
                   <input type="number" class="form-control" id="new-client-precio-habitual"
                     v-model.number="newClient.precioHabitual" step="0.01" min="0">
                 </div>
+                <div class="col-md-6">
+                  <label for="new-client-categoria" class="form-label">Categoría (para el mapa)</label>
+                  <select class="form-select" id="new-client-categoria" v-model="newClient.tipoCliente">
+                    <option value="">Sin especificar</option>
+                    <option value="casa">Particular</option>
+                    <option value="empresa">Empresa</option>
+                    <option value="cooperativa">Cooperativa</option>
+                  </select>
+                </div>
                 <div class="col-12">
                   <label for="new-client-notas" class="form-label">Notas</label>
                   <textarea class="form-control" id="new-client-notas" v-model="newClient.notas" rows="2"></textarea>
@@ -250,6 +259,15 @@
                   <label for="edit-client-precio-habitual" class="form-label">Precio habitual (€)</label>
                   <input type="number" class="form-control" id="edit-client-precio-habitual"
                     v-model.number="editedClient.precioHabitual" step="0.01" min="0">
+                </div>
+                <div class="col-md-6">
+                  <label for="edit-client-categoria" class="form-label">Categoría (para el mapa)</label>
+                  <select class="form-select" id="edit-client-categoria" v-model="editedClient.tipoCliente">
+                    <option value="">Sin especificar</option>
+                    <option value="casa">Particular</option>
+                    <option value="empresa">Empresa</option>
+                    <option value="cooperativa">Cooperativa</option>
+                  </select>
                 </div>
                 <div class="col-12">
                   <label for="edit-client-notas" class="form-label">Notas</label>
@@ -316,10 +334,10 @@ const historialLimpiezasCliente = ref([]); // Para el historial de limpiezas del
 
 // ... (El resto de tus refs como newClient, editedClient, etc.)
 const newClient = ref({
-  nombre: '', nifCif: '', direccion: '', telefono: '', email: '', personaContacto: '', notas: '', precioHabitual: 0.00,
+  nombre: '', nifCif: '', direccion: '', telefono: '', email: '', personaContacto: '', notas: '', precioHabitual: 0.00, tipoCliente: '',
 });
 const editedClient = ref({
-  id: null, nombre: '', nifCif: '', direccion: '', telefono: '', email: '', personaContacto: '', notas: '', precioHabitual: 0.00,
+  id: null, nombre: '', nifCif: '', direccion: '', telefono: '', email: '', personaContacto: '', notas: '', precioHabitual: 0.00, tipoCliente: '',
 });
 
 const isAddClientModalOpen = ref(false);
@@ -351,7 +369,7 @@ const copyPortalLink = async (cliente) => {
 const openAddClientModal = () => {
   isAddClientModalOpen.value = true;
   Object.assign(newClient.value, {
-    nombre: '', nifCif: '', direccion: '', telefono: '', email: '', personaContacto: '', notas: '', precioHabitual: 0.00,
+    nombre: '', nifCif: '', direccion: '', telefono: '', email: '', personaContacto: '', notas: '', precioHabitual: 0.00, tipoCliente: '',
   });
 };
 
@@ -386,7 +404,7 @@ const openEditClientModal = (client) => {
 const closeEditClientModal = () => {
   isEditClientModalOpen.value = false;
   editedClient.value = {
-    id: null, nombre: '', nifCif: '', direccion: '', telefono: '', email: '', personaContacto: '', notas: '', precioHabitual: 0.00,
+    id: null, nombre: '', nifCif: '', direccion: '', telefono: '', email: '', personaContacto: '', notas: '', precioHabitual: 0.00, tipoCliente: '',
   };
 };
 

@@ -164,6 +164,15 @@
                   <label>Precio habitual (€)</label>
                   <input type="number" v-model.number="newClient.precioHabitual" step="0.01" min="0" />
                 </div>
+                <div class="nf-field">
+                  <label>Categoría (para el mapa)</label>
+                  <select v-model="newClient.tipoCliente">
+                    <option value="">Sin especificar</option>
+                    <option value="casa">Particular</option>
+                    <option value="empresa">Empresa</option>
+                    <option value="cooperativa">Cooperativa</option>
+                  </select>
+                </div>
               </div>
               <div class="nf-field">
                 <label>Notas</label>
@@ -208,7 +217,7 @@ const nuevaLimpieza = ref({
 });
 
 const newClient = ref({
-  nombre: '', nifCif: '', direccion: '', telefono: '', email: '', personaContacto: '', notas: '', precioHabitual: 0.00,
+  nombre: '', nifCif: '', direccion: '', telefono: '', email: '', personaContacto: '', notas: '', precioHabitual: 0.00, tipoCliente: '',
 });
 
 const isAddClientModalOpen = ref(false);
@@ -309,7 +318,7 @@ const formatEuropeanDate = (dateValue) => {
 const openAddClientModal = () => {
   isAddClientModalOpen.value = true;
   Object.assign(newClient.value, {
-    nombre: '', nifCif: '', direccion: '', telefono: '', email: '', personaContacto: '', notas: '', precioHabitual: 0.00,
+    nombre: '', nifCif: '', direccion: '', telefono: '', email: '', personaContacto: '', notas: '', precioHabitual: 0.00, tipoCliente: '',
   });
 };
 const closeAddClientModal = () => { isAddClientModalOpen.value = false; };

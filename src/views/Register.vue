@@ -228,6 +228,7 @@ const handleSubmit = async () => {
       email:          email.value.trim(),
       direccion:      direccion.value.trim(),
       precioHabitual: precio.value ? Number(precio.value) : 0,
+      tipoCliente:    tipoCliente.value,
     });
 
     // Además se guarda (con geocodificación) en Firestore, que es de donde

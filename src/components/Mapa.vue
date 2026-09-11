@@ -25,6 +25,35 @@
         </button>
       </div>
 
+      <hr>
+
+      <h4>Filtrar Clientes por Tipo</h4>
+      <div class="client-type-filter-buttons">
+        <button
+          @click="setClientTypeFilter('all')"
+          :class="{ active: selectedClientType === 'all' }"
+        >
+          Todos
+        </button>
+        <button
+          @click="setClientTypeFilter('casa')"
+          :class="{ active: selectedClientType === 'casa', 'filter-casa': true }"
+        >
+          Particular
+        </button>
+        <button
+          @click="setClientTypeFilter('empresa')"
+          :class="{ active: selectedClientType === 'empresa', 'filter-empresa': true }"
+        >
+          Empresa
+        </button>
+        <button
+          @click="setClientTypeFilter('cooperativa')"
+          :class="{ active: selectedClientType === 'cooperativa', 'filter-cooperativa': true }"
+        >
+          Cooperativa
+        </button>
+      </div>
     </div>
 
     <!-- Contenedor para mostrar la información de la ruta -->
@@ -63,10 +92,16 @@ const trafficEnabled = ref(false);
 const allClientsProcessedData = ref<any[]>([]); // Coordenadas ya geocodificadas de cada cliente
 const activeMarkers = ref<mapboxgl.Marker[]>([]); // Instancias de los marcadores actualmente en el mapa
 const isMenuOpen = ref(false);
+const selectedClientType = ref('all'); // 'all', 'casa', 'empresa', 'cooperativa'
 
 // Función para alternar el menú
 const toggleMenu = () => {
   isMenuOpen.value = !isMenuOpen.value;
+};
+
+const setClientTypeFilter = (type: string) => {
+  selectedClientType.value = type;
+  renderMarkers();
 };
 
 // --- FUNCIONES DE UTILIDAD PARA RUTAS ---
@@ -294,7 +329,18 @@ const toggleTrafficLayer = () => {
 
 // --- RENDERIZADO DE MARCADORES ---
 
-const MARKER_COLOR = '#60a5fa';
+const MARKER_COLORS: Record<string, string> = {
+  empresa: '#4970B6',      // Azul para empresas
+  cooperativa: 'orange',   // Naranja para cooperativas
+  casa: 'pink',            // Rosa para particulares
+};
+const DEFAULT_MARKER_COLOR = 'gray'; // Sin categoría asignada
+
+const TYPE_LABELS: Record<string, string> = {
+  empresa: 'Empresa',
+  cooperativa: 'Cooperativa',
+  casa: 'Particular',
+};
 
 const renderMarkers = () => {
   if (!map) return;
@@ -303,11 +349,16 @@ const renderMarkers = () => {
   activeMarkers.value = [];
 
   allClientsProcessedData.value.forEach(({ coordinates, clientData }) => {
+    const clientType = clientData.tipoCliente;
+    const shouldDisplay = selectedClientType.value === 'all' || clientType === selectedClientType.value;
+    if (!shouldDisplay) return;
+
+    const markerColor = MARKER_COLORS[clientType] || DEFAULT_MARKER_COLOR;
     const clientLng = coordinates[0];
     const clientLat = coordinates[1];
     const contacto = [clientData.telefono, clientData.email].filter(Boolean).join(' · ');
 
-    const marker = new mapboxgl.Marker({ color: MARKER_COLOR })
+    const marker = new mapboxgl.Marker({ color: markerColor })
       .setLngLat(coordinates)
       .setPopup(
         new mapboxgl.Popup({ offset: 25 })
@@ -315,6 +366,7 @@ const renderMarkers = () => {
             `<h5 class="p-2 text-center fw-bold">${clientData.nombre}</h5>
             <p class="text-center">${clientData.direccion || ''}</p>
             ${contacto ? `<p class="text-center">${contacto}</p>` : ''}
+            <p class="text-center">Tipo: <b>${TYPE_LABELS[clientType] || 'No especificado'}</b></p>
             <div class="popup-buttons-container">
               <button class="btn btn-primary btn-sm" onclick="window.drawClientRouteOnMap(${clientLat}, ${clientLng})">Ver Ruta</button>
               <button class="btn btn-success btn-sm" onclick="window.startWazeNavigation(${clientLat}, ${clientLng})">
@@ -644,6 +696,67 @@ onMounted(() => {
   color: #fff;
 }
 
+.client-type-filter-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: center;
+}
+
+.client-type-filter-buttons button {
+  flex: 1;
+  min-width: 72px;
+  padding: 7px 10px;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 8px;
+  background-color: rgba(255,255,255,0.05);
+  color: #94a3b8;
+  cursor: pointer;
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s, opacity 0.2s;
+}
+
+.client-type-filter-buttons button:hover:not(.active) {
+  background-color: rgba(255,255,255,0.1);
+  color: #f1f5f9;
+}
+
+.client-type-filter-buttons button.active {
+  color: #fff;
+  font-weight: 700;
+}
+
+.client-type-filter-buttons button.active:not(.filter-empresa):not(.filter-casa):not(.filter-cooperativa) {
+  background-color: #2563eb;
+  border-color: #2563eb;
+}
+
+.client-type-filter-buttons button.filter-empresa {
+  border-color: rgba(73,112,182,0.4);
+}
+.client-type-filter-buttons button.filter-empresa.active {
+  background-color: #4970B6;
+  border-color: #4970B6;
+}
+
+.client-type-filter-buttons button.filter-casa {
+  border-color: rgba(255,105,180,0.4);
+}
+.client-type-filter-buttons button.filter-casa.active {
+  background-color: #e05c9f;
+  border-color: #e05c9f;
+}
+
+.client-type-filter-buttons button.filter-cooperativa {
+  border-color: rgba(255,165,0,0.4);
+}
+.client-type-filter-buttons button.filter-cooperativa.active {
+  background-color: #d97706;
+  border-color: #d97706;
+}
+
 /* --- MEDIA QUERY PARA MÓVILES --- */
 @media (max-width: 768px) {
   .route-info-display {
@@ -674,6 +787,11 @@ onMounted(() => {
     right: 10px;
     left: 10px;
     min-width: unset;
+  }
+
+  .client-type-filter-buttons button {
+    font-size: 0.78rem;
+    padding: 6px 8px;
   }
 }
 </style>

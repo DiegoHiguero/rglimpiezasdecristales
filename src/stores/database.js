@@ -23,7 +23,7 @@ const TAB = {
   gastos:    'GASTOS',
 }
 
-const CLIENTES_HEADERS = ['Nombre / Razón social', 'NIF/CIF', 'Dirección', 'Teléfono', 'Email', 'Persona contacto', 'Notas', 'Precio habitual']
+const CLIENTES_HEADERS = ['Nombre / Razón social', 'NIF/CIF', 'Dirección', 'Teléfono', 'Email', 'Persona contacto', 'Notas', 'Precio habitual', 'Categoría']
 const FACTURAS_HEADERS = ['Nº Factura', 'Fecha', 'Cliente', 'NIF', 'Concepto', 'Base', 'IVA', 'Total', 'Estado', 'F. cobro', 'Trim.', 'Enlace PDF', 'Notas']
 const GASTOS_HEADERS   = ['Fecha', 'Proveedor', 'NIF', 'Concepto', 'Categoría', 'Base', 'IVA sop.', 'Total', '% Ded.', 'IVA deduc.', 'Base deduc.', 'Trim.', 'Recibo (foto)', 'Nº Factura']
 
@@ -96,6 +96,7 @@ function clienteFromRow(r) {
     personaContacto: r['Persona contacto'] || '',
     notas:           r['Notas'] || '',
     precioHabitual:  parseEuroNumber(r['Precio habitual']),
+    tipoCliente:     r['Categoría'] || '',
   }
 }
 
@@ -109,6 +110,7 @@ function clienteToRow(d) {
     'Persona contacto':      d.personaContacto || '',
     'Notas':                 d.notas || '',
     'Precio habitual':       d.precioHabitual ? formatEuroNumber(d.precioHabitual) : '',
+    'Categoría':             d.tipoCliente || '',
   }
 }
 
