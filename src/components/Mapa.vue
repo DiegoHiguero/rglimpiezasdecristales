@@ -25,39 +25,6 @@
         </button>
       </div>
 
-      <!-- NUEVO: Separador -->
-      <hr>
-
-      <!-- NUEVO: Título para Filtrar Clientes por Tipo -->
-      <h4>Filtrar Clientes por Tipo</h4>
-      <!-- INICIO DEL CAMBIO: Botones de filtro -->
-      <div class="client-type-filter-buttons">
-        <button
-          @click="setClientTypeFilter('all')"
-          :class="{ active: selectedClientType === 'all' }"
-        >
-          Todos
-        </button>
-        <button
-          @click="setClientTypeFilter('casa')"
-          :class="{ active: selectedClientType === 'casa', 'filter-casa': true }"
-        >
-          Casa
-        </button>
-        <button
-          @click="setClientTypeFilter('empresa')"
-          :class="{ active: selectedClientType === 'empresa', 'filter-empresa': true }"
-        >
-          Empresa
-        </button>
-        <button
-          @click="setClientTypeFilter('cooperativa')"
-          :class="{ active: selectedClientType === 'cooperativa', 'filter-cooperativa': true }"
-        >
-          Cooperativa
-        </button>
-      </div>
-      <!-- FIN DEL CAMBIO -->
     </div>
 
     <!-- Contenedor para mostrar la información de la ruta -->
@@ -75,10 +42,11 @@ import mapboxgl from "mapbox-gl";
 import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 import "@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css";
 import mapboxSdk from "@mapbox/mapbox-sdk/services/geocoding";
-import { query, collection, getDocs } from "firebase/firestore";
-import { db } from "../firebaseConfig";
+import { useDatabaseStore } from "../stores/database";
 
 mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN;
+const databaseStore = useDatabaseStore();
+const MADRID_CENTER: [number, number] = [-3.7267915, 40.3100345];
 
 // Referencias para el mapa y sus estados
 const mapContainer = ref<HTMLElement>();
@@ -92,21 +60,13 @@ const routeDuration = ref<string | null>(null);
 const routeDistance = ref<string | null>(null);
 const trafficEnabled = ref(false);
 
-// Referencias para el filtrado de clientes
-const selectedClientType = ref('all'); // 'all', 'casa', 'empresa', 'cooperativa'
-const allClientsProcessedData = ref<any[]>([]); // Almacena todos los datos de clientes procesados para filtrar
-const activeMarkers = ref<mapboxgl.Marker[]>([]); // Almacena las instancias de los marcadores actualmente en el mapa
+const allClientsProcessedData = ref<any[]>([]); // Coordenadas ya geocodificadas de cada cliente
+const activeMarkers = ref<mapboxgl.Marker[]>([]); // Instancias de los marcadores actualmente en el mapa
 const isMenuOpen = ref(false);
 
 // Función para alternar el menú
 const toggleMenu = () => {
   isMenuOpen.value = !isMenuOpen.value;
-};
-
-// NUEVO: Función para establecer el tipo de cliente y filtrar
-const setClientTypeFilter = (type: string) => {
-  selectedClientType.value = type;
-  filterAndRenderMarkers();
 };
 
 // --- FUNCIONES DE UTILIDAD PARA RUTAS ---
@@ -332,48 +292,39 @@ const toggleTrafficLayer = () => {
   trafficEnabled.value = newVisibility === 'visible';
 };
 
-// --- FUNCIONES DE FILTRADO Y RENDERIZADO DE MARCADORES ---
+// --- RENDERIZADO DE MARCADORES ---
 
-const filterAndRenderMarkers = () => {
+const MARKER_COLOR = '#60a5fa';
+
+const renderMarkers = () => {
   if (!map) return;
 
-  // 1. Elimina todos los marcadores existentes del mapa
   activeMarkers.value.forEach(marker => marker.remove());
-  activeMarkers.value = []; // Limpia el array de marcadores activos
+  activeMarkers.value = [];
 
-  // 2. Itera sobre todos los datos de clientes procesados
-  allClientsProcessedData.value.forEach(({ coordinates, markerColor, clientData }) => {
-    const clientType = clientData.tipoCliente;
-    // Determina si el marcador debe mostrarse basándose en el filtro
-    const shouldDisplay = selectedClientType.value === 'all' || clientType === selectedClientType.value;
+  allClientsProcessedData.value.forEach(({ coordinates, clientData }) => {
+    const clientLng = coordinates[0];
+    const clientLat = coordinates[1];
+    const contacto = [clientData.telefono, clientData.email].filter(Boolean).join(' · ');
 
-    if (shouldDisplay) {
-      const clientLng = coordinates[0];
-      const clientLat = coordinates[1];
-
-      // Crea y añade el marcador al mapa
-      const marker = new mapboxgl.Marker({
-        color: markerColor,
-      })
-        .setLngLat(coordinates)
-        .setPopup(
-          new mapboxgl.Popup({ offset: 25 })
-            .setHTML(
-              `<h5 class="p-2 text-center fw-bold">${clientData.nombre}</h5>
-              <p class="text-center">${clientData.direccion}<p/>
-              <p class="text-center">${clientData.codigoPostal || ''} ${clientData.ciudad}<p/>
-              <p class="text-center">Tipo: <b>${clientData.tipoCliente || 'No especificado'}</b></p>
-              <div class="popup-buttons-container">
-                <button class="btn btn-primary btn-sm" onclick="window.drawClientRouteOnMap(${clientLat}, ${clientLng})">Ver Ruta</button>
-                <button class="btn btn-success btn-sm" onclick="window.startWazeNavigation(${clientLat}, ${clientLng})">
-                  <i class="fa-brands fa-waze"></i> Ir
-                </button>
-              </div>`
-            )
-        )
-        .addTo(map!);
-        activeMarkers.value.push(marker); // Almacena la instancia del marcador
-    }
+    const marker = new mapboxgl.Marker({ color: MARKER_COLOR })
+      .setLngLat(coordinates)
+      .setPopup(
+        new mapboxgl.Popup({ offset: 25 })
+          .setHTML(
+            `<h5 class="p-2 text-center fw-bold">${clientData.nombre}</h5>
+            <p class="text-center">${clientData.direccion || ''}</p>
+            ${contacto ? `<p class="text-center">${contacto}</p>` : ''}
+            <div class="popup-buttons-container">
+              <button class="btn btn-primary btn-sm" onclick="window.drawClientRouteOnMap(${clientLat}, ${clientLng})">Ver Ruta</button>
+              <button class="btn btn-success btn-sm" onclick="window.startWazeNavigation(${clientLat}, ${clientLng})">
+                <i class="fa-brands fa-waze"></i> Ir
+              </button>
+            </div>`
+          )
+      )
+      .addTo(map!);
+    activeMarkers.value.push(marker);
   });
 };
 
@@ -405,45 +356,25 @@ onMounted(() => {
   });
   map.addControl(geocoder);
 
-  // Cargar datos de clientes y dibujar marcadores una vez que el mapa esté listo
+  // Cargar clientes (la misma hoja que usa el resto del panel) y dibujar
+  // marcadores una vez que el mapa esté listo.
   map.on("load", async () => {
     try {
-      const q = query(collection(db, "clientes"));
-      const querySnapshot = await getDocs(q);
+      if (!databaseStore.clientes.length) await databaseStore.fetchClientes();
       const mapboxClient = mapboxSdk({ accessToken: mapboxgl.accessToken });
 
-      const clientPromises = querySnapshot.docs.map(async (docFirebase) => {
-        const clientData = docFirebase.data();
-        let coordinates: [number, number] | null = null;
-        let markerColor: string; // Declaramos el tipo como string
-
-        // Lógica para asignar el color del marcador según el tipo de cliente
-        switch (clientData.tipoCliente) {
-          case 'empresa':
-            markerColor = '#4970B6';    // Azul para empresas
-            break;
-          case 'cooperativa':
-            markerColor = 'orange';  // Naranja para cooperativas
-            break;
-          case 'casa':
-            markerColor = 'pink';    // Rosa para casas
-            break;
-          default:
-            markerColor = 'gray';    // Color por defecto si el tipo no está definido o es desconocido
-            console.warn(`Tipo de cliente desconocido para ${clientData.nombre}: ${clientData.tipoCliente}. Usando color gris.`);
-            break;
-        }
-
-        if (!clientData.direccion || !clientData.ciudad) {
-          console.warn(`Cliente ${clientData.nombre} (${docFirebase.id}) no tiene dirección o ciudad para geocodificar.`);
+      const clientPromises = databaseStore.clientes.map(async (clientData) => {
+        if (!clientData.direccion) {
+          console.warn(`Cliente ${clientData.nombre} no tiene dirección para geocodificar.`);
           return null;
         }
 
         try {
           const response = await mapboxClient.forwardGeocode({
-              query: `${clientData.direccion}, ${clientData.ciudad}, ${clientData.codigoPostal || ''}`,
+              query: clientData.direccion,
               autocomplete: false,
               limit: 1,
+              proximity: MADRID_CENTER,
             })
             .send();
 
@@ -453,21 +384,16 @@ onMounted(() => {
             !response.body.features ||
             !response.body.features.length
           ) {
-            console.warn(`No se encontraron coordenadas válidas para: ${clientData.nombre} - ${clientData.direccion}, ${clientData.ciudad}`);
+            console.warn(`No se encontraron coordenadas válidas para: ${clientData.nombre} - ${clientData.direccion}`);
             return null;
           }
           const feature = response.body.features[0];
-          coordinates = feature.center as [number, number];
+          const coordinates = feature.center as [number, number];
 
-          // Devolvemos todos los datos necesarios para el filtrado y el renderizado
-          return {
-            coordinates,
-            markerColor,
-            clientData // Mantén los datos originales del cliente para el popup y el filtrado
-          };
+          return { coordinates, clientData };
 
         } catch (error) {
-          console.error(`Error al geocodificar dirección para ${clientData.nombre} (${clientData.direccion}, ${clientData.ciudad}):`, error);
+          console.error(`Error al geocodificar dirección para ${clientData.nombre} (${clientData.direccion}):`, error);
           return null;
         }
       });
@@ -476,11 +402,10 @@ onMounted(() => {
       // guarda todos los datos procesados en la variable reactiva
       allClientsProcessedData.value = (await Promise.all(clientPromises)).filter(Boolean);
 
-      // Renderiza los marcadores iniciales (todos por defecto)
-      filterAndRenderMarkers();
+      renderMarkers();
 
     } catch (error) {
-      console.error("Error al obtener clientes de Firestore o procesar datos:", error);
+      console.error("Error al obtener clientes o procesar datos:", error);
     }
   });
 });
@@ -719,67 +644,6 @@ onMounted(() => {
   color: #fff;
 }
 
-.client-type-filter-buttons {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  justify-content: center;
-}
-
-.client-type-filter-buttons button {
-  flex: 1;
-  min-width: 72px;
-  padding: 7px 10px;
-  border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 8px;
-  background-color: rgba(255,255,255,0.05);
-  color: #94a3b8;
-  cursor: pointer;
-  font-family: 'Raleway', sans-serif;
-  font-size: 0.8rem;
-  font-weight: 600;
-  transition: background-color 0.2s, color 0.2s, border-color 0.2s, opacity 0.2s;
-}
-
-.client-type-filter-buttons button:hover:not(.active) {
-  background-color: rgba(255,255,255,0.1);
-  color: #f1f5f9;
-}
-
-.client-type-filter-buttons button.active {
-  color: #fff;
-  font-weight: 700;
-}
-
-.client-type-filter-buttons button.active:not(.filter-empresa):not(.filter-casa):not(.filter-cooperativa) {
-  background-color: #2563eb;
-  border-color: #2563eb;
-}
-
-.client-type-filter-buttons button.filter-empresa {
-  border-color: rgba(73,112,182,0.4);
-}
-.client-type-filter-buttons button.filter-empresa.active {
-  background-color: #4970B6;
-  border-color: #4970B6;
-}
-
-.client-type-filter-buttons button.filter-casa {
-  border-color: rgba(255,105,180,0.4);
-}
-.client-type-filter-buttons button.filter-casa.active {
-  background-color: #e05c9f;
-  border-color: #e05c9f;
-}
-
-.client-type-filter-buttons button.filter-cooperativa {
-  border-color: rgba(255,165,0,0.4);
-}
-.client-type-filter-buttons button.filter-cooperativa.active {
-  background-color: #d97706;
-  border-color: #d97706;
-}
-
 /* --- MEDIA QUERY PARA MÓVILES --- */
 @media (max-width: 768px) {
   .route-info-display {
@@ -810,11 +674,6 @@ onMounted(() => {
     right: 10px;
     left: 10px;
     min-width: unset;
-  }
-
-  .client-type-filter-buttons button {
-    font-size: 0.78rem;
-    padding: 6px 8px;
   }
 }
 </style>
