@@ -1,5 +1,5 @@
 <template>
-  <div class="galeria-wrap">
+  <div id="trabajos-realizados" class="galeria-wrap">
 
     <span class="gl-label">
       <font-awesome-icon :icon="['fas', 'images']" class="me-1" />Portfolio
@@ -151,7 +151,6 @@ import img20260528d  from '../../assets/img/20260528_141113.webp';
 import imgPadelVacio   from '../../assets/img/padel-cristales-vacio.webp';
 import imgPadelNoche   from '../../assets/img/padel-cristales-noche.webp';
 import imgPlacasSolares from '../../assets/img/placas-solares-collage.webp';
-import imgCarrilVentana from '../../assets/img/carril-ventana-antes-despues.webp';
 import imgCristalera   from '../../assets/img/cristalera-terraza.webp';
 
 const tab = ref('fotos');
@@ -199,7 +198,6 @@ const photos = [
   { src: imgPlacasSolares, label: 'Limpieza de placas solares' },
   { src: imgPadelNoche,    label: 'Pistas de pádel acristaladas' },
   { src: imgPadelVacio,    label: 'Cristales de pista de pádel' },
-  { src: imgCarrilVentana, label: 'Carril de ventana · Antes y después' },
 ];
 
 const baPairs = [

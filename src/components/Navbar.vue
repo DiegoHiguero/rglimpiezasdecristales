@@ -20,6 +20,7 @@
           <li class="nav-item"><a class="nl" href="#" @click.prevent="scrollToSection('inicio')">Inicio</a></li>
           <li class="nav-item"><a class="nl" href="#" @click.prevent="scrollToSection('texto-principal')">Nosotros</a></li>
           <li class="nav-item"><a class="nl" href="#" @click.prevent="scrollToSection('servicios')">Servicios</a></li>
+          <li class="nav-item"><a class="nl" href="#" @click.prevent="scrollToSection('trabajos-realizados')">Trabajos realizados</a></li>
           <li class="nav-item"><a class="nl" href="#" @click.prevent="scrollToSection('precios')">Precios</a></li>
           <li class="nav-item"><router-link class="nl" to="/blog" @click="closeNavbar">Blog</router-link></li>
           <li class="nav-item"><router-link class="nl" to="/contacto" @click="closeNavbar">Contacto</router-link></li>
