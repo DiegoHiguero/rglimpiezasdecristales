@@ -30,7 +30,7 @@
           </router-link>
         </div>
 
-        <div class="hero-phone-card mx-3">
+        <div class="hero-phone-card">
           <div class="phone-mockup phone-mockup--hero">
             <video
               class="phone-mockup-video"
