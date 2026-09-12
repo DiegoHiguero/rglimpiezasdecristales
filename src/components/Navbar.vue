@@ -17,7 +17,6 @@
 
       <div class="collapse navbar-collapse" id="navMenu">
         <ul class="navbar-nav mx-auto">
-          <li class="nav-item"><a class="nl" href="#" @click.prevent="scrollToSection('inicio')">Inicio</a></li>
           <li class="nav-item"><a class="nl" href="#" @click.prevent="scrollToSection('texto-principal')">Nosotros</a></li>
           <li class="nav-item"><a class="nl" href="#" @click.prevent="scrollToSection('servicios')">Servicios</a></li>
           <li class="nav-item"><a class="nl" href="#" @click.prevent="scrollToSection('trabajos-realizados')">Trabajos realizados</a></li>
@@ -99,12 +98,6 @@ const closeNavbar = () => {
 
 const scrollToSection = (id) => {
   closeNavbar();
-  if (id === 'inicio') {
-    route.path === '/'
-      ? window.scrollTo({ top: 0, behavior: 'smooth' })
-      : router.push('/');
-    return;
-  }
   if (route.path === '/') {
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
   } else {
