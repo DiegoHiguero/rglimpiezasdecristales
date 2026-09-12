@@ -2,11 +2,7 @@
   <div class="nf-wrap">
     <div class="nf-inner">
 
-      <div class="nf-code">404</div>
-
-      <div class="nf-icon">
-        <font-awesome-icon :icon="['fas', 'spray-can-sparkles']" />
-      </div>
+      <img src="../assets/img/404-ilustracion.webp" alt="No podemos limpiar esta ventana... Error 404" class="nf-illustration" />
 
       <h1 class="nf-title">Esta página no existe</h1>
       <p class="nf-sub">Puede que la URL esté mal escrita o que la página haya sido eliminada.<br>Pero los cristales de Madrid siguen necesitando limpieza.</p>
@@ -46,22 +42,12 @@
   max-width: 520px;
 }
 
-.nf-code {
-  font-family: 'Anton', sans-serif;
-  font-size: clamp(6rem, 20vw, 9rem);
-  color: var(--blue);
-  line-height: 1;
-  margin-bottom: 8px;
-  opacity: 0.15;
-  letter-spacing: -4px;
-  user-select: none;
-}
-
-.nf-icon {
-  font-size: 2.8rem;
-  color: var(--blue);
-  margin-bottom: 24px;
-  margin-top: -24px;
+.nf-illustration {
+  width: 100%;
+  max-width: 340px;
+  height: auto;
+  margin: 0 auto 28px;
+  display: block;
 }
 
 .nf-title {
