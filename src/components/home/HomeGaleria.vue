@@ -41,14 +41,14 @@
 
     <!-- ── Vídeos ── -->
     <div v-if="tab === 'videos'" class="video-grid">
-      <div class="video-item animate-on-scroll">
+      <div class="video-item">
         <video ref="videoA" src="../../assets/img/videoplayback.mp4" muted loop playsinline></video>
         <div class="video-overlay">
           <span class="gl-play-badge"><font-awesome-icon :icon="['fas', 'play']" /></span>
           <span class="gallery-tag">En acción</span>
         </div>
       </div>
-      <div class="video-item animate-on-scroll">
+      <div class="video-item">
         <video ref="videoB" src="../../assets/img/VID-20251022-WA0013.mp4" muted loop playsinline></video>
         <div class="video-overlay">
           <span class="gl-play-badge"><font-awesome-icon :icon="['fas', 'play']" /></span>
