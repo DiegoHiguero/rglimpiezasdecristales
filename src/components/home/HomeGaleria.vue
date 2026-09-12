@@ -148,6 +148,11 @@ import img20260528a  from '../../assets/img/20260528_140011.webp';
 import img20260528b  from '../../assets/img/20260528_140444.webp';
 import img20260528c  from '../../assets/img/20260528_140712.webp';
 import img20260528d  from '../../assets/img/20260528_141113.webp';
+import imgPadelVacio   from '../../assets/img/padel-cristales-vacio.webp';
+import imgPadelNoche   from '../../assets/img/padel-cristales-noche.webp';
+import imgPlacasSolares from '../../assets/img/placas-solares-collage.webp';
+import imgCarrilVentana from '../../assets/img/carril-ventana-antes-despues.webp';
+import imgCristalera   from '../../assets/img/cristalera-terraza.webp';
 
 const tab = ref('fotos');
 const videoA = ref(null);
@@ -190,6 +195,11 @@ const photos = [
   { src: img20260528b,   label: 'Trabajo · May 2026' },
   { src: img20260528c,   label: 'Trabajo · May 2026' },
   { src: img20260528d,   label: 'Trabajo · May 2026' },
+  { src: imgCristalera,    label: 'Cristalera de terraza · Instalación' },
+  { src: imgPlacasSolares, label: 'Limpieza de placas solares' },
+  { src: imgPadelNoche,    label: 'Pistas de pádel acristaladas' },
+  { src: imgPadelVacio,    label: 'Cristales de pista de pádel' },
+  { src: imgCarrilVentana, label: 'Carril de ventana · Antes y después' },
 ];
 
 const baPairs = [
