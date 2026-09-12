@@ -4,7 +4,7 @@
 
       <router-link class="navbar-brand" to="/">
         <img class="logo-crown" src="../assets/img/logo-crown.webp" alt="" />
-        <span class="logo-text-float">
+        <span class="logo-text-chip">
           <span class="logo-text-main">Royall Clean</span>
           <span class="logo-text-sub">Cleaning services</span>
         </span>
@@ -188,30 +188,29 @@ onUnmounted(() => {
   display: block;
   flex-shrink: 0;
 }
-.logo-text-float {
+.logo-text-chip {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  background: #fff;
+  border-radius: 8px;
+  padding: 3px 10px;
   line-height: 1.2;
-  transform: translateY(18px);
-  pointer-events: none;
 }
 .logo-text-main {
-  color: #fff;
+  color: #10192e;
   font-family: 'Anton', sans-serif;
-  font-size: 0.95rem;
+  font-size: 0.92rem;
   letter-spacing: 0.02em;
   text-transform: uppercase;
-  text-shadow: 0 2px 10px rgba(0,0,0,0.7), 0 1px 3px rgba(0,0,0,0.5);
 }
 .logo-text-sub {
-  color: rgba(255,255,255,0.8);
+  color: #4a6fa8;
   font-family: 'Raleway', sans-serif;
   font-weight: 700;
-  font-size: 0.55rem;
+  font-size: 0.52rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  text-shadow: 0 1px 6px rgba(0,0,0,0.65);
 }
 
 /* ── HAMBURGER ── */
