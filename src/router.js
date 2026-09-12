@@ -152,6 +152,7 @@ const routes = [
         path: '/:pathMatch(.*)*',
         component: NotFound,
         meta: {
+            notFound: true,
             title: 'Página no encontrada | Royall Clean',
             description: 'La página que buscas no existe. Vuelve al inicio de Royall Clean, empresa de limpieza de cristales en Madrid.',
         },
@@ -176,6 +177,14 @@ router.afterEach((to) => {
     const article  = (to.meta?.dynamic && to.params?.slug) ? articles.find(a => a.slug === to.params.slug) : null;
     const servicio = to.meta?.servicio ? getServicioBySlug(to.meta.servicio) : null;
 
+    // Un slug de blog/servicio que no existe también es un 404, aunque la
+    // ruta en sí coincida (:slug acepta cualquier texto) — sin esto, se
+    // mandaba a los buscadores el título/descripción genérico de portada
+    // en vez de un 404 real.
+    const isNotFound = to.meta?.notFound
+        || (to.meta?.dynamic && !article)
+        || (to.meta?.servicio && !servicio);
+
     let title = to.meta?.title || BASE_TITLE;
     let desc  = to.meta?.description || BASE_DESC;
     let keywords = to.meta?.keywords || '';
@@ -191,9 +200,19 @@ router.afterEach((to) => {
         desc  = servicio.metaDescription;
         keywords = servicio.keywords || '';
         image = servicio.image ? window.location.origin + servicio.image : image;
+    } else if (isNotFound) {
+        title = 'Página no encontrada | Royall Clean';
+        desc  = 'La página que buscas no existe. Vuelve al inicio de Royall Clean, empresa de limpieza de cristales en Madrid.';
     }
 
     document.title = title;
+
+    const metaRobots = document.querySelector('meta[name="robots"]');
+    if (metaRobots) {
+        metaRobots.setAttribute('content', isNotFound
+            ? 'noindex, follow'
+            : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1');
+    }
 
     const metaDesc = document.querySelector('meta[name="description"]');
     if (metaDesc) metaDesc.setAttribute('content', desc);
@@ -209,6 +228,15 @@ router.afterEach((to) => {
 
     const ogImage = document.querySelector('meta[property="og:image"]');
     if (ogImage) ogImage.setAttribute('content', image);
+
+    const twitterTitle = document.querySelector('meta[name="twitter:title"]');
+    if (twitterTitle) twitterTitle.setAttribute('content', title);
+
+    const twitterDesc = document.querySelector('meta[name="twitter:description"]');
+    if (twitterDesc) twitterDesc.setAttribute('content', desc);
+
+    const twitterImage = document.querySelector('meta[name="twitter:image"]');
+    if (twitterImage) twitterImage.setAttribute('content', image);
 
     const canonical = document.querySelector('link[rel="canonical"]');
     if (canonical) canonical.setAttribute('href', 'https://royallclean.es' + to.path);
