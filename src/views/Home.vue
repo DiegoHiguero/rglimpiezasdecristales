@@ -656,5 +656,9 @@ function getCookie(cname: string): string {
   .phone-mockup { width: 118px; }
   .hero-phone-tag { font-size: 0.95rem; }
   .hero-phone-sub { font-size: 0.8rem; }
+  /* Mismo margen que ya tenía el formulario, para que el texto y la
+     tarjeta del vídeo de arriba queden alineados con él */
+  .col-md-6.p-3 { padding-left: 12px !important; padding-right: 12px !important; }
+  .hero-badge, .hero-phone-card { margin-left: 0; }
 }
 </style>
