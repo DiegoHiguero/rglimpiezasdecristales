@@ -3,7 +3,11 @@
     <div class="nav-inner">
 
       <router-link class="navbar-brand" to="/">
-        <img class="logo" src="../assets/img/ROYAL_CLEAN_2025_BLANCO.png" alt="Royall Clean logo" />
+        <img class="logo-crown" src="../assets/img/logo-crown.webp" alt="" />
+        <span class="logo-text-chip">
+          <span class="logo-text-main">Royall Clean</span>
+          <span class="logo-text-sub">Cleaning services</span>
+        </span>
       </router-link>
 
       <button class="toggler" :class="{ open: menuOpen }" type="button"
@@ -170,13 +174,44 @@ onUnmounted(() => {
 }
 
 /* ── LOGO ── */
-.logo {
-  height: 50px;
-  width: auto;
-  display: block;
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  gap: 10px;
   transition: transform 0.25s;
 }
-.logo:hover { transform: scale(1.04); }
+.navbar-brand:hover { transform: scale(1.03); }
+.logo-crown {
+  height: 100%;
+  width: auto;
+  display: block;
+  flex-shrink: 0;
+}
+.logo-text-chip {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: #fff;
+  border-radius: 8px;
+  padding: 3px 10px;
+  line-height: 1.2;
+}
+.logo-text-main {
+  color: #10192e;
+  font-family: 'Anton', sans-serif;
+  font-size: 0.92rem;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+.logo-text-sub {
+  color: #4a6fa8;
+  font-family: 'Raleway', sans-serif;
+  font-weight: 700;
+  font-size: 0.52rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
 
 /* ── HAMBURGER ── */
 .toggler {
@@ -371,8 +406,6 @@ ul.navbar-nav {
   }
 
   .icon-btn { width: 36px; height: 36px; font-size: 0.95rem; border-radius: 8px; }
-
-  .logo { height: 42px; }
 }
 
 @media (max-width: 400px) {
