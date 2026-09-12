@@ -358,11 +358,9 @@ function getCookie(cname: string): string {
   margin: 8px 0 0 0;
   padding: 14px;
   width: 100%;
-  background: rgba(255,255,255,0.06);
+  background: linear-gradient(rgba(8,12,24,0.74), rgba(8,12,24,0.74)), url('../assets/img/hero-phone-card-bg.webp') center/cover no-repeat;
   border: 1px solid rgba(255,255,255,0.14);
   border-radius: 18px;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
   box-shadow: 0 8px 24px rgba(0,0,0,0.18);
 }
 .phone-mockup {
