@@ -32,13 +32,14 @@
 
         <div class="hero-phone-row px-3">
           <div class="phone-mockup phone-mockup--hero">
-            <div class="phone-notch"></div>
             <video
+              class="phone-mockup-video"
               src="../assets/img/videoplayback.mp4"
               muted loop playsinline autoplay
               @loadedmetadata="onHeroVideoLoaded"
               @timeupdate="onHeroVideoTimeUpdate"
             ></video>
+            <img src="../assets/img/phone-mockup.webp" alt="" class="phone-mockup-frame" />
           </div>
           <span class="hero-phone-caption">
             <font-awesome-icon :icon="['fas', 'circle-play']" class="me-1" />Así trabajamos, de verdad
@@ -426,32 +427,31 @@ function getCookie(cname: string): string {
 }
 .phone-mockup {
   position: relative;
-  width: 84px;
-  aspect-ratio: 9 / 19.5;
-  background: #0b0f1a;
-  border-radius: 18px;
-  padding: 5px;
-  box-shadow: 0 14px 32px rgba(0,0,0,0.4), inset 0 0 0 1.5px rgba(255,255,255,0.1);
+  width: 100px;
+  aspect-ratio: 1 / 1;
   flex-shrink: 0;
+  filter: drop-shadow(0 14px 28px rgba(0,0,0,0.4));
 }
-.phone-mockup video {
-  width: 100%;
-  height: 100%;
+.phone-mockup-video {
+  position: absolute;
+  left: 31.3%;
+  top: 13%;
+  width: 37.8%;
+  height: 77.8%;
   object-fit: cover;
-  border-radius: 14px;
+  border-radius: 12%;
   display: block;
   background: #000;
+  z-index: 1;
 }
-.phone-notch {
+.phone-mockup-frame {
   position: absolute;
-  top: 5px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 28px;
-  height: 7px;
-  background: #0b0f1a;
-  border-radius: 0 0 6px 6px;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   z-index: 2;
+  pointer-events: none;
+  display: block;
 }
 .hero-phone-caption {
   color: rgba(255,255,255,0.85);
