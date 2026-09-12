@@ -16,7 +16,7 @@
       </button>
 
       <div class="collapse navbar-collapse" id="navMenu">
-        <ul class="navbar-nav mx-auto">
+        <ul class="navbar-nav">
           <li class="nav-item"><a class="nl" href="#" @click.prevent="scrollToSection('inicio')">Inicio</a></li>
           <li class="nav-item"><a class="nl" href="#" @click.prevent="scrollToSection('texto-principal')">Nosotros</a></li>
           <li class="nav-item"><a class="nl" href="#" @click.prevent="scrollToSection('servicios')">Servicios</a></li>
@@ -165,13 +165,15 @@ onUnmounted(() => {
 .nav-inner {
   display: flex;
   align-items: center;
+  justify-content: center;
   height: 72px;
   padding: 0 28px;
   width: 100%;
+  gap: 20px;
 }
 
 /* ── LOGO ── */
-.navbar-brand { margin-right: 8px; }
+.navbar-brand { margin-right: 0; }
 .logo {
   height: 60px;
   width: auto;
@@ -254,7 +256,18 @@ ul.navbar-nav {
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-left: auto;
+}
+
+@media (min-width: 992px) {
+  .navbar-collapse { flex-grow: 0; gap: 24px; }
+}
+
+/* Rango bajo de escritorio: todo el conjunto centrado no cabe con el
+   mismo aire que en pantallas grandes, así que se aprieta un poco. */
+@media (min-width: 992px) and (max-width: 1260px) {
+  .nav-inner { gap: 12px; padding: 0 20px; }
+  .navbar-collapse { gap: 14px; }
+  .nl { padding: 9px 11px; }
 }
 
 .nav-divider {
