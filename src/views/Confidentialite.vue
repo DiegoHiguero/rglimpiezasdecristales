@@ -132,7 +132,7 @@
 
 <style scoped>
 .pp-wrap {
-  min-height: calc(100vh - 54px);
+  min-height: calc(100vh - 72px);
   background: #151515;
   padding: 52px 16px 80px;
   display: flex;

@@ -67,7 +67,7 @@ body {
   font-weight: initial;
   background-color: var(--slate);
   color: var(--text);
-  padding-top: 54px;
+  padding-top: 72px;
 }
 
 body.admin-mode {

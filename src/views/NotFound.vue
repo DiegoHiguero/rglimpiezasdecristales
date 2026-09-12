@@ -29,7 +29,7 @@
 
 <style scoped>
 .nf-wrap {
-  min-height: calc(100vh - 54px);
+  min-height: calc(100vh - 72px);
   display: flex;
   align-items: center;
   justify-content: center;

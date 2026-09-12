@@ -27,10 +27,6 @@
         </ul>
 
         <div class="nav-right">
-          <router-link to="/contacto" class="cta-btn" @click="closeNavbar">
-            Presupuesto gratis
-          </router-link>
-
           <button class="icon-btn theme-toggle" @click="toggleTheme" :title="isDark ? 'Modo claro' : 'Modo oscuro'">
             <font-awesome-icon :icon="['fas', isDark ? 'sun' : 'moon']" />
           </button>
@@ -55,6 +51,11 @@
             </button>
           </template>
 
+          <span class="nav-divider"></span>
+
+          <router-link to="/contacto" class="cta-btn" @click="closeNavbar">
+            Presupuesto gratis
+          </router-link>
         </div>
       </div>
 
@@ -164,15 +165,15 @@ onUnmounted(() => {
 .nav-inner {
   display: flex;
   align-items: center;
-  height: 54px;
-  padding: 0 20px;
+  height: 72px;
+  padding: 0 28px;
   width: 100%;
 }
 
 /* ── LOGO ── */
-.navbar-brand { margin-left: 8px; }
+.navbar-brand { margin-right: 8px; }
 .logo {
-  height: 54px;
+  height: 60px;
   width: auto;
   display: block;
   transition: transform 0.25s;
@@ -225,7 +226,7 @@ onUnmounted(() => {
 ul.navbar-nav {
   display: flex;
   align-items: center;
-  gap: 2px;
+  gap: 4px;
   list-style: none;
   margin: 0;
   padding: 0;
@@ -236,9 +237,9 @@ ul.navbar-nav {
   color: rgba(255, 255, 255, 0.65);
   font-family: 'Raleway', sans-serif;
   font-weight: 600;
-  font-size: 0.875rem;
-  padding: 6px 13px;
-  border-radius: 6px;
+  font-size: 0.9rem;
+  padding: 9px 16px;
+  border-radius: 8px;
   text-decoration: none;
   transition: color 0.2s, background 0.2s;
   white-space: nowrap;
@@ -252,8 +253,15 @@ ul.navbar-nav {
 .nav-right {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   margin-left: auto;
+}
+
+.nav-divider {
+  width: 1px;
+  height: 24px;
+  background: rgba(255, 255, 255, 0.14);
+  margin: 0 4px;
 }
 
 .cta-btn {
@@ -276,18 +284,18 @@ ul.navbar-nav {
 }
 
 .icon-btn {
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 7px;
+  border-radius: 8px;
   color: rgba(255, 255, 255, 0.55);
   background: transparent;
   border: none;
   cursor: pointer;
   text-decoration: none;
-  font-size: 0.85rem;
+  font-size: 0.88rem;
   transition: color 0.2s, background 0.2s;
   position: relative;
   padding: 0;
@@ -327,7 +335,7 @@ ul.navbar-nav {
 
   .navbar-collapse {
     position: absolute;
-    top: 60px;
+    top: 78px;
     right: 12px;
     left: auto;
     width: auto;
@@ -363,6 +371,8 @@ ul.navbar-nav {
     margin-left: 0;
   }
 
+  .nav-divider { display: none; }
+
   .cta-btn {
     flex: 1;
     text-align: center;
@@ -373,7 +383,8 @@ ul.navbar-nav {
 
   .icon-btn { width: 36px; height: 36px; font-size: 0.95rem; border-radius: 8px; }
 
-  .logo { height: 54px; }
+  .nav-inner { padding: 0 16px; }
+  .logo { height: 56px; }
 }
 
 @media (max-width: 400px) {

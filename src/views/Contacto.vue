@@ -142,7 +142,7 @@ const {
 </script>
 
 <style scoped>
-.ct-wrap { min-height: calc(100vh - 54px); padding: 52px 16px 72px; background: var(--slate); display: flex; flex-direction: column; align-items: center; }
+.ct-wrap { min-height: calc(100vh - 72px); padding: 52px 16px 72px; background: var(--slate); display: flex; flex-direction: column; align-items: center; }
 .ct-header { text-align: center; max-width: 600px; margin-bottom: 40px; }
 .ct-label { display: inline-block; font-family: 'Raleway', sans-serif; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--blue); background: var(--blue-pale); border: 1px solid rgba(37,99,235,0.2); border-radius: 20px; padding: 4px 14px; margin-bottom: 16px; }
 .ct-title { font-family: 'Anton', sans-serif; font-size: 2.8rem; color: var(--text); line-height: 1.1; margin: 0 0 14px; }
