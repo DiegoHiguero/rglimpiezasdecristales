@@ -118,7 +118,7 @@ const weatherInfo = computed(() => {
 footer { margin: 0 15px 15px; font-family: 'Raleway', sans-serif; }
 .ft-inner { background: var(--navy); border-radius: var(--r-lg); padding: 48px 40px 28px; }
 .ft-top { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr; gap: 40px; margin-bottom: 40px; }
-.ft-logo { height: 44px; width: auto; display: block; margin-bottom: 16px; }
+.ft-logo { height: 44px; width: auto; display: block; margin-bottom: 16px; filter: grayscale(1); }
 .ft-tagline { color: #94a3b8; font-size: 0.83rem; line-height: 1.7; margin: 0 0 22px; max-width: 260px; }
 .ft-social { display: flex; gap: 8px; }
 .ft-social-link { width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; border-radius: 9px; color: #94a3b8; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.07); font-size: 0.88rem; text-decoration: none; transition: color 0.2s, background 0.2s, transform 0.2s, border-color 0.2s; }
