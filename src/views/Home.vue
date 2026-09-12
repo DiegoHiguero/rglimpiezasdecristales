@@ -115,6 +115,7 @@
     <!-- ── SECCIONES ── -->
     <HomeStats />
     <HomeServicios />
+    <HomeVideoShowcase />
     <HomeGaleria />
     <HomeTestimonios />
     <HomeSobreMi />
@@ -167,6 +168,7 @@ import HomeStats      from '../components/home/HomeStats.vue';
 import HomeServicios  from '../components/home/HomeServicios.vue';
 import HomePrecios    from '../components/home/HomePrecios.vue';
 import HomeGaleria    from '../components/home/HomeGaleria.vue';
+import HomeVideoShowcase from '../components/home/HomeVideoShowcase.vue';
 import HomeTestimonios from '../components/home/HomeTestimonios.vue';
 import HomeSobreMi    from '../components/home/HomeSobreMi.vue';
 import HomeVentajas   from '../components/home/HomeVentajas.vue';
