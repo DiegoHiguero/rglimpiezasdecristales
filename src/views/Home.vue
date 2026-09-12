@@ -355,10 +355,9 @@ function getCookie(cname: string): string {
   display: flex;
   align-items: center;
   gap: 16px;
-  margin: 8px 0 0 12px;
+  margin: 8px 0 0 0;
   padding: 14px;
-  width: fit-content;
-  max-width: 100%;
+  width: 100%;
   background: rgba(255,255,255,0.06);
   border: 1px solid rgba(255,255,255,0.14);
   border-radius: 18px;
