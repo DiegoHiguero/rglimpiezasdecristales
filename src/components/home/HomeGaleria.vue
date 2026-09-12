@@ -263,6 +263,7 @@ onUnmounted(() => {
 
 <style scoped>
 .galeria-wrap {
+  scroll-margin-top: 88px;
   background: var(--white);
   margin: 12px 20px;
   padding: 40px 28px 28px;

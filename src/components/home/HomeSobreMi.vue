@@ -85,6 +85,7 @@
 <style scoped>
 /* ── NOSOTROS ── */
 .texto-principal-nosotros {
+  scroll-margin-top: 88px;
   background: var(--white);
   margin: 12px 20px 0;
   padding: 40px 40px 28px;

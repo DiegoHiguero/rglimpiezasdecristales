@@ -133,11 +133,14 @@
     </div>
 
     <!-- ── SECCIONES ── -->
+    <!-- Orden alineado con el menú (Nosotros · Servicios · Trabajos
+         realizados · Precios) para que el scroll al hacer click en el
+         nav siempre avance hacia abajo, nunca salte hacia atrás. -->
     <HomeStats />
+    <HomeSobreMi />
     <HomeServicios />
     <HomeGaleria />
     <HomeTestimonios />
-    <HomeSobreMi />
     <HomePrecios />
     <HomeVentajas />
     <HomeZonas />

@@ -162,7 +162,7 @@
 .pc-card--orange { --cc: #f97316; --cp: #fff7ed; }
 
 /* ── Section ── */
-.section2 { background: var(--white); border-radius: var(--r-lg); margin: 12px 20px; padding: 40px 28px 0; }
+.section2 { scroll-margin-top: 88px; background: var(--white); border-radius: var(--r-lg); margin: 12px 20px; padding: 40px 28px 0; }
 
 .svc-label {
   display: block;
