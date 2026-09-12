@@ -30,6 +30,21 @@
           </router-link>
         </div>
 
+        <div class="hero-phone-row px-3">
+          <div class="phone-mockup phone-mockup--hero">
+            <div class="phone-notch"></div>
+            <video
+              src="../assets/img/videoplayback.mp4"
+              muted loop playsinline autoplay
+              @loadedmetadata="onHeroVideoLoaded"
+              @timeupdate="onHeroVideoTimeUpdate"
+            ></video>
+          </div>
+          <span class="hero-phone-caption">
+            <font-awesome-icon :icon="['fas', 'circle-play']" class="me-1" />Así trabajamos, de verdad
+          </span>
+        </div>
+
       </div>
 
       <div class="col-md-6 d-flex align-items-center justify-content-center py-4" style="z-index:2;">
@@ -115,7 +130,6 @@
     <!-- ── SECCIONES ── -->
     <HomeStats />
     <HomeServicios />
-    <HomeVideoShowcase />
     <HomeGaleria />
     <HomeTestimonios />
     <HomeSobreMi />
@@ -168,13 +182,22 @@ import HomeStats      from '../components/home/HomeStats.vue';
 import HomeServicios  from '../components/home/HomeServicios.vue';
 import HomePrecios    from '../components/home/HomePrecios.vue';
 import HomeGaleria    from '../components/home/HomeGaleria.vue';
-import HomeVideoShowcase from '../components/home/HomeVideoShowcase.vue';
 import HomeTestimonios from '../components/home/HomeTestimonios.vue';
 import HomeSobreMi    from '../components/home/HomeSobreMi.vue';
 import HomeVentajas   from '../components/home/HomeVentajas.vue';
 import HomeZonas      from '../components/home/HomeZonas.vue';
 import HomeBlog       from '../components/home/HomeBlog.vue';
 import HomeFaq        from '../components/home/HomeFaq.vue';
+
+// Vídeo del hero: solo enseña un fragmento corto en bucle, no el vídeo entero
+const HERO_CLIP_START = 1.5;
+const HERO_CLIP_END = 7;
+const onHeroVideoLoaded = (e) => { e.target.currentTime = HERO_CLIP_START; e.target.play().catch(() => {}); };
+const onHeroVideoTimeUpdate = (e) => {
+  if (e.target.currentTime >= HERO_CLIP_END || e.target.currentTime < HERO_CLIP_START) {
+    e.target.currentTime = HERO_CLIP_START;
+  }
+};
 
 const prenom  = ref("");
 const email   = ref("");
@@ -392,6 +415,50 @@ function getCookie(cname: string): string {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   display: inline-block;
+}
+
+/* â”€â”€ VÃDEO DEL HERO (mockup de mÃ³vil) â”€â”€ */
+.hero-phone-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 4px;
+}
+.phone-mockup {
+  position: relative;
+  width: 84px;
+  aspect-ratio: 9 / 19.5;
+  background: #0b0f1a;
+  border-radius: 18px;
+  padding: 5px;
+  box-shadow: 0 14px 32px rgba(0,0,0,0.4), inset 0 0 0 1.5px rgba(255,255,255,0.1);
+  flex-shrink: 0;
+}
+.phone-mockup video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 14px;
+  display: block;
+  background: #000;
+}
+.phone-notch {
+  position: absolute;
+  top: 5px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 28px;
+  height: 7px;
+  background: #0b0f1a;
+  border-radius: 0 0 6px 6px;
+  z-index: 2;
+}
+.hero-phone-caption {
+  color: rgba(255,255,255,0.85);
+  font-family: 'Raleway', sans-serif;
+  font-weight: 600;
+  font-size: 0.82rem;
+  text-shadow: 0 1px 6px rgba(0,0,0,0.6);
 }
 
 /* â”€â”€ FORMULARIO â”€â”€ */
