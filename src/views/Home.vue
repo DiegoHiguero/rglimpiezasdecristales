@@ -30,7 +30,7 @@
           </router-link>
         </div>
 
-        <div class="hero-phone-row px-3">
+        <div class="hero-phone-card mx-3">
           <div class="phone-mockup phone-mockup--hero">
             <video
               class="phone-mockup-video"
@@ -41,9 +41,10 @@
             ></video>
             <img src="../assets/img/phone-mockup.webp" alt="" class="phone-mockup-frame" />
           </div>
-          <span class="hero-phone-caption">
-            <font-awesome-icon :icon="['fas', 'circle-play']" class="me-1" />Así trabajamos, de verdad
-          </span>
+          <div class="hero-phone-info">
+            <span class="hero-phone-tag"><font-awesome-icon :icon="['fas', 'circle-play']" class="me-1" />Así trabajamos</span>
+            <span class="hero-phone-sub">Vídeo real, sin edición</span>
+          </div>
         </div>
 
       </div>
@@ -350,18 +351,27 @@ function getCookie(cname: string): string {
 }
 
 /* â”€â”€ VÃDEO DEL HERO (mockup de mÃ³vil) â”€â”€ */
-.hero-phone-row {
+.hero-phone-card {
   display: flex;
   align-items: center;
-  gap: 14px;
-  margin-top: 4px;
+  gap: 16px;
+  margin-top: 8px;
+  padding: 12px 20px 12px 12px;
+  width: fit-content;
+  max-width: 100%;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 18px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.18);
 }
 .phone-mockup {
   position: relative;
-  width: 220px;
+  width: 108px;
   aspect-ratio: 1 / 1;
   flex-shrink: 0;
-  filter: drop-shadow(0 14px 28px rgba(0,0,0,0.4));
+  filter: drop-shadow(0 10px 20px rgba(0,0,0,0.4));
 }
 .phone-mockup-video {
   position: absolute;
@@ -384,12 +394,23 @@ function getCookie(cname: string): string {
   pointer-events: none;
   display: block;
 }
-.hero-phone-caption {
-  color: rgba(255,255,255,0.85);
+.hero-phone-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.hero-phone-tag {
+  color: #fff;
   font-family: 'Raleway', sans-serif;
-  font-weight: 600;
-  font-size: 0.82rem;
-  text-shadow: 0 1px 6px rgba(0,0,0,0.6);
+  font-weight: 700;
+  font-size: 0.88rem;
+}
+.hero-phone-tag svg { color: #60a5fa; }
+.hero-phone-sub {
+  color: rgba(255,255,255,0.62);
+  font-family: 'Raleway', sans-serif;
+  font-weight: 500;
+  font-size: 0.76rem;
 }
 
 /* â”€â”€ FORMULARIO â”€â”€ */
