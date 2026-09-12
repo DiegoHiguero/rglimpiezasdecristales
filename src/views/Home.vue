@@ -380,7 +380,7 @@ function getCookie(cname: string): string {
   width: 86.3%;
   height: 94%;
   object-fit: cover;
-  border-radius: 10%;
+  border-radius: 10.5% / 5%;
   display: block;
   background: #000;
   z-index: 1;
