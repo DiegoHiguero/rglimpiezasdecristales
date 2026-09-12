@@ -427,7 +427,7 @@ function getCookie(cname: string): string {
 }
 .phone-mockup {
   position: relative;
-  width: 150px;
+  width: 220px;
   aspect-ratio: 1 / 1;
   flex-shrink: 0;
   filter: drop-shadow(0 14px 28px rgba(0,0,0,0.4));
