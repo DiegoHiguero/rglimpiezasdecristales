@@ -131,81 +131,14 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
-import emailjs from '@emailjs/browser';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
-import { db } from '../firebaseConfig';
+import { useContactForm } from '../composables/useContactForm';
 
-const prenom        = ref('');
-const email         = ref('');
-const phone         = ref('');
-const tipoServicio  = ref('');
-const zona          = ref('');
-const message       = ref('');
-const sending       = ref(false);
-const feedback      = ref({ msg: '', ok: false });
-const errors        = ref({ prenom: '', email: '', phone: '', message: '' });
-
-const validatePrenom = () => {
-  errors.value.prenom = prenom.value.trim() ? '' : 'El nombre es obligatorio.';
-  return !errors.value.prenom;
-};
-const validateEmail = () => {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!email.value.trim()) errors.value.email = 'Se requiere un correo electrónico.';
-  else if (!emailRegex.test(email.value)) errors.value.email = 'Introduce un correo válido.';
-  else errors.value.email = '';
-  return !errors.value.email;
-};
-const validatePhone = () => {
-  if (!phone.value.trim()) errors.value.phone = 'Se requiere un teléfono.';
-  else if (phone.value.trim().replace(/[\s\-()]/g, '').length < 9) errors.value.phone = 'El teléfono debe tener al menos 9 dígitos.';
-  else errors.value.phone = '';
-  return !errors.value.phone;
-};
-const validateMessage = () => {
-  if (!message.value.trim()) errors.value.message = 'El mensaje es obligatorio.';
-  else if (message.value.trim().length < 10) errors.value.message = 'Cuéntanos un poco más (mínimo 10 caracteres).';
-  else errors.value.message = '';
-  return !errors.value.message;
-};
-
-const isFormValid = computed(() =>
-  prenom.value.trim() !== '' && !errors.value.prenom &&
-  email.value.trim()  !== '' && !errors.value.email &&
-  phone.value.trim()  !== '' && !errors.value.phone &&
-  message.value.trim() !== '' && !errors.value.message
-);
-
-const enviarMensaje = async () => {
-  const ok = validatePrenom() && validateEmail() && validatePhone() && validateMessage();
-  if (!ok) { feedback.value = { msg: 'Corrige los campos marcados antes de enviar.', ok: false }; return; }
-
-  sending.value = true;
-  feedback.value = { msg: '', ok: false };
-  try {
-    await emailjs.send('service_iytm8yl', 'template_7yngfsa', {
-      prenom: prenom.value,
-      email: email.value,
-      phone: phone.value,
-      message: message.value,
-      tipoServicio: tipoServicio.value,
-      zona: zona.value,
-    }, 'IF1Sn503DHVPja4II');
-    await addDoc(collection(db, "mensajes"), {
-      prenom: prenom.value, email: email.value, message: message.value, phone: phone.value,
-      tipoServicio: tipoServicio.value, zona: zona.value,
-      timestamp: serverTimestamp(), read: false,
-    });
-    feedback.value = { msg: '¡Mensaje enviado! Te respondemos en menos de 24 h.', ok: true };
-    prenom.value = email.value = phone.value = zona.value = message.value = tipoServicio.value = '';
-    errors.value = { prenom: '', email: '', phone: '', message: '' };
-  } catch {
-    feedback.value = { msg: 'Hubo un problema al enviar. Inténtalo de nuevo.', ok: false };
-  } finally {
-    sending.value = false;
-  }
-};
+const {
+  prenom, email, phone, message, tipoServicio, zona,
+  errors, sending, feedback, isFormValid,
+  validatePrenom, validateEmail, validatePhone, validateMessage,
+  enviarMensaje,
+} = useContactForm();
 </script>
 
 <style scoped>

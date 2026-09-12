@@ -58,58 +58,61 @@
 
           <form @submit.prevent="enviarMensaje" novalidate>
 
-            <div class="ff" :class="{ 'ff--ok': prenom.length > 0 && !prenomError, 'ff--err': prenomError }">
+            <div class="ff" :class="{ 'ff--ok': prenom.length > 0 && !errors.prenom, 'ff--err': errors.prenom }">
               <div class="ff-icon"><font-awesome-icon :icon="['fas', 'user']" /></div>
               <div class="ff-body">
                 <label for="prenomInput">Nombre completo</label>
                 <input type="text" id="prenomInput" placeholder="¿Cómo te llamas?"
                   v-model="prenom" @blur="validatePrenom" @input="validatePrenom" autocomplete="name" />
-                <span class="ff-msg" v-if="prenomError">{{ prenomError }}</span>
-                <span class="ff-msg ff-msg--ok" v-else-if="prenom.length > 0 && !prenomError">¡Perfecto!</span>
+                <span class="ff-msg" v-if="errors.prenom">{{ errors.prenom }}</span>
+                <span class="ff-msg ff-msg--ok" v-else-if="prenom.length > 0 && !errors.prenom">¡Perfecto!</span>
               </div>
             </div>
 
             <div class="ff-row">
-              <div class="ff" :class="{ 'ff--ok': email.length > 0 && !emailError, 'ff--err': emailError }">
+              <div class="ff" :class="{ 'ff--ok': email.length > 0 && !errors.email, 'ff--err': errors.email }">
                 <div class="ff-icon"><font-awesome-icon :icon="['fas', 'envelope']" /></div>
                 <div class="ff-body">
                   <label for="emailInput">Correo</label>
                   <input type="email" id="emailInput" placeholder="tu@email.com"
                     v-model.trim="email" @blur="validateEmail" @input="validateEmail" autocomplete="email" />
-                  <span class="ff-msg" v-if="emailError">{{ emailError }}</span>
-                  <span class="ff-msg ff-msg--ok" v-else-if="email.length > 0 && !emailError">¡Perfecto!</span>
+                  <span class="ff-msg" v-if="errors.email">{{ errors.email }}</span>
+                  <span class="ff-msg ff-msg--ok" v-else-if="email.length > 0 && !errors.email">¡Perfecto!</span>
                 </div>
               </div>
-              <div class="ff" :class="{ 'ff--ok': phone.length > 0 && !phoneError, 'ff--err': phoneError }">
+              <div class="ff" :class="{ 'ff--ok': phone.length > 0 && !errors.phone, 'ff--err': errors.phone }">
                 <div class="ff-icon"><font-awesome-icon :icon="['fas', 'phone']" /></div>
                 <div class="ff-body">
                   <label for="phoneInput">Teléfono</label>
                   <input type="tel" id="phoneInput" placeholder="6XX XXX XXX"
                     v-model.trim="phone" @blur="validatePhone" @input="validatePhone" autocomplete="tel" />
-                  <span class="ff-msg" v-if="phoneError">{{ phoneError }}</span>
-                  <span class="ff-msg ff-msg--ok" v-else-if="phone.length > 0 && !phoneError">¡Perfecto!</span>
+                  <span class="ff-msg" v-if="errors.phone">{{ errors.phone }}</span>
+                  <span class="ff-msg ff-msg--ok" v-else-if="phone.length > 0 && !errors.phone">¡Perfecto!</span>
                 </div>
               </div>
             </div>
 
-            <div class="ff" :class="{ 'ff--ok': message.length > 0 && !messageError, 'ff--err': messageError }">
+            <div class="ff" :class="{ 'ff--ok': message.length > 0 && !errors.message, 'ff--err': errors.message }">
               <div class="ff-icon ff-icon--top"><font-awesome-icon :icon="['fas', 'comments']" /></div>
               <div class="ff-body">
                 <label for="messageInput">¿Qué necesitas limpiar?</label>
                 <textarea id="messageInput" rows="3"
                   placeholder="Ej: Cristales de una tienda en Madrid, 6 ventanas grandes..."
                   v-model="message" @blur="validateMessage" @input="validateMessage"></textarea>
-                <span class="ff-msg" v-if="messageError">{{ messageError }}</span>
-                <span class="ff-msg ff-msg--ok" v-else-if="message.length > 0 && !messageError">¡Perfecto!</span>
+                <span class="ff-msg" v-if="errors.message">{{ errors.message }}</span>
+                <span class="ff-msg ff-msg--ok" v-else-if="message.length > 0 && !errors.message">¡Perfecto!</span>
               </div>
             </div>
 
-            <div class="f-success" v-if="userStore.timeOut !== false">
-              <font-awesome-icon :icon="['fas', 'check']" class="me-2" />{{ userStore.mensaje }}
+            <div class="f-success" v-if="feedback.msg && feedback.ok">
+              <font-awesome-icon :icon="['fas', 'check']" class="me-2" />{{ feedback.msg }}
+            </div>
+            <div class="ff-error" v-if="feedback.msg && !feedback.ok">
+              <font-awesome-icon :icon="['fas', 'xmark']" class="me-2" />{{ feedback.msg }}
             </div>
 
-            <button type="submit" class="f-submit" :disabled="isSubmitting || !isFormValid">
-              <span v-if="!isSubmitting">
+            <button type="submit" class="f-submit" :disabled="sending || !isFormValid">
+              <span v-if="!sending">
                 <font-awesome-icon :icon="['fas', 'paper-plane']" class="me-2" />Enviar consulta
               </span>
               <span v-else class="f-submit-loading">
@@ -175,10 +178,8 @@
 
 <script setup lang="ts">
 import { useUserStore } from "../stores/user";
-import { onMounted, onUnmounted, ref, computed } from "vue";
-import emailjs from "@emailjs/browser";
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
-import { db } from '../firebaseConfig';
+import { onMounted, onUnmounted, ref } from "vue";
+import { useContactForm } from '../composables/useContactForm';
 import HomeStats      from '../components/home/HomeStats.vue';
 import HomeServicios  from '../components/home/HomeServicios.vue';
 import HomePrecios    from '../components/home/HomePrecios.vue';
@@ -200,18 +201,14 @@ const onHeroVideoTimeUpdate = (e) => {
   }
 };
 
-const prenom  = ref("");
-const email   = ref("");
-const message = ref("");
-const phone   = ref("");
+const {
+  prenom, email, phone, message,
+  errors, sending, feedback, isFormValid,
+  validatePrenom, validateEmail, validatePhone, validateMessage,
+  enviarMensaje,
+} = useContactForm();
 
-const prenomError  = ref("");
-const emailError   = ref("");
-const phoneError   = ref("");
-const messageError = ref("");
-
-const userStore    = useUserStore();
-const isSubmitting = ref(false);
+const userStore = useUserStore();
 
 const isWaOpen    = ref(false);
 const waWidgetRef = ref(null);
@@ -273,72 +270,6 @@ onMounted(() => {
   animatedEls.forEach(el => scrollObserver.observe(el));
   checkCookie();
 });
-
-const validatePrenom = () => {
-  prenomError.value = "";
-  if (!prenom.value.trim()) { prenomError.value = "El nombre es obligatorio."; return false; }
-  return true;
-};
-
-const validateEmail = () => {
-  emailError.value = "";
-  if (!email.value.trim()) { emailError.value = "Se requiere dirección de correo electrónico."; return false; }
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(email.value)) { emailError.value = "Por favor, introduce una dirección de correo electrónico válida."; return false; }
-  return true;
-};
-
-const validatePhone = () => {
-  phoneError.value = "";
-  if (!phone.value.trim()) { phoneError.value = "Se requiere el número de teléfono."; return false; }
-  const phoneRegex = /^[\d\s\-\(\)]+$/;
-  if (!phoneRegex.test(phone.value)) { phoneError.value = "Ingrese un número de teléfono válido."; return false; }
-  if (phone.value.trim().replace(/[\s\-\(\)]/g, '').length < 9) { phoneError.value = "El número de teléfono debe contener al menos 9 dígitos."; return false; }
-  return true;
-};
-
-const validateMessage = () => {
-  messageError.value = "";
-  if (!message.value.trim()) { messageError.value = "El mensaje es obligatorio."; return false; }
-  if (message.value.trim().length < 10) { messageError.value = "El mensaje debe contener al menos 10 caracteres."; return false; }
-  return true;
-};
-
-const validateForm = () => {
-  userStore.mensaje = '';
-  userStore.timeOut = false;
-  return validatePrenom() && validateEmail() && validatePhone() && validateMessage();
-};
-
-const isFormValid = computed(() =>
-  prenom.value.trim() !== '' && !prenomError.value &&
-  email.value.trim()  !== '' && !emailError.value  &&
-  phone.value.trim()  !== '' && !phoneError.value  &&
-  message.value.trim() !== '' && !messageError.value
-);
-
-const enviarMensaje = async () => {
-  if (isSubmitting.value) return;
-  if (!validateForm()) { userStore.mensajeAlerta("Corrija cualquier error en el formulario antes de enviarlo."); return; }
-
-  isSubmitting.value = true;
-  try {
-    const contactParams = { prenom: prenom.value, email: email.value, message: message.value, phone: phone.value };
-    await emailjs.send("service_iytm8yl", "template_7yngfsa", contactParams, "IF1Sn503DHVPja4II");
-    await addDoc(collection(db, "mensajes"), {
-      prenom: prenom.value, email: email.value, message: message.value, phone: phone.value,
-      timestamp: serverTimestamp(), read: false,
-    });
-    prenom.value = ""; email.value = ""; message.value = ""; phone.value = "";
-    prenomError.value = ""; emailError.value = ""; phoneError.value = ""; messageError.value = "";
-    userStore.mensajeAlerta("¡Mensaje enviado! Te respondemos en menos de 24 h.");
-  } catch (error: any) {
-    console.error("Error al enviar:", error);
-    userStore.mensajeAlerta("Hubo un problema al enviar. Inténtalo de nuevo.");
-  } finally {
-    isSubmitting.value = false;
-  }
-};
 
 function checkCookie() {
   const check = getCookie("cookieConsent-ANALYTICS");
@@ -536,6 +467,11 @@ function getCookie(cname: string): string {
 .f-success {
   background: rgba(52,211,153,0.1); border: 1px solid rgba(52,211,153,0.3);
   border-radius: 9px; color: #6ee7b7; font-family: 'Raleway', sans-serif;
+  font-size: 0.82rem; font-weight: 600; padding: 10px 14px; margin-bottom: 12px; text-align: center;
+}
+.ff-error {
+  background: rgba(239,68,68,0.12); border: 1px solid rgba(239,68,68,0.35);
+  border-radius: 9px; color: #f87171; font-family: 'Raleway', sans-serif;
   font-size: 0.82rem; font-weight: 600; padding: 10px 14px; margin-bottom: 12px; text-align: center;
 }
 .f-submit {
