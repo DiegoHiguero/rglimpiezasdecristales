@@ -653,5 +653,8 @@ function getCookie(cname: string): string {
 @media (max-width: 480px) {
   .ff-row { grid-template-columns: 1fr; }
   .formulario { padding: 22px 16px 16px; }
+  .phone-mockup { width: 118px; }
+  .hero-phone-tag { font-size: 0.95rem; }
+  .hero-phone-sub { font-size: 0.8rem; }
 }
 </style>
