@@ -423,7 +423,11 @@ onMounted(() => {
   // marcadores una vez que el mapa esté listo.
   map.on("load", async () => {
     try {
-      if (!databaseStore.clientes.length) await databaseStore.fetchClientes();
+      // Siempre en fresco: si vienes de otra página (p.ej. Mis Clientes) el
+      // store ya tiene clientes en memoria, pero pueden no reflejar cambios
+      // hechos directamente en la hoja (como asignar la categoría) desde la
+      // última vez que se cargaron.
+      await databaseStore.fetchClientes();
       const mapboxClient = mapboxSdk({ accessToken: mapboxgl.accessToken });
 
       const clientPromises = databaseStore.clientes.map(async (clientData) => {
