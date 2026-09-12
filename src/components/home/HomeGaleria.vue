@@ -25,17 +25,27 @@
     </div>
 
     <!-- ── Fotos ── -->
-    <div v-if="tab === 'fotos'" class="gallery-grid">
-      <div
-        v-for="(item, i) in photos" :key="i"
-        :class="['gallery-item', 'animate-on-scroll', { 'gallery-item--featured': i === 0 }]"
-        @click="openLightbox(i)"
-      >
-        <img :src="item.src" :alt="item.label" loading="lazy" />
-        <div class="gallery-overlay">
-          <font-awesome-icon :icon="['fas', 'magnifying-glass-plus']" class="gl-zoom" />
-          <span class="gallery-tag">{{ item.label }}</span>
+    <div v-if="tab === 'fotos'">
+      <div class="gallery-grid">
+        <div
+          v-for="(item, i) in photos" :key="i"
+          v-show="showAllPhotos || i < PHOTOS_PREVIEW_COUNT"
+          :class="['gallery-item', 'animate-on-scroll', { 'gallery-item--featured': i === 0 }]"
+          @click="openLightbox(i)"
+        >
+          <img :src="item.src" :alt="item.label" loading="lazy" />
+          <div class="gallery-overlay">
+            <font-awesome-icon :icon="['fas', 'magnifying-glass-plus']" class="gl-zoom" />
+            <span class="gallery-tag">{{ item.label }}</span>
+          </div>
         </div>
+      </div>
+
+      <div v-if="photos.length > PHOTOS_PREVIEW_COUNT" class="gl-toggle-row">
+        <button type="button" class="gl-toggle-btn" @click="showAllPhotos = !showAllPhotos">
+          <font-awesome-icon :icon="['fas', showAllPhotos ? 'chevron-up' : 'chevron-down']" class="me-2" />
+          {{ showAllPhotos ? 'Ver menos fotos' : `Ver todas las fotos (${photos.length})` }}
+        </button>
       </div>
     </div>
 
@@ -154,6 +164,8 @@ import imgPlacasSolares from '../../assets/img/placas-solares-collage.webp';
 import imgCristalera   from '../../assets/img/cristalera-terraza.webp';
 
 const tab = ref('fotos');
+const PHOTOS_PREVIEW_COUNT = 9;
+const showAllPhotos = ref(false);
 const videoA = ref(null);
 const videoB = ref(null);
 
@@ -344,6 +356,17 @@ onUnmounted(() => {
   font-size: 0.78rem; color: #fff; letter-spacing: 0.04em;
   text-shadow: 0 1px 4px rgba(0,0,0,0.6);
 }
+
+.gl-toggle-row { display: flex; justify-content: center; margin-top: 18px; }
+.gl-toggle-btn {
+  display: inline-flex; align-items: center;
+  font-family: 'Raleway', sans-serif; font-weight: 700; font-size: 0.85rem;
+  color: var(--blue); background: var(--blue-pale);
+  border: 1.5px solid transparent;
+  padding: 10px 22px; border-radius: 20px; cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, transform 0.2s;
+}
+.gl-toggle-btn:hover { border-color: var(--blue); transform: translateY(-1px); }
 
 /* ── Video grid ── */
 .video-grid {
