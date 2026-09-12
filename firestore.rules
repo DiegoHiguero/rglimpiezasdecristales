@@ -42,13 +42,18 @@ service cloud.firestore {
       allow write: if isSignedInAsAdmin();
     }
 
+    // Los campos reales que escriben los formularios de contacto (Home y
+    // /contacto) son prenom/email/phone/message, no nombre/mensaje — con los
+    // nombres antiguos, hasAll() nunca coincidía y el create fallaba con
+    // permission-denied aunque el email ya se hubiera enviado por EmailJS.
     match /mensajes/{document} {
       allow create: if
-        request.resource.data.keys().hasAll(['nombre', 'email', 'mensaje']) &&
-        request.resource.data.nombre is string && request.resource.data.nombre.size() > 0 && request.resource.data.nombre.size() <= 100 &&
+        request.resource.data.keys().hasAll(['prenom', 'email', 'phone', 'message']) &&
+        request.resource.data.prenom is string && request.resource.data.prenom.size() > 0 && request.resource.data.prenom.size() <= 100 &&
         request.resource.data.email is string && request.resource.data.email.size() > 0 && request.resource.data.email.size() <= 200 &&
-        request.resource.data.mensaje is string && request.resource.data.mensaje.size() > 0 && request.resource.data.mensaje.size() <= 2000 &&
-        request.resource.data.keys().size() <= 6;
+        request.resource.data.phone is string && request.resource.data.phone.size() > 0 && request.resource.data.phone.size() <= 30 &&
+        request.resource.data.message is string && request.resource.data.message.size() > 0 && request.resource.data.message.size() <= 2000 &&
+        request.resource.data.keys().size() <= 8;
       allow read, update, delete: if isSignedInAsAdmin();
     }
   }

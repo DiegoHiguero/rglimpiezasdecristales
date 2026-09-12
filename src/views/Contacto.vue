@@ -133,6 +133,8 @@
 <script setup>
 import { ref, computed } from 'vue';
 import emailjs from '@emailjs/browser';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { db } from '../firebaseConfig';
 
 const prenom        = ref('');
 const email         = ref('');
@@ -190,6 +192,11 @@ const enviarMensaje = async () => {
       tipoServicio: tipoServicio.value,
       zona: zona.value,
     }, 'IF1Sn503DHVPja4II');
+    await addDoc(collection(db, "mensajes"), {
+      prenom: prenom.value, email: email.value, message: message.value, phone: phone.value,
+      tipoServicio: tipoServicio.value, zona: zona.value,
+      timestamp: serverTimestamp(), read: false,
+    });
     feedback.value = { msg: '¡Mensaje enviado! Te respondemos en menos de 24 h.', ok: true };
     prenom.value = email.value = phone.value = zona.value = message.value = tipoServicio.value = '';
     errors.value = { prenom: '', email: '', phone: '', message: '' };
