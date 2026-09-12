@@ -3,7 +3,7 @@ import imgVerano       from '../assets/img/man-cleaning-windows.webp';
 import imgPrimavera    from '../assets/img/housemaid-wearing.webp';
 import imgOtono        from '../assets/img/hojas-otono.webp';
 import imgPaloma       from '../assets/img/paloma.webp';
-import imgCintaAdhesiva from '../assets/img/cintaadhesiva.jpg';
+import imgCintaAdhesiva from '../assets/img/cintaadhesiva.webp';
 
 export const articles = [
   {

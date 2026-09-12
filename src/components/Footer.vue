@@ -37,8 +37,7 @@
         <div class="ft-col">
           <h3 class="ft-heading">Legal</h3>
           <ul>
-            <li><router-link to="/politica-privacidad">Política de cookies</router-link></li>
-            <li><router-link to="/politica-privacidad">Política de privacidad</router-link></li>
+            <li><router-link to="/politica-privacidad">Política de privacidad y cookies</router-link></li>
             <li><router-link to="/aviso-legal">Aviso legal</router-link></li>
           </ul>
         </div>
