@@ -170,8 +170,9 @@ onUnmounted(() => {
 }
 
 /* ── LOGO ── */
+.navbar-brand { margin-left: 8px; }
 .logo {
-  height: 50px;
+  height: 54px;
   width: auto;
   display: block;
   transition: transform 0.25s;
@@ -372,7 +373,7 @@ ul.navbar-nav {
 
   .icon-btn { width: 36px; height: 36px; font-size: 0.95rem; border-radius: 8px; }
 
-  .logo { height: 42px; }
+  .logo { height: 54px; }
 }
 
 @media (max-width: 400px) {
