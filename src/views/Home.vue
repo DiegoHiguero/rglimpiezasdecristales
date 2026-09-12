@@ -368,19 +368,19 @@ function getCookie(cname: string): string {
 }
 .phone-mockup {
   position: relative;
-  width: 168px;
-  aspect-ratio: 1 / 1;
+  width: 85px;
+  aspect-ratio: 394 / 783;
   flex-shrink: 0;
   filter: drop-shadow(0 10px 20px rgba(0,0,0,0.4));
 }
 .phone-mockup-video {
   position: absolute;
-  left: 31.3%;
-  top: 9%;
-  width: 37.8%;
-  height: 81.8%;
+  left: 7.1%;
+  top: 3.1%;
+  width: 86.3%;
+  height: 94%;
   object-fit: cover;
-  border-radius: 12%;
+  border-radius: 10%;
   display: block;
   background: #000;
   z-index: 1;
