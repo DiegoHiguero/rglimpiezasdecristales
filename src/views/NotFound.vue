@@ -48,7 +48,12 @@
   height: auto;
   margin: 0 auto 28px;
   display: block;
+  border-radius: 20px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.35), 0 4px 14px rgba(0,0,0,0.25);
+  transform: rotate(-2deg);
+  transition: transform 0.3s ease;
 }
+.nf-illustration:hover { transform: rotate(-1deg) scale(1.02); }
 
 .nf-title {
   font-family: 'Anton', sans-serif;
