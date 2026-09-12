@@ -115,10 +115,6 @@
         Mensajes
         <span v-if="userStore.unreadMessagesCount > 0" class="as-badge">{{ userStore.unreadMessagesCount }}</span>
       </router-link>
-      <router-link to="/" class="as-link as-link--muted" @click="mobileOpen = false">
-        <span class="as-icon"><font-awesome-icon :icon="['fas', 'house']" /></span>
-        Ver sitio web
-      </router-link>
     </nav>
 
     <!-- Usuario y logout -->

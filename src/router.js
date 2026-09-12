@@ -66,6 +66,20 @@ const requiereAuth2 = async(to,from,next) => {
     }
 };
 
+// Con la sesión de administrador iniciada, "/" redirige al panel: no tiene
+// sentido volver a la home pública desde dentro del área de administración.
+const redirigeAdminAlPanel = async (to, from, next) => {
+    const userStore = useUserStore();
+    const user = await userStore.currentUser();
+    const isAllowedAdmin = user && user.email === "roys.abreu@gmail.com";
+
+    if (isAllowedAdmin) {
+        next('/dashboard');
+    } else {
+        next();
+    }
+};
+
 const BASE_TITLE = 'Limpieza de Cristales en Madrid | Royall Clean';
 const BASE_DESC  = 'Limpieza de cristales y ventanas en Madrid para hogares, comunidades y locales. Más de 10 años de experiencia. ¡Presupuesto gratis en 24 h! ☎ 696 169 435';
 
@@ -73,6 +87,7 @@ const routes = [
     {
         path: '/',
         component: Home,
+        beforeEnter: redirigeAdminAlPanel,
         meta: {
             title: BASE_TITLE,
             description: BASE_DESC,
