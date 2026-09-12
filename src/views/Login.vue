@@ -9,6 +9,14 @@
         <p class="lp-sub">Accede a tu panel de Royall Clean</p>
       </div>
 
+      <!-- Aviso: iniciar sesión con Google no funciona bien dentro de la app instalada (PWA) -->
+      <div v-if="isStandalone" class="lp-warning">
+        <font-awesome-icon :icon="['fas', 'triangle-exclamation']" class="me-2" />
+        Estás abriendo esto como app instalada. El inicio de sesión con Google puede fallar aquí —
+        si te da error, abre este enlace en el navegador normal (Chrome/Safari), no desde el icono
+        de la pantalla de inicio.
+      </div>
+
       <!-- Error -->
       <div v-if="userStore.timeOut !== false" class="lp-error">
         <font-awesome-icon :icon="['fas', 'xmark']" class="me-2" />
@@ -73,6 +81,13 @@ const email = ref('');
 const password = ref('');
 const showPass = ref(false);
 
+// La web es instalable como app (manifest con display:standalone). El popup
+// de Google Sign-In de Firebase no funciona de forma fiable ahí porque el
+// navegador aísla el almacenamiento distinto que en una pestaña normal —
+// error típico: "missing initial state" / sessionStorage inaccesible.
+const isStandalone = window.matchMedia?.('(display-mode: standalone)').matches
+  || window.navigator.standalone === true;
+
 const handleSubmit = async () => {
   if (!email.value || !password.value) {
     userStore.mensajeAlerta('Rellena todos los campos');
@@ -132,6 +147,19 @@ const handleGoogleSignIn = async () => {
   font-size: 0.88rem;
   color: #64748b;
   margin: 0;
+}
+
+/* ── Aviso PWA standalone ── */
+.lp-warning {
+  background: rgba(251,191,36,0.1);
+  border: 1px solid rgba(251,191,36,0.3);
+  color: #fbbf24;
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  border-radius: 10px;
+  padding: 10px 14px;
+  margin-bottom: 20px;
 }
 
 /* ── Error ── */
