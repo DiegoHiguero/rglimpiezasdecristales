@@ -16,7 +16,7 @@
       </button>
 
       <div class="collapse navbar-collapse" id="navMenu">
-        <ul class="navbar-nav">
+        <ul class="navbar-nav mx-auto">
           <li class="nav-item"><a class="nl" href="#" @click.prevent="scrollToSection('inicio')">Inicio</a></li>
           <li class="nav-item"><a class="nl" href="#" @click.prevent="scrollToSection('texto-principal')">Nosotros</a></li>
           <li class="nav-item"><a class="nl" href="#" @click.prevent="scrollToSection('servicios')">Servicios</a></li>
@@ -162,18 +162,22 @@ onUnmounted(() => {
 }
 
 /* ── INNER ── */
+/* Mismo ancho que .padre (el contenedor del contenido de la home), para
+   que el logo y el CTA queden alineados con el borde del contenido. */
 .nav-inner {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   height: 72px;
-  padding: 0 28px;
+  padding: 0 16px;
+  max-width: 1200px;
+  margin: 0 auto;
   width: 100%;
-  gap: 20px;
+  gap: 24px;
 }
 
 /* ── LOGO ── */
-.navbar-brand { margin-right: 0; }
+.navbar-brand { margin-right: 24px; }
 .logo {
   height: 60px;
   width: auto;
@@ -259,14 +263,14 @@ ul.navbar-nav {
 }
 
 @media (min-width: 992px) {
-  .navbar-collapse { flex-grow: 0; gap: 24px; }
+  .nav-right { margin-left: auto; }
 }
 
-/* Rango bajo de escritorio: todo el conjunto centrado no cabe con el
-   mismo aire que en pantallas grandes, así que se aprieta un poco. */
+/* Rango bajo de escritorio: los enlaces + CTA no caben con el mismo
+   aire que en pantallas grandes, así que se aprieta un poco. */
 @media (min-width: 992px) and (max-width: 1260px) {
-  .nav-inner { gap: 12px; padding: 0 20px; }
-  .navbar-collapse { gap: 14px; }
+  .nav-inner { padding: 0 20px; }
+  ul.navbar-nav { gap: 0; }
   .nl { padding: 9px 11px; }
 }
 
