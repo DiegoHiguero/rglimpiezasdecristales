@@ -142,7 +142,9 @@ onUnmounted(() => {
   left: 0;
   right: 0;
   z-index: 200;
-  background: linear-gradient(180deg, rgba(17, 25, 44, 0.94) 0%, rgba(13, 19, 34, 0.88) 100%);
+  background:
+    radial-gradient(ellipse 60% 100% at 20% 0%, rgba(96, 165, 250, 0.16) 0%, transparent 65%),
+    linear-gradient(180deg, rgba(17, 25, 44, 0.94) 0%, rgba(13, 19, 34, 0.88) 100%);
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
