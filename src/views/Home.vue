@@ -41,6 +41,9 @@
               @timeupdate="onHeroVideoTimeUpdate"
             ></video>
             <img src="../assets/img/phone-mockup.webp" alt="" class="phone-mockup-frame" />
+            <!-- Precargan ambos clips en segundo plano (nunca se muestran) para
+                 que el cambio de fuente del vídeo visible sea instantáneo -->
+            <video v-for="clip in HERO_CLIPS" :key="clip.src" :src="clip.src" preload="auto" muted playsinline class="phone-mockup-preload"></video>
           </div>
           <div class="hero-phone-info">
             <span class="hero-phone-tag"><font-awesome-icon :icon="['fas', 'circle-play']" class="me-1" />Así trabajamos</span>
@@ -414,6 +417,13 @@ function getCookie(cname: string): string {
   z-index: 2;
   pointer-events: none;
   display: block;
+}
+.phone-mockup-preload {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
 }
 .hero-phone-info {
   display: flex;
