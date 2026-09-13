@@ -32,23 +32,16 @@
 
         <div class="hero-phone-card">
           <div class="phone-mockup phone-mockup--hero">
-            <video
-              class="phone-mockup-video"
-              src="../assets/img/videoplayback.mp4"
-              muted loop playsinline autoplay
-              @loadedmetadata="onHeroVideoLoaded"
-              @timeupdate="onHeroVideoTimeUpdate"
-            ></video>
-            <img src="../assets/img/phone-mockup.webp" alt="" class="phone-mockup-frame" />
-          </div>
-          <div class="phone-mockup phone-mockup--hero">
-            <video
-              class="phone-mockup-video"
-              src="../assets/img/VID-20251022-WA0013.mp4"
-              muted loop playsinline autoplay
-              @loadedmetadata="onHeroVideoLoaded"
-              @timeupdate="onHeroVideoTimeUpdate"
-            ></video>
+            <div class="phone-mockup-screen">
+              <video
+                class="phone-mockup-video"
+                :class="{ 'phone-mockup-video--zoomed': heroVideoIndex === 1 }"
+                :src="heroVideoSrc"
+                muted loop playsinline autoplay
+                @loadedmetadata="onHeroVideoLoaded"
+                @timeupdate="onHeroVideoTimeUpdate"
+              ></video>
+            </div>
             <img src="../assets/img/phone-mockup.webp" alt="" class="phone-mockup-frame" />
           </div>
           <div class="hero-phone-info">
@@ -192,8 +185,10 @@
 
 <script setup lang="ts">
 import { useUserStore } from "../stores/user";
-import { onMounted, onUnmounted, ref } from "vue";
+import { onMounted, onUnmounted, ref, computed } from "vue";
 import { useContactForm } from '../composables/useContactForm';
+import heroVideoA from '../assets/img/videoplayback.mp4';
+import heroVideoB from '../assets/img/VID-20251022-WA0013.mp4';
 import HomeStats      from '../components/home/HomeStats.vue';
 import HomeServicios  from '../components/home/HomeServicios.vue';
 import HomePrecios    from '../components/home/HomePrecios.vue';
@@ -205,14 +200,43 @@ import HomeZonas      from '../components/home/HomeZonas.vue';
 import HomeBlog       from '../components/home/HomeBlog.vue';
 import HomeFaq        from '../components/home/HomeFaq.vue';
 
-// Vídeo del hero: solo enseña un fragmento corto en bucle, no el vídeo entero
-const HERO_CLIP_START = 1.5;
-const HERO_CLIP_END = 7;
-const onHeroVideoLoaded = (e) => { e.target.currentTime = HERO_CLIP_START; e.target.play().catch(() => {}); };
+// Vídeo del hero: cada vídeo real de la galería se repite varias veces en
+// bucle (dentro de su propia ventana de recorte, distinta según su duración
+// real) y luego pasa al otro, indefinidamente.
+const HERO_CLIPS = [
+  { src: heroVideoA, start: 1.5, end: 7, loops: 2 },
+  { src: heroVideoB, start: 0.2, end: 3.4, loops: 3 },
+];
+const HERO_CLIP_FADE = 0.3; // fundido a negro al reiniciar/cambiar, para disimular el salto de imagen
+const heroVideoIndex = ref(0);
+const heroLoopCount = ref(0);
+const heroVideoSrc = computed(() => HERO_CLIPS[heroVideoIndex.value].src);
+const onHeroVideoLoaded = (e) => {
+  e.target.currentTime = HERO_CLIPS[heroVideoIndex.value].start;
+  e.target.play().catch(() => {});
+};
 const onHeroVideoTimeUpdate = (e) => {
-  if (e.target.currentTime >= HERO_CLIP_END || e.target.currentTime < HERO_CLIP_START) {
-    e.target.currentTime = HERO_CLIP_START;
+  const el = e.target;
+  const clip = HERO_CLIPS[heroVideoIndex.value];
+  const t = el.currentTime;
+  if (t >= clip.end) {
+    heroLoopCount.value += 1;
+    if (heroLoopCount.value >= clip.loops) {
+      heroLoopCount.value = 0;
+      heroVideoIndex.value = (heroVideoIndex.value + 1) % HERO_CLIPS.length;
+    } else {
+      el.currentTime = clip.start;
+    }
+    return;
   }
+  if (t < clip.start) {
+    el.currentTime = clip.start;
+    return;
+  }
+  const timeIn = t - clip.start;
+  const timeLeft = clip.end - t;
+  const opacity = Math.min(1, timeIn / HERO_CLIP_FADE, timeLeft / HERO_CLIP_FADE);
+  el.style.opacity = String(Math.max(0, opacity));
 };
 
 const {
@@ -369,7 +393,6 @@ function getCookie(cname: string): string {
 .hero-phone-card {
   display: flex;
   align-items: center;
-  flex-wrap: wrap;
   gap: 16px;
   margin: 8px 0 0 0;
   padding: 14px;
@@ -386,18 +409,25 @@ function getCookie(cname: string): string {
   flex-shrink: 0;
   filter: drop-shadow(0 10px 20px rgba(0,0,0,0.4));
 }
-.phone-mockup-video {
+.phone-mockup-screen {
   position: absolute;
   left: 7.1%;
   top: 3.1%;
   width: 86.3%;
   height: 94%;
-  object-fit: cover;
   border-radius: 10.5% / 5%;
-  display: block;
+  overflow: hidden;
   background: #000;
   z-index: 1;
 }
+.phone-mockup-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: opacity 0.12s linear, transform 0.3s ease;
+}
+.phone-mockup-video--zoomed { transform: scale(1.18); }
 .phone-mockup-frame {
   position: absolute;
   inset: 0;
@@ -666,7 +696,7 @@ function getCookie(cname: string): string {
 @media (max-width: 480px) {
   .ff-row { grid-template-columns: 1fr; }
   .formulario { padding: 22px 16px 16px; }
-  .phone-mockup { width: 120px; }
+  .phone-mockup { width: 160px; }
   .hero-phone-tag { font-size: 0.95rem; }
   .hero-phone-sub { font-size: 0.8rem; }
   /* Mismo margen que ya tenía el formulario, para que el texto y la
