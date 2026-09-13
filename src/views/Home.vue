@@ -41,6 +41,16 @@
             ></video>
             <img src="../assets/img/phone-mockup.webp" alt="" class="phone-mockup-frame" />
           </div>
+          <div class="phone-mockup phone-mockup--hero">
+            <video
+              class="phone-mockup-video"
+              src="../assets/img/VID-20251022-WA0013.mp4"
+              muted loop playsinline autoplay
+              @loadedmetadata="onHeroVideoLoaded"
+              @timeupdate="onHeroVideoTimeUpdate"
+            ></video>
+            <img src="../assets/img/phone-mockup.webp" alt="" class="phone-mockup-frame" />
+          </div>
           <div class="hero-phone-info">
             <span class="hero-phone-tag"><font-awesome-icon :icon="['fas', 'circle-play']" class="me-1" />Así trabajamos</span>
             <span class="hero-phone-sub">Vídeo real, sin edición</span>
@@ -359,6 +369,7 @@ function getCookie(cname: string): string {
 .hero-phone-card {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 16px;
   margin: 8px 0 0 0;
   padding: 14px;
@@ -655,7 +666,7 @@ function getCookie(cname: string): string {
 @media (max-width: 480px) {
   .ff-row { grid-template-columns: 1fr; }
   .formulario { padding: 22px 16px 16px; }
-  .phone-mockup { width: 160px; }
+  .phone-mockup { width: 120px; }
   .hero-phone-tag { font-size: 0.95rem; }
   .hero-phone-sub { font-size: 0.8rem; }
   /* Mismo margen que ya tenía el formulario, para que el texto y la
