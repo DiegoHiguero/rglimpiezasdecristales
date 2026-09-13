@@ -344,6 +344,8 @@ function getCookie(cname: string): string {
   line-height: 1.7;
   margin: 0 0 14px;
   text-shadow: 0 1px 8px rgba(0,0,0,0.6);
+  text-align: justify;
+  text-align-last: left;
 }
 .textAnimation {
   background: linear-gradient(90deg, #60a5fa 0%, #93c5fd 50%, #60a5fa 100%);
