@@ -32,16 +32,14 @@
 
         <div class="hero-phone-card">
           <div class="phone-mockup phone-mockup--hero">
-            <div class="phone-mockup-screen">
-              <video
-                class="phone-mockup-video"
-                :class="{ 'phone-mockup-video--zoomed': heroVideoIndex === 1 }"
-                :src="heroVideoSrc"
-                muted loop playsinline autoplay
-                @loadedmetadata="onHeroVideoLoaded"
-                @timeupdate="onHeroVideoTimeUpdate"
-              ></video>
-            </div>
+            <video
+              class="phone-mockup-video"
+              :class="{ 'phone-mockup-video--fading': heroFading }"
+              :src="heroVideoSrc"
+              muted loop playsinline autoplay
+              @loadedmetadata="onHeroVideoLoaded"
+              @timeupdate="onHeroVideoTimeUpdate"
+            ></video>
             <img src="../assets/img/phone-mockup.webp" alt="" class="phone-mockup-frame" />
           </div>
           <div class="hero-phone-info">
@@ -200,43 +198,28 @@ import HomeZonas      from '../components/home/HomeZonas.vue';
 import HomeBlog       from '../components/home/HomeBlog.vue';
 import HomeFaq        from '../components/home/HomeFaq.vue';
 
-// Vídeo del hero: cada vídeo real de la galería se repite varias veces en
-// bucle (dentro de su propia ventana de recorte, distinta según su duración
-// real) y luego pasa al otro, indefinidamente.
+// Vídeo del hero: los dos vídeos reales de la galería se reproducen uno
+// detrás del otro (cada uno con su propia ventana de recorte, según su
+// duración real), con un único fundido simple al cambiar de uno a otro.
 const HERO_CLIPS = [
-  { src: heroVideoA, start: 1.5, end: 7, loops: 2 },
-  { src: heroVideoB, start: 0.2, end: 3.4, loops: 3 },
+  { src: heroVideoA, start: 1.5, end: 7 },
+  { src: heroVideoB, start: 0.2, end: 3.4 },
 ];
-const HERO_CLIP_FADE = 0.3; // fundido a negro al reiniciar/cambiar, para disimular el salto de imagen
 const heroVideoIndex = ref(0);
-const heroLoopCount = ref(0);
 const heroVideoSrc = computed(() => HERO_CLIPS[heroVideoIndex.value].src);
+const heroFading = ref(false);
+
 const onHeroVideoLoaded = (e) => {
   e.target.currentTime = HERO_CLIPS[heroVideoIndex.value].start;
   e.target.play().catch(() => {});
+  heroFading.value = false;
 };
 const onHeroVideoTimeUpdate = (e) => {
-  const el = e.target;
   const clip = HERO_CLIPS[heroVideoIndex.value];
-  const t = el.currentTime;
-  if (t >= clip.end) {
-    heroLoopCount.value += 1;
-    if (heroLoopCount.value >= clip.loops) {
-      heroLoopCount.value = 0;
-      heroVideoIndex.value = (heroVideoIndex.value + 1) % HERO_CLIPS.length;
-    } else {
-      el.currentTime = clip.start;
-    }
-    return;
+  if (e.target.currentTime >= clip.end) {
+    heroFading.value = true;
+    heroVideoIndex.value = (heroVideoIndex.value + 1) % HERO_CLIPS.length;
   }
-  if (t < clip.start) {
-    el.currentTime = clip.start;
-    return;
-  }
-  const timeIn = t - clip.start;
-  const timeLeft = clip.end - t;
-  const opacity = Math.min(1, timeIn / HERO_CLIP_FADE, timeLeft / HERO_CLIP_FADE);
-  el.style.opacity = String(Math.max(0, opacity));
 };
 
 const {
@@ -409,25 +392,20 @@ function getCookie(cname: string): string {
   flex-shrink: 0;
   filter: drop-shadow(0 10px 20px rgba(0,0,0,0.4));
 }
-.phone-mockup-screen {
+.phone-mockup-video {
   position: absolute;
   left: 7.1%;
   top: 3.1%;
   width: 86.3%;
   height: 94%;
+  object-fit: cover;
   border-radius: 10.5% / 5%;
-  overflow: hidden;
+  display: block;
   background: #000;
+  transition: opacity 0.25s ease;
   z-index: 1;
 }
-.phone-mockup-video {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-  transition: opacity 0.12s linear, transform 0.3s ease;
-}
-.phone-mockup-video--zoomed { transform: scale(1.18); }
+.phone-mockup-video--fading { opacity: 0; }
 .phone-mockup-frame {
   position: absolute;
   inset: 0;
