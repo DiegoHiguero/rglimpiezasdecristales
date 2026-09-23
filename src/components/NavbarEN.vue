@@ -2,13 +2,13 @@
   <nav class="navbar navbar-expand-lg" :class="{ scrolled: isScrolled }" id="scrollspyHeading1">
     <div class="nav-inner">
 
-      <router-link class="navbar-brand" to="/">
+      <router-link class="navbar-brand" to="/en">
         <img class="logo" src="../assets/img/ROYAL_CLEAN_2025_BLANCO.png" alt="Royall Clean logo" />
       </router-link>
 
       <button class="toggler" :class="{ open: menuOpen }" type="button"
         data-bs-toggle="collapse" data-bs-target="#navMenu"
-        aria-controls="navMenu" :aria-expanded="menuOpen" aria-label="Abrir menú"
+        aria-controls="navMenu" :aria-expanded="menuOpen" aria-label="Open menu"
         @click="menuOpen = !menuOpen">
         <span class="bar bar-1"></span>
         <span class="bar bar-2"></span>
@@ -17,16 +17,16 @@
 
       <div class="collapse navbar-collapse" id="navMenu">
         <ul class="navbar-nav mx-auto">
-          <li class="nav-item"><a class="nl" href="#" @click.prevent="scrollToSection('texto-principal')">Nosotros</a></li>
-          <li class="nav-item"><a class="nl" href="#" @click.prevent="scrollToSection('servicios')">Servicios</a></li>
-          <li class="nav-item"><a class="nl" href="#" @click.prevent="scrollToSection('trabajos-realizados')">Trabajos realizados</a></li>
-          <li class="nav-item"><a class="nl" href="#" @click.prevent="scrollToSection('precios')">Precios</a></li>
+          <li class="nav-item"><a class="nl" href="#" @click.prevent="scrollToSection('about')">About</a></li>
+          <li class="nav-item"><a class="nl" href="#" @click.prevent="scrollToSection('services')">Services</a></li>
+          <li class="nav-item"><a class="nl" href="#" @click.prevent="scrollToSection('work')">Our Work</a></li>
+          <li class="nav-item"><a class="nl" href="#" @click.prevent="scrollToSection('pricing')">Pricing</a></li>
           <li class="nav-item"><router-link class="nl" to="/blog" @click="closeNavbar">Blog</router-link></li>
-          <li class="nav-item"><router-link class="nl" to="/contacto" @click="closeNavbar">Contacto</router-link></li>
+          <li class="nav-item"><router-link class="nl" to="/en/contact" @click="closeNavbar">Contact</router-link></li>
         </ul>
 
         <div class="nav-right">
-          <button class="icon-btn theme-toggle" @click="toggleTheme" :title="isDark ? 'Modo claro' : 'Modo oscuro'">
+          <button class="icon-btn theme-toggle" @click="toggleTheme" :title="isDark ? 'Light mode' : 'Dark mode'">
             <font-awesome-icon :icon="['fas', isDark ? 'sun' : 'moon']" />
           </button>
 
@@ -52,12 +52,12 @@
 
           <span class="nav-divider"></span>
 
-          <router-link to="/en" class="icon-btn" title="English" @click="closeNavbar">
-            EN
+          <router-link to="/" class="icon-btn" title="Español" @click="closeNavbar">
+            ES
           </router-link>
 
-          <router-link to="/contacto" class="cta-btn" @click="closeNavbar">
-            Presupuesto gratis
+          <router-link to="/en/contact" class="cta-btn" @click="closeNavbar">
+            Free quote
           </router-link>
         </div>
       </div>
@@ -102,10 +102,10 @@ const closeNavbar = () => {
 
 const scrollToSection = (id) => {
   closeNavbar();
-  if (route.path === '/') {
+  if (route.path === '/en') {
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
   } else {
-    router.push(`/#${id}`);
+    router.push(`/en#${id}`);
   }
 };
 

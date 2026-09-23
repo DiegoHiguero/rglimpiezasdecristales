@@ -3,6 +3,7 @@
 import { createRouter,createWebHistory } from "vue-router";
 
 import Home from "./views/Home.vue";
+import HomeEN from "./views/HomeEN.vue";
 import Blog from "./views/Blog.vue";
 import BlogArticle from "./views/BlogArticle.vue";
 import ServicioDetalle from "./views/ServicioDetalle.vue";
@@ -13,6 +14,7 @@ const Register          = () => import("./views/Register.vue");
 const MisClientes       = () => import("./views/MisClientes.vue");
 const MisFacturas       = () => import("./views/MisFacturas.vue");
 const Contacto          = () => import("./views/Contacto.vue");
+const ContactoEN        = () => import("./views/ContactoEN.vue");
 const Confidentialite   = () => import("./views/Confidentialite.vue");
 const MentionsLegales   = () => import("./views/MentionsLegales.vue");
 const LimpiezasMensuales = () => import("./views/LimpiezasMensuales.vue");
@@ -83,6 +85,9 @@ const redirigeAdminAlPanel = async (to, from, next) => {
 const BASE_TITLE = 'Limpieza de Cristales en Madrid | Royall Clean';
 const BASE_DESC  = 'Limpieza de cristales y ventanas en Madrid para hogares, comunidades y locales. Más de 10 años de experiencia. ¡Presupuesto gratis en 24 h! ☎ 696 169 435';
 
+const EN_TITLE = 'Window & Glass Cleaning in Madrid | Royall Clean';
+const EN_DESC  = 'Window and glass cleaning in Madrid for homes, communities and shops. Over 10 years of experience. Free quote within 24 h! ☎ +34 696 169 435';
+
 const routes = [
     {
         path: '/',
@@ -91,6 +96,23 @@ const routes = [
         meta: {
             title: BASE_TITLE,
             description: BASE_DESC,
+        },
+    },
+    {
+        path: '/en',
+        component: HomeEN,
+        beforeEnter: redirigeAdminAlPanel,
+        meta: {
+            title: EN_TITLE,
+            description: EN_DESC,
+        },
+    },
+    {
+        path: '/en/contact',
+        component: ContactoEN,
+        meta: {
+            title: 'Free Quote for Window Cleaning in Madrid | Royall Clean',
+            description: 'Request your free window cleaning quote in Madrid. No obligation, reply within 24 hours. ☎ +34 696 169 435',
         },
     },
     { path: '/login', component: Login },
@@ -221,6 +243,13 @@ router.afterEach((to) => {
     }
 
     document.title = title;
+
+    // Páginas /en y /en/contact: cambia el idioma del documento y el locale
+    // de Open Graph para que los buscadores y redes sociales lo detecten bien.
+    const isEnglish = to.path === '/en' || to.path.startsWith('/en/');
+    document.documentElement.setAttribute('lang', isEnglish ? 'en' : 'es');
+    const ogLocale = document.querySelector('meta[property="og:locale"]');
+    if (ogLocale) ogLocale.setAttribute('content', isEnglish ? 'en_US' : 'es_ES');
 
     const metaRobots = document.querySelector('meta[name="robots"]');
     if (metaRobots) {

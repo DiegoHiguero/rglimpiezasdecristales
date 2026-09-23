@@ -1,5 +1,6 @@
 <template>
-  <Navbar v-if="!isAdminRoute" />
+  <Navbar v-if="!isAdminRoute && !isEnglishRoute" />
+  <NavbarEN v-if="!isAdminRoute && isEnglishRoute" />
   <AdminSidebar v-if="isAdminRoute" />
   <main v-if="isAdminRoute" class="admin-wrap">
     <router-view v-if="!userStore.loadingSesion"></router-view>
@@ -16,7 +17,8 @@
         </div>
       </div>
     </main>
-    <Footer />
+    <Footer v-if="!isEnglishRoute" />
+    <FooterEN v-else />
   </template>
   <CookieBanner />
 </template>
@@ -25,7 +27,9 @@
 import { computed, watchEffect } from 'vue';
 import { useRoute } from 'vue-router';
 import Navbar from "./components/Navbar.vue";
+import NavbarEN from "./components/NavbarEN.vue";
 import Footer from "./components/Footer.vue";
+import FooterEN from "./components/FooterEN.vue";
 import CookieBanner from "./components/CookieBanner.vue";
 import AdminSidebar from "./components/AdminSidebar.vue";
 import { useUserStore } from "./stores/user";
@@ -37,6 +41,7 @@ const route     = useRoute();
 
 const adminPaths = ['/dashboard', '/Register', '/registro', '/misClientes', '/misFacturas', '/gastos', '/sheet/', '/admin/', '/hoja-de-ruta', '/firmas', '/pagos-pendientes', '/nueva-factura', '/evolucion-ingresos', '/mapa-clientes'];
 const isAdminRoute = computed(() => adminPaths.some(p => route.path === p || route.path.startsWith(p)));
+const isEnglishRoute = computed(() => route.path === '/en' || route.path.startsWith('/en/'));
 
 watchEffect(() => {
   if (isAdminRoute.value) {

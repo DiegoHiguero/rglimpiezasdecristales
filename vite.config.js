@@ -173,6 +173,16 @@ const staticPages = [
     title: 'Aviso Legal | Royall Clean',
     description: 'Aviso legal de Royall Clean. Información sobre el titular del sitio web, condiciones de uso y propiedad intelectual.',
   },
+  {
+    route: 'en',
+    title: 'Window & Glass Cleaning in Madrid | Royall Clean',
+    description: 'Window and glass cleaning in Madrid for homes, communities and shops. Over 10 years of experience. Free quote within 24 h! ☎ +34 696 169 435',
+  },
+  {
+    route: 'en/contact',
+    title: 'Free Quote for Window Cleaning in Madrid | Royall Clean',
+    description: 'Request your free window cleaning quote in Madrid. No obligation, reply within 24 hours. ☎ +34 696 169 435',
+  },
 ]
 
 // El JSON-LD de la home incluye un FAQPage con preguntas específicas de la
@@ -235,7 +245,9 @@ function injectBlogHtmlPlugin() {
           description: page.description,
           url: `${SITE}/${page.route}`,
         })
-        fs.writeFileSync(path.join(distDir, `${page.route}.html`), html)
+        const outPath = path.join(distDir, `${page.route}.html`)
+        fs.mkdirSync(path.dirname(outPath), { recursive: true })
+        fs.writeFileSync(outPath, html)
       }
 
       // Service pages
@@ -361,7 +373,7 @@ function injectBlogHtmlPlugin() {
         fs.writeFileSync(path.join(blogDir, `${article.slug}.html`), html)
       }
 
-      console.log('[inject-blog-html] Generated static HTML for static pages + 8 service pages + blog + 6 articles')
+      console.log(`[inject-blog-html] Generated static HTML for ${staticPages.length} static pages + 8 service pages + blog + 6 articles`)
     },
   }
 }
