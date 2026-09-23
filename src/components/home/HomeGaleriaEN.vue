@@ -210,7 +210,7 @@ const photos = [
   { src: imgPlacasSolares, label: 'Solar panel cleaning' },
   { src: imgPadelNoche,    label: 'Glass-walled padel courts' },
   { src: imgPadelVacio,    label: 'Padel court glass panels' },
-];
+].reverse(); // most recently added photos (at the end of the list) show first
 
 const baPairs = [
   { before: imgBefore1, after: imgAfter1, label: 'Shop window · Jun 2024' },

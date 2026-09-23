@@ -210,7 +210,7 @@ const photos = [
   { src: imgPlacasSolares, label: 'Limpieza de placas solares' },
   { src: imgPadelNoche,    label: 'Pistas de pádel acristaladas' },
   { src: imgPadelVacio,    label: 'Cristales de pista de pádel' },
-];
+].reverse(); // las últimas fotos añadidas (al final de la lista) se ven primero
 
 const baPairs = [
   { before: imgBefore1, after: imgAfter1, label: 'Escaparate comercial · Jun 2024' },
