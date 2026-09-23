@@ -1,22 +1,21 @@
 <template>
   <Teleport to="body">
     <Transition name="cb-slide">
-      <div v-if="visible" class="cb-wrap" role="dialog" aria-label="Aviso de cookies">
+      <div v-if="visible" class="cb-wrap" role="dialog" :aria-label="t.aria">
         <div class="cb-inner">
           <img src="../assets/img/cookies.webp" alt="Cookie" class="cb-cookie-img" />
           <div class="cb-text">
             <div class="cb-title">
-              Usamos cookies
+              {{ t.title }}
             </div>
             <p class="cb-desc">
-              Utilizamos cookies propias y de terceros para mejorar tu experiencia y analizar el tráfico.
-              Puedes aceptarlas todas o quedarte solo con las imprescindibles.
-              <router-link to="/politica-privacidad" class="cb-link" @click="dismiss">Política de privacidad</router-link>
+              {{ t.desc }}
+              <router-link to="/politica-privacidad" class="cb-link" @click="dismiss">{{ t.link }}</router-link>
             </p>
           </div>
           <div class="cb-actions">
-            <button class="cb-btn cb-btn--ghost" @click="accept('necessary')">Solo necesarias</button>
-            <button class="cb-btn cb-btn--primary" @click="accept('all')">Aceptar todo</button>
+            <button class="cb-btn cb-btn--ghost" @click="accept('necessary')">{{ t.necessary }}</button>
+            <button class="cb-btn cb-btn--primary" @click="accept('all')">{{ t.all }}</button>
           </div>
         </div>
       </div>
@@ -25,10 +24,34 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
+import { useRoute } from 'vue-router'
 
 const STORAGE_KEY = 'rc_cookie_consent'
 const visible = ref(false)
+
+const route = useRoute()
+const isEnglish = computed(() => route.path === '/en' || route.path.startsWith('/en/'))
+
+const TEXT = {
+  es: {
+    aria: 'Aviso de cookies',
+    title: 'Usamos cookies',
+    desc: 'Utilizamos cookies propias y de terceros para mejorar tu experiencia y analizar el tráfico. Puedes aceptarlas todas o quedarte solo con las imprescindibles.',
+    link: 'Política de privacidad',
+    necessary: 'Solo necesarias',
+    all: 'Aceptar todo',
+  },
+  en: {
+    aria: 'Cookie notice',
+    title: 'We use cookies',
+    desc: 'We use our own and third-party cookies to improve your experience and analyse traffic. You can accept all of them or keep only the essential ones.',
+    link: 'Privacy policy',
+    necessary: 'Necessary only',
+    all: 'Accept all',
+  },
+}
+const t = computed(() => (isEnglish.value ? TEXT.en : TEXT.es))
 
 onMounted(() => {
   if (!localStorage.getItem(STORAGE_KEY)) {

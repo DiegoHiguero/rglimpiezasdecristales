@@ -251,6 +251,30 @@ router.afterEach((to) => {
     const ogLocale = document.querySelector('meta[property="og:locale"]');
     if (ogLocale) ogLocale.setAttribute('content', isEnglish ? 'en_US' : 'es_ES');
 
+    // hreflang: solo entre las páginas que tienen versión en los dos idiomas
+    // (home y contacto), para que los buscadores muestren la versión correcta
+    // según el idioma de quien busca.
+    document.querySelectorAll('link[data-dynamic-hreflang]').forEach((el) => el.remove());
+    const LOCALE_ALTERNATES = {
+        '/': '/en',
+        '/en': '/',
+        '/contacto': '/en/contact',
+        '/en/contact': '/contacto',
+    };
+    const altPath = LOCALE_ALTERNATES[to.path];
+    if (altPath) {
+        const esPath = isEnglish ? altPath : to.path;
+        const enPath = isEnglish ? to.path : altPath;
+        [['es', esPath], ['en', enPath], ['x-default', esPath]].forEach(([hreflang, p]) => {
+            const link = document.createElement('link');
+            link.setAttribute('rel', 'alternate');
+            link.setAttribute('hreflang', hreflang);
+            link.setAttribute('href', 'https://royallclean.es' + p);
+            link.setAttribute('data-dynamic-hreflang', 'true');
+            document.head.appendChild(link);
+        });
+    }
+
     const metaRobots = document.querySelector('meta[name="robots"]');
     if (metaRobots) {
         metaRobots.setAttribute('content', isNotFound

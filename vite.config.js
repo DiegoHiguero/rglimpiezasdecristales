@@ -162,6 +162,7 @@ const staticPages = [
     route: 'contacto',
     title: 'Presupuesto Limpieza de Cristales en Madrid | Royall Clean',
     description: 'Pide tu presupuesto gratuito de limpieza de cristales y ventanas en Madrid. Sin compromiso, respuesta en menos de 24 horas. ☎ 696 169 435',
+    hreflang: { es: 'contacto', en: 'en/contact' },
   },
   {
     route: 'politica-privacidad',
@@ -177,11 +178,13 @@ const staticPages = [
     route: 'en',
     title: 'Window & Glass Cleaning in Madrid | Royall Clean',
     description: 'Window and glass cleaning in Madrid for homes, communities and shops. Over 10 years of experience. Free quote within 24 h! ☎ +34 696 169 435',
+    hreflang: { es: '', en: 'en' },
   },
   {
     route: 'en/contact',
     title: 'Free Quote for Window Cleaning in Madrid | Royall Clean',
     description: 'Request your free window cleaning quote in Madrid. No obligation, reply within 24 hours. ☎ +34 696 169 435',
+    hreflang: { es: 'contacto', en: 'en/contact' },
   },
 ]
 
@@ -233,6 +236,22 @@ function injectBlogHtmlPlugin() {
         return patched
       }
 
+      // hreflang: le dice a los buscadores qué versión de idioma de una misma
+      // página mostrar según el idioma de quien busca. Solo aplica a las
+      // páginas que existen en los dos idiomas (home y contacto).
+      const localeUrl = (route) => (route ? `${SITE}/${route}` : `${SITE}/`)
+      const injectHreflang = (html, hreflang) => {
+        if (!hreflang) return html
+        const esUrl = localeUrl(hreflang.es)
+        const enUrl = localeUrl(hreflang.en)
+        const tags = [
+          `<link rel="alternate" hreflang="es" href="${esUrl}">`,
+          `<link rel="alternate" hreflang="en" href="${enUrl}">`,
+          `<link rel="alternate" hreflang="x-default" href="${esUrl}">`,
+        ].join('\n')
+        return html.replace('</head>', `${tags}\n</head>`)
+      }
+
       // Static pages (contacto, política de privacidad, aviso legal)
       // Se escriben como archivos planos (contacto.html), NO como contacto/index.html:
       // Firebase Hosting trata cualquier carpeta con index.html como un directorio y
@@ -240,15 +259,25 @@ function injectBlogHtmlPlugin() {
       // sitemap/canonical (que usan la URL sin barra) y hace que Google nunca llegue
       // al contenido real — exactamente el aviso "Página con redirección".
       for (const page of staticPages) {
-        const html = patchHtml(baseHtmlNoFaq, {
+        let html = patchHtml(baseHtmlNoFaq, {
           fullTitle: page.title,
           description: page.description,
           url: `${SITE}/${page.route}`,
         })
+        html = injectHreflang(html, page.hreflang)
         const outPath = path.join(distDir, `${page.route}.html`)
         fs.mkdirSync(path.dirname(outPath), { recursive: true })
         fs.writeFileSync(outPath, html)
       }
+
+      // Home (index.html) también tiene versión en inglés (/en): se escribe
+      // aparte porque index.html es el propio template base, no una entrada
+      // de staticPages. Se hace al final para no afectar al resto de páginas,
+      // que ya capturaron baseHtml/baseHtmlNoFaq como strings independientes.
+      fs.writeFileSync(
+        path.join(distDir, 'index.html'),
+        injectHreflang(baseHtml, { es: '', en: 'en' })
+      )
 
       // Service pages
       for (const service of serviceRoutes) {
