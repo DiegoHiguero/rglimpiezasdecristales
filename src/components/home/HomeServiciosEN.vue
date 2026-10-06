@@ -10,25 +10,28 @@
     <div class="svc-grid-wrap">
     <div class="svc-grid">
 
-      <div class="svc-card animate-on-scroll">
+      <div class="svc-card svc-card--featured animate-on-scroll">
+        <div class="svc-featured-badge">
+          <font-awesome-icon :icon="['fas', 'trophy']" class="me-1" />Exclusive service
+        </div>
         <div class="svc-img-wrap">
-          <img src="../../assets/img/restaurant.webp" class="svc-img" alt="Window cleaning for businesses" />
+          <img src="../../assets/img/20261006-pertiga-fachada.webp" class="svc-img" alt="Pure water cleaning at height with Unger HydroPower" />
           <div class="svc-overlay"></div>
-          <span class="svc-tag svc-tag--blue">Businesses</span>
+          <span class="svc-tag svc-tag--teal">Pure water</span>
         </div>
         <div class="svc-body">
           <div class="svc-body-head">
-            <span class="svc-icon svc-icon--blue"><font-awesome-icon :icon="['fas', 'store']" /></span>
-            <h3 class="svc-name">Shops and commercial premises</h3>
+            <span class="svc-icon svc-icon--teal"><font-awesome-icon :icon="['fas', 'droplet']" /></span>
+            <h3 class="svc-name">Pure water at height (Unger HydroPower)</h3>
           </div>
-          <p class="svc-desc">Shops, cafés and stores always spotless, without disrupting your daily activity.</p>
+          <p class="svc-desc">Exclusive professional equipment: pure-water cleaning up to 10 metres high, no scaffolding, no streaks.</p>
           <ul class="svc-list">
-            <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Cleaning without closing your business</li>
-            <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Fortnightly or monthly frequency</li>
-            <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Free custom quote</li>
+            <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Up to 10 metres of reach</li>
+            <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Exclusive Unger HydroPower system</li>
+            <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Streak-free finish, no manual wiping</li>
           </ul>
-          <router-link to="/limpieza-cristales-locales-comerciales" class="svc-btn-secondary">Learn more</router-link>
-          <router-link to="/en/contact" class="svc-btn svc-btn--blue">Get a quote</router-link>
+          <router-link to="/agua-pura-altura" class="svc-btn-secondary">Learn more</router-link>
+          <router-link to="/en/contact" class="svc-btn svc-btn--teal">Get a quote</router-link>
         </div>
       </div>
 
@@ -56,75 +59,94 @@
 
       <div class="svc-card animate-on-scroll">
         <div class="svc-img-wrap">
-          <img src="../../assets/img/locales.webp" class="svc-img" alt="Window cleaning for companies" />
+          <img src="../../assets/img/restaurant.webp" class="svc-img" alt="Window cleaning for businesses" />
           <div class="svc-overlay"></div>
-          <span class="svc-tag svc-tag--purple">Companies</span>
+          <span class="svc-tag svc-tag--blue">Businesses</span>
         </div>
         <div class="svc-body">
           <div class="svc-body-head">
-            <span class="svc-icon svc-icon--purple"><font-awesome-icon :icon="['fas', 'building']" /></span>
-            <h3 class="svc-name">Offices and buildings</h3>
+            <span class="svc-icon svc-icon--blue"><font-awesome-icon :icon="['fas', 'store']" /></span>
+            <h3 class="svc-name">Shops and commercial premises</h3>
           </div>
-          <p class="svc-desc">Offices, buildings and industrial units. Tailored plans with flexible schedules.</p>
+          <p class="svc-desc">Shops, cafés and stores always spotless, without disrupting your daily activity.</p>
           <ul class="svc-list">
-            <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Maintenance contracts</li>
-            <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Schedules adapted to your business</li>
-            <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Business invoicing</li>
+            <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Cleaning without closing your business</li>
+            <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Fortnightly or monthly frequency</li>
+            <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Free custom quote</li>
           </ul>
-          <router-link to="/en/contact" class="svc-btn svc-btn--purple">Get a quote</router-link>
+          <router-link to="/limpieza-cristales-locales-comerciales" class="svc-btn-secondary">Learn more</router-link>
+          <router-link to="/en/contact" class="svc-btn svc-btn--blue">Get a quote</router-link>
         </div>
       </div>
 
-      <div class="svc-card svc-card--featured animate-on-scroll">
-        <div class="svc-featured-badge">
-          <font-awesome-icon :icon="['fas', 'bolt']" class="me-1" />Specialised service
-        </div>
+      <div class="svc-card animate-on-scroll">
         <div class="svc-img-wrap">
-          <img src="../../assets/img/presion.webp" class="svc-img" alt="Pressure washing" />
+          <img src="../../assets/img/office-buildings.webp" class="svc-img" alt="Window cleaning for residential communities" />
           <div class="svc-overlay"></div>
-          <span class="svc-tag svc-tag--orange">Pressure washing</span>
+          <span class="svc-tag svc-tag--indigo">Communities</span>
         </div>
         <div class="svc-body">
           <div class="svc-body-head">
-            <span class="svc-icon svc-icon--orange"><font-awesome-icon :icon="['fas', 'droplet']" /></span>
-            <h3 class="svc-name">Façades and outdoor areas</h3>
+            <span class="svc-icon svc-icon--indigo"><font-awesome-icon :icon="['fas', 'building-columns']" /></span>
+            <h3 class="svc-name">Residential communities</h3>
           </div>
-          <p class="svc-desc">Façades, patios and garages free of stubborn dirt. Fast results with professional equipment.</p>
+          <p class="svc-desc">Entrances, stairwells and common-area glass with regular maintenance for the whole community.</p>
           <ul class="svc-list">
-            <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Up to 350 bar of pressure</li>
-            <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Façades, floors and patios</li>
-            <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Immediate, visible results</li>
+            <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Invoice for the community</li>
+            <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Maintenance contract</li>
+            <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Quotes for property managers</li>
           </ul>
-          <router-link to="/limpieza-cristales-altura" class="svc-btn-secondary">Learn more</router-link>
-          <router-link to="/en/contact" class="svc-btn svc-btn--orange">Get a quote</router-link>
+          <router-link to="/limpieza-cristales-comunidades" class="svc-btn-secondary">Learn more</router-link>
+          <router-link to="/en/contact" class="svc-btn svc-btn--indigo">Get a quote</router-link>
         </div>
       </div>
 
       <TransitionGroup name="svc-reveal">
 
-          <div class="svc-card svc-card--extra" data-stagger="1" v-if="showAll" key="comunidades">
+          <div class="svc-card svc-card--extra" data-stagger="1" v-if="showAll" key="oficinas">
             <div class="svc-img-wrap">
-              <img src="../../assets/img/office-buildings.webp" class="svc-img" alt="Window cleaning for residential communities" />
+              <img src="../../assets/img/locales.webp" class="svc-img" alt="Window cleaning for companies" />
               <div class="svc-overlay"></div>
-              <span class="svc-tag svc-tag--purple">Communities</span>
+              <span class="svc-tag svc-tag--purple">Companies</span>
             </div>
             <div class="svc-body">
               <div class="svc-body-head">
-                <span class="svc-icon svc-icon--purple"><font-awesome-icon :icon="['fas', 'building-columns']" /></span>
-                <h3 class="svc-name">Residential communities</h3>
+                <span class="svc-icon svc-icon--purple"><font-awesome-icon :icon="['fas', 'building']" /></span>
+                <h3 class="svc-name">Offices and buildings</h3>
               </div>
-              <p class="svc-desc">Entrances, stairwells and common-area glass with regular maintenance for the whole community.</p>
+              <p class="svc-desc">Offices, buildings and industrial units. Tailored plans with flexible schedules.</p>
               <ul class="svc-list">
-                <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Invoice for the community</li>
-                <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Maintenance contract</li>
-                <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Quotes for property managers</li>
+                <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Maintenance contracts</li>
+                <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Schedules adapted to your business</li>
+                <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Business invoicing</li>
               </ul>
-              <router-link to="/limpieza-cristales-comunidades" class="svc-btn-secondary">Learn more</router-link>
               <router-link to="/en/contact" class="svc-btn svc-btn--purple">Get a quote</router-link>
             </div>
           </div>
 
-          <div class="svc-card svc-card--extra" data-stagger="2" v-if="showAll" key="placas">
+          <div class="svc-card svc-card--extra" data-stagger="2" v-if="showAll" key="altura">
+            <div class="svc-img-wrap">
+              <img src="../../assets/img/Header_Fensterreiniger_Glas_ANW_Toplock_000313.webp" class="svc-img" alt="Window cleaning at height with a telescopic pole" />
+              <div class="svc-overlay"></div>
+              <span class="svc-tag svc-tag--orange">Height</span>
+            </div>
+            <div class="svc-body">
+              <div class="svc-body-head">
+                <span class="svc-icon svc-icon--orange"><font-awesome-icon :icon="['fas', 'arrow-up-from-water-pump']" /></span>
+                <h3 class="svc-name">Height cleaning (telescopic pole)</h3>
+              </div>
+              <p class="svc-desc">Façades and windows at height with a standard telescopic pole, up to 5 storeys, no scaffolding.</p>
+              <ul class="svc-list">
+                <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Up to 5 storeys, no scaffolding</li>
+                <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Deionised water, streak-free</li>
+                <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />No council permits needed</li>
+              </ul>
+              <router-link to="/limpieza-cristales-altura" class="svc-btn-secondary">Learn more</router-link>
+              <router-link to="/en/contact" class="svc-btn svc-btn--orange">Get a quote</router-link>
+            </div>
+          </div>
+
+          <div class="svc-card svc-card--extra" data-stagger="3" v-if="showAll" key="placas">
             <div class="svc-img-wrap">
               <img src="../../assets/img/limpieza-panel-thumb.webp" class="svc-img" alt="Solar panel cleaning" />
               <div class="svc-overlay"></div>
@@ -146,7 +168,7 @@
             </div>
           </div>
 
-          <div class="svc-card svc-card--extra" data-stagger="3" v-if="showAll" key="obras">
+          <div class="svc-card svc-card--extra" data-stagger="4" v-if="showAll" key="obras">
             <div class="svc-img-wrap">
               <img src="../../assets/img/20260323_184851.webp" class="svc-img" alt="Post-construction cleaning" />
               <div class="svc-overlay"></div>
@@ -168,7 +190,7 @@
             </div>
           </div>
 
-          <div class="svc-card svc-card--extra" data-stagger="4" v-if="showAll" key="grafitis">
+          <div class="svc-card svc-card--extra" data-stagger="5" v-if="showAll" key="grafitis">
             <div class="svc-img-wrap">
               <img src="../../assets/img/grafitis.webp" class="svc-img" alt="Graffiti removal" />
               <div class="svc-overlay"></div>
@@ -190,7 +212,7 @@
             </div>
           </div>
 
-          <div class="svc-card svc-card--extra" data-stagger="5" v-if="showAll" key="vinilos">
+          <div class="svc-card svc-card--extra" data-stagger="6" v-if="showAll" key="vinilos">
             <div class="svc-img-wrap">
               <img src="../../assets/img/vinilo.webp" class="svc-img" alt="Vinyl removal from shop windows" />
               <div class="svc-overlay"></div>
@@ -222,7 +244,7 @@
       <div class="svc-footer-icon">
         <font-awesome-icon :icon="['fas', 'arrow-up-from-water-pump']" />
       </div>
-      <p class="svc-footer-text">Got a special case? We also work at height with telescopic poles up to 5 storeys, no scaffolding needed.</p>
+      <p class="svc-footer-text">Need to reach higher? Our exclusive Unger HydroPower pure-water system reaches up to 10 metres, no scaffolding.</p>
       <button type="button" class="svc-toggle-btn" :class="{ 'svc-toggle-btn--open': showAll }" @click="showAll = !showAll">
         <span class="svc-toggle-text">{{ showAll ? 'Show less' : 'See more services' }}</span>
         <span class="svc-toggle-badge" v-if="!showAll">+{{ extraCount }}</span>
@@ -236,7 +258,7 @@
 <script setup>
 import { ref } from 'vue';
 const showAll = ref(false);
-const extraCount = 5;
+const extraCount = 6;
 </script>
 
 <style scoped>
@@ -358,6 +380,8 @@ const extraCount = 5;
 .svc-tag--cyan    { color: #22d3ee; }
 .svc-tag--rose    { color: #fb7185; }
 .svc-tag--fuchsia { color: #e879f9; }
+.svc-tag--teal    { color: #2dd4bf; }
+.svc-tag--indigo  { color: #818cf8; }
 
 /* ── Body ── */
 .svc-body {
@@ -388,6 +412,8 @@ const extraCount = 5;
 .svc-icon--cyan    { background: rgba(34,211,238,0.15);  color: #22d3ee; }
 .svc-icon--rose    { background: rgba(251,113,133,0.15); color: #fb7185; }
 .svc-icon--fuchsia { background: rgba(232,121,249,0.15); color: #e879f9; }
+.svc-icon--teal    { background: rgba(45,212,191,0.15);  color: #2dd4bf; }
+.svc-icon--indigo  { background: rgba(129,140,248,0.15); color: #818cf8; }
 
 .svc-name {
   font-family: 'Raleway', sans-serif;
@@ -455,6 +481,8 @@ const extraCount = 5;
 .svc-btn--cyan    { color: #22d3ee; border-color: rgba(34,211,238,0.4);  background: rgba(34,211,238,0.07); }
 .svc-btn--rose    { color: #fb7185; border-color: rgba(251,113,133,0.4); background: rgba(251,113,133,0.07); }
 .svc-btn--fuchsia { color: #e879f9; border-color: rgba(232,121,249,0.4); background: rgba(232,121,249,0.07); }
+.svc-btn--teal    { color: #2dd4bf; border-color: rgba(45,212,191,0.4);  background: rgba(45,212,191,0.07); }
+.svc-btn--indigo  { color: #818cf8; border-color: rgba(129,140,248,0.4); background: rgba(129,140,248,0.07); }
 
 .svc-btn--blue:hover    { background: #60a5fa; color: #fff; }
 .svc-btn--green:hover   { background: #34d399; color: #fff; }
@@ -464,6 +492,8 @@ const extraCount = 5;
 .svc-btn--cyan:hover    { background: #22d3ee; color: #1e293b; }
 .svc-btn--rose:hover    { background: #fb7185; color: #fff; }
 .svc-btn--fuchsia:hover { background: #e879f9; color: #1e293b; }
+.svc-btn--teal:hover    { background: #2dd4bf; color: #1e293b; }
+.svc-btn--indigo:hover  { background: #818cf8; color: #fff; }
 .svc-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(0,0,0,0.25); }
 
 .svc-btn-secondary {
@@ -564,6 +594,7 @@ const extraCount = 5;
 .svc-card--extra[data-stagger="3"].svc-reveal-enter-active { transition-delay: 120ms; }
 .svc-card--extra[data-stagger="4"].svc-reveal-enter-active { transition-delay: 180ms; }
 .svc-card--extra[data-stagger="5"].svc-reveal-enter-active { transition-delay: 240ms; }
+.svc-card--extra[data-stagger="6"].svc-reveal-enter-active { transition-delay: 300ms; }
 
 /* ── Responsive ── */
 @media (max-width: 768px) {

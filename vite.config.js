@@ -52,6 +52,19 @@ const blogRoutes = [
 
 const serviceRoutes = [
   {
+    slug: 'agua-pura-altura',
+    name: 'Limpieza de cristales con sistema de agua pura en altura en Madrid',
+    title: 'Limpieza con Agua Pura en Altura (Unger HydroPower) en Madrid',
+    description: 'Servicio exclusivo de limpieza de cristales con sistema de agua pura Unger HydroPower. Alcance de hasta 10 metros sin andamios. Presupuesto gratis en 24 h.',
+    keywords: 'limpieza cristales agua pura madrid, sistema unger hydropower, limpieza en altura 10 metros, limpiacristales agua desionizada madrid, water fed pole madrid',
+    breadcrumbLabel: 'Agua pura en altura',
+    faqs: [
+      { q: '¿Qué significa "agua pura" y por qué no deja marcas en el cristal?', a: 'El sistema Unger HydroPower purifica el agua mediante resinas desionizadoras, eliminando los minerales que forman la cal. Al secarse de forma natural al aire, el cristal queda completamente transparente, sin necesidad de repasar con gamuza ni producto.' },
+      { q: '¿A cuántas plantas equivalen los 10 metros de alcance?', a: 'Dependiendo de la altura de cada planta, 10 metros suelen cubrir entre 3 y 4 alturas sin necesidad de andamio, grúa ni trabajos verticales.' },
+      { q: '¿Por qué decís que es un servicio exclusivo?', a: 'Porque disponemos del sistema profesional Unger HydroPower, un equipo de alta gama que no todas las empresas de limpieza de la zona tienen, y que permite un acabado y un alcance superiores a la pértiga convencional.' },
+    ],
+  },
+  {
     slug: 'limpieza-cristales-hogares',
     name: 'Limpieza de cristales para hogares en Madrid',
     title: 'Limpieza de Cristales para Hogares en Madrid',
@@ -402,7 +415,7 @@ function injectBlogHtmlPlugin() {
         fs.writeFileSync(path.join(blogDir, `${article.slug}.html`), html)
       }
 
-      console.log(`[inject-blog-html] Generated static HTML for ${staticPages.length} static pages + 8 service pages + blog + 6 articles`)
+      console.log(`[inject-blog-html] Generated static HTML for ${staticPages.length} static pages + ${serviceRoutes.length} service pages + blog + ${blogRoutes.length} articles`)
     },
   }
 }

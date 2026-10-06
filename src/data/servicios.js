@@ -2,12 +2,77 @@ import imgHogares  from '../assets/img/casamadera.webp';
 import imgComunidades from '../assets/img/office-buildings.webp';
 import imgLocales  from '../assets/img/restaurant.webp';
 import imgAltura   from '../assets/img/Header_Fensterreiniger_Glas_ANW_Toplock_000313.webp';
+import imgAguaPura from '../assets/img/20261006-pertiga-fachada.webp';
 import imgPlacas   from '../assets/img/limpieza-panel-thumb.webp';
 import imgObras    from '../assets/img/20260323_184851.webp';
 import imgGrafitis from '../assets/img/grafitis.webp';
 import imgVinilos  from '../assets/img/vinilo.webp';
 
 export const servicios = [
+  {
+    slug: 'agua-pura-altura',
+    breadcrumbLabel: 'Agua pura en altura',
+    title: 'Limpieza con sistema de agua pura en altura (Unger HydroPower)',
+    excerpt: 'Servicio exclusivo con equipo profesional Unger HydroPower: limpieza de cristales en altura con agua pura hasta 10 metros, sin andamios.',
+    metaTitle: 'Limpieza con Agua Pura en Altura (Unger HydroPower) en Madrid',
+    metaDescription: 'Servicio exclusivo de limpieza de cristales con sistema de agua pura Unger HydroPower. Alcance de hasta 10 metros sin andamios. Presupuesto gratis en 24 h.',
+    keywords: 'limpieza cristales agua pura madrid, sistema unger hydropower, limpieza en altura 10 metros, limpiacristales agua desionizada madrid, water fed pole madrid',
+    icon: ['fas', 'droplet'],
+    image: imgAguaPura,
+    color: '#0d9488',
+    colorPale: '#f0fdfa',
+    tag: 'Exclusivo',
+    content: `
+      <h2>Un servicio exclusivo: sistema de agua pura Unger HydroPower</h2>
+      <p>En <strong>Royall Clean</strong> incorporamos el sistema profesional <strong>Unger HydroPower</strong>, un equipo de agua pura de alta gama que no todas las empresas de limpieza de cristales de Madrid tienen. Esta inversión nos permite ofrecer un servicio de limpieza en altura con un alcance y un acabado superiores a los de una pértiga convencional.</p>
+
+      <h2>¿Qué es el agua pura y por qué marca la diferencia?</h2>
+      <p>El sistema purifica el agua del grifo mediante resinas desionizadoras, eliminando los minerales que forman la cal. El resultado es un agua completamente desmineralizada que, al entrar en contacto con el cristal, arrastra la suciedad sin dejar ningún residuo al secarse. No hace falta repasar con gamuza, mopa ni producto: el cristal se seca solo al aire y queda perfectamente transparente, sin marcas ni halos de cal.</p>
+
+      <h2>Hasta 10 metros de alcance, sin andamios</h2>
+      <p>La pértiga telescópica del sistema Unger HydroPower alcanza <strong>hasta 10 metros de altura</strong> (aproximadamente entre 3 y 4 plantas, según la altura de cada edificio), operada siempre desde el suelo. Esto elimina la necesidad de andamios, grúas o trabajos verticales con cuerdas, reduciendo tanto el coste como el tiempo de la intervención.</p>
+
+      <h2>Qué incluye el servicio</h2>
+      <ul>
+        <li><strong>Fachadas acristaladas y ventanales en altura</strong> de viviendas, comunidades, oficinas y locales.</li>
+        <li><strong>Agua pura desionizada en origen</strong>, filtrada sobre el terreno con el propio equipo Unger HydroPower.</li>
+        <li><strong>Acabado sin marcas ni repaso manual</strong>, gracias al secado natural del agua pura.</li>
+        <li><strong>Trabajo desde el suelo</strong>, sin necesidad de permisos de ocupación de vía pública ni instalación de andamios.</li>
+      </ul>
+
+      <h2>Agua pura Unger HydroPower frente a la pértiga convencional</h2>
+      <p>Ya ofrecíamos limpieza en altura con pértiga telescópica convencional hasta 5 plantas. El sistema Unger HydroPower amplía esa capacidad:</p>
+      <ul>
+        <li><strong>Mayor alcance:</strong> hasta 10 metros, frente a los 5 plantas habituales de una pértiga estándar.</li>
+        <li><strong>Filtrado de agua más fino</strong>, pensado para fachadas y cristaleras de gran formato.</li>
+        <li><strong>Equipo exclusivo</strong> que pocas empresas de la zona tienen disponible.</li>
+      </ul>
+
+      <h2>¿Para quién es este servicio?</h2>
+      <ul>
+        <li>Comunidades de vecinos con fachadas acristaladas en plantas altas.</li>
+        <li>Oficinas y edificios comerciales con grandes superficies de cristal.</li>
+        <li>Chalets y viviendas con ventanales de difícil acceso.</li>
+        <li>Naves industriales con cerramientos acristalados en altura.</li>
+      </ul>
+
+      <h2>Zonas que cubrimos</h2>
+      <p>Ofrecemos este servicio en Madrid capital y en Getafe, Leganés, Alcorcón, Fuenlabrada, Móstoles, Alcobendas, Pozuelo de Alarcón, Las Rozas, Majadahonda, Boadilla del Monte, Torrejón de Ardoz y el resto de la Comunidad de Madrid.</p>
+
+      <h2>Preguntas frecuentes sobre el sistema de agua pura en altura</h2>
+      <h3>¿Qué significa "agua pura" y por qué no deja marcas en el cristal?</h3>
+      <p>El sistema Unger HydroPower purifica el agua mediante resinas desionizadoras, eliminando los minerales que forman la cal. Al secarse de forma natural al aire, el cristal queda completamente transparente, sin necesidad de repasar con gamuza ni producto.</p>
+      <h3>¿A cuántas plantas equivalen los 10 metros de alcance?</h3>
+      <p>Dependiendo de la altura de cada planta, 10 metros suelen cubrir entre 3 y 4 alturas sin necesidad de andamio, grúa ni trabajos verticales.</p>
+      <h3>¿Por qué decís que es un servicio exclusivo?</h3>
+      <p>Porque disponemos del sistema profesional Unger HydroPower, un equipo de alta gama que no todas las empresas de limpieza de la zona tienen, y que permite un acabado y un alcance superiores a la pértiga convencional.</p>
+    `,
+    faqs: [
+      { q: '¿Qué significa "agua pura" y por qué no deja marcas en el cristal?', a: 'El sistema Unger HydroPower purifica el agua mediante resinas desionizadoras, eliminando los minerales que forman la cal. Al secarse de forma natural al aire, el cristal queda completamente transparente, sin necesidad de repasar con gamuza ni producto.' },
+      { q: '¿A cuántas plantas equivalen los 10 metros de alcance?', a: 'Dependiendo de la altura de cada planta, 10 metros suelen cubrir entre 3 y 4 alturas sin necesidad de andamio, grúa ni trabajos verticales.' },
+      { q: '¿Por qué decís que es un servicio exclusivo?', a: 'Porque disponemos del sistema profesional Unger HydroPower, un equipo de alta gama que no todas las empresas de limpieza de la zona tienen, y que permite un acabado y un alcance superiores a la pértiga convencional.' },
+    ],
+  },
   {
     slug: 'limpieza-cristales-hogares',
     breadcrumbLabel: 'Hogares',

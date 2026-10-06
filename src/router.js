@@ -129,6 +129,7 @@ const routes = [
         },
     },
     { path: '/servicios', redirect: '/' },
+    { path: '/agua-pura-altura', component: ServicioDetalle, meta: { servicio: 'agua-pura-altura' } },
     { path: '/limpieza-cristales-hogares', component: ServicioDetalle, meta: { servicio: 'limpieza-cristales-hogares' } },
     { path: '/limpieza-cristales-comunidades', component: ServicioDetalle, meta: { servicio: 'limpieza-cristales-comunidades' } },
     { path: '/limpieza-cristales-locales-comerciales', component: ServicioDetalle, meta: { servicio: 'limpieza-cristales-locales-comerciales' } },
