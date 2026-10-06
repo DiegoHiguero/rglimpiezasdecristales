@@ -162,6 +162,8 @@ import imgPadelVacio   from '../../assets/img/padel-cristales-vacio.webp';
 import imgPadelNoche   from '../../assets/img/padel-cristales-noche.webp';
 import imgPlacasSolares from '../../assets/img/placas-solares-collage.webp';
 import imgCristalera   from '../../assets/img/cristalera-terraza.webp';
+import imgPertiga2026  from '../../assets/img/20261006-pertiga-fachada.webp';
+import imgFachada2026  from '../../assets/img/20261006-fachada-acristalada.webp';
 
 const tab = ref('fotos');
 const PHOTOS_PREVIEW_COUNT = 9;
@@ -210,6 +212,8 @@ const photos = [
   { src: imgPlacasSolares, label: 'Limpieza de placas solares' },
   { src: imgPadelNoche,    label: 'Pistas de pádel acristaladas' },
   { src: imgPadelVacio,    label: 'Cristales de pista de pádel' },
+  { src: imgPertiga2026,   label: 'Limpieza con pértiga telescópica · Oct 2026' },
+  { src: imgFachada2026,   label: 'Fachada acristalada impecable · Oct 2026' },
 ].reverse(); // las últimas fotos añadidas (al final de la lista) se ven primero
 
 const baPairs = [

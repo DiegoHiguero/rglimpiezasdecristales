@@ -162,6 +162,8 @@ import imgPadelVacio   from '../../assets/img/padel-cristales-vacio.webp';
 import imgPadelNoche   from '../../assets/img/padel-cristales-noche.webp';
 import imgPlacasSolares from '../../assets/img/placas-solares-collage.webp';
 import imgCristalera   from '../../assets/img/cristalera-terraza.webp';
+import imgPertiga2026  from '../../assets/img/20261006-pertiga-fachada.webp';
+import imgFachada2026  from '../../assets/img/20261006-fachada-acristalada.webp';
 
 const tab = ref('fotos');
 const PHOTOS_PREVIEW_COUNT = 9;
@@ -210,6 +212,8 @@ const photos = [
   { src: imgPlacasSolares, label: 'Solar panel cleaning' },
   { src: imgPadelNoche,    label: 'Glass-walled padel courts' },
   { src: imgPadelVacio,    label: 'Padel court glass panels' },
+  { src: imgPertiga2026,   label: 'Cleaning with telescopic pole · Oct 2026' },
+  { src: imgFachada2026,   label: 'Spotless glass façade · Oct 2026' },
 ].reverse(); // most recently added photos (at the end of the list) show first
 
 const baPairs = [
