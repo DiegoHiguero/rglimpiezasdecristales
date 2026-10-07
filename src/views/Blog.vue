@@ -68,8 +68,8 @@
     <div class="blog-cta">
       <p class="blog-cta-text">¿Prefieres que nos encarguemos nosotros?</p>
       <div class="blog-cta-btns">
-        <a href="tel:+34696169435" class="blog-cta-btn blog-cta-btn--primary">
-          <font-awesome-icon :icon="['fas', 'phone']" class="me-2" />696 169 435
+        <a href="tel:+34625950506" class="blog-cta-btn blog-cta-btn--primary">
+          <font-awesome-icon :icon="['fas', 'phone']" class="me-2" />625 950 506
         </a>
         <router-link to="/contacto" class="blog-cta-btn blog-cta-btn--outline">
           Pedir presupuesto gratis

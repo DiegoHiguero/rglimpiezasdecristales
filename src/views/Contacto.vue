@@ -10,17 +10,17 @@
 
     <!-- Tarjetas de contacto -->
     <div class="ct-cards">
-      <a href="tel:+34696169435" class="ct-card">
+      <a href="tel:+34625950506" class="ct-card">
         <div class="ct-card-icon"><font-awesome-icon :icon="['fas', 'phone']" /></div>
         <span class="ct-card-label">Teléfono</span>
-        <span class="ct-card-value">+34 696 169 435</span>
+        <span class="ct-card-value">+34 625 950 506</span>
       </a>
       <a href="mailto:info@royallclean.es" class="ct-card">
         <div class="ct-card-icon"><font-awesome-icon :icon="['fas', 'envelope']" /></div>
         <span class="ct-card-label">Email</span>
         <span class="ct-card-value">info@royallclean.es</span>
       </a>
-      <a href="https://wa.me/34696169435" target="_blank" rel="noopener noreferrer" class="ct-card ct-card--wa">
+      <a href="https://wa.me/34625950506" target="_blank" rel="noopener noreferrer" class="ct-card ct-card--wa">
         <div class="ct-card-icon ct-card-icon--wa"><font-awesome-icon :icon="['fab', 'whatsapp']" /></div>
         <span class="ct-card-label">WhatsApp</span>
         <span class="ct-card-value">Escríbenos ahora</span>

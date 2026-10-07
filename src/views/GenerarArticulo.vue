@@ -112,7 +112,7 @@ function updateKeyword() {
   form.value.keyword = KEYWORDS[form.value.temporada] || '';
 }
 
-const prompt = computed(() => `Eres el redactor SEO de Royall Clean, empresa de limpiacristales en Madrid (tel: 696 169 435).
+const prompt = computed(() => `Eres el redactor SEO de Royall Clean, empresa de limpiacristales en Madrid (tel: 625 950 506).
 
 Escribe un artículo de blog en español con estos datos:
 - Tipo: ${form.value.tipo}
@@ -124,7 +124,7 @@ Requisitos:
 - Entre 1.000 y 1.400 palabras
 - Estructura con <h2> y <h3>
 - Menciona Madrid al menos 2 veces de forma natural
-- Llamada a la acción al final hacia Royall Clean con el teléfono 696 169 435
+- Llamada a la acción al final hacia Royall Clean con el teléfono 625 950 506
 - Usa SOLO estas etiquetas HTML: <p>, <h2>, <h3>, <ul>, <li>, <strong>
 - Tono profesional y cercano, orientado a comercios, oficinas y comunidades de vecinos
 

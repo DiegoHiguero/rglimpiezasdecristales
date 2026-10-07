@@ -36,10 +36,10 @@
         Don't see your municipality? We may still cover your area.
       </p>
       <div class="zonas-ctas">
-        <a href="tel:+34696169435" class="zonas-btn zonas-btn--primary">
+        <a href="tel:+34625950506" class="zonas-btn zonas-btn--primary">
           <font-awesome-icon :icon="['fas', 'phone']" class="me-2" />Call now
         </a>
-        <a href="https://wa.me/34696169435" target="_blank" rel="noopener noreferrer" class="zonas-btn zonas-btn--whatsapp">
+        <a href="https://wa.me/34625950506" target="_blank" rel="noopener noreferrer" class="zonas-btn zonas-btn--whatsapp">
           <font-awesome-icon :icon="['fab', 'whatsapp']" class="me-2" />WhatsApp
         </a>
       </div>

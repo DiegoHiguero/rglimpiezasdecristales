@@ -24,28 +24,14 @@ export const servicios = [
     tag: 'Exclusivo',
     content: `
       <h2>Un servicio exclusivo: sistema de agua pura Unger HydroPower</h2>
-      <p>En <strong>Royall Clean</strong> incorporamos el sistema profesional <strong>Unger HydroPower</strong>, un equipo de agua pura de alta gama que no todas las empresas de limpieza de cristales de Madrid tienen. Esta inversión nos permite ofrecer un servicio de limpieza en altura con un alcance y un acabado superiores a los de una pértiga convencional.</p>
-
-      <h2>¿Qué es el agua pura y por qué marca la diferencia?</h2>
-      <p>El sistema purifica el agua del grifo mediante resinas desionizadoras, eliminando los minerales que forman la cal. El resultado es un agua completamente desmineralizada que, al entrar en contacto con el cristal, arrastra la suciedad sin dejar ningún residuo al secarse. No hace falta repasar con gamuza, mopa ni producto: el cristal se seca solo al aire y queda perfectamente transparente, sin marcas ni halos de cal.</p>
-
-      <h2>Hasta 10 metros de alcance, sin andamios</h2>
-      <p>La pértiga telescópica del sistema Unger HydroPower alcanza <strong>hasta 10 metros de altura</strong> (aproximadamente entre 3 y 4 plantas, según la altura de cada edificio), operada siempre desde el suelo. Esto elimina la necesidad de andamios, grúas o trabajos verticales con cuerdas, reduciendo tanto el coste como el tiempo de la intervención.</p>
+      <p>En <strong>Royall Clean</strong> incorporamos el sistema profesional <strong>Unger HydroPower</strong>, un equipo de agua pura que no todas las empresas de limpieza de cristales de Madrid tienen. El agua se purifica con resinas desionizadoras, eliminando los minerales que forman la cal: se seca sola al aire y el cristal queda transparente, sin marcas ni repaso manual. La pértiga alcanza <strong>hasta 10 metros</strong> (unas 3-4 plantas, según el edificio), siempre operada desde el suelo y sin necesidad de andamios.</p>
 
       <h2>Qué incluye el servicio</h2>
       <ul>
         <li><strong>Fachadas acristaladas y ventanales en altura</strong> de viviendas, comunidades, oficinas y locales.</li>
-        <li><strong>Agua pura desionizada en origen</strong>, filtrada sobre el terreno con el propio equipo Unger HydroPower.</li>
-        <li><strong>Acabado sin marcas ni repaso manual</strong>, gracias al secado natural del agua pura.</li>
-        <li><strong>Trabajo desde el suelo</strong>, sin necesidad de permisos de ocupación de vía pública ni instalación de andamios.</li>
-      </ul>
-
-      <h2>Agua pura Unger HydroPower frente a la pértiga convencional</h2>
-      <p>Ya ofrecíamos limpieza en altura con pértiga telescópica convencional hasta 5 plantas. El sistema Unger HydroPower amplía esa capacidad:</p>
-      <ul>
-        <li><strong>Mayor alcance:</strong> hasta 10 metros, frente a los 5 plantas habituales de una pértiga estándar.</li>
-        <li><strong>Filtrado de agua más fino</strong>, pensado para fachadas y cristaleras de gran formato.</li>
-        <li><strong>Equipo exclusivo</strong> que pocas empresas de la zona tienen disponible.</li>
+        <li><strong>Agua pura desionizada en origen</strong>, filtrada sobre el terreno con el propio equipo.</li>
+        <li><strong>Acabado sin marcas ni repaso manual.</strong></li>
+        <li><strong>Trabajo desde el suelo</strong>, sin andamios ni permisos de ocupación de vía pública.</li>
       </ul>
 
       <h2>¿Para quién es este servicio?</h2>
@@ -61,16 +47,16 @@ export const servicios = [
 
       <h2>Preguntas frecuentes sobre el sistema de agua pura en altura</h2>
       <h3>¿Qué significa "agua pura" y por qué no deja marcas en el cristal?</h3>
-      <p>El sistema Unger HydroPower purifica el agua mediante resinas desionizadoras, eliminando los minerales que forman la cal. Al secarse de forma natural al aire, el cristal queda completamente transparente, sin necesidad de repasar con gamuza ni producto.</p>
+      <p>El sistema purifica el agua mediante resinas desionizadoras, eliminando los minerales que forman la cal. Al secarse de forma natural al aire, el cristal queda transparente, sin repasar con gamuza ni producto.</p>
       <h3>¿A cuántas plantas equivalen los 10 metros de alcance?</h3>
-      <p>Dependiendo de la altura de cada planta, 10 metros suelen cubrir entre 3 y 4 alturas sin necesidad de andamio, grúa ni trabajos verticales.</p>
+      <p>Dependiendo de la altura de cada planta, suelen ser unas 3-4 alturas, sin necesidad de andamio ni trabajos verticales.</p>
       <h3>¿Por qué decís que es un servicio exclusivo?</h3>
-      <p>Porque disponemos del sistema profesional Unger HydroPower, un equipo de alta gama que no todas las empresas de limpieza de la zona tienen, y que permite un acabado y un alcance superiores a la pértiga convencional.</p>
+      <p>Porque disponemos del sistema profesional Unger HydroPower, un equipo que no todas las empresas de limpieza de la zona tienen.</p>
     `,
     faqs: [
-      { q: '¿Qué significa "agua pura" y por qué no deja marcas en el cristal?', a: 'El sistema Unger HydroPower purifica el agua mediante resinas desionizadoras, eliminando los minerales que forman la cal. Al secarse de forma natural al aire, el cristal queda completamente transparente, sin necesidad de repasar con gamuza ni producto.' },
-      { q: '¿A cuántas plantas equivalen los 10 metros de alcance?', a: 'Dependiendo de la altura de cada planta, 10 metros suelen cubrir entre 3 y 4 alturas sin necesidad de andamio, grúa ni trabajos verticales.' },
-      { q: '¿Por qué decís que es un servicio exclusivo?', a: 'Porque disponemos del sistema profesional Unger HydroPower, un equipo de alta gama que no todas las empresas de limpieza de la zona tienen, y que permite un acabado y un alcance superiores a la pértiga convencional.' },
+      { q: '¿Qué significa "agua pura" y por qué no deja marcas en el cristal?', a: 'El sistema purifica el agua mediante resinas desionizadoras, eliminando los minerales que forman la cal. Al secarse de forma natural al aire, el cristal queda transparente, sin repasar con gamuza ni producto.' },
+      { q: '¿A cuántas plantas equivalen los 10 metros de alcance?', a: 'Dependiendo de la altura de cada planta, suelen ser unas 3-4 alturas, sin necesidad de andamio ni trabajos verticales.' },
+      { q: '¿Por qué decís que es un servicio exclusivo?', a: 'Porque disponemos del sistema profesional Unger HydroPower, un equipo que no todas las empresas de limpieza de la zona tienen.' },
     ],
   },
   {
@@ -79,7 +65,7 @@ export const servicios = [
     title: 'Limpieza de cristales para hogares en Madrid',
     excerpt: 'Cristales, marcos, persianas y balcones impecables en tu casa o piso, con productos ecológicos y sin que tengas que preocuparte de nada.',
     metaTitle: 'Limpieza de Cristales para Hogares en Madrid',
-    metaDescription: 'Limpieza profesional de cristales para casas y pisos en Madrid. Interior y exterior, marcos y balcones. Presupuesto gratis en 24 h. ☎ 696 169 435',
+    metaDescription: 'Limpieza profesional de cristales para casas y pisos en Madrid. Interior y exterior, marcos y balcones. Presupuesto gratis en 24 h. ☎ 625 950 506',
     keywords: 'limpieza cristales hogar madrid, limpieza ventanas piso, limpiacristales domicilio madrid, limpieza cristales casa particular',
     icon: ['fas', 'house'],
     image: imgHogares,
@@ -181,7 +167,7 @@ export const servicios = [
       </ul>
 
       <h2>Limpieza de fachadas en edificios de varias alturas</h2>
-      <p>Muchos edificios de Madrid tienen cristaleras en plantas altas a las que no se puede acceder desde dentro de las viviendas. Para estos casos contamos con <strong>pértigas telescópicas de hasta 5 plantas</strong>, que permiten limpiar sin necesidad de montar andamios ni contratar trabajos verticales, reduciendo tanto el coste como el tiempo de la obra.</p>
+      <p>Muchos edificios de Madrid tienen cristaleras en plantas altas a las que no se puede acceder desde dentro de las viviendas. Para estos casos contamos con <strong>pértigas telescópicas de hasta 4 plantas</strong>, que permiten limpiar sin necesidad de montar andamios ni contratar trabajos verticales, reduciendo tanto el coste como el tiempo de la obra.</p>
 
       <h2>Zonas que cubrimos</h2>
       <p>Trabajamos con comunidades de vecinos en Madrid capital, Getafe, Leganés, Alcorcón, Fuenlabrada, Móstoles, Alcobendas, Pozuelo de Alarcón, Las Rozas, Majadahonda y el resto de municipios de la Comunidad de Madrid.</p>
@@ -192,7 +178,7 @@ export const servicios = [
       <h3>¿Hace falta convocar una junta para contratar el servicio?</h3>
       <p>No es necesario para empezar: podemos dar un presupuesto orientativo que el administrador o el presidente puede presentar en la siguiente junta antes de firmar el contrato definitivo.</p>
       <h3>¿Limpiáis también las plantas altas sin andamio?</h3>
-      <p>Sí, con pértiga telescópica llegamos hasta 5 plantas de altura sin necesidad de andamios ni permisos especiales, lo que reduce considerablemente el coste frente a otros métodos.</p>
+      <p>Sí, con pértiga telescópica llegamos hasta 4 plantas de altura sin necesidad de andamios ni permisos especiales, lo que reduce considerablemente el coste frente a otros métodos.</p>
     `,
     faqs: [
       {
@@ -205,7 +191,7 @@ export const servicios = [
       },
       {
         q: '¿Limpiáis también las plantas altas sin andamio?',
-        a: 'Sí, con pértiga telescópica llegamos hasta 5 plantas de altura sin necesidad de andamios ni permisos especiales, lo que reduce considerablemente el coste frente a otros métodos.',
+        a: 'Sí, con pértiga telescópica llegamos hasta 4 plantas de altura sin necesidad de andamios ni permisos especiales, lo que reduce considerablemente el coste frente a otros métodos.',
       },
     ],
   },
@@ -274,9 +260,9 @@ export const servicios = [
     slug: 'limpieza-cristales-altura',
     breadcrumbLabel: 'Limpieza en altura',
     title: 'Limpieza de cristales en altura y fachadas en Madrid',
-    excerpt: 'Fachadas acristaladas y ventanales en altura, limpios con pértiga telescópica hasta 5 plantas, sin andamios ni cuerdas.',
+    excerpt: 'Fachadas acristaladas y ventanales en altura, limpios con pértiga telescópica hasta 4 plantas, sin andamios ni cuerdas.',
     metaTitle: 'Limpieza de Cristales en Altura y Fachadas en Madrid',
-    metaDescription: 'Limpieza de fachadas y cristales en altura en Madrid con pértiga telescópica, sin andamios. Hasta 5 plantas. Presupuesto gratis en 24 h.',
+    metaDescription: 'Limpieza de fachadas y cristales en altura en Madrid con pértiga telescópica, sin andamios. Hasta 4 plantas. Presupuesto gratis en 24 h.',
     keywords: 'limpieza cristales en altura madrid, limpieza fachadas acristaladas, limpieza ventanas altura sin andamios, pertiga telescopica limpieza cristales',
     icon: ['fas', 'arrow-up-from-water-pump'],
     image: imgAltura,
@@ -285,7 +271,7 @@ export const servicios = [
     tag: 'Altura',
     content: `
       <h2>Limpieza de fachadas y cristales en altura sin andamios</h2>
-      <p>Las fachadas acristaladas, los ventanales de salón en plantas altas o los miradores de difícil acceso necesitan un equipo y una técnica distintos a la limpieza de cristales convencional. En <strong>Royall Clean</strong> resolvemos este tipo de trabajos con <strong>pértigas telescópicas de hasta 5 plantas de altura</strong>, lo que evita la necesidad de montar andamios, contratar trabajos verticales con cuerdas o pedir permisos especiales.</p>
+      <p>Las fachadas acristaladas, los ventanales de salón en plantas altas o los miradores de difícil acceso necesitan un equipo y una técnica distintos a la limpieza de cristales convencional. En <strong>Royall Clean</strong> resolvemos este tipo de trabajos con <strong>pértigas telescópicas de hasta 4 plantas de altura</strong>, lo que evita la necesidad de montar andamios, contratar trabajos verticales con cuerdas o pedir permisos especiales.</p>
 
       <h2>¿Cuándo se necesita limpieza en altura?</h2>
       <ul>
@@ -296,14 +282,14 @@ export const servicios = [
       </ul>
 
       <h2>Pértiga telescópica frente a andamio o cuerda</h2>
-      <p>Para edificios de hasta 5 plantas, la pértiga telescópica con agua desionizada es, en la mayoría de los casos, la solución más rápida y económica frente al andamiaje o los trabajos verticales con cuerdas:</p>
+      <p>Para edificios de hasta 4 plantas, la pértiga telescópica con agua desionizada es, en la mayoría de los casos, la solución más rápida y económica frente al andamiaje o los trabajos verticales con cuerdas:</p>
       <ul>
         <li><strong>Sin necesidad de permisos de ocupación de vía pública</strong>, que sí suele exigir un andamio en la calle.</li>
         <li><strong>Sin interrumpir el paso</strong> de peatones ni el acceso al edificio.</li>
         <li><strong>Montaje inmediato:</strong> el equipo empieza a trabajar el mismo día, sin tiempos de instalación.</li>
         <li><strong>Acabado sin marcas</strong>, porque el agua desionizada se seca sola sin dejar residuos de cal.</li>
       </ul>
-      <p>Para alturas superiores a 5 plantas o accesos especialmente complicados, valoramos cada caso de forma personalizada y, si es necesario, coordinamos con empresas especializadas en trabajos verticales.</p>
+      <p>Para alturas superiores a 4 plantas o accesos especialmente complicados, valoramos cada caso de forma personalizada y, si es necesario, coordinamos con empresas especializadas en trabajos verticales.</p>
 
       <h2>Seguridad en el trabajo</h2>
       <p>Todo nuestro personal está formado en el uso de equipos de limpieza en altura y trabaja siguiendo las medidas de seguridad necesarias en cada tipo de superficie y acceso. La pértiga telescópica, al operarse desde el suelo, elimina además gran parte de los riesgos asociados a otros métodos de trabajo en altura.</p>
@@ -316,7 +302,7 @@ export const servicios = [
 
       <h2>Preguntas frecuentes sobre limpieza de cristales en altura</h2>
       <h3>¿Hasta qué altura podéis limpiar sin andamio?</h3>
-      <p>Con pértiga telescópica llegamos sin problema hasta 5 plantas de altura. Para edificios más altos, estudiamos cada caso de forma individual.</p>
+      <p>Con pértiga telescópica llegamos sin problema hasta 4 plantas de altura. Para edificios más altos, estudiamos cada caso de forma individual.</p>
       <h3>¿Necesito pedir algún permiso para este tipo de limpieza?</h3>
       <p>Con pértiga telescópica, al no ocupar la vía pública ni requerir instalación de andamios, normalmente no se necesita ningún permiso municipal.</p>
       <h3>¿El agua que usáis deja marcas en el cristal?</h3>
@@ -325,7 +311,7 @@ export const servicios = [
     faqs: [
       {
         q: '¿Hasta qué altura podéis limpiar sin andamio?',
-        a: 'Con pértiga telescópica llegamos sin problema hasta 5 plantas de altura. Para edificios más altos, estudiamos cada caso de forma individual.',
+        a: 'Con pértiga telescópica llegamos sin problema hasta 4 plantas de altura. Para edificios más altos, estudiamos cada caso de forma individual.',
       },
       {
         q: '¿Necesito pedir algún permiso para este tipo de limpieza?',

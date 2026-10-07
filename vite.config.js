@@ -68,7 +68,7 @@ const serviceRoutes = [
     slug: 'limpieza-cristales-hogares',
     name: 'Limpieza de cristales para hogares en Madrid',
     title: 'Limpieza de Cristales para Hogares en Madrid',
-    description: 'Limpieza profesional de cristales para casas y pisos en Madrid. Interior y exterior, marcos y balcones. Presupuesto gratis en 24 h. ☎ 696 169 435',
+    description: 'Limpieza profesional de cristales para casas y pisos en Madrid. Interior y exterior, marcos y balcones. Presupuesto gratis en 24 h. ☎ 625 950 506',
     keywords: 'limpieza cristales hogar madrid, limpieza ventanas piso, limpiacristales domicilio madrid, limpieza cristales casa particular',
     breadcrumbLabel: 'Hogares',
     faqs: [
@@ -87,7 +87,7 @@ const serviceRoutes = [
     faqs: [
       { q: '¿Podéis facturar directamente a la comunidad?', a: 'Sí, emitimos factura a nombre de la comunidad de propietarios para que el administrador pueda incluirla en la contabilidad habitual.' },
       { q: '¿Hace falta convocar una junta para contratar el servicio?', a: 'No es necesario para empezar: podemos dar un presupuesto orientativo que el administrador o el presidente puede presentar en la siguiente junta antes de firmar el contrato definitivo.' },
-      { q: '¿Limpiáis también las plantas altas sin andamio?', a: 'Sí, con pértiga telescópica llegamos hasta 5 plantas de altura sin necesidad de andamios ni permisos especiales, lo que reduce considerablemente el coste frente a otros métodos.' },
+      { q: '¿Limpiáis también las plantas altas sin andamio?', a: 'Sí, con pértiga telescópica llegamos hasta 4 plantas de altura sin necesidad de andamios ni permisos especiales, lo que reduce considerablemente el coste frente a otros métodos.' },
     ],
   },
   {
@@ -107,11 +107,11 @@ const serviceRoutes = [
     slug: 'limpieza-cristales-altura',
     name: 'Limpieza de cristales en altura y fachadas en Madrid',
     title: 'Limpieza de Cristales en Altura y Fachadas en Madrid',
-    description: 'Limpieza de fachadas y cristales en altura en Madrid con pértiga telescópica, sin andamios. Hasta 5 plantas. Presupuesto gratis en 24 h.',
+    description: 'Limpieza de fachadas y cristales en altura en Madrid con pértiga telescópica, sin andamios. Hasta 4 plantas. Presupuesto gratis en 24 h.',
     keywords: 'limpieza cristales en altura madrid, limpieza fachadas acristaladas, limpieza ventanas altura sin andamios, pertiga telescopica limpieza cristales',
     breadcrumbLabel: 'Limpieza en altura',
     faqs: [
-      { q: '¿Hasta qué altura podéis limpiar sin andamio?', a: 'Con pértiga telescópica llegamos sin problema hasta 5 plantas de altura. Para edificios más altos, estudiamos cada caso de forma individual.' },
+      { q: '¿Hasta qué altura podéis limpiar sin andamio?', a: 'Con pértiga telescópica llegamos sin problema hasta 4 plantas de altura. Para edificios más altos, estudiamos cada caso de forma individual.' },
       { q: '¿Necesito pedir algún permiso para este tipo de limpieza?', a: 'Con pértiga telescópica, al no ocupar la vía pública ni requerir instalación de andamios, normalmente no se necesita ningún permiso municipal.' },
       { q: '¿El agua que usáis deja marcas en el cristal?', a: 'No, trabajamos con agua desionizada, que se seca sin dejar restos de cal ni marcas, a diferencia del agua del grifo convencional.' },
     ],
@@ -174,7 +174,7 @@ const staticPages = [
   {
     route: 'contacto',
     title: 'Presupuesto Limpieza de Cristales en Madrid | Royall Clean',
-    description: 'Pide tu presupuesto gratuito de limpieza de cristales y ventanas en Madrid. Sin compromiso, respuesta en menos de 24 horas. ☎ 696 169 435',
+    description: 'Pide tu presupuesto gratuito de limpieza de cristales y ventanas en Madrid. Sin compromiso, respuesta en menos de 24 horas. ☎ 625 950 506',
     hreflang: { es: 'contacto', en: 'en/contact' },
   },
   {
@@ -190,13 +190,13 @@ const staticPages = [
   {
     route: 'en',
     title: 'Window & Glass Cleaning in Madrid | Royall Clean',
-    description: 'Window and glass cleaning in Madrid for homes, communities and shops. Over 10 years of experience. Free quote within 24 h! ☎ +34 696 169 435',
+    description: 'Window and glass cleaning in Madrid for homes, communities and shops. Over 10 years of experience. Free quote within 24 h! ☎ +34 625 950 506',
     hreflang: { es: '', en: 'en' },
   },
   {
     route: 'en/contact',
     title: 'Free Quote for Window Cleaning in Madrid | Royall Clean',
-    description: 'Request your free window cleaning quote in Madrid. No obligation, reply within 24 hours. ☎ +34 696 169 435',
+    description: 'Request your free window cleaning quote in Madrid. No obligation, reply within 24 hours. ☎ +34 625 950 506',
     hreflang: { es: 'contacto', en: 'en/contact' },
   },
 ]

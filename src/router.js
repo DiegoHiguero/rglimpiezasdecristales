@@ -83,10 +83,10 @@ const redirigeAdminAlPanel = async (to, from, next) => {
 };
 
 const BASE_TITLE = 'Limpieza de Cristales en Madrid | Royall Clean';
-const BASE_DESC  = 'Limpieza de cristales y ventanas en Madrid para hogares, comunidades y locales. Más de 10 años de experiencia. ¡Presupuesto gratis en 24 h! ☎ 696 169 435';
+const BASE_DESC  = 'Limpieza de cristales y ventanas en Madrid para hogares, comunidades y locales. Más de 10 años de experiencia. ¡Presupuesto gratis en 24 h! ☎ 625 950 506';
 
 const EN_TITLE = 'Window & Glass Cleaning in Madrid | Royall Clean';
-const EN_DESC  = 'Window and glass cleaning in Madrid for homes, communities and shops. Over 10 years of experience. Free quote within 24 h! ☎ +34 696 169 435';
+const EN_DESC  = 'Window and glass cleaning in Madrid for homes, communities and shops. Over 10 years of experience. Free quote within 24 h! ☎ +34 625 950 506';
 
 const routes = [
     {
@@ -112,7 +112,7 @@ const routes = [
         component: ContactoEN,
         meta: {
             title: 'Free Quote for Window Cleaning in Madrid | Royall Clean',
-            description: 'Request your free window cleaning quote in Madrid. No obligation, reply within 24 hours. ☎ +34 696 169 435',
+            description: 'Request your free window cleaning quote in Madrid. No obligation, reply within 24 hours. ☎ +34 625 950 506',
         },
     },
     { path: '/login', component: Login },
@@ -125,7 +125,7 @@ const routes = [
         component: Contacto,
         meta: {
             title: 'Presupuesto Limpieza de Cristales en Madrid | Royall Clean',
-            description: 'Pide tu presupuesto gratuito de limpieza de cristales y ventanas en Madrid. Sin compromiso, respuesta en menos de 24 horas. ☎ 696 169 435',
+            description: 'Pide tu presupuesto gratuito de limpieza de cristales y ventanas en Madrid. Sin compromiso, respuesta en menos de 24 horas. ☎ 625 950 506',
         },
     },
     { path: '/servicios', redirect: '/' },

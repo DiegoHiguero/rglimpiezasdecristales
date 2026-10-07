@@ -8,7 +8,7 @@
           <div class="ft-social">
             <a href="https://www.instagram.com/royall_clean_madrid/" target="_blank" rel="noopener noreferrer" class="ft-social-link" aria-label="Instagram"><font-awesome-icon :icon="['fab', 'instagram']" /></a>
             <a href="https://share.google/DLNHmdGwTFC8h4F7Y" target="_blank" rel="noopener noreferrer" class="ft-social-link" aria-label="Google Business"><font-awesome-icon :icon="['fab', 'google']" /></a>
-            <a href="https://wa.me/34696169435" target="_blank" rel="noopener noreferrer" class="ft-social-link" aria-label="WhatsApp"><font-awesome-icon :icon="['fab', 'whatsapp']" /></a>
+            <a href="https://wa.me/34625950506" target="_blank" rel="noopener noreferrer" class="ft-social-link" aria-label="WhatsApp"><font-awesome-icon :icon="['fab', 'whatsapp']" /></a>
           </div>
         </div>
         <div class="ft-col">
@@ -30,7 +30,7 @@
         <div class="ft-col">
           <h3 class="ft-heading">Contacto</h3>
           <ul>
-            <li><font-awesome-icon :icon="['fas', 'phone']" class="ft-icon" /><a href="tel:+34696169435">+34 696 169 435</a></li>
+            <li><font-awesome-icon :icon="['fas', 'phone']" class="ft-icon" /><a href="tel:+34625950506">+34 625 950 506</a></li>
             <li><font-awesome-icon :icon="['fas', 'envelope']" class="ft-icon" /><a href="mailto:info@royallclean.es">info@royallclean.es</a></li>
             <li><font-awesome-icon :icon="['fas', 'location-dot']" class="ft-icon" /><span>Madrid y alrededores</span></li>
           </ul>

@@ -199,7 +199,7 @@ export function buildInvoicePdf({ factura, fecha, clientName, clientAddress, ite
   doc.text('IBAN:ES69 1465 0340 53 1718233167', 25, paymentY)
   paymentY += 7
   doc.addImage(phoneIcon, 'PNG', 25, paymentY - 3, 5, 5)
-  doc.text('696169435', 32, paymentY)
+  doc.text('625950506', 32, paymentY)
   paymentY += 7
   doc.addImage(emailIcon, 'PNG', 25, paymentY - 3, 5, 5)
   doc.text('roys.abreu@hotmail.es', 32, paymentY)

@@ -22,8 +22,8 @@
         </p>
 
         <div class="p-3 d-flex flex-wrap gap-2">
-          <a href="tel:+34696169435" class="btn btn-light fw-bold px-4">
-            <font-awesome-icon :icon="['fas', 'phone']" class="me-2" />696 169 435
+          <a href="tel:+34625950506" class="btn btn-light fw-bold px-4">
+            <font-awesome-icon :icon="['fas', 'phone']" class="me-2" />625 950 506
           </a>
           <router-link to="/en/contact" class="btn btn-outline-light fw-bold px-4">
             Free quote
@@ -155,16 +155,16 @@
       <transition name="wa-pop">
         <div class="wa-menu" v-if="isWaOpen">
           <span class="wa-menu-title">How can we help?</span>
-          <a href="https://wa.me/34696169435?text=Hi%2C%20I%27d%20like%20a%20quote%20for%20window%20cleaning%20at%20my%20home" target="_blank" rel="noopener noreferrer" class="wa-menu-item">
+          <a href="https://wa.me/34625950506?text=Hi%2C%20I%27d%20like%20a%20quote%20for%20window%20cleaning%20at%20my%20home" target="_blank" rel="noopener noreferrer" class="wa-menu-item">
             <font-awesome-icon :icon="['fas', 'house']" />Home quote
           </a>
-          <a href="https://wa.me/34696169435?text=Hi%2C%20I%27d%20like%20a%20quote%20for%20window%20cleaning%20at%20my%20business" target="_blank" rel="noopener noreferrer" class="wa-menu-item">
+          <a href="https://wa.me/34625950506?text=Hi%2C%20I%27d%20like%20a%20quote%20for%20window%20cleaning%20at%20my%20business" target="_blank" rel="noopener noreferrer" class="wa-menu-item">
             <font-awesome-icon :icon="['fas', 'shop']" />Business quote
           </a>
-          <a href="https://wa.me/34696169435?text=Hi%2C%20I%27d%20like%20a%20quote%20for%20window%20cleaning%20at%20my%20residential%20community" target="_blank" rel="noopener noreferrer" class="wa-menu-item">
+          <a href="https://wa.me/34625950506?text=Hi%2C%20I%27d%20like%20a%20quote%20for%20window%20cleaning%20at%20my%20residential%20community" target="_blank" rel="noopener noreferrer" class="wa-menu-item">
             <font-awesome-icon :icon="['fas', 'building']" />Community quote
           </a>
-          <a href="https://wa.me/34696169435" target="_blank" rel="noopener noreferrer" class="wa-menu-item">
+          <a href="https://wa.me/34625950506" target="_blank" rel="noopener noreferrer" class="wa-menu-item">
             <font-awesome-icon :icon="['fas', 'comment']" />Other enquiry
           </a>
         </div>

@@ -66,7 +66,7 @@ export const articles = [
       <p>En Madrid, donde muchos locales tienen fachadas acristaladas de gran superficie, este tipo de trabajos requieren también las medidas de seguridad adecuadas para trabajar en altura.</p>
       <h2>Royall Clean: limpieza profesional de cristales en Madrid</h2>
       <p>En <strong>Royall Clean</strong> llevamos años ayudando a comercios, oficinas y comunidades de vecinos de Madrid a mantener sus cristales en perfecto estado. Desde la retirada de adhesivos y vinilos hasta la limpieza integral de fachadas y escaparates, nuestro equipo cuenta con la experiencia necesaria para cada tipo de superficie.</p>
-      <p>Si tienes cristales con restos de pegamento difíciles de quitar o simplemente quieres dejar esta tarea en manos de profesionales, <strong>llámanos al 696 169 435</strong>. Valoramos tu caso sin compromiso y te damos presupuesto en el mismo día.</p>
+      <p>Si tienes cristales con restos de pegamento difíciles de quitar o simplemente quieres dejar esta tarea en manos de profesionales, <strong>llámanos al 625 950 506</strong>. Valoramos tu caso sin compromiso y te damos presupuesto en el mismo día.</p>
     `,
   },
   {
@@ -140,7 +140,7 @@ export const articles = [
 
       <h2>Confía en Royall Clean para esta primavera</h2>
       <p>En <strong>Royall Clean</strong> nos especializamos en la <strong>limpieza de ventanas y cristales</strong> para comercios, oficinas y comunidades de vecinos en Madrid y sus alrededores. Utilizamos productos de alta calidad y técnicas contrastadas que garantizan resultados impecables, sin marcas ni rayaduras, incluso en los casos más difíciles de polen, heces de pájaros o acumulación de insectos.</p>
-      <p>Si quieres que tus escaparates y ventanas estén siempre perfectos esta primavera, <strong>contacta con nosotros hoy mismo</strong>. Llámanos al <strong>696 169 435</strong> y te preparamos un presupuesto gratuito y sin compromiso adaptado a las necesidades de tu negocio.</p>
+      <p>Si quieres que tus escaparates y ventanas estén siempre perfectos esta primavera, <strong>contacta con nosotros hoy mismo</strong>. Llámanos al <strong>625 950 506</strong> y te preparamos un presupuesto gratuito y sin compromiso adaptado a las necesidades de tu negocio.</p>
     `,
   },
   {

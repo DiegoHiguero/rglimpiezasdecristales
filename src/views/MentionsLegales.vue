@@ -56,7 +56,7 @@
             <font-awesome-icon :icon="['fas', 'phone']" class="al-data-icon" />
             <div>
               <span class="al-data-label">Teléfono</span>
-              <a href="tel:+34696169435" class="al-data-value al-link">+34 696 169 435</a>
+              <a href="tel:+34625950506" class="al-data-value al-link">+34 625 950 506</a>
             </div>
           </div>
           <div class="al-data-item">

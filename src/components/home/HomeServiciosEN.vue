@@ -135,9 +135,9 @@
                 <span class="svc-icon svc-icon--orange"><font-awesome-icon :icon="['fas', 'arrow-up-from-water-pump']" /></span>
                 <h3 class="svc-name">Height cleaning (telescopic pole)</h3>
               </div>
-              <p class="svc-desc">Façades and windows at height with a standard telescopic pole, up to 5 storeys, no scaffolding.</p>
+              <p class="svc-desc">Façades and windows at height with a standard telescopic pole, up to 4 storeys, no scaffolding.</p>
               <ul class="svc-list">
-                <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Up to 5 storeys, no scaffolding</li>
+                <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Up to 4 storeys, no scaffolding</li>
                 <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Deionised water, streak-free</li>
                 <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />No council permits needed</li>
               </ul>

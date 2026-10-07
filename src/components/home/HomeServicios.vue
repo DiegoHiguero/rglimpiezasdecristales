@@ -135,9 +135,9 @@
                 <span class="svc-icon svc-icon--orange"><font-awesome-icon :icon="['fas', 'arrow-up-from-water-pump']" /></span>
                 <h3 class="svc-name">Limpieza en altura (pértiga)</h3>
               </div>
-              <p class="svc-desc">Fachadas y ventanales en altura con pértiga telescópica convencional, hasta 5 plantas, sin andamios.</p>
+              <p class="svc-desc">Fachadas y ventanales en altura con pértiga telescópica convencional, hasta 4 plantas, sin andamios.</p>
               <ul class="svc-list">
-                <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Hasta 5 plantas sin andamio</li>
+                <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Hasta 4 plantas sin andamio</li>
                 <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Agua desionizada sin marcas</li>
                 <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Sin permisos municipales</li>
               </ul>

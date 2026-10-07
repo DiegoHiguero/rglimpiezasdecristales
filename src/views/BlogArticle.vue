@@ -59,8 +59,8 @@
           <h2 class="article-cta-title">¿Necesitas una limpieza profesional?</h2>
           <p class="article-cta-sub">Cubrimos Madrid y toda la Comunidad de Madrid. Presupuesto gratuito en menos de 24 h.</p>
           <div class="article-cta-btns">
-            <a href="tel:+34696169435" class="article-btn article-btn--primary">
-              <font-awesome-icon :icon="['fas', 'phone']" class="me-2" />696 169 435
+            <a href="tel:+34625950506" class="article-btn article-btn--primary">
+              <font-awesome-icon :icon="['fas', 'phone']" class="me-2" />625 950 506
             </a>
             <router-link to="/contacto" class="article-btn article-btn--outline">
               Pedir presupuesto gratis

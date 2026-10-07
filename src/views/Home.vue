@@ -22,8 +22,8 @@
         </p>
 
         <div class="p-3 d-flex flex-wrap gap-2">
-          <a href="tel:+34696169435" class="btn btn-light fw-bold px-4">
-            <font-awesome-icon :icon="['fas', 'phone']" class="me-2" />696 169 435
+          <a href="tel:+34625950506" class="btn btn-light fw-bold px-4">
+            <font-awesome-icon :icon="['fas', 'phone']" class="me-2" />625 950 506
           </a>
           <router-link to="/contacto" class="btn btn-outline-light fw-bold px-4">
             Presupuesto gratis
@@ -156,16 +156,16 @@
       <transition name="wa-pop">
         <div class="wa-menu" v-if="isWaOpen">
           <span class="wa-menu-title">¿En qué podemos ayudarte?</span>
-          <a href="https://wa.me/34696169435?text=Hola%2C%20quiero%20un%20presupuesto%20para%20limpieza%20de%20cristales%20en%20mi%20vivienda" target="_blank" rel="noopener noreferrer" class="wa-menu-item">
+          <a href="https://wa.me/34625950506?text=Hola%2C%20quiero%20un%20presupuesto%20para%20limpieza%20de%20cristales%20en%20mi%20vivienda" target="_blank" rel="noopener noreferrer" class="wa-menu-item">
             <font-awesome-icon :icon="['fas', 'house']" />Presupuesto vivienda
           </a>
-          <a href="https://wa.me/34696169435?text=Hola%2C%20quiero%20un%20presupuesto%20para%20limpieza%20de%20cristales%20en%20mi%20negocio%20o%20local" target="_blank" rel="noopener noreferrer" class="wa-menu-item">
+          <a href="https://wa.me/34625950506?text=Hola%2C%20quiero%20un%20presupuesto%20para%20limpieza%20de%20cristales%20en%20mi%20negocio%20o%20local" target="_blank" rel="noopener noreferrer" class="wa-menu-item">
             <font-awesome-icon :icon="['fas', 'shop']" />Presupuesto negocio o local
           </a>
-          <a href="https://wa.me/34696169435?text=Hola%2C%20quiero%20un%20presupuesto%20para%20limpieza%20de%20cristales%20en%20mi%20comunidad%20de%20vecinos" target="_blank" rel="noopener noreferrer" class="wa-menu-item">
+          <a href="https://wa.me/34625950506?text=Hola%2C%20quiero%20un%20presupuesto%20para%20limpieza%20de%20cristales%20en%20mi%20comunidad%20de%20vecinos" target="_blank" rel="noopener noreferrer" class="wa-menu-item">
             <font-awesome-icon :icon="['fas', 'building']" />Presupuesto comunidad
           </a>
-          <a href="https://wa.me/34696169435" target="_blank" rel="noopener noreferrer" class="wa-menu-item">
+          <a href="https://wa.me/34625950506" target="_blank" rel="noopener noreferrer" class="wa-menu-item">
             <font-awesome-icon :icon="['fas', 'comment']" />Otra consulta
           </a>
         </div>
