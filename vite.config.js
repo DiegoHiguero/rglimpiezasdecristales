@@ -58,6 +58,7 @@ const serviceRoutes = [
     description: 'Servicio exclusivo de limpieza de cristales con sistema de agua pura Unger HydroPower. Alcance de hasta 10 metros sin andamios. Presupuesto gratis en 24 h.',
     keywords: 'limpieza cristales agua pura madrid, sistema unger hydropower, limpieza en altura 10 metros, limpiacristales agua desionizada madrid, water fed pole madrid',
     breadcrumbLabel: 'Agua pura en altura',
+    image: `${SITE}/og-image-agua-pura.webp`,
     faqs: [
       { q: '¿Qué significa "agua pura" y por qué no deja marcas en el cristal?', a: 'El sistema Unger HydroPower purifica el agua mediante resinas desionizadoras, eliminando los minerales que forman la cal. Al secarse de forma natural al aire, el cristal queda completamente transparente, sin necesidad de repasar con gamuza ni producto.' },
       { q: '¿A cuántas plantas equivalen los 10 metros de alcance?', a: 'Dependiendo de la altura de cada planta, 10 metros suelen cubrir entre 3 y 4 alturas sin necesidad de andamio, grúa ni trabajos verticales.' },
@@ -232,7 +233,7 @@ function injectBlogHtmlPlugin() {
       const baseHtml = fs.readFileSync(path.join(distDir, 'index.html'), 'utf-8')
       const baseHtmlNoFaq = stripHomeFaqPage(baseHtml)
 
-      const patchHtml = (html, { fullTitle, description, keywords, url }) => {
+      const patchHtml = (html, { fullTitle, description, keywords, url, image }) => {
         let patched = html
           .replace(/(<title>)[^<]*(<\/title>)/, `$1${fullTitle}$2`)
           .replace(/(<meta name="title"[^>]*content=")[^"]*(")/,        `$1${fullTitle}$2`)
@@ -245,6 +246,12 @@ function injectBlogHtmlPlugin() {
           .replace(/(<link rel="canonical"[^>]*href=")[^"]*(")/,              `$1${url}$2`)
         if (keywords) {
           patched = patched.replace('</head>', `<meta name="keywords" content="${keywords}">\n</head>`)
+        }
+        if (image) {
+          patched = patched
+            .replace(/(<meta property="og:image"[^>]*content=")[^"]*(")/,     `$1${image}$2`)
+            .replace(/(<meta property="og:image:alt"[^>]*content=")[^"]*(")/, `$1${fullTitle}$2`)
+            .replace(/(<meta name="twitter:image"[^>]*content=")[^"]*(")/,    `$1${image}$2`)
         }
         return patched
       }
@@ -334,6 +341,7 @@ function injectBlogHtmlPlugin() {
           description: service.description,
           keywords: service.keywords,
           url: serviceUrl,
+          image: service.image,
         })
         html = html.replace('</head>', `${extraSchemas}</head>`)
         fs.writeFileSync(path.join(distDir, `${service.slug}.html`), html)
