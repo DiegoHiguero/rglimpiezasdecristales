@@ -14,7 +14,7 @@ export const servicios = [
     breadcrumbLabel: 'Agua pura en altura',
     title: 'Limpieza con sistema de agua pura en altura (Unger HydroPower)',
     excerpt: 'Servicio exclusivo con equipo profesional Unger HydroPower: limpieza de cristales en altura con agua pura hasta 10 metros, sin andamios.',
-    metaTitle: 'Limpieza con Agua Pura en Altura (Unger HydroPower) en Madrid',
+    metaTitle: 'Limpieza con Agua Pura en Altura en Madrid',
     metaDescription: 'Servicio exclusivo de limpieza de cristales con sistema de agua pura Unger HydroPower. Alcance de hasta 10 metros sin andamios. Presupuesto gratis en 24 h.',
     keywords: 'limpieza cristales agua pura madrid, sistema unger hydropower, limpieza en altura 10 metros, limpiacristales agua desionizada madrid, water fed pole madrid',
     icon: ['fas', 'droplet'],
