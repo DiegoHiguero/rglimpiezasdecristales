@@ -120,6 +120,7 @@
                 <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Horarios adaptados a tu empresa</li>
                 <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Contrato y factura para empresas</li>
               </ul>
+              <router-link to="/limpieza-cristales-oficinas" class="svc-btn-secondary">Saber más</router-link>
               <router-link to="/contacto" class="svc-btn svc-btn--purple">Consultar precio</router-link>
             </div>
           </div>

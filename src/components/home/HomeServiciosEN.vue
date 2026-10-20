@@ -120,6 +120,7 @@
                 <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Schedules adapted to your business</li>
                 <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Contract and business invoicing</li>
               </ul>
+              <router-link to="/limpieza-cristales-oficinas" class="svc-btn-secondary">Learn more</router-link>
               <router-link to="/en/contact" class="svc-btn svc-btn--purple">Get a quote</router-link>
             </div>
           </div>

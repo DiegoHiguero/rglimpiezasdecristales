@@ -133,6 +133,7 @@ const routes = [
     { path: '/limpieza-cristales-hogares', component: ServicioDetalle, meta: { servicio: 'limpieza-cristales-hogares' } },
     { path: '/limpieza-cristales-comunidades', component: ServicioDetalle, meta: { servicio: 'limpieza-cristales-comunidades' } },
     { path: '/limpieza-cristales-locales-comerciales', component: ServicioDetalle, meta: { servicio: 'limpieza-cristales-locales-comerciales' } },
+    { path: '/limpieza-cristales-oficinas', component: ServicioDetalle, meta: { servicio: 'limpieza-cristales-oficinas' } },
     { path: '/limpieza-cristales-altura', component: ServicioDetalle, meta: { servicio: 'limpieza-cristales-altura' } },
     { path: '/limpieza-placas-solares', component: ServicioDetalle, meta: { servicio: 'limpieza-placas-solares' } },
     { path: '/limpieza-fin-de-obra', component: ServicioDetalle, meta: { servicio: 'limpieza-fin-de-obra' } },

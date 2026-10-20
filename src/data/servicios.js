@@ -1,6 +1,7 @@
 import imgHogares  from '../assets/img/casamadera.webp';
 import imgComunidades from '../assets/img/office-buildings.webp';
 import imgLocales  from '../assets/img/restaurant.webp';
+import imgOficinas from '../assets/img/20260528_141113.webp';
 import imgAltura   from '../assets/img/Header_Fensterreiniger_Glas_ANW_Toplock_000313.webp';
 import imgAguaPura from '../assets/img/20261006-pertiga-fachada.webp';
 import imgPlacas   from '../assets/img/limpieza-panel-thumb.webp';
@@ -199,10 +200,10 @@ export const servicios = [
     slug: 'limpieza-cristales-locales-comerciales',
     breadcrumbLabel: 'Locales comerciales',
     title: 'Limpieza de cristales para locales comerciales y escaparates en Madrid',
-    excerpt: 'Escaparates impecables sin cerrar el negocio: limpieza profesional para tiendas, cafeterías, oficinas y locales en Madrid.',
+    excerpt: 'Escaparates impecables sin cerrar el negocio: limpieza profesional para tiendas, bares, cafeterías y locales a pie de calle en Madrid.',
     metaTitle: 'Limpieza de Cristales para Locales Comerciales en Madrid',
     metaDescription: 'Limpieza de escaparates y cristales para negocios en Madrid. Horarios fuera de apertura, factura para empresas. Presupuesto gratis en 24 h.',
-    keywords: 'limpieza cristales locales comerciales madrid, limpieza escaparates madrid, limpiacristales negocios madrid, limpieza cristales oficinas',
+    keywords: 'limpieza cristales locales comerciales madrid, limpieza escaparates madrid, limpiacristales negocios madrid, limpieza lunas tiendas',
     icon: ['fas', 'store'],
     image: imgLocales,
     color: '#1d4ed8',
@@ -253,6 +254,67 @@ export const servicios = [
       {
         q: '¿Retiráis vinilos antiguos del escaparate?',
         a: 'Sí, retiramos vinilos y restos de adhesivo sin rayar el cristal, dejando la superficie lista para una nueva decoración o totalmente limpia.',
+      },
+    ],
+  },
+  {
+    slug: 'limpieza-cristales-oficinas',
+    breadcrumbLabel: 'Oficinas y edificios',
+    title: 'Limpieza de cristales para oficinas y edificios en Madrid',
+    excerpt: 'Cristaleras, mamparas y fachadas acristaladas de oficinas, edificios y naves, con contrato de mantenimiento y horarios adaptados a tu empresa.',
+    metaTitle: 'Limpieza de Cristales para Oficinas en Madrid',
+    metaDescription: 'Limpieza de cristales en oficinas, edificios y naves de Madrid: mamparas, cristaleras y fachadas. Contrato de mantenimiento y factura. Presupuesto en 24 h.',
+    keywords: 'limpieza cristales oficinas madrid, limpieza mamparas oficina, limpieza cristales edificios empresas, limpieza fachadas acristaladas madrid, limpieza cristales naves industriales',
+    icon: ['fas', 'building'],
+    image: imgOficinas,
+    color: '#7c3aed',
+    colorPale: '#f5f3ff',
+    tag: 'Empresas',
+    content: `
+      <h2>Cristales limpios, imagen de empresa</h2>
+      <p>Clientes, proveedores y candidatos se forman una idea de tu empresa en cuanto llegan a la entrada. Unas cristaleras con polvo, marcas de lluvia o huellas en las mamparas restan profesionalidad a cualquier oficina. En <strong>Royall Clean</strong> nos encargamos de los cristales de oficinas, edificios corporativos y naves en Madrid, por dentro y por fuera, para que tu espacio de trabajo dé la imagen que corresponde.</p>
+
+      <h2>Qué incluye el servicio</h2>
+      <ul>
+        <li><strong>Ventanales y cristaleras exteriores</strong> de oficinas y despachos.</li>
+        <li><strong>Mamparas y divisiones de cristal</strong> de salas de reuniones y espacios abiertos.</li>
+        <li><strong>Puertas de acceso, vestíbulos y recepciones</strong>, donde más se notan las huellas.</li>
+        <li><strong>Fachadas acristaladas</strong>: con pértiga hasta 4 plantas y con agua pura Unger HydroPower hasta 10 metros, sin andamios.</li>
+        <li><strong>Lucernarios, claraboyas y ventanales de naves</strong> industriales y logísticas.</li>
+      </ul>
+
+      <h2>Horarios que no interrumpen el trabajo</h2>
+      <p>Planificamos cada visita con tu empresa: a primera hora, a última hora o en las franjas con menos actividad, para que la limpieza no moleste a tu equipo ni a tus visitas. Si el edificio tiene control de acceso o normas de seguridad propias, nos adaptamos a ellas.</p>
+
+      <h2>Contrato de mantenimiento con calendario fijo</h2>
+      <p>Lo más cómodo para una empresa es olvidarse de los cristales. Con un contrato de mantenimiento fijamos un calendario de visitas (mensual, bimestral o trimestral según la zona y el tipo de edificio) y un único interlocutor. Emitimos <strong>factura a nombre de la empresa</strong> en cada servicio, y trabajamos con seguro de responsabilidad civil.</p>
+
+      <h2>¿Tienes un local a pie de calle?</h2>
+      <p>Si lo que necesitas es mantener impecable el escaparate de una tienda, un bar o una cafetería, consulta nuestro servicio de <a href="/limpieza-cristales-locales-comerciales">limpieza de cristales para locales comerciales</a>, pensado para negocios con atención al público.</p>
+
+      <h2>Zonas que cubrimos</h2>
+      <p>Damos servicio a oficinas y edificios de empresa en Madrid capital y en los principales núcleos empresariales de la Comunidad: Alcobendas, San Sebastián de los Reyes, Tres Cantos, Las Rozas, Pozuelo de Alarcón, Getafe, Leganés, Coslada, Torrejón de Ardoz y el resto de la región.</p>
+
+      <h2>Preguntas frecuentes sobre limpieza de cristales en oficinas</h2>
+      <h3>¿Limpiáis también las mamparas y divisiones interiores?</h3>
+      <p>Sí: además de las ventanas exteriores limpiamos mamparas, puertas de cristal y divisiones de salas de reuniones, eliminando huellas y marcas por ambas caras.</p>
+      <h3>¿Cada cuánto conviene limpiar los cristales de una oficina?</h3>
+      <p>Para la mayoría de oficinas recomendamos una limpieza mensual de las zonas de paso y mamparas, y trimestral de los ventanales exteriores. Lo ajustamos según la ubicación del edificio y el tráfico de la zona.</p>
+      <h3>¿Podéis limpiar la fachada acristalada de todo el edificio?</h3>
+      <p>Sí. Con pértiga telescópica llegamos hasta 4 plantas sin andamios, y con nuestro sistema de agua pura Unger HydroPower hasta 10 metros de altura, con un acabado sin marcas.</p>
+    `,
+    faqs: [
+      {
+        q: '¿Limpiáis también las mamparas y divisiones interiores?',
+        a: 'Sí: además de las ventanas exteriores limpiamos mamparas, puertas de cristal y divisiones de salas de reuniones, eliminando huellas y marcas por ambas caras.',
+      },
+      {
+        q: '¿Cada cuánto conviene limpiar los cristales de una oficina?',
+        a: 'Para la mayoría de oficinas recomendamos una limpieza mensual de las zonas de paso y mamparas, y trimestral de los ventanales exteriores. Lo ajustamos según la ubicación del edificio y el tráfico de la zona.',
+      },
+      {
+        q: '¿Podéis limpiar la fachada acristalada de todo el edificio?',
+        a: 'Sí. Con pértiga telescópica llegamos hasta 4 plantas sin andamios, y con nuestro sistema de agua pura Unger HydroPower hasta 10 metros de altura, con un acabado sin marcas.',
       },
     ],
   },

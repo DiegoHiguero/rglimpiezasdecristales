@@ -21,6 +21,7 @@
             <li><router-link to="/limpieza-cristales-hogares">Limpieza para hogares</router-link></li>
             <li><router-link to="/limpieza-cristales-comunidades">Limpieza para comunidades</router-link></li>
             <li><router-link to="/limpieza-cristales-locales-comerciales">Limpieza de locales</router-link></li>
+            <li><router-link to="/limpieza-cristales-oficinas">Limpieza de oficinas</router-link></li>
             <li><router-link to="/limpieza-cristales-altura">Limpieza en altura</router-link></li>
             <li><router-link to="/#precios">Precios</router-link></li>
             <li><router-link to="/blog">Blog</router-link></li>

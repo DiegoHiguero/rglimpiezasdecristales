@@ -21,6 +21,7 @@
             <li><router-link to="/limpieza-cristales-hogares">Home cleaning</router-link></li>
             <li><router-link to="/limpieza-cristales-comunidades">Community cleaning</router-link></li>
             <li><router-link to="/limpieza-cristales-locales-comerciales">Shop cleaning</router-link></li>
+            <li><router-link to="/limpieza-cristales-oficinas">Office window cleaning</router-link></li>
             <li><router-link to="/limpieza-cristales-altura">Cleaning at height</router-link></li>
             <li><router-link to="/en#pricing">Pricing</router-link></li>
             <li><router-link to="/blog">Blog</router-link></li>

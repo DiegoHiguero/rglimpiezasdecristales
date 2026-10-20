@@ -96,12 +96,25 @@ const serviceRoutes = [
     name: 'Limpieza de cristales para locales comerciales y escaparates en Madrid',
     title: 'Limpieza de Cristales para Locales Comerciales en Madrid',
     description: 'Limpieza de escaparates y cristales para negocios en Madrid. Horarios fuera de apertura, factura para empresas. Presupuesto gratis en 24 h.',
-    keywords: 'limpieza cristales locales comerciales madrid, limpieza escaparates madrid, limpiacristales negocios madrid, limpieza cristales oficinas',
+    keywords: 'limpieza cristales locales comerciales madrid, limpieza escaparates madrid, limpiacristales negocios madrid, limpieza lunas tiendas',
     breadcrumbLabel: 'Locales comerciales',
     faqs: [
       { q: '¿Podéis limpiar fuera del horario de apertura?', a: 'Sí, es lo habitual: trabajamos antes de que abras o después del cierre para no afectar a tu actividad ni a tus clientes.' },
       { q: '¿Hacéis contratos de mantenimiento para varios locales?', a: 'Sí, si gestionas varias tiendas u oficinas en Madrid podemos coordinar un calendario único con condiciones especiales por volumen.' },
       { q: '¿Retiráis vinilos antiguos del escaparate?', a: 'Sí, retiramos vinilos y restos de adhesivo sin rayar el cristal, dejando la superficie lista para una nueva decoración o totalmente limpia.' },
+    ],
+  },
+  {
+    slug: 'limpieza-cristales-oficinas',
+    name: 'Limpieza de cristales para oficinas y edificios en Madrid',
+    title: 'Limpieza de Cristales para Oficinas en Madrid',
+    description: 'Limpieza de cristales en oficinas, edificios y naves de Madrid: mamparas, cristaleras y fachadas. Contrato de mantenimiento y factura. Presupuesto en 24 h.',
+    keywords: 'limpieza cristales oficinas madrid, limpieza mamparas oficina, limpieza cristales edificios empresas, limpieza fachadas acristaladas madrid, limpieza cristales naves industriales',
+    breadcrumbLabel: 'Oficinas y edificios',
+    faqs: [
+      { q: '¿Limpiáis también las mamparas y divisiones interiores?', a: 'Sí: además de las ventanas exteriores limpiamos mamparas, puertas de cristal y divisiones de salas de reuniones, eliminando huellas y marcas por ambas caras.' },
+      { q: '¿Cada cuánto conviene limpiar los cristales de una oficina?', a: 'Para la mayoría de oficinas recomendamos una limpieza mensual de las zonas de paso y mamparas, y trimestral de los ventanales exteriores. Lo ajustamos según la ubicación del edificio y el tráfico de la zona.' },
+      { q: '¿Podéis limpiar la fachada acristalada de todo el edificio?', a: 'Sí. Con pértiga telescópica llegamos hasta 4 plantas sin andamios, y con nuestro sistema de agua pura Unger HydroPower hasta 10 metros de altura, con un acabado sin marcas.' },
     ],
   },
   {
