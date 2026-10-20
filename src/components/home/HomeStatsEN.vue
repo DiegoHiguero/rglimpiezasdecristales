@@ -1,18 +1,19 @@
 <template>
+  <!-- Franja fina de cifras y garantías; va dentro del fondo oscuro del hero -->
   <div class="section3" ref="sectionRef">
-    <div class="stats-row">
-      <div
-        class="stat-item"
-        v-for="(s, i) in stats"
-        :key="s.label"
-        :class="{ 'is-visible': hasAnimated }"
-        :style="{ transitionDelay: (i * 0.08) + 's' }"
-      >
-        <font-awesome-icon :icon="s.icon" class="stat-icon" />
-        <span class="stat-number" v-if="!s.rating">{{ s.prefix }}{{ displayValues[i] }}</span>
-        <span class="stat-number" v-else>5.0</span>
-        <p class="stat-label">{{ s.label }}</p>
-      </div>
+    <div
+      class="stat-item"
+      v-for="(s, i) in stats"
+      :key="s.label"
+      :class="{ 'is-visible': hasAnimated }"
+      :style="{ transitionDelay: (i * 0.08) + 's' }"
+    >
+      <span class="stat-number">{{ s.prefix }}{{ displayValues[i] }}</span>
+      <span class="stat-label">{{ s.label }}</span>
+    </div>
+    <div class="perk" v-for="p in perks" :key="p.titulo">
+      <font-awesome-icon :icon="p.icon" class="perk-icon" />
+      <span class="stat-label">{{ p.titulo }}</span>
     </div>
   </div>
 </template>
@@ -21,10 +22,14 @@
 import { ref, onMounted } from 'vue';
 
 const stats = [
-  { icon: ['fas', 'clock'], target: 10,  prefix: '+', label: 'Years of experience' },
-  { icon: ['fas', 'broom'], target: 500, prefix: '+', label: 'Jobs completed' },
-  { icon: ['fas', 'user'],  target: 200, prefix: '+', label: 'Happy clients' },
-  { icon: ['fas', 'star'],  rating: true, label: 'Google rating' },
+  { target: 10,  prefix: '+', label: 'years of experience' },
+  { target: 500, prefix: '+', label: 'jobs' },
+  { target: 200, prefix: '+', label: 'clients' },
+];
+
+const perks = [
+  { icon: ['fas', 'shield-halved'], titulo: 'Fully insured' },
+  { icon: ['fas', 'file-invoice'],  titulo: 'Invoice provided' },
 ];
 
 const displayValues = ref(stats.map(() => 0));
@@ -48,7 +53,7 @@ onMounted(() => {
     entries.forEach(entry => {
       if (entry.isIntersecting && !hasAnimated.value) {
         hasAnimated.value = true;
-        stats.forEach((s, i) => { if (!s.rating) animateCount(i, s.target); });
+        stats.forEach((s, i) => animateCount(i, s.target));
         obs.disconnect();
       }
     });
@@ -59,58 +64,64 @@ onMounted(() => {
 
 <style scoped>
 .section3 {
-  background: var(--white);
-  margin: 12px 20px;
-  border-radius: var(--r-lg);
-  border: 1px solid var(--border);
-  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  background: rgba(10, 16, 30, 0.45);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: var(--r-md);
+  padding: 12px 8px;
 }
-.stats-row {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
+.stat-item, .perk {
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+  padding: 4px 22px;
+  border-right: 1px solid rgba(255,255,255,0.14);
 }
+.section3 > :last-child { border-right: none; }
 .stat-item {
-  padding: 30px 16px;
-  text-align: center;
-  border-right: 1px solid var(--border);
   opacity: 0;
-  transform: translateY(14px);
+  transform: translateY(8px);
   transition: opacity 0.5s ease, transform 0.5s ease;
 }
-.stat-item:last-child { border-right: none; }
 .stat-item.is-visible { opacity: 1; transform: translateY(0); }
-
-.stat-icon {
-  display: block;
-  font-size: 1.05rem;
-  color: var(--blue);
-  margin-bottom: 12px;
-}
-.stat-item:last-child .stat-icon { color: #f59e0b; }
+.perk { align-items: center; }
 
 .stat-number {
-  display: block;
   font-family: 'Anton', sans-serif;
-  font-size: 2.1rem;
-  color: var(--text);
+  font-size: 1.45rem;
+  color: #fff;
   line-height: 1;
 }
 .stat-label {
   font-family: 'Raleway', sans-serif;
-  font-size: 0.74rem;
+  font-size: 0.8rem;
   font-weight: 600;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin: 8px 0 0;
+  color: rgba(255,255,255,0.75);
 }
+.perk-icon { color: #60a5fa; font-size: 0.95rem; }
 
 @media (max-width: 768px) {
-  .section3 { margin: 10px 10px; border-radius: var(--r-md); }
-  .stats-row { grid-template-columns: repeat(2, 1fr); }
-  .stat-item { padding: 22px 10px; border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); }
-  .stat-item:nth-child(2n) { border-right: none; }
-  .stat-item:nth-last-child(-n+2) { border-bottom: none; }
-  .stat-number { font-size: 1.8rem; }
+  .section3 { padding: 10px 4px; row-gap: 8px; }
+  .stat-item {
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    flex: 1 1 30%;
+    padding: 2px 6px;
+  }
+  .stat-item:nth-child(3) { border-right: none; }
+  .stat-number { font-size: 1.3rem; }
+  .stat-label { font-size: 0.7rem; text-align: center; }
+  .perk {
+    flex: 1 1 45%;
+    justify-content: center;
+    padding: 8px 6px 2px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+  }
 }
 </style>

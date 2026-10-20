@@ -23,7 +23,7 @@ import { ref } from 'vue';
 const openFaq = ref(null);
 
 const faqs = [
-  { q: 'How much does window cleaning cost?', a: 'Guide prices start from €15 for small shops, €50 for flats and €75 for houses. Every quote is free and tailored to you — get in touch and we\'ll reply within 24 hours.' },
+  { q: 'How much does window cleaning cost?', a: 'Guide prices start from €20 for small shops, €55 for flats and €95 for houses. Every quote is free and tailored to you — get in touch and we\'ll reply within 24 hours.' },
   { q: 'How often should I clean my windows?', a: 'For commercial premises we recommend monthly or fortnightly cleaning to keep an impeccable image. For homes and residential communities, every 2-3 months is usually enough.' },
   { q: 'Which areas of Madrid do you cover?', a: 'We cover Madrid city and its entire metropolitan area: Getafe, Leganés, Móstoles, Alcorcón, Majadahonda, Pozuelo, Las Rozas and surrounding areas.' },
   { q: 'How do I request a quote?', a: 'You can contact us through the form, via WhatsApp on 625 950 506, or by calling us. We\'ll send you a quote within 24 hours.' },

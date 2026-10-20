@@ -20,6 +20,7 @@ const MESSAGES = {
     fixErrors: 'Corrige los campos marcados antes de enviar.',
     success: '¡Mensaje enviado! Te respondemos en menos de 24 h.',
     error: 'Hubo un problema al enviar. Inténtalo de nuevo.',
+    noEmail: 'No indicado',
   },
   en: {
     prenomRequired: 'Your name is required.',
@@ -33,6 +34,7 @@ const MESSAGES = {
     fixErrors: 'Please fix the highlighted fields before sending.',
     success: 'Message sent! We\'ll reply within 24 hours.',
     error: 'Something went wrong sending your message. Please try again.',
+    noEmail: 'Not provided',
   },
 };
 
@@ -42,7 +44,10 @@ const MESSAGES = {
 // Home venía justo de eso: la escritura en Firestore de un formulario había
 // quedado desalineada con las reglas de seguridad sin que el otro formulario
 // se viera afectado).
-export function useContactForm(locale = 'es') {
+// emailOptional: el formulario corto del hero no obliga a dar email. Como
+// las reglas de Firestore exigen un email no vacío, en ese caso se guarda
+// "No indicado" en Firestore (a EmailJS va vacío) sin tener que cambiar las reglas.
+export function useContactForm(locale = 'es', { emailOptional = false } = {}) {
   const t = MESSAGES[locale] || MESSAGES.es;
 
   const prenom = ref('');
@@ -63,7 +68,7 @@ export function useContactForm(locale = 'es') {
 
   const validateEmail = () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!email.value.trim()) errors.value.email = t.emailRequired;
+    if (!email.value.trim()) errors.value.email = emailOptional ? '' : t.emailRequired;
     else if (!emailRegex.test(email.value)) errors.value.email = t.emailInvalid;
     else errors.value.email = '';
     return !errors.value.email;
@@ -89,7 +94,7 @@ export function useContactForm(locale = 'es') {
 
   const isFormValid = computed(() =>
     prenom.value.trim() !== '' && !errors.value.prenom &&
-    email.value.trim() !== '' && !errors.value.email &&
+    (emailOptional || email.value.trim() !== '') && !errors.value.email &&
     phone.value.trim() !== '' && !errors.value.phone &&
     message.value.trim() !== '' && !errors.value.message
   );
@@ -114,12 +119,14 @@ export function useContactForm(locale = 'es') {
 
     sending.value = true;
     try {
-      const payload = { prenom: prenom.value, email: email.value, phone: phone.value, message: message.value };
+      const payload = { prenom: prenom.value, email: email.value.trim(), phone: phone.value, message: message.value };
       if (tipoServicio.value) payload.tipoServicio = tipoServicio.value;
       if (zona.value) payload.zona = zona.value;
 
-      await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, payload, EMAILJS_PUBLIC_KEY);
-      await addDoc(collection(db, 'mensajes'), { ...payload, timestamp: serverTimestamp(), read: false });
+      // email_display solo va al correo (no a Firestore: las reglas limitan el
+      // número de campos); muestra "No indicado" si el cliente no dejó email.
+      await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, { ...payload, email_display: payload.email || t.noEmail }, EMAILJS_PUBLIC_KEY);
+      await addDoc(collection(db, 'mensajes'), { ...payload, email: payload.email || t.noEmail, timestamp: serverTimestamp(), read: false });
 
       feedback.value = { msg: t.success, ok: true };
       resetForm();

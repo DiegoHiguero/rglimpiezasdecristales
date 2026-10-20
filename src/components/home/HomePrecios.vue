@@ -10,6 +10,8 @@
         <p class="pricing-sub">Tarifas orientativas — cada presupuesto es personalizado y gratuito.</p>
       </div>
 
+      <p class="pc-swipe">Desliza para ver todas las tarifas <font-awesome-icon :icon="['fas', 'arrow-right']" class="ms-1" /></p>
+
       <div class="pc-grid">
 
         <div class="pc-card pc-card--blue animate-on-scroll">
@@ -22,7 +24,7 @@
             </div>
             <div class="pc-price-wrap">
               <span class="pc-desde">desde</span>
-              <div class="pc-price">€20<span>/limpieza</span></div>
+              <div class="pc-price">20 €<span>/limpieza</span></div>
             </div>
             <ul class="pc-list">
               <li><font-awesome-icon :icon="['fas', 'check']" class="pc-check" />Limpieza de ventanas</li>
@@ -43,7 +45,7 @@
             </div>
             <div class="pc-price-wrap">
               <span class="pc-desde">desde</span>
-              <div class="pc-price">€38<span>/limpieza</span></div>
+              <div class="pc-price">38 €<span>/limpieza</span></div>
             </div>
             <ul class="pc-list">
               <li><font-awesome-icon :icon="['fas', 'check']" class="pc-check" />Limpieza de ventanas</li>
@@ -64,7 +66,7 @@
             </div>
             <div class="pc-price-wrap">
               <span class="pc-desde">desde</span>
-              <div class="pc-price">€52<span>/limpieza</span></div>
+              <div class="pc-price">52 €<span>/limpieza</span></div>
             </div>
             <ul class="pc-list">
               <li><font-awesome-icon :icon="['fas', 'check']" class="pc-check" />Limpieza con pértiga</li>
@@ -85,7 +87,7 @@
             </div>
             <div class="pc-price-wrap">
               <span class="pc-desde">desde</span>
-              <div class="pc-price">€55<span>/limpieza</span></div>
+              <div class="pc-price">55 €<span>/limpieza</span></div>
             </div>
             <ul class="pc-list">
               <li><font-awesome-icon :icon="['fas', 'check']" class="pc-check" />Limpieza de ventanas</li>
@@ -108,7 +110,7 @@
             </div>
             <div class="pc-price-wrap">
               <span class="pc-desde">desde</span>
-              <div class="pc-price">€95<span>/limpieza</span></div>
+              <div class="pc-price">95 €<span>/limpieza</span></div>
             </div>
             <ul class="pc-list">
               <li><font-awesome-icon :icon="['fas', 'check']" class="pc-check" />Limpieza de ventanas</li>
@@ -131,7 +133,7 @@
             </div>
             <div class="pc-price-wrap">
               <span class="pc-desde">desde</span>
-              <div class="pc-price">€4–9<span>/habitación</span></div>
+              <div class="pc-price">4–9 €<span>/habitación</span></div>
             </div>
             <ul class="pc-list">
               <li><font-awesome-icon :icon="['fas', 'check']" class="pc-check" />Limpieza de ventanas</li>
@@ -257,6 +259,8 @@
 }
 .pc-icon-wrap i { line-height: 1; }
 .pc-card:hover .pc-icon-wrap { transform: scale(1.08); }
+/* En oscuro el fondo pastel deslumbra: se usa el color de la tarjeta, translúcido */
+:root[data-theme="dark"] .pc-icon-wrap { background: color-mix(in srgb, var(--cc) 16%, transparent); }
 .pc-name {
   font-family: 'Raleway', sans-serif; font-weight: 700;
   font-size: 1rem; color: var(--text); margin: 0 0 4px;
@@ -325,5 +329,33 @@
 /* ── Responsive ── */
 @media (max-width: 900px) { .pc-grid { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 768px) { .section2 { margin: 10px 10px; border-radius: var(--r-md); } }
-@media (max-width: 560px) { .pc-grid { grid-template-columns: 1fr; } }
+.pc-swipe { display: none; }
+/* En móvil las tarifas van en carrusel horizontal en vez de 6 tarjetas apiladas */
+@media (max-width: 560px) {
+  .pc-swipe {
+    display: block;
+    text-align: center;
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.78rem; font-weight: 600;
+    color: var(--text-muted);
+    margin: -8px 0 12px;
+  }
+  .pc-grid {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-left: 12px;
+    gap: 12px;
+    margin: 0 -12px 8px;
+    padding: 6px 12px 12px;
+    scrollbar-width: none;
+  }
+  .pc-grid::-webkit-scrollbar { display: none; }
+  .pc-card {
+    flex: 0 0 82%;
+    scroll-snap-align: start;
+    opacity: 1;
+    transform: none;
+  }
+}
 </style>

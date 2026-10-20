@@ -17,10 +17,10 @@
 
       <div class="collapse navbar-collapse" id="navMenu">
         <ul class="navbar-nav mx-auto">
-          <li class="nav-item"><a class="nl" href="#" @click.prevent="scrollToSection('texto-principal')">Nosotros</a></li>
           <li class="nav-item"><a class="nl" href="#" @click.prevent="scrollToSection('servicios')">Servicios</a></li>
           <li class="nav-item"><a class="nl" href="#" @click.prevent="scrollToSection('trabajos-realizados')">Trabajos realizados</a></li>
           <li class="nav-item"><a class="nl" href="#" @click.prevent="scrollToSection('precios')">Precios</a></li>
+          <li class="nav-item"><a class="nl" href="#" @click.prevent="scrollToSection('texto-principal')">Sobre mí</a></li>
           <li class="nav-item"><router-link class="nl" to="/blog" @click="closeNavbar">Blog</router-link></li>
           <li class="nav-item"><router-link class="nl" to="/contacto" @click="closeNavbar">Contacto</router-link></li>
         </ul>
@@ -260,7 +260,8 @@ ul.navbar-nav {
   width: 0;
   height: 2px;
   border-radius: 2px;
-  background: linear-gradient(90deg, #60a5fa, #93c5fd);
+  /* Puntas que se desvanecen, como el .nav-divider */
+  background: linear-gradient(90deg, transparent 0%, #60a5fa 25%, #93c5fd 50%, #60a5fa 75%, transparent 100%);
   transform: translateX(-50%);
   transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }

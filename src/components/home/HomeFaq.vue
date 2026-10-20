@@ -23,7 +23,7 @@ import { ref } from 'vue';
 const openFaq = ref(null);
 
 const faqs = [
-  { q: '¿Cuánto cuesta la limpieza de cristales?', a: 'Los precios orientativos parten de €15 para locales pequeños, €50 para apartamentos y €75 para chalets. Cada presupuesto es personalizado y gratuito — contáctanos y te respondemos en menos de 24 horas.' },
+  { q: '¿Cuánto cuesta la limpieza de cristales?', a: 'Los precios orientativos parten de 20 € para locales pequeños, 55 € para apartamentos y 95 € para chalets. Cada presupuesto es personalizado y gratuito — contáctanos y te respondemos en menos de 24 horas.' },
   { q: '¿Con qué frecuencia debo limpiar los cristales?', a: 'Para locales comerciales recomendamos limpieza mensual o quincenal para mantener una imagen impecable. En hogares y comunidades, cada 2-3 meses suele ser suficiente.' },
   { q: '¿En qué zonas de Madrid trabajáis?', a: 'Cubrimos Madrid capital y toda su área metropolitana: Getafe, Leganés, Móstoles, Alcorcón, Majadahonda, Pozuelo, Las Rozas y alrededores.' },
   { q: '¿Cómo solicito un presupuesto?', a: 'Puedes contactarnos a través del formulario, por WhatsApp al 625 950 506 o llamándonos. Te enviamos el presupuesto en menos de 24 horas.' },

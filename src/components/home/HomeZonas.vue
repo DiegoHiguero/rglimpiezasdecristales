@@ -8,19 +8,21 @@
     <div class="zonas-header">
       <h2 class="zonas-title">Limpieza de cristales en <span class="zonas-accent">toda la Comunidad de Madrid</span></h2>
       <p class="zonas-sub">
-        Realizamos limpieza de cristales y ventanas en Madrid capital y en todos los municipios del área metropolitana.
-        Si tienes dudas sobre tu zona, <strong>llámanos y lo confirmamos.</strong>
+        Madrid capital y todos los municipios del área metropolitana.
       </p>
     </div>
 
     <div class="zonas-grid">
-      <div class="zona-card" v-for="zona in zonas" :key="zona.nombre">
-        <div class="zona-card-head">
+      <div class="zona-card" v-for="zona in zonas" :key="zona.nombre"
+           :class="{ 'zona-card--open': abierta === zona.nombre }">
+        <button type="button" class="zona-card-head" :aria-expanded="abierta === zona.nombre"
+                @click="abierta = abierta === zona.nombre ? null : zona.nombre">
           <span class="zona-icon-box" :style="{ background: zona.colorPale, color: zona.color }">
             <font-awesome-icon :icon="zona.icono" />
           </span>
           <span class="zona-nombre">{{ zona.nombre }}</span>
-        </div>
+          <font-awesome-icon :icon="['fas', 'chevron-down']" class="zona-chevron" />
+        </button>
         <ul class="zona-lista">
           <li v-for="municipio in zona.municipios" :key="municipio">
             <font-awesome-icon :icon="['fas', 'check']" class="zona-check" />
@@ -33,7 +35,7 @@
     <div class="zonas-footer">
       <p class="zonas-nota">
         <font-awesome-icon :icon="['fas', 'circle-info']" class="me-2" />
-        ¿Tu municipio no aparece? Es posible que también cubramos tu zona.
+        ¿Tu municipio no aparece? Llámanos y lo confirmamos.
       </p>
       <div class="zonas-ctas">
         <a href="tel:+34625950506" class="zonas-btn zonas-btn--primary">
@@ -49,6 +51,11 @@
 </template>
 
 <script setup>
+import { ref } from 'vue';
+
+// En móvil cada zona se pliega; los municipios siguen en el HTML (SEO local)
+const abierta = ref(null);
+
 const zonas = [
   {
     nombre: 'Madrid Capital',
@@ -136,15 +143,13 @@ const zonas = [
 
 /* ── Grid de zonas ── */
 .zonas-grid {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 16px;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 14px;
   margin-bottom: 32px;
 }
 
 .zona-card {
-  width: 240px;
   background: var(--white);
   border: 1px solid var(--border);
   border-radius: var(--r-md);
@@ -157,6 +162,12 @@ const zonas = [
 }
 
 .zona-card-head {
+  width: 100%;
+  padding: 0;
+  background: none;
+  border-top: none; border-left: none; border-right: none;
+  text-align: left;
+  cursor: default;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -169,12 +180,16 @@ const zonas = [
   display: flex; align-items: center; justify-content: center;
   font-size: 0.9rem; flex-shrink: 0;
 }
+/* El fondo pastel va inline (colorPale); en oscuro se sustituye por uno translúcido */
+:root[data-theme="dark"] .zona-icon-box { background: rgba(255,255,255,0.07) !important; }
 .zona-nombre {
   font-family: 'Anton', sans-serif;
   font-size: 1.05rem;
   color: var(--text);
   letter-spacing: 0.02em;
 }
+
+.zona-chevron { display: none; margin-left: auto; color: var(--text-muted); font-size: 0.8rem; transition: transform 0.25s; }
 
 .zona-lista {
   list-style: none;
@@ -258,7 +273,18 @@ const zonas = [
 }
 
 /* ── Responsive ── */
+@media (max-width: 1100px) {
+  .zonas-grid { grid-template-columns: repeat(3, 1fr); }
+}
 @media (max-width: 768px) {
+  .zonas-grid { grid-template-columns: 1fr; gap: 10px; margin-bottom: 24px; }
+  .zona-card { padding: 12px 14px; }
+  .zona-card:hover { transform: none; }
+  .zona-card-head { cursor: pointer; margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+  .zona-chevron { display: block; }
+  .zona-card--open .zona-chevron { transform: rotate(180deg); }
+  .zona-card:not(.zona-card--open) .zona-lista { display: none; }
+  .zona-card--open .zona-lista { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); }
   .zonas-section { margin: 10px 10px; padding: 32px 16px 28px; border-radius: var(--r-md); }
   .zonas-title { font-size: 1.7rem; }
   .zonas-footer { flex-direction: column; align-items: flex-start; }

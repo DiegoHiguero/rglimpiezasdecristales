@@ -10,6 +10,10 @@
     </div>
 
     <div class="gl-tabs">
+      <button :class="['gl-tab', { active: tab === 'ba' }]" @click="tab = 'ba'">
+        <font-awesome-icon :icon="['fas', 'chevron-left']" /><font-awesome-icon :icon="['fas', 'chevron-right']" />
+        Before / After <span class="gl-tab-count">{{ baPairs.length }}</span>
+      </button>
       <button :class="['gl-tab', { active: tab === 'fotos' }]" @click="tab = 'fotos'">
         <font-awesome-icon :icon="['fas', 'image']" />
         Photos <span class="gl-tab-count">{{ photos.length }}</span>
@@ -17,10 +21,6 @@
       <button :class="['gl-tab', { active: tab === 'videos' }]" @click="tab = 'videos'">
         <font-awesome-icon :icon="['fas', 'video']" />
         Videos <span class="gl-tab-count">2</span>
-      </button>
-      <button :class="['gl-tab', { active: tab === 'ba' }]" @click="tab = 'ba'">
-        <font-awesome-icon :icon="['fas', 'chevron-left']" /><font-awesome-icon :icon="['fas', 'chevron-right']" />
-        Before / After <span class="gl-tab-count">{{ baPairs.length }}</span>
       </button>
     </div>
 
@@ -30,7 +30,7 @@
         <div
           v-for="(item, i) in photos" :key="i"
           v-show="showAllPhotos || i < PHOTOS_PREVIEW_COUNT"
-          :class="['gallery-item', 'animate-on-scroll', { 'gallery-item--featured': i === 0 }]"
+          :class="['gallery-item', { 'gallery-item--featured': i === 0 }]"
           @click="openLightbox(i)"
         >
           <img :src="item.src" :alt="item.label" loading="lazy" />
@@ -133,40 +133,30 @@
 
 <script setup>
 import { ref, onMounted, onUnmounted, nextTick, watch } from 'vue';
-import img2024Feb    from '../../assets/img/2024-02-19.webp';
-import img2024Jul    from '../../assets/img/2024-07-08.webp';
-import img2023Ene    from '../../assets/img/20230119_110356.webp';
-import img2025Ago    from '../../assets/img/2025-08-30.webp';
-import img2025Oct    from '../../assets/img/2025-10-22.webp';
 import imgLimpiando  from '../../assets/img/limpiando.webp';
 import img20240529a  from '../../assets/img/20240529_100505.webp';
 import img20240529b  from '../../assets/img/20240529_100458.webp';
-import imgCollage2024 from '../../assets/img/Collage_2024-05-08_17_16_13.webp';
-import img20260319   from '../../assets/img/20260319_124222.webp';
-import img20260324   from '../../assets/img/20260324_122426.webp';
-import img20250917   from '../../assets/img/20250917_131013.webp';
-import img20260311   from '../../assets/img/20260311_121255.webp';
 import imgBefore1    from '../../assets/img/Screenshot_20240620_180140_Maps.webp';
 import imgAfter1     from '../../assets/img/Screenshot_20240620_180159_Maps.webp';
 import imgBefore2    from '../../assets/img/IMG-20250520-WA0000.webp';
 import imgAfter2     from '../../assets/img/IMG-20250520-WA0001.webp';
-import imgSingle5    from '../../assets/img/20260518_113941.webp';
+import imgBefore3    from '../../assets/img/ba-pergola-antes.webp';
+import imgAfter3     from '../../assets/img/ba-pergola-despues.webp';
+import imgBefore4    from '../../assets/img/ba-carteles-antes.webp';
+import imgAfter4     from '../../assets/img/ba-carteles-despues.webp';
 import imgSingle6    from '../../assets/img/20260518_122343.webp';
-import imgSingle3    from '../../assets/img/IMG-20230901-WA0000.webp';
-import imgSingle4    from '../../assets/img/20230606_132202.webp';
 import img20260528a  from '../../assets/img/20260528_140011.webp';
-import img20260528b  from '../../assets/img/20260528_140444.webp';
 import img20260528c  from '../../assets/img/20260528_140712.webp';
 import img20260528d  from '../../assets/img/20260528_141113.webp';
-import imgPadelVacio   from '../../assets/img/padel-cristales-vacio.webp';
 import imgPadelNoche   from '../../assets/img/padel-cristales-noche.webp';
 import imgPlacasSolares from '../../assets/img/placas-solares-collage.webp';
 import imgCristalera   from '../../assets/img/cristalera-terraza.webp';
 import imgPertiga2026  from '../../assets/img/20261006-pertiga-fachada.webp';
 import imgFachada2026  from '../../assets/img/20261006-fachada-acristalada.webp';
 
-const tab = ref('fotos');
-const PHOTOS_PREVIEW_COUNT = 9;
+// Opens on Before/After: it's the most convincing view at a glance
+const tab = ref('ba');
+const PHOTOS_PREVIEW_COUNT = 12;
 const showAllPhotos = ref(false);
 const videoA = ref(null);
 const videoB = ref(null);
@@ -186,39 +176,27 @@ watch(tab, async (val) => {
   }
 });
 
+// Best photos, in display order (the first one is shown large)
 const photos = [
-  { src: imgLimpiando,   label: 'Telescopic pole in action' },
-  { src: img2024Feb,     label: 'Commercial premises · Feb 2024' },
-  { src: img2023Ene,     label: 'Exterior windows · Jan 2023' },
-  { src: img20240529a,   label: 'Completed job · May 2024' },
-  { src: img20240529b,   label: 'Final detail · May 2024' },
-  { src: imgCollage2024, label: 'Portfolio · May 2024' },
-  { src: img2024Jul,     label: 'Working at height · Jul 2024' },
-  { src: imgSingle3,     label: 'Job · Sep 2023' },
-  { src: imgSingle4,     label: 'Job · Jun 2023' },
-  { src: img20250917,    label: 'Spotless windows · Sep 2025' },
-  { src: img2025Ago,     label: 'Result · Aug 2025' },
-  { src: img2025Oct,     label: 'Result · Oct 2025' },
-  { src: img20260311,    label: 'Recent job · Mar 2026' },
-  { src: img20260319,    label: 'Clean façade · Mar 2026' },
-  { src: img20260324,    label: 'Final result · Mar 2026' },
-  { src: imgSingle5,     label: 'Job · May 2026' },
-  { src: imgSingle6,     label: 'Job · May 2026' },
-  { src: img20260528a,   label: 'Job · May 2026' },
-  { src: img20260528b,   label: 'Job · May 2026' },
-  { src: img20260528c,   label: 'Job · May 2026' },
-  { src: img20260528d,   label: 'Job · May 2026' },
-  { src: imgCristalera,    label: 'Terrace glass enclosure · Installation' },
-  { src: imgPlacasSolares, label: 'Solar panel cleaning' },
+  { src: imgFachada2026,   label: 'Glass façade · Oct 2026' },
+  { src: imgPertiga2026,   label: 'Pure-water pole cleaning · Oct 2026' },
+  { src: img20260528d,     label: 'Glass building · May 2026' },
+  { src: imgLimpiando,     label: 'Terrace window cleaning' },
+  { src: img20260528c,     label: 'Glass-walled office · May 2026' },
+  { src: imgCristalera,    label: 'Terrace glass enclosure' },
+  { src: imgSingle6,       label: 'Rooftop skylight · May 2026' },
   { src: imgPadelNoche,    label: 'Glass-walled padel courts' },
-  { src: imgPadelVacio,    label: 'Padel court glass panels' },
-  { src: imgPertiga2026,   label: 'Cleaning with telescopic pole · Oct 2026' },
-  { src: imgFachada2026,   label: 'Spotless glass façade · Oct 2026' },
-].reverse(); // most recently added photos (at the end of the list) show first
+  { src: img20260528a,     label: 'Office glass partitions · May 2026' },
+  { src: img20240529b,     label: 'Skylight · May 2024' },
+  { src: imgPlacasSolares, label: 'Solar panel cleaning' },
+  { src: img20240529a,     label: 'Classroom windows · May 2024' },
+];
 
 const baPairs = [
   { before: imgBefore1, after: imgAfter1, label: 'Shop window · Jun 2024' },
-  { before: imgBefore2, after: imgAfter2, label: 'Residential community · May 2025' },
+  { before: imgBefore2, after: imgAfter2, label: 'Solar panels · May 2025' },
+  { before: imgBefore3, after: imgAfter3, label: 'Glass pergola · Oct 2025' },
+  { before: imgBefore4, after: imgAfter4, label: 'Poster removal from shop front · Jul 2024' },
 ];
 
 const sliderPos = ref(baPairs.map(() => 50));

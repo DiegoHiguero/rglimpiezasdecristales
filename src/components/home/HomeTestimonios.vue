@@ -14,22 +14,6 @@
     <div class="ti-header">
       <h2 class="ti-title">Lo que dicen <span class="ti-accent">nuestros clientes</span></h2>
       <p class="ti-sub">Opiniones reales, sin filtros ni retoques</p>
-
-      <div class="ti-summary">
-        <div class="ti-rating-box">
-          <div class="ti-stars">★★★★★</div>
-          <span class="ti-rating-label">Valoración en <strong>Google</strong></span>
-        </div>
-        <a
-          href="https://share.google/bqfKwS6rprwkS5FZI"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="ti-review-btn"
-        >
-          <font-awesome-icon :icon="['fas', 'star']" class="me-2" />
-          ¿Quedaste satisfecho? Déjanos tu opinión
-        </a>
-      </div>
     </div>
 
     <div ref="widgetContainer"></div>
@@ -48,19 +32,34 @@ onMounted(() => {
   script.async = true;
   widgetContainer.value?.appendChild(script);
 
+  // El widget de Trustmary es el mismo en /en, así que su idioma no se puede
+  // cambiar en el panel sin afectar a la versión inglesa: traducimos aquí sus
+  // textos fijos y ocultamos su título (ya tenemos el nuestro).
+  const TRADUCCIONES = [
+    [/^Write a review$/, 'Escribir una opinión'],
+    [/^(\d+) reviews?$/, '$1 opiniones'],
+  ];
+
   const observer = new MutationObserver(() => {
     const container = widgetContainer.value;
     if (!container) return;
     container.querySelectorAll('*').forEach(el => {
-      if (el.children.length === 0 && el.textContent.trim() === 'Here is what our customers say') {
+      if (el.children.length !== 0) return;
+      const text = el.textContent.trim();
+      if (text === 'Here is what our customers say') {
         el.style.display = 'none';
-        observer.disconnect();
+        return;
+      }
+      for (const [patron, traduccion] of TRADUCCIONES) {
+        if (patron.test(text)) el.textContent = text.replace(patron, traduccion);
       }
     });
   });
 
   if (widgetContainer.value) {
     observer.observe(widgetContainer.value, { childList: true, subtree: true });
+    // El widget termina de pintarse en unos segundos; luego dejamos de observar
+    setTimeout(() => observer.disconnect(), 20000);
   }
 });
 </script>
@@ -77,8 +76,7 @@ onMounted(() => {
 /* ── Header ── */
 .ti-header {
   text-align: center;
-  padding: 0 0 28px;
-  border-bottom: 1px solid var(--border);
+  padding: 0 0 8px;
 }
 
 .ti-label {
@@ -115,63 +113,9 @@ onMounted(() => {
   margin: 0 0 28px;
 }
 
-.ti-summary {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 20px;
-}
-
-.ti-rating-box {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  background: var(--slate);
-  border: 1px solid var(--border);
-  border-radius: var(--r-md);
-  padding: 12px 24px;
-}
-.ti-stars {
-  color: #f59e0b;
-  font-size: 1.3rem;
-  letter-spacing: 3px;
-  line-height: 1;
-}
-.ti-rating-label {
-  font-family: 'Raleway', sans-serif;
-  font-size: 0.75rem;
-  color: var(--text-muted);
-}
-.ti-rating-label strong { color: var(--text); }
-
-.ti-review-btn {
-  display: inline-flex;
-  align-items: center;
-  background: var(--blue);
-  color: #fff;
-  font-family: 'Raleway', sans-serif;
-  font-weight: 700;
-  font-size: 0.88rem;
-  padding: 12px 22px;
-  border-radius: 12px;
-  text-decoration: none;
-  transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
-}
-.ti-review-btn:hover {
-  background: var(--blue-hover);
-  color: #fff;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(37,99,235,0.35);
-}
-
 @media (max-width: 768px) {
   .testimonials-section { margin: 10px 10px; border-radius: var(--r-md); padding: 36px 16px 0; }
-  .ti-header { padding: 0 0 28px; }
   .ti-title { font-size: 1.7rem; }
-  .ti-summary { flex-direction: column; gap: 14px; }
-  .ti-review-btn { width: 100%; justify-content: center; }
   .ti-grid { padding: 24px 16px 28px; gap: 14px; }
 }
 </style>

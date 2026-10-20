@@ -6,49 +6,22 @@
 
       <div class="col-md-6 p-3 d-flex flex-column justify-content-center">
 
-        <div class="hero-badge">
-          <font-awesome-icon :icon="['fas', 'shield-halved']" class="me-1" />
-          Empresa de confianza en Madrid
-        </div>
-
-        <h1 class="display-4 p-3 fs-1">
+        <h1 class="hero-title px-3">
           <span class="prof">Limpieza de cristales y ventanas en Madrid</span>
-          <span class="textAnimation d-block mt-2">Escaparates · ventanas · fachadas · comunidades</span>
+          <span class="textAnimation hero-sub">Escaparates · ventanas · fachadas · comunidades</span>
         </h1>
 
-        <p class="hero-desc px-3">
-          Dejamos tus cristales impecables en hogares, locales y comunidades de vecinos.<br>
-          Cubrimos toda la Comunidad de Madrid. Presupuesto gratis en menos de 24 h.
+        <p class="hero-proof px-3">
+          <span class="hero-proof-stars">★★★★★</span><strong>5.0</strong> en Google · Presupuesto gratis en 24 h
         </p>
 
-        <div class="p-3 d-flex flex-wrap gap-2">
+        <div class="hero-ctas px-3">
           <a href="tel:+34625950506" class="btn btn-light fw-bold px-4">
             <font-awesome-icon :icon="['fas', 'phone']" class="me-2" />625 950 506
           </a>
-          <router-link to="/contacto" class="btn btn-outline-light fw-bold px-4">
-            Presupuesto gratis
-          </router-link>
-        </div>
-
-        <div class="hero-phone-card">
-          <div class="phone-mockup phone-mockup--hero">
-            <video
-              class="phone-mockup-video"
-              :class="{ 'phone-mockup-video--fading': heroFading }"
-              :src="heroVideoSrc"
-              muted loop playsinline autoplay
-              @loadedmetadata="onHeroVideoLoaded"
-              @timeupdate="onHeroVideoTimeUpdate"
-            ></video>
-            <img src="../assets/img/phone-mockup.webp" alt="" class="phone-mockup-frame" />
-            <!-- Precargan ambos clips en segundo plano (nunca se muestran) para
-                 que el cambio de fuente del vídeo visible sea instantáneo -->
-            <video v-for="clip in HERO_CLIPS" :key="clip.src" :src="clip.src" preload="auto" muted playsinline class="phone-mockup-preload"></video>
-          </div>
-          <div class="hero-phone-info">
-            <span class="hero-phone-tag"><font-awesome-icon :icon="['fas', 'circle-play']" class="me-1" />Así trabajamos</span>
-            <span class="hero-phone-sub">Vídeo real, sin edición</span>
-          </div>
+          <a href="https://wa.me/34625950506?text=Hola%2C%20quiero%20un%20presupuesto%20para%20limpieza%20de%20cristales" target="_blank" rel="noopener noreferrer" class="btn hero-wa fw-bold px-4">
+            <font-awesome-icon :icon="['fab', 'whatsapp']" class="me-2" />WhatsApp
+          </a>
         </div>
 
       </div>
@@ -58,31 +31,19 @@
 
           <div class="fh">
             <h2 class="fh-title">¿Cuánto cuesta limpiar<br><span class="fh-accent">tu espacio?</span></h2>
-            <p class="fh-sub">Cuéntanos y te respondemos en menos de 24 h</p>
           </div>
 
           <form @submit.prevent="enviarMensaje" novalidate>
 
-            <div class="ff" :class="{ 'ff--ok': prenom.length > 0 && !errors.prenom, 'ff--err': errors.prenom }">
-              <div class="ff-icon"><font-awesome-icon :icon="['fas', 'user']" /></div>
-              <div class="ff-body">
-                <label for="prenomInput">Nombre completo</label>
-                <input type="text" id="prenomInput" placeholder="¿Cómo te llamas?"
-                  v-model="prenom" @blur="validatePrenom" @input="validatePrenom" autocomplete="name" />
-                <span class="ff-msg" v-if="errors.prenom">{{ errors.prenom }}</span>
-                <span class="ff-msg ff-msg--ok" v-else-if="prenom.length > 0 && !errors.prenom">¡Perfecto!</span>
-              </div>
-            </div>
-
             <div class="ff-row">
-              <div class="ff" :class="{ 'ff--ok': email.length > 0 && !errors.email, 'ff--err': errors.email }">
-                <div class="ff-icon"><font-awesome-icon :icon="['fas', 'envelope']" /></div>
+              <div class="ff" :class="{ 'ff--ok': prenom.length > 0 && !errors.prenom, 'ff--err': errors.prenom }">
+                <div class="ff-icon"><font-awesome-icon :icon="['fas', 'user']" /></div>
                 <div class="ff-body">
-                  <label for="emailInput">Correo</label>
-                  <input type="email" id="emailInput" placeholder="tu@email.com"
-                    v-model.trim="email" @blur="validateEmail" @input="validateEmail" autocomplete="email" />
-                  <span class="ff-msg" v-if="errors.email">{{ errors.email }}</span>
-                  <span class="ff-msg ff-msg--ok" v-else-if="email.length > 0 && !errors.email">¡Perfecto!</span>
+                  <label for="prenomInput">Nombre</label>
+                  <input type="text" id="prenomInput" placeholder="¿Cómo te llamas?"
+                    v-model="prenom" @blur="validatePrenom" @input="validatePrenom" autocomplete="name" />
+                  <span class="ff-msg" v-if="errors.prenom">{{ errors.prenom }}</span>
+                  <span class="ff-msg ff-msg--ok" v-else-if="prenom.length > 0 && !errors.prenom">¡Perfecto!</span>
                 </div>
               </div>
               <div class="ff" :class="{ 'ff--ok': phone.length > 0 && !errors.phone, 'ff--err': errors.phone }">
@@ -96,6 +57,20 @@
                 </div>
               </div>
             </div>
+
+            <div class="ff" v-if="showEmail" :class="{ 'ff--ok': email.length > 0 && !errors.email, 'ff--err': errors.email }">
+              <div class="ff-icon"><font-awesome-icon :icon="['fas', 'envelope']" /></div>
+              <div class="ff-body">
+                <label for="emailInput">Correo (opcional)</label>
+                <input type="email" id="emailInput" placeholder="tu@email.com"
+                  v-model.trim="email" @blur="validateEmail" @input="validateEmail" autocomplete="email" />
+                <span class="ff-msg" v-if="errors.email">{{ errors.email }}</span>
+                <span class="ff-msg ff-msg--ok" v-else-if="email.length > 0 && !errors.email">¡Perfecto!</span>
+              </div>
+            </div>
+            <button type="button" class="ff-add-email" v-else @click="showEmail = true">
+              <font-awesome-icon :icon="['fas', 'plus']" class="me-1" />Añadir email (opcional)
+            </button>
 
             <div class="ff" :class="{ 'ff--ok': message.length > 0 && !errors.message, 'ff--err': errors.message }">
               <div class="ff-icon ff-icon--top"><font-awesome-icon :icon="['fas', 'comments']" /></div>
@@ -116,7 +91,7 @@
               <font-awesome-icon :icon="['fas', 'xmark']" class="me-2" />{{ feedback.msg }}
             </div>
 
-            <button type="submit" class="f-submit" :disabled="sending || !isFormValid">
+            <button type="submit" class="f-submit" :disabled="sending">
               <span v-if="!sending">
                 <font-awesome-icon :icon="['fas', 'paper-plane']" class="me-2" />Enviar consulta
               </span>
@@ -127,26 +102,28 @@
 
             <div class="f-trust">
               <span><font-awesome-icon :icon="['fas', 'lock']" class="me-1" />Sin compromiso</span>
-              <span><font-awesome-icon :icon="['fas', 'clock']" class="me-1" />Respuesta en 24 h</span>
               <span><font-awesome-icon :icon="['fas', 'shield-halved']" class="me-1" />Datos protegidos</span>
             </div>
 
           </form>
         </div>
       </div>
+
+      <!-- Cifras y garantías, dentro del fondo del hero, bajo texto y formulario -->
+      <div class="col-12 hero-stats">
+        <HomeStats />
+      </div>
     </div>
 
     <!-- ── SECCIONES ── -->
-    <!-- Orden alineado con el menú (Nosotros · Servicios · Trabajos
-         realizados · Precios) para que el scroll al hacer click en el
+    <!-- Orden alineado con el menú (Servicios · Trabajos realizados ·
+         Precios · Nosotros) para que el scroll al hacer click en el
          nav siempre avance hacia abajo, nunca salte hacia atrás. -->
-    <HomeStats />
-    <HomeSobreMi />
     <HomeServicios />
     <HomeGaleria />
     <HomeTestimonios />
     <HomePrecios />
-    <HomeVentajas />
+    <HomeSobreMi />
     <HomeZonas />
     <HomeBlog />
     <HomeFaq />
@@ -186,51 +163,25 @@
 
 <script setup lang="ts">
 import { useUserStore } from "../stores/user";
-import { onMounted, onUnmounted, ref, computed } from "vue";
+import { onMounted, onUnmounted, ref } from "vue";
 import { useContactForm } from '../composables/useContactForm';
-import heroVideoA from '../assets/img/videoplayback.mp4';
-import heroVideoB from '../assets/img/VID-20251022-WA0013.mp4';
 import HomeStats      from '../components/home/HomeStats.vue';
 import HomeServicios  from '../components/home/HomeServicios.vue';
 import HomePrecios    from '../components/home/HomePrecios.vue';
 import HomeGaleria    from '../components/home/HomeGaleria.vue';
 import HomeTestimonios from '../components/home/HomeTestimonios.vue';
 import HomeSobreMi    from '../components/home/HomeSobreMi.vue';
-import HomeVentajas   from '../components/home/HomeVentajas.vue';
 import HomeZonas      from '../components/home/HomeZonas.vue';
 import HomeBlog       from '../components/home/HomeBlog.vue';
 import HomeFaq        from '../components/home/HomeFaq.vue';
 
-// Vídeo del hero: los dos vídeos reales de la galería se reproducen uno
-// detrás del otro (cada uno con su propia ventana de recorte, según su
-// duración real), con un único fundido simple al cambiar de uno a otro.
-const HERO_CLIPS = [
-  { src: heroVideoA, start: 1.5, end: 7 },
-  { src: heroVideoB, start: 0.2, end: 3.4 },
-];
-const heroVideoIndex = ref(0);
-const heroVideoSrc = computed(() => HERO_CLIPS[heroVideoIndex.value].src);
-const heroFading = ref(false);
-
-const onHeroVideoLoaded = (e) => {
-  e.target.currentTime = HERO_CLIPS[heroVideoIndex.value].start;
-  e.target.play().catch(() => {});
-  heroFading.value = false;
-};
-const onHeroVideoTimeUpdate = (e) => {
-  const clip = HERO_CLIPS[heroVideoIndex.value];
-  if (e.target.currentTime >= clip.end) {
-    heroFading.value = true;
-    heroVideoIndex.value = (heroVideoIndex.value + 1) % HERO_CLIPS.length;
-  }
-};
-
 const {
   prenom, email, phone, message,
-  errors, sending, feedback, isFormValid,
+  errors, sending, feedback,
   validatePrenom, validateEmail, validatePhone, validateMessage,
   enviarMensaje,
-} = useContactForm();
+} = useContactForm('es', { emailOptional: true });
+const showEmail = ref(false);
 
 const userStore = useUserStore();
 
@@ -340,108 +291,40 @@ function getCookie(cname: string): string {
   pointer-events: none;
 }
 .principal > * { position: relative; z-index: 2; }
+.hero-stats { padding: 0 16px 18px; }
+.hero-stats :deep(.section3) { margin: 0; }
 .prof { color: #fff; text-shadow: 0 2px 18px rgba(0,0,0,0.8); }
-.hero-badge {
-  display: inline-flex;
-  align-items: center;
-  background: rgba(37,99,235,0.18);
-  border: 1px solid rgba(96,165,250,0.3);
-  color: #93c5fd;
-  font-family: 'Raleway', sans-serif;
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  padding: 5px 14px;
-  border-radius: 20px;
-  margin: 0 0 4px 12px;
-  width: fit-content;
-}
-.hero-desc {
+.hero-proof {
   color: rgba(255,255,255,0.9);
   font-family: 'Raleway', sans-serif;
-  font-size: 0.97rem;
-  line-height: 1.7;
-  margin: 0 0 14px;
+  font-size: 0.95rem;
+  margin: 0;
   text-shadow: 0 1px 8px rgba(0,0,0,0.6);
-  text-align: justify;
-  text-align-last: left;
 }
+.hero-proof-stars { color: #fbbf24; letter-spacing: 1px; margin-right: 4px; }
+.hero-title {
+  font-family: 'Anton', sans-serif;
+  font-weight: 400;
+  font-size: 2.9rem;
+  line-height: 1.1;
+  margin: 0 0 14px;
+}
+.hero-sub {
+  display: block;
+  font-family: 'Raleway', sans-serif;
+  font-weight: 600;
+  font-size: 1.1rem;
+  line-height: 1.4;
+  margin-top: 12px;
+}
+.hero-ctas { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+.hero-wa { background: #25d366; color: #fff; border: none; }
+.hero-wa:hover { background: #1ebe5b; color: #fff; }
 .textAnimation {
   background: linear-gradient(90deg, #60a5fa 0%, #93c5fd 50%, #60a5fa 100%);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  display: inline-block;
-}
-
-/* â”€â”€ VÃDEO DEL HERO (mockup de mÃ³vil) â”€â”€ */
-.hero-phone-card {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  margin: 8px 0 0 0;
-  padding: 14px;
-  width: 100%;
-  background: linear-gradient(rgba(8,12,24,0.74), rgba(8,12,24,0.74)), url('../assets/img/hero-phone-card-bg.webp') center/cover no-repeat;
-  border: 1px solid rgba(255,255,255,0.14);
-  border-radius: 18px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.18);
-}
-.phone-mockup {
-  position: relative;
-  width: 85px;
-  aspect-ratio: 394 / 783;
-  flex-shrink: 0;
-  filter: drop-shadow(0 10px 20px rgba(0,0,0,0.4));
-}
-.phone-mockup-video {
-  position: absolute;
-  left: 7.1%;
-  top: 3.1%;
-  width: 86.3%;
-  height: 94%;
-  object-fit: cover;
-  border-radius: 10.5% / 5%;
-  display: block;
-  background: #000;
-  transition: opacity 0.25s ease;
-  z-index: 1;
-}
-.phone-mockup-video--fading { opacity: 0; }
-.phone-mockup-frame {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 2;
-  pointer-events: none;
-  display: block;
-}
-.phone-mockup-preload {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  opacity: 0;
-  pointer-events: none;
-}
-.hero-phone-info {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-.hero-phone-tag {
-  color: #fff;
-  font-family: 'Raleway', sans-serif;
-  font-weight: 700;
-  font-size: 0.88rem;
-}
-.hero-phone-tag svg { color: #60a5fa; }
-.hero-phone-sub {
-  color: rgba(255,255,255,0.62);
-  font-family: 'Raleway', sans-serif;
-  font-weight: 500;
-  font-size: 0.76rem;
 }
 
 /* â”€â”€ FORMULARIO â”€â”€ */
@@ -471,7 +354,6 @@ function getCookie(cname: string): string {
 }
 .fh-title { font-family: 'Anton', sans-serif; color: #fff; font-size: 1.5rem; line-height: 1.2; margin: 0 0 6px; }
 .fh-accent { background: linear-gradient(90deg, #60a5fa, #93c5fd); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-.fh-sub { color: rgba(255,255,255,0.45); font-family: 'Raleway', sans-serif; font-size: 0.8rem; margin: 0; }
 
 .ff { display: flex; gap: 10px; margin-bottom: 13px; }
 .ff-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
@@ -515,6 +397,15 @@ function getCookie(cname: string): string {
 
 .ff-msg { display: block; font-family: 'Raleway', sans-serif; font-size: 0.7rem; font-weight: 600; margin-top: 3px; color: #f87171; }
 .ff-msg--ok { color: #34d399; }
+.ff-add-email {
+  display: block;
+  background: none; border: none; padding: 0;
+  margin: -4px 0 12px 44px;
+  color: #93c5fd;
+  font-family: 'Raleway', sans-serif; font-size: 0.75rem; font-weight: 600;
+  cursor: pointer;
+}
+.ff-add-email:hover { text-decoration: underline; }
 
 .f-success {
   background: rgba(52,211,153,0.1); border: 1px solid rgba(52,211,153,0.3);
@@ -561,7 +452,6 @@ function getCookie(cname: string): string {
   box-shadow: 0 8px 40px rgba(0,0,0,0.18);
 }
 :root:not([data-theme="dark"]) .fh-title { color: #1e293b; }
-:root:not([data-theme="dark"]) .fh-sub { color: rgba(0,0,0,0.45); }
 :root:not([data-theme="dark"]) .ff-icon {
   background: rgba(37,99,235,0.08);
   border-color: rgba(37,99,235,0.2);
@@ -680,16 +570,18 @@ function getCookie(cname: string): string {
 /* â”€â”€ RESPONSIVE â”€â”€ */
 @media (max-width: 768px) {
   .principal { min-height: 360px; border-radius: var(--r-md); }
+  .hero-title { font-size: 2.1rem; padding-top: 14px; }
+  .hero-sub { font-size: 0.98rem; }
 }
 @media (max-width: 480px) {
   .ff-row { grid-template-columns: 1fr; }
   .formulario { padding: 22px 16px 16px; }
-  .phone-mockup { width: 160px; }
-  .hero-phone-tag { font-size: 0.95rem; }
-  .hero-phone-sub { font-size: 0.8rem; }
-  /* Mismo margen que ya tenía el formulario, para que el texto y la
-     tarjeta del vídeo de arriba queden alineados con él */
   .col-md-6.p-3 { padding-left: 12px !important; padding-right: 12px !important; }
-  .hero-badge, .hero-phone-card { margin-left: 0; }
+  .hero-ctas .btn {
+    flex: 1;
+    display: inline-flex; align-items: center; justify-content: center;
+    white-space: nowrap;
+    padding-left: 12px !important; padding-right: 12px !important;
+  }
 }
 </style>

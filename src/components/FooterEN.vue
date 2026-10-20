@@ -15,7 +15,7 @@
           <h3 class="ft-heading">Navigation</h3>
           <ul>
             <li><router-link to="/en">Home</router-link></li>
-            <li><router-link to="/en#about">About</router-link></li>
+            <li><router-link to="/en#about">About me</router-link></li>
             <li><router-link to="/en#services">Window Cleaning</router-link></li>
             <li><router-link to="/agua-pura-altura">Pure water at height</router-link></li>
             <li><router-link to="/limpieza-cristales-hogares">Home cleaning</router-link></li>

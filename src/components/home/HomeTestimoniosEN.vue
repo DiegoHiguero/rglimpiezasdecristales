@@ -14,22 +14,6 @@
     <div class="ti-header">
       <h2 class="ti-title">What <span class="ti-accent">our clients say</span></h2>
       <p class="ti-sub">Real reviews, no filters or touch-ups</p>
-
-      <div class="ti-summary">
-        <div class="ti-rating-box">
-          <div class="ti-stars">★★★★★</div>
-          <span class="ti-rating-label"><strong>Google</strong> rating</span>
-        </div>
-        <a
-          href="https://share.google/bqfKwS6rprwkS5FZI"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="ti-review-btn"
-        >
-          <font-awesome-icon :icon="['fas', 'star']" class="me-2" />
-          Happy with our service? Leave us a review
-        </a>
-      </div>
     </div>
 
     <div ref="widgetContainer"></div>
@@ -77,8 +61,7 @@ onMounted(() => {
 /* ── Header ── */
 .ti-header {
   text-align: center;
-  padding: 0 0 28px;
-  border-bottom: 1px solid var(--border);
+  padding: 0 0 8px;
 }
 
 .ti-label {
@@ -115,63 +98,9 @@ onMounted(() => {
   margin: 0 0 28px;
 }
 
-.ti-summary {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 20px;
-}
-
-.ti-rating-box {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  background: var(--slate);
-  border: 1px solid var(--border);
-  border-radius: var(--r-md);
-  padding: 12px 24px;
-}
-.ti-stars {
-  color: #f59e0b;
-  font-size: 1.3rem;
-  letter-spacing: 3px;
-  line-height: 1;
-}
-.ti-rating-label {
-  font-family: 'Raleway', sans-serif;
-  font-size: 0.75rem;
-  color: var(--text-muted);
-}
-.ti-rating-label strong { color: var(--text); }
-
-.ti-review-btn {
-  display: inline-flex;
-  align-items: center;
-  background: var(--blue);
-  color: #fff;
-  font-family: 'Raleway', sans-serif;
-  font-weight: 700;
-  font-size: 0.88rem;
-  padding: 12px 22px;
-  border-radius: 12px;
-  text-decoration: none;
-  transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
-}
-.ti-review-btn:hover {
-  background: var(--blue-hover);
-  color: #fff;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(37,99,235,0.35);
-}
-
 @media (max-width: 768px) {
   .testimonials-section { margin: 10px 10px; border-radius: var(--r-md); padding: 36px 16px 0; }
-  .ti-header { padding: 0 0 28px; }
   .ti-title { font-size: 1.7rem; }
-  .ti-summary { flex-direction: column; gap: 14px; }
-  .ti-review-btn { width: 100%; justify-content: center; }
   .ti-grid { padding: 24px 16px 28px; gap: 14px; }
 }
 </style>

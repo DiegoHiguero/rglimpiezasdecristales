@@ -4,7 +4,7 @@
     <span class="svc-label"><font-awesome-icon :icon="['fas', 'hand-sparkles']" class="me-1" />Lo que hacemos</span>
     <div class="svc-header">
       <h2 class="svc-title">Limpieza <span class="svc-accent">profesional</span><br>para cada espacio</h2>
-      <p class="svc-subtitle">Sin andamios, sin complicaciones — trabajamos sin interrumpir tu día a día</p>
+      <p class="svc-subtitle">Trabajamos sin interrumpir tu día a día, en casa o en tu negocio</p>
     </div>
 
     <div class="svc-grid-wrap">
@@ -24,7 +24,7 @@
             <span class="svc-icon svc-icon--teal"><font-awesome-icon :icon="['fas', 'droplet']" /></span>
             <h3 class="svc-name">Agua pura en altura (Unger HydroPower)</h3>
           </div>
-          <p class="svc-desc">Equipo profesional exclusivo: limpieza con agua pura hasta 10 metros de altura, sin andamios ni marcas.</p>
+          <p class="svc-desc">Para donde la pértiga no llega: agua pura filtrada hasta 10 metros de altura, que se seca sola sin dejar marcas.</p>
           <ul class="svc-list">
             <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Hasta 10 metros de alcance</li>
             <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Sistema Unger HydroPower exclusivo</li>
@@ -68,11 +68,11 @@
             <span class="svc-icon svc-icon--blue"><font-awesome-icon :icon="['fas', 'store']" /></span>
             <h3 class="svc-name">Locales comerciales</h3>
           </div>
-          <p class="svc-desc">Tiendas, cafeterías y locales siempre impecables, sin interrumpir tu actividad diaria.</p>
+          <p class="svc-desc">Escaparates y lunas de tiendas, bares y cafeterías a pie de calle, siempre impecables sin interrumpir tu actividad.</p>
           <ul class="svc-list">
+            <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Escaparates, lunas y puertas</li>
             <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Limpieza sin cerrar el negocio</li>
             <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Frecuencia quincenal o mensual</li>
-            <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Presupuesto personalizado gratis</li>
           </ul>
           <router-link to="/limpieza-cristales-locales-comerciales" class="svc-btn-secondary">Saber más</router-link>
           <router-link to="/contacto" class="svc-btn svc-btn--blue">Consultar precio</router-link>
@@ -114,11 +114,11 @@
                 <span class="svc-icon svc-icon--purple"><font-awesome-icon :icon="['fas', 'building']" /></span>
                 <h3 class="svc-name">Oficinas y edificios</h3>
               </div>
-              <p class="svc-desc">Oficinas, edificios y naves industriales. Planes a medida con horarios flexibles.</p>
+              <p class="svc-desc">Grandes superficies acristaladas de oficinas, edificios y naves, por dentro y por fuera, con calendario fijo.</p>
               <ul class="svc-list">
-                <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Contratos de mantenimiento</li>
+                <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Grandes cristaleras y mamparas</li>
                 <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Horarios adaptados a tu empresa</li>
-                <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Factura para empresas</li>
+                <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Contrato y factura para empresas</li>
               </ul>
               <router-link to="/contacto" class="svc-btn svc-btn--purple">Consultar precio</router-link>
             </div>
@@ -135,11 +135,11 @@
                 <span class="svc-icon svc-icon--orange"><font-awesome-icon :icon="['fas', 'arrow-up-from-water-pump']" /></span>
                 <h3 class="svc-name">Limpieza en altura (pértiga)</h3>
               </div>
-              <p class="svc-desc">Fachadas y ventanales en altura con pértiga telescópica convencional, hasta 4 plantas, sin andamios.</p>
+              <p class="svc-desc">Ventanas y fachadas de hasta 4 plantas con pértiga telescópica, trabajando desde el suelo y sin andamios.</p>
               <ul class="svc-list">
-                <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Hasta 4 plantas sin andamio</li>
-                <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Agua desionizada sin marcas</li>
-                <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Sin permisos municipales</li>
+                <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Hasta 4 plantas desde el suelo</li>
+                <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Ideal para alturas medias</li>
+                <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Sin andamios ni permisos municipales</li>
               </ul>
               <router-link to="/limpieza-cristales-altura" class="svc-btn-secondary">Saber más</router-link>
               <router-link to="/contacto" class="svc-btn svc-btn--orange">Consultar precio</router-link>
@@ -241,10 +241,6 @@
     </div>
 
     <div class="svc-footer">
-      <div class="svc-footer-icon">
-        <font-awesome-icon :icon="['fas', 'arrow-up-from-water-pump']" />
-      </div>
-      <p class="svc-footer-text">¿Necesitas llegar más alto? Con nuestro sistema exclusivo de agua pura Unger HydroPower alcanzamos hasta 10 metros, sin andamios.</p>
       <button type="button" class="svc-toggle-btn" :class="{ 'svc-toggle-btn--open': showAll }" @click="showAll = !showAll">
         <span class="svc-toggle-text">{{ showAll ? 'Mostrar menos' : 'Ver más servicios' }}</span>
         <span class="svc-toggle-badge" v-if="!showAll">+{{ extraCount }}</span>
@@ -511,31 +507,8 @@ const extraCount = 6;
 /* ── Footer strip ── */
 .svc-footer {
   margin-top: 24px;
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: var(--r-md);
-  padding: 20px 24px;
   display: flex;
-  align-items: center;
-  gap: 16px;
-  flex-wrap: wrap;
-}
-.svc-footer-icon {
-  width: 40px; height: 40px;
-  border-radius: 10px;
-  background: var(--blue-pale);
-  color: var(--blue-hover);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 1rem;
-  flex-shrink: 0;
-}
-.svc-footer-text {
-  font-family: 'Raleway', sans-serif;
-  font-size: 0.87rem;
-  color: var(--text-muted);
-  margin: 0;
-  flex: 1;
-  min-width: 200px;
+  justify-content: center;
 }
 .svc-toggle-btn {
   display: inline-flex;
@@ -601,7 +574,6 @@ const extraCount = 6;
   .svc-section { margin: 10px 10px; padding: 32px 14px 24px; border-radius: var(--r-md); }
   .svc-title { font-size: 1.9rem; }
   .svc-grid { grid-template-columns: 1fr; gap: 12px; }
-  .svc-footer { gap: 12px; padding: 16px; }
   .svc-toggle-btn { width: 100%; justify-content: center; }
 }
 </style>

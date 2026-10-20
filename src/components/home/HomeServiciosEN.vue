@@ -4,7 +4,7 @@
     <span class="svc-label"><font-awesome-icon :icon="['fas', 'hand-sparkles']" class="me-1" />What we do</span>
     <div class="svc-header">
       <h2 class="svc-title">Professional <span class="svc-accent">cleaning</span><br>for every space</h2>
-      <p class="svc-subtitle">No scaffolding, no hassle — we work without disrupting your day</p>
+      <p class="svc-subtitle">We work without disrupting your day, at home or at your business</p>
     </div>
 
     <div class="svc-grid-wrap">
@@ -24,7 +24,7 @@
             <span class="svc-icon svc-icon--teal"><font-awesome-icon :icon="['fas', 'droplet']" /></span>
             <h3 class="svc-name">Pure water at height (Unger HydroPower)</h3>
           </div>
-          <p class="svc-desc">Exclusive professional equipment: pure-water cleaning up to 10 metres high, no scaffolding, no streaks.</p>
+          <p class="svc-desc">Where a standard pole can't reach: filtered pure water up to 10 metres high that dries on its own without streaks.</p>
           <ul class="svc-list">
             <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Up to 10 metres of reach</li>
             <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Exclusive Unger HydroPower system</li>
@@ -68,11 +68,11 @@
             <span class="svc-icon svc-icon--blue"><font-awesome-icon :icon="['fas', 'store']" /></span>
             <h3 class="svc-name">Shops and commercial premises</h3>
           </div>
-          <p class="svc-desc">Shops, cafés and stores always spotless, without disrupting your daily activity.</p>
+          <p class="svc-desc">Shop windows and glazing of street-level shops, bars and cafés, always spotless without disrupting your business.</p>
           <ul class="svc-list">
+            <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Shop windows, glazing and doors</li>
             <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Cleaning without closing your business</li>
             <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Fortnightly or monthly frequency</li>
-            <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Free custom quote</li>
           </ul>
           <router-link to="/limpieza-cristales-locales-comerciales" class="svc-btn-secondary">Learn more</router-link>
           <router-link to="/en/contact" class="svc-btn svc-btn--blue">Get a quote</router-link>
@@ -114,11 +114,11 @@
                 <span class="svc-icon svc-icon--purple"><font-awesome-icon :icon="['fas', 'building']" /></span>
                 <h3 class="svc-name">Offices and buildings</h3>
               </div>
-              <p class="svc-desc">Offices, buildings and industrial units. Tailored plans with flexible schedules.</p>
+              <p class="svc-desc">Large glazed areas in offices, buildings and industrial units, inside and out, on a fixed schedule.</p>
               <ul class="svc-list">
-                <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Maintenance contracts</li>
+                <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Large glass walls and partitions</li>
                 <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Schedules adapted to your business</li>
-                <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Business invoicing</li>
+                <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Contract and business invoicing</li>
               </ul>
               <router-link to="/en/contact" class="svc-btn svc-btn--purple">Get a quote</router-link>
             </div>
@@ -135,11 +135,11 @@
                 <span class="svc-icon svc-icon--orange"><font-awesome-icon :icon="['fas', 'arrow-up-from-water-pump']" /></span>
                 <h3 class="svc-name">Height cleaning (telescopic pole)</h3>
               </div>
-              <p class="svc-desc">Façades and windows at height with a standard telescopic pole, up to 4 storeys, no scaffolding.</p>
+              <p class="svc-desc">Windows and façades up to 4 storeys with a telescopic pole, working from the ground with no scaffolding.</p>
               <ul class="svc-list">
-                <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Up to 4 storeys, no scaffolding</li>
-                <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Deionised water, streak-free</li>
-                <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />No council permits needed</li>
+                <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Up to 4 storeys from the ground</li>
+                <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Ideal for mid-height buildings</li>
+                <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />No scaffolding or council permits</li>
               </ul>
               <router-link to="/limpieza-cristales-altura" class="svc-btn-secondary">Learn more</router-link>
               <router-link to="/en/contact" class="svc-btn svc-btn--orange">Get a quote</router-link>
@@ -241,10 +241,6 @@
     </div>
 
     <div class="svc-footer">
-      <div class="svc-footer-icon">
-        <font-awesome-icon :icon="['fas', 'arrow-up-from-water-pump']" />
-      </div>
-      <p class="svc-footer-text">Need to reach higher? Our exclusive Unger HydroPower pure-water system reaches up to 10 metres, no scaffolding.</p>
       <button type="button" class="svc-toggle-btn" :class="{ 'svc-toggle-btn--open': showAll }" @click="showAll = !showAll">
         <span class="svc-toggle-text">{{ showAll ? 'Show less' : 'See more services' }}</span>
         <span class="svc-toggle-badge" v-if="!showAll">+{{ extraCount }}</span>
@@ -511,31 +507,8 @@ const extraCount = 6;
 /* ── Footer strip ── */
 .svc-footer {
   margin-top: 24px;
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: var(--r-md);
-  padding: 20px 24px;
   display: flex;
-  align-items: center;
-  gap: 16px;
-  flex-wrap: wrap;
-}
-.svc-footer-icon {
-  width: 40px; height: 40px;
-  border-radius: 10px;
-  background: var(--blue-pale);
-  color: var(--blue-hover);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 1rem;
-  flex-shrink: 0;
-}
-.svc-footer-text {
-  font-family: 'Raleway', sans-serif;
-  font-size: 0.87rem;
-  color: var(--text-muted);
-  margin: 0;
-  flex: 1;
-  min-width: 200px;
+  justify-content: center;
 }
 .svc-toggle-btn {
   display: inline-flex;
@@ -601,7 +574,6 @@ const extraCount = 6;
   .svc-section { margin: 10px 10px; padding: 32px 14px 24px; border-radius: var(--r-md); }
   .svc-title { font-size: 1.9rem; }
   .svc-grid { grid-template-columns: 1fr; gap: 12px; }
-  .svc-footer { gap: 12px; padding: 16px; }
   .svc-toggle-btn { width: 100%; justify-content: center; }
 }
 </style>
