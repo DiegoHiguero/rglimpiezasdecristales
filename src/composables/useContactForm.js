@@ -1,11 +1,6 @@
 import { ref, computed } from 'vue';
-import emailjs from '@emailjs/browser';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
-
-const EMAILJS_SERVICE_ID = 'service_iytm8yl';
-const EMAILJS_TEMPLATE_ID = 'template_7yngfsa';
-const EMAILJS_PUBLIC_KEY = 'IF1Sn503DHVPja4II';
 
 const MESSAGES = {
   es: {
@@ -44,9 +39,13 @@ const MESSAGES = {
 // Home venía justo de eso: la escritura en Firestore de un formulario había
 // quedado desalineada con las reglas de seguridad sin que el otro formulario
 // se viera afectado).
+// El correo de aviso ya no sale desde la web: la Cloud Function
+// notificarMensajeContacto lo envía desde info@royallclean.es al detectar el
+// mensaje nuevo en Firestore. Así, si el correo falla, el mensaje no se pierde.
+//
 // emailOptional: el formulario corto del hero no obliga a dar email. Como
 // las reglas de Firestore exigen un email no vacío, en ese caso se guarda
-// "No indicado" en Firestore (a EmailJS va vacío) sin tener que cambiar las reglas.
+// "No indicado" sin tener que cambiar las reglas.
 export function useContactForm(locale = 'es', { emailOptional = false } = {}) {
   const t = MESSAGES[locale] || MESSAGES.es;
 
@@ -119,14 +118,11 @@ export function useContactForm(locale = 'es', { emailOptional = false } = {}) {
 
     sending.value = true;
     try {
-      const payload = { prenom: prenom.value, email: email.value.trim(), phone: phone.value, message: message.value };
+      const payload = { prenom: prenom.value, email: email.value.trim() || t.noEmail, phone: phone.value, message: message.value };
       if (tipoServicio.value) payload.tipoServicio = tipoServicio.value;
       if (zona.value) payload.zona = zona.value;
 
-      // email_display solo va al correo (no a Firestore: las reglas limitan el
-      // número de campos); muestra "No indicado" si el cliente no dejó email.
-      await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, { ...payload, email_display: payload.email || t.noEmail }, EMAILJS_PUBLIC_KEY);
-      await addDoc(collection(db, 'mensajes'), { ...payload, email: payload.email || t.noEmail, timestamp: serverTimestamp(), read: false });
+      await addDoc(collection(db, 'mensajes'), { ...payload, timestamp: serverTimestamp(), read: false });
 
       feedback.value = { msg: t.success, ok: true };
       resetForm();
