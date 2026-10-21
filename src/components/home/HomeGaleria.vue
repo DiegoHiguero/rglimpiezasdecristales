@@ -1,10 +1,10 @@
 <template>
   <div id="trabajos-realizados" class="galeria-wrap">
 
-    <span class="gl-label">
+    <span class="gl-label" v-if="!completa">
       <font-awesome-icon :icon="['fas', 'images']" class="me-1" />Portfolio
     </span>
-    <div class="gl-header">
+    <div class="gl-header" v-if="!completa">
       <h2 class="gl-title">Trabajos <span class="gl-accent">realizados</span></h2>
       <p class="gl-sub">Cada foto es un cliente satisfecho en Madrid y alrededores</p>
     </div>
@@ -41,7 +41,7 @@
         </div>
       </div>
 
-      <div v-if="photos.length > PHOTOS_PREVIEW_COUNT" class="gl-toggle-row">
+      <div v-if="!completa && photos.length > PHOTOS_PREVIEW_COUNT" class="gl-toggle-row">
         <button type="button" class="gl-toggle-btn" @click="showAllPhotos = !showAllPhotos">
           <font-awesome-icon :icon="['fas', showAllPhotos ? 'chevron-up' : 'chevron-down']" class="me-2" />
           {{ showAllPhotos ? 'Ver menos fotos' : `Ver todas las fotos (${photos.length})` }}
@@ -96,6 +96,13 @@
           <p class="ba-caption">{{ pair.label }}</p>
         </div>
       </div>
+    </div>
+
+    <div class="gl-more" v-if="!completa">
+      <router-link to="/trabajos-realizados" class="gl-more-link">
+        Ver todos los trabajos ({{ photos.length + fotosExtra.length }} fotos)
+        <font-awesome-icon :icon="['fas', 'arrow-right']" class="ms-1" />
+      </router-link>
     </div>
 
     <!-- ── Lightbox ── -->
@@ -153,11 +160,25 @@ import imgPlacasSolares from '../../assets/img/placas-solares-collage.webp';
 import imgCristalera   from '../../assets/img/cristalera-terraza.webp';
 import imgPertiga2026  from '../../assets/img/20261006-pertiga-fachada.webp';
 import imgFachada2026  from '../../assets/img/20261006-fachada-acristalada.webp';
+import img2024Feb     from '../../assets/img/2024-02-19.webp';
+import img2023Sep     from '../../assets/img/IMG-20230901-WA0000.webp';
+import img2025Sep     from '../../assets/img/20250917_131013.webp';
+import img2023Ene     from '../../assets/img/20230119_110356.webp';
+import img20260311    from '../../assets/img/20260311_121255.webp';
+import img20260319    from '../../assets/img/20260319_124222.webp';
+import img20260324    from '../../assets/img/20260324_122426.webp';
+import img20260528b   from '../../assets/img/20260528_140444.webp';
+import imgPadelVacio  from '../../assets/img/padel-cristales-vacio.webp';
 
-// Abre en Antes/Después: es lo que más convence de un vistazo
-const tab = ref('ba');
+// completa: modo de la página /trabajos-realizados (todas las fotos, sin la
+// cabecera de sección porque la página ya tiene su H1)
+const props = defineProps({ completa: { type: Boolean, default: false } });
+
+// En la portada abre en Antes/Después, que es lo que más convence de un
+// vistazo; en la página completa, en Fotos
+const tab = ref(props.completa ? 'fotos' : 'ba');
 const PHOTOS_PREVIEW_COUNT = 12;
-const showAllPhotos = ref(false);
+const showAllPhotos = ref(props.completa);
 const videoA = ref(null);
 const videoB = ref(null);
 
@@ -176,8 +197,21 @@ watch(tab, async (val) => {
   }
 });
 
+// Resto de trabajos: solo en la página completa, detrás de los destacados
+const fotosExtra = [
+  { src: img20260324,   label: 'Cerramiento de cristal en azotea · Mar 2026' },
+  { src: img20260311,   label: 'Cristalera de local a pie de calle · Mar 2026' },
+  { src: img20260319,   label: 'Techo de cristal en terraza · Mar 2026' },
+  { src: img20260528b,  label: 'Ventanales de oficina · May 2026' },
+  { src: imgPadelVacio, label: 'Cristales de pista de pádel' },
+  { src: img2025Sep,    label: 'Terraza en azotea · Sep 2025' },
+  { src: img2024Feb,    label: 'Acabado con rasqueta profesional · Feb 2024' },
+  { src: img2023Sep,    label: 'Ventana con vistas a Madrid · Sep 2023' },
+  { src: img2023Ene,    label: 'Ventanas de local con pértiga · Ene 2023' },
+];
+
 // Selección de las mejores fotos, en orden de aparición (la primera sale en grande)
-const photos = [
+const destacadas = [
   { src: imgFachada2026,   label: 'Fachada acristalada · Oct 2026' },
   { src: imgPertiga2026,   label: 'Agua pura con pértiga · Oct 2026' },
   { src: img20260528d,     label: 'Edificio acristalado · May 2026' },
@@ -191,6 +225,8 @@ const photos = [
   { src: imgPlacasSolares, label: 'Limpieza de placas solares' },
   { src: img20240529a,     label: 'Ventanales de aula · May 2024' },
 ];
+
+const photos = props.completa ? [...destacadas, ...fotosExtra] : destacadas;
 
 const baPairs = [
   { before: imgBefore1, after: imgAfter1, label: 'Escaparate comercial · Jun 2024' },
@@ -497,6 +533,15 @@ onUnmounted(() => {
 }
 
 /* ── Footer CTA ── */
+.gl-more { text-align: center; margin: 22px 0 4px; }
+.gl-more-link {
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.88rem; font-weight: 700;
+  color: var(--blue);
+  text-decoration: none;
+}
+.gl-more-link:hover { text-decoration: underline; }
+
 .gl-footer {
   margin-top: 28px;
   background: var(--slate);

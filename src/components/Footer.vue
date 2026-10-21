@@ -24,6 +24,7 @@
             <li><router-link to="/limpieza-cristales-oficinas">Limpieza de oficinas</router-link></li>
             <li><router-link to="/limpieza-cristales-altura">Limpieza en altura</router-link></li>
             <li><router-link to="/precios">Precios</router-link></li>
+            <li><router-link to="/trabajos-realizados">Trabajos realizados</router-link></li>
             <li><router-link to="/blog">Blog</router-link></li>
             <li><router-link to="/contacto">Contacto</router-link></li>
           </ul>

@@ -214,6 +214,13 @@ const staticPages = [
     faqs: preciosFaqs,
   },
   {
+    route: 'trabajos-realizados',
+    title: 'Trabajos Realizados de Limpieza de Cristales | Royall Clean',
+    description: 'Fotos reales y antes/después de nuestros trabajos de limpieza de cristales en Madrid: viviendas, comunidades, locales, oficinas y fachadas en altura.',
+    keywords: 'trabajos limpieza cristales madrid, antes y despues limpieza cristales, fotos limpiacristales madrid, portfolio limpieza cristales',
+    breadcrumbLabel: 'Trabajos realizados',
+  },
+  {
     route: 'politica-privacidad',
     title: 'Política de Privacidad | Royall Clean',
     description: 'Consulta la política de privacidad de Royall Clean. Información sobre el tratamiento de tus datos personales conforme al RGPD.',
@@ -322,9 +329,9 @@ function injectBlogHtmlPlugin() {
           url: pageUrl,
         })
         html = injectHreflang(html, page.hreflang)
-        // Páginas con FAQ propia (p. ej. /precios): breadcrumb + FAQPage que
-        // coinciden con el contenido visible
-        if (page.faqs) {
+        // Páginas con migas propias (p. ej. /precios, /trabajos-realizados) y,
+        // si la tienen, FAQPage que coincide con el contenido visible
+        if (page.breadcrumbLabel) {
           const breadcrumbLd = JSON.stringify({
             '@context': 'https://schema.org',
             '@type': 'BreadcrumbList',
@@ -333,6 +340,9 @@ function injectBlogHtmlPlugin() {
               { '@type': 'ListItem', 'position': 2, 'name': page.breadcrumbLabel, 'item': pageUrl },
             ],
           })
+          html = html.replace('</head>', `<script type="application/ld+json">${breadcrumbLd}</script>\n</head>`)
+        }
+        if (page.faqs) {
           const faqLd = JSON.stringify({
             '@context': 'https://schema.org',
             '@type': 'FAQPage',
@@ -342,7 +352,7 @@ function injectBlogHtmlPlugin() {
               'acceptedAnswer': { '@type': 'Answer', 'text': f.a },
             })),
           })
-          html = html.replace('</head>', `<script type="application/ld+json">${breadcrumbLd}</script>\n<script type="application/ld+json">${faqLd}</script>\n</head>`)
+          html = html.replace('</head>', `<script type="application/ld+json">${faqLd}</script>\n</head>`)
         }
         const outPath = path.join(distDir, `${page.route}.html`)
         fs.mkdirSync(path.dirname(outPath), { recursive: true })

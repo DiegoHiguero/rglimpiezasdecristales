@@ -15,6 +15,7 @@ const MisClientes       = () => import("./views/MisClientes.vue");
 const MisFacturas       = () => import("./views/MisFacturas.vue");
 const Contacto          = () => import("./views/Contacto.vue");
 const Precios           = () => import("./views/Precios.vue");
+const TrabajosRealizados = () => import("./views/TrabajosRealizados.vue");
 const ContactoEN        = () => import("./views/ContactoEN.vue");
 const Confidentialite   = () => import("./views/Confidentialite.vue");
 const MentionsLegales   = () => import("./views/MentionsLegales.vue");
@@ -135,6 +136,14 @@ const routes = [
         path: '/precios',
         component: Precios,
         meta: { title: preciosMeta.title, description: preciosMeta.description },
+    },
+    {
+        path: '/trabajos-realizados',
+        component: TrabajosRealizados,
+        meta: {
+            title: 'Trabajos Realizados de Limpieza de Cristales | Royall Clean',
+            description: 'Fotos reales y antes/después de nuestros trabajos de limpieza de cristales en Madrid: viviendas, comunidades, locales, oficinas y fachadas en altura.',
+        },
     },
     { path: '/servicios', redirect: '/' },
     { path: '/agua-pura-altura', component: ServicioDetalle, meta: { servicio: 'agua-pura-altura' } },
