@@ -167,6 +167,7 @@ const routes = [
     { path: '/retirada-de-vinilos', component: ServicioDetalle, meta: { servicio: 'retirada-de-vinilos' } },
     { path: '/limpieza-cristales-getafe', component: ServicioDetalle, meta: { zona: 'limpieza-cristales-getafe' } },
     { path: '/limpieza-cristales-pozuelo-de-alarcon', component: ServicioDetalle, meta: { zona: 'limpieza-cristales-pozuelo-de-alarcon' } },
+    { path: '/limpieza-cristales-las-rozas', component: ServicioDetalle, meta: { zona: 'limpieza-cristales-las-rozas' } },
     { path: '/limpieza-cristales-grinon', component: ServicioDetalle, meta: { zona: 'limpieza-cristales-grinon' } },
     { path: '/limpieza-cristales-madrid-centro', component: ServicioDetalle, meta: { zona: 'limpieza-cristales-madrid-centro' } },
     {

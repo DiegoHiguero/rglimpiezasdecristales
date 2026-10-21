@@ -62,6 +62,7 @@ const paginasZona = {
   'Centro': '/limpieza-cristales-madrid-centro',
   'Getafe': '/limpieza-cristales-getafe',
   'Griñón': '/limpieza-cristales-grinon',
+  'Las Rozas': '/limpieza-cristales-las-rozas',
   'Pozuelo de Alarcón': '/limpieza-cristales-pozuelo-de-alarcon',
 };
 

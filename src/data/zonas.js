@@ -91,6 +91,46 @@ export const zonas = [
     ],
   },
   {
+    slug: 'limpieza-cristales-las-rozas',
+    areaServed: 'Las Rozas de Madrid',
+    breadcrumbLabel: 'Las Rozas',
+    title: 'Limpieza de cristales en Las Rozas',
+    excerpt: 'Chalets de urbanización, comunidades, oficinas y comercios en Las Rozas: limpieza de cristales profesional, con agua pura hasta 10 metros y sin andamios.',
+    metaTitle: 'Limpieza de Cristales en Las Rozas',
+    metaDescription: 'Limpieza de cristales en Las Rozas para chalets, comunidades, oficinas y comercios. Ventanales en altura con agua pura sin andamios. Presupuesto gratis en 24 h.',
+    keywords: 'limpieza cristales las rozas, limpiacristales las rozas, limpieza ventanas las rozas, limpieza cristales las matas, limpieza cristales oficinas las rozas',
+    icon: ['fas', 'location-dot'],
+    color: '#7c3aed',
+    colorPale: '#f5f3ff',
+    tag: 'Zona oeste',
+    content: `
+      <h2>Limpiacristales en Las Rozas</h2>
+      <p>Las Rozas combina urbanizaciones de chalets y viviendas unifamiliares, como Las Matas, El Burgo o Molino de la Hoz, con comunidades de pisos con zonas comunes y una importante zona de oficinas y comercios en sus parques empresariales. En <strong>Royall Clean</strong> limpiamos los cristales de todos ellos, adaptando el equipo a cada tipo de edificio.</p>
+
+      <h2>Chalets y viviendas de urbanización</h2>
+      <p>Los chalets de Las Rozas suelen tener grandes ventanales, puertas correderas al jardín, porches y, en muchos casos, fachadas de doble altura. Limpiamos por dentro y por fuera, con marcos, juntas y barandillas, y para las zonas altas usamos nuestro sistema de <a href="/agua-pura-altura">agua pura Unger HydroPower</a>, que llega hasta 10 metros desde el suelo sin andamios y deja el cristal sin marcas.</p>
+
+      <h2>Comunidades con zonas comunes</h2>
+      <p>En las comunidades de vecinos limpiamos portales, cristaleras de escaleras y cerramientos de zonas comunes, con un calendario de mantenimiento y factura a nombre de la <a href="/limpieza-cristales-comunidades">comunidad de propietarios</a> para el administrador.</p>
+
+      <h2>Oficinas y comercios</h2>
+      <p>Para las oficinas de los parques empresariales y los comercios de Las Rozas ofrecemos <a href="/limpieza-cristales-oficinas">limpieza de cristales para empresas</a> y para <a href="/limpieza-cristales-locales-comerciales">locales comerciales</a>, con horarios que no interrumpen la actividad, contrato de mantenimiento y factura.</p>
+
+      <h2>Preguntas frecuentes sobre limpieza de cristales en Las Rozas</h2>
+      <h3>¿Trabajáis en Las Matas y en las urbanizaciones?</h3>
+      <p>Sí, damos servicio en todo el municipio de Las Rozas, incluidas Las Matas y las urbanizaciones.</p>
+      <h3>¿Podéis limpiar ventanales de doble altura sin andamio?</h3>
+      <p>Sí. Con agua pura Unger HydroPower llegamos hasta 10 metros trabajando desde el suelo, sin andamios ni escaleras apoyadas en la fachada.</p>
+      <h3>¿Cuánto cuesta limpiar los cristales de un chalet en Las Rozas?</h3>
+      <p>Como referencia, la limpieza de un chalet parte de 95 €. El precio final depende del número de ventanales, la altura y la dificultad; tienes todas las tarifas en nuestra <a href="/precios">página de precios</a>.</p>
+    `,
+    faqs: [
+      { q: '¿Trabajáis en Las Matas y en las urbanizaciones?', a: 'Sí, damos servicio en todo el municipio de Las Rozas, incluidas Las Matas y las urbanizaciones.' },
+      { q: '¿Podéis limpiar ventanales de doble altura sin andamio?', a: 'Sí. Con agua pura Unger HydroPower llegamos hasta 10 metros trabajando desde el suelo, sin andamios ni escaleras apoyadas en la fachada.' },
+      { q: '¿Cuánto cuesta limpiar los cristales de un chalet en Las Rozas?', a: 'Como referencia, la limpieza de un chalet parte de 95 €. El precio final depende del número de ventanales, la altura y la dificultad.' },
+    ],
+  },
+  {
     slug: 'limpieza-cristales-grinon',
     areaServed: 'Griñón',
     breadcrumbLabel: 'Griñón',

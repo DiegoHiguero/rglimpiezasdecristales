@@ -119,6 +119,7 @@ const zonas = [
   { to: '/limpieza-cristales-madrid-centro', nombre: 'Madrid Centro' },
   { to: '/limpieza-cristales-getafe', nombre: 'Getafe' },
   { to: '/limpieza-cristales-pozuelo-de-alarcon', nombre: 'Pozuelo de Alarcón' },
+  { to: '/limpieza-cristales-las-rozas', nombre: 'Las Rozas' },
   { to: '/limpieza-cristales-grinon', nombre: 'Griñón' },
 ];
 </script>
