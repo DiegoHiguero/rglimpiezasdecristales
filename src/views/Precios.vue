@@ -98,6 +98,11 @@ const factores = [
     texto: 'Con pértiga llegamos hasta 4 plantas y con agua pura Unger HydroPower hasta 10 metros, siempre sin andamios.',
   },
   {
+    icono: ['fas', 'screwdriver-wrench'],
+    titulo: 'Dificultad del trabajo',
+    texto: 'Accesos complicados, cristales muy sucios o con restos de obra, pintura o adhesivos requieren más tiempo y se presupuestan aparte.',
+  },
+  {
     icono: ['fas', 'calendar-days'],
     titulo: 'Frecuencia del servicio',
     texto: 'Puedes pedir una limpieza puntual o un mantenimiento periódico (quincenal, mensual o trimestral) con calendario fijo.',
@@ -205,7 +210,7 @@ onMounted(() => {
 
 .pr-factors {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 16px;
 }
 .pr-factor {
@@ -318,6 +323,9 @@ onMounted(() => {
 :root[data-theme="dark"] .pr-factor-icon { background: rgba(37,99,235,0.18); }
 
 /* ── Responsive ── */
+@media (max-width: 1100px) {
+  .pr-factors { grid-template-columns: repeat(2, 1fr); }
+}
 @media (max-width: 900px) {
   .pr-factors, .pr-steps { grid-template-columns: 1fr; }
 }

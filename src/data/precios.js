@@ -12,7 +12,7 @@ export const preciosMeta = {
 export const preciosFaqs = [
   {
     q: '¿Por qué los precios son "desde"?',
-    a: 'Porque cada espacio es distinto: el precio final depende del número y tamaño de los cristales, de la altura del inmueble y de la frecuencia del servicio. Las tarifas te dan una referencia y el presupuesto personalizado te da la cifra exacta.',
+    a: 'Porque cada espacio es distinto: el precio final depende del número y tamaño de los cristales, de la altura del inmueble, de la dificultad del trabajo y de la frecuencia del servicio. Las tarifas te dan una referencia y el presupuesto personalizado te da la cifra exacta.',
   },
   {
     q: '¿El presupuesto tiene algún coste?',
@@ -21,6 +21,10 @@ export const preciosFaqs = [
   {
     q: '¿Limpiáis los cristales por dentro y por fuera?',
     a: 'Sí. En viviendas la limpieza incluye interior y exterior, además de marcos, juntas y barandillas.',
+  },
+  {
+    q: '¿Cobráis desplazamiento?',
+    a: 'Depende de la distancia. Si el trabajo está lejos, el presupuesto puede incluir un suplemento por desplazamiento, que siempre te indicamos de antemano para que no haya sorpresas.',
   },
   {
     q: '¿Emitís factura?',
