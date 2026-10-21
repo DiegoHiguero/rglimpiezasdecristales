@@ -36,6 +36,7 @@ const SheetView         = () => import("./views/SheetView.vue");
 import { articles } from "./data/blog.js";
 import { getServicioBySlug } from "./data/servicios.js";
 import { getZonaBySlug } from "./data/zonas.js";
+import { imagenesZona } from "./data/zonasImagenes.js";
 import { preciosMeta } from "./data/precios.js";
 
 // import Editar from "./views/Editar.vue";
@@ -270,7 +271,8 @@ router.afterEach((to) => {
         title = `${servicio.metaTitle} | Royall Clean`;
         desc  = servicio.metaDescription;
         keywords = servicio.keywords || '';
-        image = servicio.image ? window.location.origin + servicio.image : image;
+        const img = servicio.image || imagenesZona[to.meta?.zona]?.src;
+        image = img ? window.location.origin + img : image;
     } else if (isNotFound) {
         title = 'Página no encontrada | Royall Clean';
         desc  = 'La página que buscas no existe. Vuelve al inicio de Royall Clean, empresa de limpieza de cristales en Madrid.';

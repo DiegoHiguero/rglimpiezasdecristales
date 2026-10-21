@@ -20,9 +20,10 @@
         <p class="article-excerpt">{{ servicio.excerpt }}</p>
       </header>
 
-      <div class="article-hero-img" v-if="servicio.image">
-        <img :src="servicio.image" :alt="servicio.title" loading="eager" />
+      <div class="article-hero-img" v-if="imagen">
+        <img :src="imagen.src" :alt="imagen.pie || servicio.title" loading="eager" />
       </div>
+      <p class="article-hero-caption" v-if="imagen?.pie">{{ imagen.pie }}</p>
 
       <div class="article-content" v-html="purify(servicio.content)"></div>
 
@@ -78,6 +79,7 @@ import { computed, onMounted, onUnmounted, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { servicios, getServicioBySlug } from '../data/servicios.js';
 import { zonas, getZonaBySlug } from '../data/zonas.js';
+import { imagenesZona } from '../data/zonasImagenes.js';
 import DOMPurify from 'dompurify';
 
 const purify = (html) => DOMPurify.sanitize(html, { USE_PROFILES: { html: true } });
@@ -89,6 +91,11 @@ const esZona = computed(() => !!route.meta?.zona);
 const lista = computed(() => (esZona.value ? zonas : servicios));
 const slugActual = computed(() => route.meta?.zona || route.meta?.servicio);
 const servicio = computed(() => (esZona.value ? getZonaBySlug(slugActual.value) : getServicioBySlug(slugActual.value)));
+// Foto de cabecera: la del servicio o, en zonas, la de un trabajo real allí (con pie)
+const imagen = computed(() => {
+  if (esZona.value) return imagenesZona[slugActual.value] || null;
+  return servicio.value?.image ? { src: servicio.value.image } : null;
+});
 // Rota circularmente (siguiente 3 del array) en vez de tomar siempre los 3
 // primeros: así cada servicio recibe enlaces internos desde otras 3 páginas
 // en vez de que los últimos del array queden huérfanos de enlaces.
@@ -220,6 +227,13 @@ onUnmounted(() => { document.querySelectorAll('script[data-dynamic-schema]').for
   overflow: hidden;
   aspect-ratio: 16 / 7;
   margin-bottom: 0;
+}
+.article-hero-caption {
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-align: center;
+  margin: 8px 0 0;
 }
 .article-hero-img img {
   width: 100%; height: 100%;

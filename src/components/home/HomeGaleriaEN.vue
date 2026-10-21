@@ -178,9 +178,9 @@ watch(tab, async (val) => {
 
 // Best photos, in display order (the first one is shown large)
 const photos = [
-  { src: imgFachada2026,   label: 'Glass façade · Oct 2026' },
+  { src: imgFachada2026,   label: 'Glass façade in Getafe · Oct 2026' },
   { src: imgPertiga2026,   label: 'Pure-water pole cleaning · Oct 2026' },
-  { src: img20260528d,     label: 'Glass building · May 2026' },
+  { src: img20260528d,     label: 'Glass building in Griñón · May 2026' },
   { src: imgLimpiando,     label: 'Terrace window cleaning' },
   { src: img20260528c,     label: 'Glass-walled office · May 2026' },
   { src: imgCristalera,    label: 'Terrace glass enclosure' },

@@ -199,7 +199,7 @@ watch(tab, async (val) => {
 
 // Resto de trabajos: solo en la página completa, detrás de los destacados
 const fotosExtra = [
-  { src: img20260324,   label: 'Cerramiento de cristal en azotea · Mar 2026' },
+  { src: img20260324,   label: 'Techo de cristal de terraza en Las Rozas · Mar 2026' },
   { src: img20260311,   label: 'Cristalera de local a pie de calle · Mar 2026' },
   { src: img20260319,   label: 'Techo de cristal en terraza · Mar 2026' },
   { src: img20260528b,  label: 'Ventanales de oficina · May 2026' },
@@ -212,9 +212,9 @@ const fotosExtra = [
 
 // Selección de las mejores fotos, en orden de aparición (la primera sale en grande)
 const destacadas = [
-  { src: imgFachada2026,   label: 'Fachada acristalada · Oct 2026' },
+  { src: imgFachada2026,   label: 'Fachada acristalada en Getafe · Oct 2026' },
   { src: imgPertiga2026,   label: 'Agua pura con pértiga · Oct 2026' },
-  { src: img20260528d,     label: 'Edificio acristalado · May 2026' },
+  { src: img20260528d,     label: 'Edificio acristalado en Griñón · May 2026' },
   { src: imgLimpiando,     label: 'Limpieza de cristales en terraza' },
   { src: img20260528c,     label: 'Oficina acristalada · May 2026' },
   { src: imgCristalera,    label: 'Cristalera de terraza' },
