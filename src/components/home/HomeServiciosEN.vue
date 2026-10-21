@@ -127,7 +127,7 @@
 
           <div class="svc-card svc-card--extra" data-stagger="2" v-if="showAll" key="presion">
             <div class="svc-img-wrap">
-              <img src="../../assets/img/20250917_131013.webp" class="svc-img" alt="Pressure washing of patios and terraces" />
+              <img src="../../assets/img/presion.webp" class="svc-img" alt="Pressure washing of patios and terraces" />
               <div class="svc-overlay"></div>
               <span class="svc-tag svc-tag--orange">Pressure washing</span>
             </div>

@@ -2,8 +2,7 @@ import imgHogares  from '../assets/img/casamadera.webp';
 import imgComunidades from '../assets/img/comunidad-pertiga-fachada-h.webp';
 import imgLocales  from '../assets/img/restaurant.webp';
 import imgOficinas from '../assets/img/20260528_141113.webp';
-// Provisional hasta tener una foto real de hidrolimpieza
-import imgPresion  from '../assets/img/20250917_131013.webp';
+import imgPresion  from '../assets/img/presion.webp';
 import imgAguaPura from '../assets/img/20261006-pertiga-fachada.webp';
 import imgPlacas   from '../assets/img/limpieza-panel-thumb.webp';
 import imgObras    from '../assets/img/20260323_184851.webp';
