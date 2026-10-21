@@ -3,17 +3,41 @@
 import { createRouter,createWebHistory } from "vue-router";
 
 import Home from "./views/Home.vue";
-import Login from "./views/Login.vue";
-import Register from "./views/Register.vue";
-import MisClientes from "./views/MisClientes.vue";
-import MisFacturas from "./views/MisFacturas.vue";
-import Contacto from "./views/Contacto.vue";
-import Servicios from "./views/Servicios.vue";
-import Confidentialite from "./views/Confidentialite.vue";
-import MentionsLegales from "./views/MentionsLegales.vue";
-import LimpiezasMensuales from "./views/LimpiezasMensuales.vue";
-// ¡NUEVA IMPORTACIÓN AQUÍ!
-import MensajesAdmin from "./views/MensajesAdmin.vue"; // Asumiendo que lo guardaste en la carpeta 'views'
+import HomeEN from "./views/HomeEN.vue";
+import Blog from "./views/Blog.vue";
+import BlogArticle from "./views/BlogArticle.vue";
+import ServicioDetalle from "./views/ServicioDetalle.vue";
+import NotFound from "./views/NotFound.vue";
+
+const Login             = () => import("./views/Login.vue");
+const Register          = () => import("./views/Register.vue");
+const MisClientes       = () => import("./views/MisClientes.vue");
+const MisFacturas       = () => import("./views/MisFacturas.vue");
+const Contacto          = () => import("./views/Contacto.vue");
+const Precios           = () => import("./views/Precios.vue");
+const TrabajosRealizados = () => import("./views/TrabajosRealizados.vue");
+const SobreMi           = () => import("./views/SobreMi.vue");
+const ContactoEN        = () => import("./views/ContactoEN.vue");
+const Confidentialite   = () => import("./views/Confidentialite.vue");
+const MentionsLegales   = () => import("./views/MentionsLegales.vue");
+const LimpiezasMensuales = () => import("./views/LimpiezasMensuales.vue");
+const Dashboard         = () => import("./views/Dashboard.vue");
+const MensajesAdmin     = () => import("./views/MensajesAdmin.vue");
+const GastosView        = () => import("./views/GastosView.vue");
+const Roadmap           = () => import("./views/Roadmap.vue");
+const PortalCliente     = () => import("./views/PortalCliente.vue");
+const RegistroFirmas    = () => import("./views/RegistroFirmas.vue");
+const PagosPendientes   = () => import("./views/PagosPendientes.vue");
+const NuevaFactura      = () => import("./views/NuevaFactura.vue");
+const EvolucionIngresos = () => import("./views/EvolucionIngresos.vue");
+const MapaClientes      = () => import("./views/MapaClientes.vue");
+const GenerarArticulo   = () => import("./views/GenerarArticulo.vue");
+const SheetView         = () => import("./views/SheetView.vue");
+import { articles } from "./data/blog.js";
+import { getServicioBySlug } from "./data/servicios.js";
+import { getZonaBySlug } from "./data/zonas.js";
+import { imagenesZona } from "./data/zonasImagenes.js";
+import { preciosMeta } from "./data/precios.js";
 
 // import Editar from "./views/Editar.vue";
 
@@ -31,7 +55,7 @@ const requiereAuth = async(to,from,next) => {
     }
 };
 
-// Guarda para rutas que requieren autenticación Y ser 'higuerodiego@gmail.com' o 'familiahiguero@gmail.com'
+// Guarda para rutas que requieren autenticación de administrador
 const requiereAuth2 = async(to,from,next) => {
     const userStore = useUserStore();
     const user = await userStore.currentUser(); // Esperamos a que el estado del usuario esté definido
@@ -39,10 +63,7 @@ const requiereAuth2 = async(to,from,next) => {
     // **MODIFICACIÓN CLAVE:**
     // Aseguramos que 'user' no sea null/undefined antes de intentar acceder a 'user.email'.
     // Los paréntesis son cruciales para que el 'OR' se evalúe correctamente dentro del 'AND'.
-    const isAllowedAdmin = user && (
-        user.email === "higuerodiego@gmail.com" ||
-        user.email === "roys.abreu@gmail.com"
-    );
+    const isAllowedAdmin = user && user.email === "roys.abreu@gmail.com";
 
     if(isAllowedAdmin){
         next(); // Usuario es un administrador permitido, permite el acceso
@@ -53,25 +74,286 @@ const requiereAuth2 = async(to,from,next) => {
     }
 };
 
+// Con la sesión de administrador iniciada, "/" redirige al panel: no tiene
+// sentido volver a la home pública desde dentro del área de administración.
+const redirigeAdminAlPanel = async (to, from, next) => {
+    const userStore = useUserStore();
+    const user = await userStore.currentUser();
+    const isAllowedAdmin = user && user.email === "roys.abreu@gmail.com";
+
+    if (isAllowedAdmin) {
+        next('/dashboard');
+    } else {
+        next();
+    }
+};
+
+const BASE_TITLE = 'Limpieza de Cristales en Madrid | Royall Clean';
+const BASE_DESC  = 'Limpieza de cristales y ventanas en Madrid para hogares, comunidades y locales. Más de 10 años de experiencia. ¡Presupuesto gratis en 24 h! ☎ 625 950 506';
+
+const EN_TITLE = 'Window & Glass Cleaning in Madrid | Royall Clean';
+const EN_DESC  = 'Window and glass cleaning in Madrid for homes, communities and shops. Over 10 years of experience. Free quote within 24 h! ☎ +34 625 950 506';
+
 const routes = [
-    {path:'/', component:Home,},
-    {path:'/login', component:Login},
-    {path:'/Register', component:Register, beforeEnter:requiereAuth2}, // Ruta protegida
-    {path:'/registro', component:LimpiezasMensuales, beforeEnter:requiereAuth2}, // Ruta protegida
-    // {path:'/editar/:id', component:Editar,beforeEnter:requiereAuth},
-    {path:'/misClientes', component:MisClientes, beforeEnter:requiereAuth2}, // Ruta protegida
-    {path:'/misFacturas', component:MisFacturas, beforeEnter:requiereAuth}, // Ruta protegida
-    {path:'/contacto', component:Contacto},
-    {path:'/servicios', component:Servicios},
-    {path:'/confidentialite', component:Confidentialite},
-    {path:'/mentionslegales', component:MentionsLegales},
-    // ¡NUEVA RUTA AQUÍ!
-    {path:'/admin/mensajes', component:MensajesAdmin, beforeEnter:requiereAuth2}, // Protegida para administradores
+    {
+        path: '/',
+        component: Home,
+        beforeEnter: redirigeAdminAlPanel,
+        meta: {
+            title: BASE_TITLE,
+            description: BASE_DESC,
+        },
+    },
+    {
+        path: '/en',
+        component: HomeEN,
+        beforeEnter: redirigeAdminAlPanel,
+        meta: {
+            title: EN_TITLE,
+            description: EN_DESC,
+        },
+    },
+    {
+        path: '/en/contact',
+        component: ContactoEN,
+        meta: {
+            title: 'Free Quote for Window Cleaning in Madrid | Royall Clean',
+            description: 'Request your free window cleaning quote in Madrid. No obligation, reply within 24 hours. ☎ +34 625 950 506',
+        },
+    },
+    { path: '/login', component: Login },
+    { path: '/Register', component: Register, beforeEnter: requiereAuth2 },
+    { path: '/registro', component: LimpiezasMensuales, beforeEnter: requiereAuth2 },
+    { path: '/misClientes', component: MisClientes, beforeEnter: requiereAuth2 },
+    { path: '/misFacturas', component: MisFacturas, beforeEnter: requiereAuth2 },
+    {
+        path: '/contacto',
+        component: Contacto,
+        meta: {
+            title: 'Presupuesto Limpieza de Cristales en Madrid | Royall Clean',
+            description: 'Pide tu presupuesto gratuito de limpieza de cristales y ventanas en Madrid. Sin compromiso, respuesta en menos de 24 horas. ☎ 625 950 506',
+        },
+    },
+    {
+        path: '/precios',
+        component: Precios,
+        meta: { title: preciosMeta.title, description: preciosMeta.description },
+    },
+    {
+        path: '/trabajos-realizados',
+        component: TrabajosRealizados,
+        meta: {
+            title: 'Trabajos Realizados de Limpieza de Cristales | Royall Clean',
+            description: 'Fotos reales y antes/después de nuestros trabajos de limpieza de cristales en Madrid: viviendas, comunidades, locales, oficinas y fachadas en altura.',
+        },
+    },
+    {
+        path: '/sobre-mi',
+        component: SobreMi,
+        meta: {
+            title: 'Sobre mí: Roys Abreu, Limpiacristales en Madrid | Royall Clean',
+            description: 'Limpio cristales en Madrid desde 2013 y me especializo en los trabajos difíciles que otros no quieren hacer. Trato directo, sin prisas y con el cliente contento.',
+        },
+    },
+    { path: '/servicios', redirect: '/' },
+    { path: '/agua-pura-altura', component: ServicioDetalle, meta: { servicio: 'agua-pura-altura' } },
+    { path: '/limpieza-cristales-hogares', component: ServicioDetalle, meta: { servicio: 'limpieza-cristales-hogares' } },
+    { path: '/limpieza-cristales-comunidades', component: ServicioDetalle, meta: { servicio: 'limpieza-cristales-comunidades' } },
+    { path: '/limpieza-cristales-locales-comerciales', component: ServicioDetalle, meta: { servicio: 'limpieza-cristales-locales-comerciales' } },
+    { path: '/limpieza-cristales-oficinas', component: ServicioDetalle, meta: { servicio: 'limpieza-cristales-oficinas' } },
+    // Unificada con agua pura en una sola página de altura (301 también en firebase.json)
+    { path: '/limpieza-cristales-altura', redirect: '/agua-pura-altura' },
+    { path: '/limpieza-agua-a-presion', component: ServicioDetalle, meta: { servicio: 'limpieza-agua-a-presion' } },
+    { path: '/limpieza-placas-solares', component: ServicioDetalle, meta: { servicio: 'limpieza-placas-solares' } },
+    { path: '/limpieza-fin-de-obra', component: ServicioDetalle, meta: { servicio: 'limpieza-fin-de-obra' } },
+    { path: '/limpieza-grafitis', component: ServicioDetalle, meta: { servicio: 'limpieza-grafitis' } },
+    { path: '/retirada-de-vinilos', component: ServicioDetalle, meta: { servicio: 'retirada-de-vinilos' } },
+    { path: '/limpieza-cristales-getafe', component: ServicioDetalle, meta: { zona: 'limpieza-cristales-getafe' } },
+    { path: '/limpieza-cristales-pozuelo-de-alarcon', component: ServicioDetalle, meta: { zona: 'limpieza-cristales-pozuelo-de-alarcon' } },
+    { path: '/limpieza-cristales-las-rozas', component: ServicioDetalle, meta: { zona: 'limpieza-cristales-las-rozas' } },
+    { path: '/limpieza-cristales-grinon', component: ServicioDetalle, meta: { zona: 'limpieza-cristales-grinon' } },
+    { path: '/limpieza-cristales-madrid-centro', component: ServicioDetalle, meta: { zona: 'limpieza-cristales-madrid-centro' } },
+    {
+        path: '/politica-privacidad',
+        component: Confidentialite,
+        meta: {
+            title: 'Política de Privacidad | Royall Clean',
+            description: 'Consulta la política de privacidad de Royall Clean. Información sobre el tratamiento de tus datos personales conforme al RGPD.',
+        },
+    },
+    {
+        path: '/aviso-legal',
+        component: MentionsLegales,
+        meta: {
+            title: 'Aviso Legal | Royall Clean',
+            description: 'Aviso legal de Royall Clean. Información sobre el titular del sitio web, condiciones de uso y propiedad intelectual.',
+        },
+    },
+    { path: '/dashboard', component: Dashboard, beforeEnter: requiereAuth2 },
+    { path: '/admin/mensajes', component: MensajesAdmin, beforeEnter: requiereAuth2 },
+    { path: '/admin/generar', component: GenerarArticulo, beforeEnter: requiereAuth2 },
+    { path: '/gastos', component: GastosView, beforeEnter: requiereAuth2 },
+    { path: '/hoja-de-ruta', component: Roadmap, beforeEnter: requiereAuth2 },
+    { path: '/firmas', component: RegistroFirmas, beforeEnter: requiereAuth2 },
+    { path: '/pagos-pendientes', component: PagosPendientes, beforeEnter: requiereAuth2 },
+    { path: '/nueva-factura', component: NuevaFactura, beforeEnter: requiereAuth2 },
+    { path: '/evolucion-ingresos', component: EvolucionIngresos, beforeEnter: requiereAuth2 },
+    { path: '/mapa-clientes', component: MapaClientes, beforeEnter: requiereAuth2 },
+    {
+        path: '/portal/:token?',
+        component: PortalCliente,
+        meta: {
+            title: 'Portal de clientes | Royall Clean',
+            description: 'Consulta tus facturas y firmas de servicio de Royall Clean.',
+        },
+    },
+    { path: '/sheet/:tab', component: SheetView, beforeEnter: requiereAuth2 },
+    {
+        path: '/blog',
+        component: Blog,
+        meta: {
+            title: 'Blog de limpieza de cristales | Royall Clean Madrid',
+            description: 'Consejos y guías profesionales para mantener tus cristales limpios en cada época del año. Blog de Royall Clean, limpiacristales en Madrid.',
+        },
+    },
+    {
+        path: '/blog/:slug',
+        component: BlogArticle,
+        meta: { dynamic: true },
+    },
+    {
+        path: '/:pathMatch(.*)*',
+        component: NotFound,
+        meta: {
+            notFound: true,
+            title: 'Página no encontrada | Royall Clean',
+            description: 'La página que buscas no existe. Vuelve al inicio de Royall Clean, empresa de limpieza de cristales en Madrid.',
+        },
+    },
 ];
 
 const router = createRouter({
     routes,
-    history:createWebHistory()
+    history: createWebHistory(),
+    scrollBehavior(to, from, savedPosition) {
+        if (savedPosition) return savedPosition;
+        if (to.hash) {
+            return new Promise(resolve => {
+                setTimeout(() => resolve({ el: to.hash, behavior: 'smooth' }), 350);
+            });
+        }
+        return { top: 0 };
+    },
+});
+
+router.afterEach((to) => {
+    const article  = (to.meta?.dynamic && to.params?.slug) ? articles.find(a => a.slug === to.params.slug) : null;
+    const servicio = to.meta?.servicio ? getServicioBySlug(to.meta.servicio)
+        : to.meta?.zona ? getZonaBySlug(to.meta.zona) : null;
+
+    // Un slug de blog/servicio que no existe también es un 404, aunque la
+    // ruta en sí coincida (:slug acepta cualquier texto) — sin esto, se
+    // mandaba a los buscadores el título/descripción genérico de portada
+    // en vez de un 404 real.
+    const isNotFound = to.meta?.notFound
+        || (to.meta?.dynamic && !article)
+        || ((to.meta?.servicio || to.meta?.zona) && !servicio);
+
+    let title = to.meta?.title || BASE_TITLE;
+    let desc  = to.meta?.description || BASE_DESC;
+    let keywords = to.meta?.keywords || '';
+    let image = 'https://royallclean.es/og-image.webp';
+
+    if (article) {
+        title = `${article.title} | Royall Clean`;
+        desc  = article.metaDescription;
+        keywords = article.keywords || '';
+        image = article.image ? window.location.origin + article.image : image;
+    } else if (servicio) {
+        title = `${servicio.metaTitle} | Royall Clean`;
+        desc  = servicio.metaDescription;
+        keywords = servicio.keywords || '';
+        const img = servicio.image || imagenesZona[to.meta?.zona]?.src;
+        image = img ? window.location.origin + img : image;
+    } else if (isNotFound) {
+        title = 'Página no encontrada | Royall Clean';
+        desc  = 'La página que buscas no existe. Vuelve al inicio de Royall Clean, empresa de limpieza de cristales en Madrid.';
+    }
+
+    document.title = title;
+
+    // Páginas /en y /en/contact: cambia el idioma del documento y el locale
+    // de Open Graph para que los buscadores y redes sociales lo detecten bien.
+    const isEnglish = to.path === '/en' || to.path.startsWith('/en/');
+    document.documentElement.setAttribute('lang', isEnglish ? 'en' : 'es');
+    const ogLocale = document.querySelector('meta[property="og:locale"]');
+    if (ogLocale) ogLocale.setAttribute('content', isEnglish ? 'en_US' : 'es_ES');
+
+    // hreflang: solo entre las páginas que tienen versión en los dos idiomas
+    // (home y contacto), para que los buscadores muestren la versión correcta
+    // según el idioma de quien busca.
+    document.querySelectorAll('link[data-dynamic-hreflang]').forEach((el) => el.remove());
+    const LOCALE_ALTERNATES = {
+        '/': '/en',
+        '/en': '/',
+        '/contacto': '/en/contact',
+        '/en/contact': '/contacto',
+    };
+    const altPath = LOCALE_ALTERNATES[to.path];
+    if (altPath) {
+        const esPath = isEnglish ? altPath : to.path;
+        const enPath = isEnglish ? to.path : altPath;
+        [['es', esPath], ['en', enPath], ['x-default', esPath]].forEach(([hreflang, p]) => {
+            const link = document.createElement('link');
+            link.setAttribute('rel', 'alternate');
+            link.setAttribute('hreflang', hreflang);
+            link.setAttribute('href', 'https://royallclean.es' + p);
+            link.setAttribute('data-dynamic-hreflang', 'true');
+            document.head.appendChild(link);
+        });
+    }
+
+    const metaRobots = document.querySelector('meta[name="robots"]');
+    if (metaRobots) {
+        metaRobots.setAttribute('content', isNotFound
+            ? 'noindex, follow'
+            : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1');
+    }
+
+    const metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) metaDesc.setAttribute('content', desc);
+
+    const ogTitle = document.querySelector('meta[property="og:title"]');
+    if (ogTitle) ogTitle.setAttribute('content', title);
+
+    const ogDesc = document.querySelector('meta[property="og:description"]');
+    if (ogDesc) ogDesc.setAttribute('content', desc);
+
+    const ogUrl = document.querySelector('meta[property="og:url"]');
+    if (ogUrl) ogUrl.setAttribute('content', 'https://royallclean.es' + to.path);
+
+    const ogImage = document.querySelector('meta[property="og:image"]');
+    if (ogImage) ogImage.setAttribute('content', image);
+
+    const twitterTitle = document.querySelector('meta[name="twitter:title"]');
+    if (twitterTitle) twitterTitle.setAttribute('content', title);
+
+    const twitterDesc = document.querySelector('meta[name="twitter:description"]');
+    if (twitterDesc) twitterDesc.setAttribute('content', desc);
+
+    const twitterImage = document.querySelector('meta[name="twitter:image"]');
+    if (twitterImage) twitterImage.setAttribute('content', image);
+
+    const canonical = document.querySelector('link[rel="canonical"]');
+    if (canonical) canonical.setAttribute('href', 'https://royallclean.es' + to.path);
+
+    let metaKeywords = document.querySelector('meta[name="keywords"]');
+    if (!metaKeywords) {
+        metaKeywords = document.createElement('meta');
+        metaKeywords.setAttribute('name', 'keywords');
+        document.head.appendChild(metaKeywords);
+    }
+    metaKeywords.setAttribute('content', keywords);
 });
 
 export default router;

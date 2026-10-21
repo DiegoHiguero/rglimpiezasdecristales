@@ -1,736 +1,263 @@
-<template>
-  <div class="padre" >
-    <!-- Contenido principal -->
-    <div
-      class="row d-flex justify-content-center ms-3 mx-3  bg-image principal mt-3  bg-body-tertiary rounded-4 align-items-md-stretch " >
-      <div class="row col-md-6 m-2 p-2">
-        <h1 class="display-4 p-3 fs-1"> <span class="prof"> Profesional en limpieza de Cristales</span>
-          <span class="textAnimation">Con más de 10 años de experiencia en el sector de limpieza de cristales!</span></h1>
-        <h1 class="p-3" style="color: #fff ;">
-          <span style="color: #fff ;">En Royal Clean Limpieza de cristales </span> hacemos la diferencia!
+﻿<template>
+  <div class="padre">
+
+    <!-- â”€â”€ HERO â”€â”€ -->
+    <div class="row d-flex justify-content-center ms-3 mx-3 bg-image principal mt-3 bg-body-tertiary rounded-4 align-items-md-stretch">
+
+      <div class="col-md-6 p-3 d-flex flex-column justify-content-center">
+
+        <h1 class="hero-title px-3">
+          <span class="prof">Limpieza de cristales y ventanas en Madrid</span>
+          <span class="textAnimation hero-sub">Escaparates · ventanas · fachadas · comunidades</span>
         </h1>
+
+        <p class="hero-proof px-3">
+          <span class="hero-proof-stars">★★★★★</span><strong>5.0</strong> en Google · Presupuesto gratis en 24 h
+        </p>
+
+        <div class="hero-ctas px-3">
+          <a href="tel:+34625950506" class="btn btn-light fw-bold px-4">
+            <font-awesome-icon :icon="['fas', 'phone']" class="me-2" />625 950 506
+          </a>
+          <a href="https://wa.me/34625950506?text=Hola%2C%20quiero%20un%20presupuesto%20para%20limpieza%20de%20cristales" target="_blank" rel="noopener noreferrer" class="btn hero-wa fw-bold px-4">
+            <font-awesome-icon :icon="['fab', 'whatsapp']" class="me-2" />WhatsApp
+          </a>
+        </div>
+
       </div>
-      <div class="row col-md-6 pt-2 pb-4 d-flex justify-content-center mt-4" style=" z-index: 2;">
-        <div class="col-lg-8 mt-4 p-4 pt-1 p-lg-8 formulario" style="border-radius: 0.75rem;">
-          <form @submit.prevent="enviarMensaje" class="mt-4 row g-3">
-            <div class="row mt-3 d-lg-flex col-12 justify-content-around">
-              <h2 class="text-center text-white">
-                Pida presupuesto gratuito!
-              </h2>
-            </div>
-            <div class="">
-              <label for="prenomInput" class="col-sm-2 col-form-label text-white">Nombre</label>
-              <input 
-                type="text" 
-                class="form-control" 
-                :class="{ 'is-invalid': prenomError, 'is-valid': prenom.length > 0 && !prenomError }"
-                id="prenomInput"
-                 placeholder="Su nombre"  
-                v-model="prenom" 
-                @blur="validatePrenom" 
-                @input="validatePrenom"
-              />
-              <div v-if="prenomError" class="invalid-feedback">
-                {{ prenomError }}
+
+      <div class="col-md-6 d-flex align-items-center justify-content-center py-4" style="z-index:2;">
+        <div class="formulario w-100">
+
+          <div class="fh">
+            <h2 class="fh-title">¿Cuánto cuesta limpiar<br><span class="fh-accent">tu espacio?</span></h2>
+          </div>
+
+          <form @submit.prevent="enviarMensaje" novalidate>
+
+            <div class="ff-row">
+              <div class="ff" :class="{ 'ff--ok': prenom.length > 0 && !errors.prenom, 'ff--err': errors.prenom }">
+                <div class="ff-icon"><font-awesome-icon :icon="['fas', 'user']" /></div>
+                <div class="ff-body">
+                  <label for="prenomInput">Nombre</label>
+                  <input type="text" id="prenomInput" placeholder="¿Cómo te llamas?"
+                    v-model="prenom" @blur="validatePrenom" @input="validatePrenom" autocomplete="name" />
+                  <span class="ff-msg" v-if="errors.prenom">{{ errors.prenom }}</span>
+                  <span class="ff-msg ff-msg--ok" v-else-if="prenom.length > 0 && !errors.prenom">¡Perfecto!</span>
+                </div>
               </div>
-              <div v-else-if="prenom.length > 0 && !prenomError" class="valid-feedback">
-                ¡Perfecto!
-              </div>
-            </div>
-            <div class="">
-              <label for="emailInput" class="col-sm-2 col-form-label text-white">Email</label>
-              <input 
-                type="email" 
-                class="form-control border-0" 
-                :class="{ 'is-invalid': emailError, 'is-valid': email.length > 0 && !emailError }"
-                id="emailInput"
-                placeholder="nombre@ejemplo.com" 
-                v-model.trim="email" 
-                @blur="validateEmail" 
-                @input="validateEmail"
-              />
-              <div v-if="emailError" class="invalid-feedback">
-                {{ emailError }}
-              </div>
-              <div v-else-if="email.length > 0 && !emailError" class="valid-feedback">
-                ¡Perfecto!
+              <div class="ff" :class="{ 'ff--ok': phone.length > 0 && !errors.phone, 'ff--err': errors.phone }">
+                <div class="ff-icon"><font-awesome-icon :icon="['fas', 'phone']" /></div>
+                <div class="ff-body">
+                  <label for="phoneInput">Teléfono</label>
+                  <input type="tel" id="phoneInput" placeholder="6XX XXX XXX"
+                    v-model.trim="phone" @blur="validatePhone" @input="validatePhone" autocomplete="tel" />
+                  <span class="ff-msg" v-if="errors.phone">{{ errors.phone }}</span>
+                  <span class="ff-msg ff-msg--ok" v-else-if="phone.length > 0 && !errors.phone">¡Perfecto!</span>
+                </div>
               </div>
             </div>
-            <div class="">
-              <label for="phoneInput" class="col-sm-2 col-form-label text-white">Teléfono</label>
-              <input 
-                type="tel" 
-                class="form-control border-0" 
-                :class="{ 'is-invalid': phoneError, 'is-valid': phone.length > 0 && !phoneError }"
-                id="phoneInput" 
-                placeholder="Su numero"
-                v-model.trim="phone" 
-                @blur="validatePhone" 
-                @input="validatePhone"
-              />
-              <div v-if="phoneError" class="invalid-feedback">
-                {{ phoneError }}
-              </div>
-              <div v-else-if="phone.length > 0 && !phoneError" class="valid-feedback">
-                ¡Perfecto!
+
+            <div class="ff" v-if="showEmail" :class="{ 'ff--ok': email.length > 0 && !errors.email, 'ff--err': errors.email }">
+              <div class="ff-icon"><font-awesome-icon :icon="['fas', 'envelope']" /></div>
+              <div class="ff-body">
+                <label for="emailInput">Correo (opcional)</label>
+                <input type="email" id="emailInput" placeholder="tu@email.com"
+                  v-model.trim="email" @blur="validateEmail" @input="validateEmail" autocomplete="email" />
+                <span class="ff-msg" v-if="errors.email">{{ errors.email }}</span>
+                <span class="ff-msg ff-msg--ok" v-else-if="email.length > 0 && !errors.email">¡Perfecto!</span>
               </div>
             </div>
-            <div class="mb-3 mb-4">
-              <label for="messageInput" class="col-sm-2 col-form-label text-white">Mensaje</label>
-              <textarea 
-                class="form-control border-0" 
-                :class="{ 'is-invalid': messageError, 'is-valid': message.length > 0 && !messageError }"
-                id="messageInput" 
-                placeholder="Mensaje" 
-                v-model="message" 
-                @blur="validateMessage" 
-                @input="validateMessage"
-              ></textarea>
-              <div v-if="messageError" class="invalid-feedback">
-                {{ messageError }}
-              </div>
-              <div v-else-if="message.length > 0 && !messageError" class="valid-feedback">
-               ¡Perfecto!
+            <button type="button" class="ff-add-email" v-else @click="showEmail = true">
+              <font-awesome-icon :icon="['fas', 'plus']" class="me-1" />Añadir email (opcional)
+            </button>
+
+            <div class="ff" :class="{ 'ff--ok': message.length > 0 && !errors.message, 'ff--err': errors.message }">
+              <div class="ff-icon ff-icon--top"><font-awesome-icon :icon="['fas', 'comments']" /></div>
+              <div class="ff-body">
+                <label for="messageInput">¿Qué necesitas limpiar?</label>
+                <textarea id="messageInput" rows="3"
+                  placeholder="Ej: Cristales de una tienda en Madrid, 6 ventanas grandes..."
+                  v-model="message" @blur="validateMessage" @input="validateMessage"></textarea>
+                <span class="ff-msg" v-if="errors.message">{{ errors.message }}</span>
+                <span class="ff-msg ff-msg--ok" v-else-if="message.length > 0 && !errors.message">¡Perfecto!</span>
               </div>
             </div>
-            <div class="text-center p-2 mt-2 alert alert-success" v-if="userStore.timeOut !== false">
-              {{ userStore.mensaje }}
+
+            <div class="f-success" v-if="feedback.msg && feedback.ok">
+              <font-awesome-icon :icon="['fas', 'check']" class="me-2" />{{ feedback.msg }}
             </div>
-            <div class="d-grid">
-             <button :disabled="isSubmitting || !isFormValid" class="btn" style="
-                  background-color: #3230af;
-                  color: white;
-                  font-weight: bold;
-                ">
-                {{ isSubmitting ? 'Envio en curso...' : 'Enviar' }}
-              </button>
+            <div class="ff-error" v-if="feedback.msg && !feedback.ok">
+              <font-awesome-icon :icon="['fas', 'xmark']" class="me-2" />{{ feedback.msg }}
             </div>
+
+            <button type="submit" class="f-submit" :disabled="sending">
+              <span v-if="!sending">
+                <font-awesome-icon :icon="['fas', 'paper-plane']" class="me-2" />Enviar consulta
+              </span>
+              <span v-else class="f-submit-loading">
+                <span class="f-spinner"></span>Enviando...
+              </span>
+            </button>
+
+            <div class="f-trust">
+              <span><font-awesome-icon :icon="['fas', 'lock']" class="me-1" />Sin compromiso</span>
+              <span><font-awesome-icon :icon="['fas', 'shield-halved']" class="me-1" />Datos protegidos</span>
+            </div>
+
           </form>
-         </div>
+        </div>
       </div>
 
-      <div class="section2 flex row">
-
+      <!-- Cifras y garantías, dentro del fondo del hero, bajo texto y formulario -->
+      <div class="col-12 hero-stats">
+        <HomeStats />
       </div>
     </div>
 
-    <div class="texto-principal-nosotros" id="texto-principal" >
-      <div class="titulo-descripcion" id="scrollspyHeading2">
-        <h1 class="imagen-descripcion display-4 mb-5 "  >
-          NOSOTROS</h1>
-      </div>
-      <img class="imagen-nosotros" src="../assets/img//Header_Fensterreiniger_Glas_ANW_Toplock_000313.jpg" alt="">
-      <h1 class="imagen-descripcion">¡Hola! Mi nombre es Roys Abreu</h1>
-      <p class="parrafogratuito2"> Soy un profesional autónomo con amplia experiencia en limpieza de cristales especializada. 
-        Bienvenidos a Royal Clean Limpieza Profesional, tu aliado de confianza para limpeza de cristales y fachadas impecables. 
-        Nos comprometemos a ofrecer servicios integrales, eficientes y de alta calidad,
-         adaptados a cada cliente, ya sea residencial o empresarial. Con Royal Clean Limpieza Profesional, 
-         no solo obtienes limpieza, sino tranquilidad y resultados que se ven.
+    <!-- ── SECCIONES ── -->
+    <!-- Orden alineado con el menú (Servicios · Trabajos realizados ·
+         Precios · Nosotros) para que el scroll al hacer click en el
+         nav siempre avance hacia abajo, nunca salte hacia atrás. -->
+    <HomeServicios />
+    <HomeGaleria />
+    <HomeTestimonios />
+    <HomePrecios />
+    <HomeSobreMi />
+    <HomeZonas />
+    <HomeBlog />
+    <HomeFaq />
 
-      </p>
-      <p class="parrafogratuito2">
-      </p>
-
+    <!-- WhatsApp flotante -->
+    <div class="wa-widget" ref="waWidgetRef">
+      <transition name="wa-pop">
+        <div class="wa-menu" v-if="isWaOpen">
+          <span class="wa-menu-title">¿En qué podemos ayudarte?</span>
+          <a href="https://wa.me/34625950506?text=Hola%2C%20quiero%20un%20presupuesto%20para%20limpieza%20de%20cristales%20en%20mi%20vivienda" target="_blank" rel="noopener noreferrer" class="wa-menu-item">
+            <font-awesome-icon :icon="['fas', 'house']" />Presupuesto vivienda
+          </a>
+          <a href="https://wa.me/34625950506?text=Hola%2C%20quiero%20un%20presupuesto%20para%20limpieza%20de%20cristales%20en%20mi%20negocio%20o%20local" target="_blank" rel="noopener noreferrer" class="wa-menu-item">
+            <font-awesome-icon :icon="['fas', 'shop']" />Presupuesto negocio o local
+          </a>
+          <a href="https://wa.me/34625950506?text=Hola%2C%20quiero%20un%20presupuesto%20para%20limpieza%20de%20cristales%20en%20mi%20comunidad%20de%20vecinos" target="_blank" rel="noopener noreferrer" class="wa-menu-item">
+            <font-awesome-icon :icon="['fas', 'building']" />Presupuesto comunidad
+          </a>
+          <a href="https://wa.me/34625950506" target="_blank" rel="noopener noreferrer" class="wa-menu-item">
+            <font-awesome-icon :icon="['fas', 'comment']" />Otra consulta
+          </a>
+        </div>
+      </transition>
+      <transition name="wa-hint-pop">
+        <div class="wa-hint" v-if="showWaHint && !isWaOpen" @click="toggleWaMenu">
+          ¿Te ayudamos con un presupuesto?
+        </div>
+      </transition>
+      <button class="whatsapp-float" :class="{ 'wa-pulse': waPulse && !isWaOpen }" aria-label="Contactar por WhatsApp" @click="toggleWaMenu">
+        <font-awesome-icon :icon="['fab', 'whatsapp']" v-if="!isWaOpen" />
+        <font-awesome-icon :icon="['fas', 'xmark']" v-else />
+      </button>
     </div>
-    <div class="accordion accordion-flush rounded-bottom-20 accordion pt-0 ps-3 px-3 " id="accordionExample">
-      <div class="accordion-item">
-        <h2 class="accordion-header">
-          <button class="accordion-button " type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne"
-            aria-expanded="true" aria-controls="collapseOne">
-            ¿Dónde trabajamos?
-          </button>
-        </h2>
-        <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
-          <div class="accordion-body">
-                      <img src="/src/assets/img/mapa.png" class="img-fluid m-2" style="width: 90px; " alt="">
 
-            <p class="text-start mt-2"> <strong>Nuestro alcance de servicio en limpieza.</strong>
-Ofrecemos servicios de limpieza en todo Madrid capital y su periferia: Madrid, Getafe, Majadahonda, Pozuelo, Las Rozas, Griñon y más.
-También podemos desplazarnos a zonas más lejanas, con un precio ajustado según la distancia.
- flexibilidad geográfica y de precios nos permite ofrecerte un servicio de limpieza profesional allí donde lo necesites.</p>
-          </div>
-        </div>
-      </div>
-      <div class="accordion-item">
-        <h2 class="accordion-header">
-          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-            data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-            Objetivos
-          </button>
-        </h2>
-        <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
-          <div class="accordion-body ">
-                     <img src="/src/assets/img/logocarta.png" class="img-fluid" style="width: 90px; " alt="">
-<p class="text-start mt-2"> <strong>Por qué se nos recomienda.</strong> Nuestra misión es ofrecer limpieza de cristales y fachadas con resultados impecables y sin complicaciones.
-Trabajamos con los más altos estándares de calidad y seguridad para que tengas la tranquilidad de contar con profesionales de confianza.</p>
-          </div>
-        </div>
-      </div>
-      <div class="accordion-item">
-        <h2 class="accordion-header">
-          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-            data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-            Materiales de primera
-          </button>
-        </h2>
-        <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
-          <div class="accordion-body">
-          <img src="/src/assets/img/materiales.png" class="img-fluid m-2" style="width: 90px; " alt="">
-
-           <p class="text-start mt-2"><strong>Materiales y tecnología de vanguardia.</strong>
-En Royal Clean trabajamos exclusivamente con materiales de la más alta calidad y lo último en tecnología de limpieza profesional. Utilizamos herramientas de la marca Unger, reconocida internacionalmente por su durabilidad, precisión y eficiencia.
-Nuestros equipos incluyen sistemas de limpieza con pértigas telescópicas, paños de microfibra de alto rendimiento y sistemas de agua pura, que garantizan resultados impecables sin dañar superficies.
-Además, empleamos productos de limpieza seguros, eficaces y respetuosos con el medio ambiente, seleccionados para ofrecer la máxima higiene y brillo en cada trabajo.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="section3 "> </div>
-
-
-    <!-- Servicios-->
-    <div class="texto-principal-servicios" id="texto-principal">
-      <div class="titulo-descripcion align-self-start">
-        <h1 class="imagen-descripcion display-4" id="scrollspyHeading3">SERVICIOS</h1>
-      </div>
-      <div class="ofrecerte ">
-      </div>
-      <div class="row row-cols-1 row-cols-md-2 g-4">
-        <div class="col ">
-          <div class="card h-100 bg-dark bg-gray-600">
-            <img src="../assets/img/cristales.jpg" class="card-img-top" alt="...">
-            <div class="card-body">
-              <h5 class="card-title subtitulo-grande1">Negocios</h5>
-              <div>
-                <p class="card-text text-light fs-6">Mantener tu negocio limpio y ordenado es clave para transmitir confianza a tus clientes. 
-                  Nos especializamos en la limpieza de tiendas, cafeterías, consultorios y pequeños locales comerciales.
-                   Utilizamos productos seguros y técnicas eficientes para que tu espacio luzca siempre impecable, sin interrumpir tu actividad diaria.</p>
-                <div>
-                  
-                   <!-- <a class="w-100 btn btn-lg btn-dark btn4 bg-primary" href="#scrollspyHeading1">Solicitar ahora</a>-->
-                  <router-link
-            to="/contacto"
-            class="w-100 btn btn-lg btn-primary text-black fw-bold "
-            id="boton-session" >
-            Solicitar ahora
-          </router-link>
-                 
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col">
-          <div class="card h-100 bg-dark bg-gray-900">
-            <img src="../assets/img/hogares.jpg" class="card-img-top" alt="...">
-            <div class="card-body">
-              <h5 class="card-title subtitulo-grande2">Hogares</h5>
-              <div>
-                <p class="card-text text-light fs-6">Nada como llegar a un hogar limpio y fresco. 
-                  Nos encargamos de la limpieza completa de casas y pisos, desde la limpieza general hasta el cuidado de detalles como cristales, 
-                  cocinas, baños y zonas exteriores. 
-                  Nos adaptamos a limpiezas puntuales o mantenimientos regulares, siempre con la máxima dedicación y esfuerzo.</p>
-                <div>
-                  
-                    <router-link
-            to="/contacto"
-            class="w-100 btn btn-lg btn-info text-black fw-bold "
-            id="boton-session" >
-            Solicitar ahora
-          </router-link>
-                  </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col">
-          <div class="card h-100 bg-dark bg-gray-900">
-            <img src="../assets/img/locales.jpg" class="card-img-top" alt="...">
-            <div class="card-body">
-              <h5 class="card-title subtitulo-grande3">Empresas</h5>
-              <div>
-                <p class="card-text text-light fs-6">Sabemos que en los entornos corporativos y las grandes instalaciones, 
-                  la limpieza es sinónimo de productividad y profesionalismo. 
-                  Ofrecemos servicios de limpieza integral para oficinas, edificios, almacenes y plantas industriales,
-                   con planes adaptados a la magnitud de cada proyecto y horarios flexibles para no afectar tus operaciones.</p>
-                <div>
-                  
-                 
-                           <router-link
-            to="/contacto"
-            class="w-100 btn btn-lg btn-secondary text-black fw-bold  "
-            id="boton-session" >
-            Solicitar ahora
-          </router-link>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col">
-          <div class="card h-100 bg-dark bg-gray-900">
-            <img src="../assets/img/presion.jpg" class="card-img-top" alt="...">
-            <div class="card-body">
-              <h5 class="card-title subtitulo-grande4">Agua a presión</h5>
-              <p class="card-text text-light fs-6">La suciedad difícil no es un problema para nosotros. 
-                Nuestro servicio de limpieza con agua a presión elimina manchas, polvo y residuos en fachadas, terrazas, patios, aceras, 
-                garajes y otras superficies exteriores.
-                 Usamos equipos profesionales que garantizan resultados rápidos, efectivos y seguros para tus superficies.</p>
-              <div>
-                
-           <router-link
-            to="/contacto"
-            class="w-100 btn btn-lg btn-warning text-black fw-bold"
-            id="boton-session" >
-            Solicitar ahora
-          </router-link>
-                
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-
-      <section class="section2">
-        <div class="container py-3">
-
-          <div class="d-flex flex-column flex-md-row align-items-center pb-3 mb-4 border-bottom">
-
-          </div>
-
-          <div class="pricing-header p-3 pb-md-4 mx-auto text-center">
-            <h1 class="display-4 fw-normal text-body-emphasis" id="scrollspyHeading4">Precios</h1>
-            <p class="fs-5 text-body-secondary">Nuestros <small class="text-body-secondary fw-bold text-decoration-underline">precios son estimativos</small> y se ajustan en función de la complejidad, la cantidad de ventanas y otros factores específicos de cada trabajo.</p><p>
-Todas nuestras tarifas incluyen los productos de limpieza y corresponden a un único servicio, garantizando calidad y transparencia en cada visita. <small class="text-body-secondary fw-bold text-decoration-underline">Los servicios se realizaran con presupuesto previo.</small></p>
-          </div>
-
-
-
-          <div class="row row-cols-1 row-cols-md-3 mb-3 text-center">
-            <div class="col">
-              <div class="card mb-4 rounded-3 shadow-sm">
-                <div class="card-header py-3" >
-                  <h4 class="my-0 fw-normal">Local Pequeño</h4>
-                </div>
-                <div class="card-body">
-                  <h1 class="card-title pricing-card-title">A partir de €15<small class="text-body-secondary fw-light">/Limpieza</small>
-                  </h1>
-                  <img src="../assets/img/petitmagasinpng.png" class="card-img-top" style="width: 8rem;" alt="...">
-                  <ul class="list-unstyled mt-3 mb-4">
-                    <li>Limpieza de ventanas</li>
-                    <li>Limpieza de puertas</li>
-                    <li>Desinfección de cristales</li>
-                    
-                  </ul>
-                   
-                </div>
-              </div>
-            </div>
-            <div class="col">
-              <div class="card mb-4 rounded-3 shadow-sm">
-                <div class="card-header py-3">
-                  <h4 class="my-0 fw-normal">Local Mediano</h4>
-                </div>
-                <div class="card-body">
-                  <h1 class="card-title pricing-card-title">A partir de €22<small class="text-body-secondary fw-light">/Limpieza</small>
-                  </h1>
-                  <img src="../assets/img/magasinpng.png" class="card-img-top" style="width: 8rem;" alt="...">
-                  <ul class="list-unstyled mt-3 mb-4">
-                    <li>Limpieza de ventanas</li>
-                    <li>Limpieza de puertas</li>
-                    <li>Desinfección de cristales</li>
-                  </ul>
-                   
-                </div>
-              </div>
-            </div>
-            <div class="col">
-              <div class="card mb-4 rounded-3 shadow-sm">
-                <div class="card-header py-3 ">
-                  <h4 class="my-0 fw-normal">Local Grande</h4>
-                </div>
-                <div class="card-body">
-                  <h1 class="card-title pricing-card-title">A partir de €30<small class="text-body-secondary fw-light">/Limpieza</small>
-                  </h1>
-                  <img src="../assets/img/grandmagasinpng.png" class="card-img-top" style="width: 8rem;" alt="...">
-                  <ul class="list-unstyled mt-3 mb-4">
-                    <li>Limpieza con pértiga</li>
-                    <li>Limpieza de puertas</li>
-                    <li>Desinfección de cristales</li>
-                  </ul>
-                   
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="row row-cols-1 row-cols-md-3 mb-3 text-center">
-            <div class="col">
-              <div class="card mb-4 rounded-3 shadow-sm">
-                <div class="card-header py-3">
-                  <h4 class="my-0 fw-normal">Apartamentos</h4>
-                </div>
-                <div class="card-body">
-                  <h1 class="card-title pricing-card-title">A partir de €50<small class="text-body-secondary fw-light">/Limpieza</small>
-                  </h1>
-                  <img src="../assets/img/appartements.png" class="card-img-top" style="width: 8rem;" alt="...">
-                  <ul class="list-unstyled mt-3 mb-4">
-                     <li>Limpieza de ventanas </li>
-                    <li>Limpieza de balcones</li>
-                    <li>Desinfección de cristales</li>
-                  </ul>
-                   
-                </div>
-              </div>
-            </div>
-            <div class="col">
-              <div class="card mb-4 rounded-3 shadow-sm">
-                <div class="card-header py-3">
-                  <h4 class="my-0 fw-normal">Chalet</h4>
-                </div>
-                <div class="card-body">
-                  <h1 class="card-title pricing-card-title">A partir de €75<small class="text-body-secondary fw-light">/Limpieza</small>
-                  </h1>
-                  <img src="../assets/img/maisons.png" class="card-img-top" style="width: 8rem;" alt="...">
-                  <ul class="list-unstyled mt-3 mb-4">
-                    <li>Limpieza de ventanas</li>
-                    <li>Limpieza de balcones</li>
-                    <li>Limpieza de terrazas</li>
-                    <li>Limpieza de barandillas</li>
-                    <li>Desinfección de cristales</li>
-                  </ul>
-    
-                </div>
-              </div>
-            </div>
-            <div class="col">
-              <div class="card mb-4 rounded-3 shadow-sm ">
-                <div class="card-header py-3 ">
-                  <h4 class="my-0 fw-normal">Hotel</h4>
-                </div>
-                <div class="card-body">
-                  <h1 class="card-title pricing-card-title">€4-9<small class="text-body-secondary fw-light">/Habitación</small>
-                  </h1>
-                  <img src="../assets/img/hotel.png" class="card-img-top" style="width: 8rem;" alt="...">
-                  <ul class="list-unstyled mt-3 mb-4">
-                    <li>Limpieza de ventanas</li>
-                    <li>Limpieza de zonas comunes</li>
-                    <li>Limpieza de terrazas</li>
-                    <li>Limpieza de barandillas</li>
-                    <li>Desinfección de cristales</li>
-                  </ul>
-                   
-                </div>
-              </div>
-            </div>
-          </div>
-          
-
-
-
-
-        </div>
-      </section>
-    </div>
-    <!-- Finanal servicios-->
-    <!--Final de contenedor-->
   </div>
 </template>
+
 <script setup lang="ts">
 import { useUserStore } from "../stores/user";
-import { onMounted, ref, computed } from "vue";
-import emailjs from "@emailjs/browser";
-import { getAnalytics, logEvent } from "firebase/analytics";
-import logoCoop from '../assets/img/logoCoop.png';
-import creditWebp from '../assets/img/credit.webp';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore'; 
-import { db, auth } from '../firebaseConfig'; 
+import { onMounted, onUnmounted, ref } from "vue";
+import { useContactForm } from '../composables/useContactForm';
+import HomeStats      from '../components/home/HomeStats.vue';
+import HomeServicios  from '../components/home/HomeServicios.vue';
+import HomePrecios    from '../components/home/HomePrecios.vue';
+import HomeGaleria    from '../components/home/HomeGaleria.vue';
+import HomeTestimonios from '../components/home/HomeTestimonios.vue';
+import HomeSobreMi    from '../components/home/HomeSobreMi.vue';
+import HomeZonas      from '../components/home/HomeZonas.vue';
+import HomeBlog       from '../components/home/HomeBlog.vue';
+import HomeFaq        from '../components/home/HomeFaq.vue';
 
-const showCreditBanner = ref(true);
-const fadeOutBanner = ref(false); 
-// Preloader state
-const showPreloader = ref(true);
-const fadingOut = ref(false); // To keep preloader mounted during fade-out transition
-
-// Existing form refs
-const prenom = ref("");
-const email = ref("");
-const message = ref("");
-const phone = ref("");
-
-// Existing validation errors
-const prenomError = ref("");
-const emailError = ref("");
-const phoneError = ref("");
-const messageError = ref("");
+const {
+  prenom, email, phone, message,
+  errors, sending, feedback,
+  validatePrenom, validateEmail, validatePhone, validateMessage,
+  enviarMensaje,
+} = useContactForm('es', { emailOptional: true });
+const showEmail = ref(false);
 
 const userStore = useUserStore();
-const analytics = getAnalytics();
-const isSubmitting = ref(false);
 
-// --- Preloader Logic ---
+const isWaOpen    = ref(false);
+const waWidgetRef = ref(null);
+const showWaHint  = ref(false);
+const waPulse     = ref(false);
+let waHintShowTimeout, waHintHideTimeout, waPulseTimeout;
+
+const dismissWaHint = () => {
+  showWaHint.value = false;
+  waPulse.value = false;
+  sessionStorage.setItem('rc-wa-hint-shown', '1');
+  clearTimeout(waHintShowTimeout);
+  clearTimeout(waHintHideTimeout);
+  clearTimeout(waPulseTimeout);
+};
+
+const toggleWaMenu = () => {
+  isWaOpen.value = !isWaOpen.value;
+  dismissWaHint();
+};
+
+const handleWaOutsideClick = (e) => {
+  if (waWidgetRef.value && !waWidgetRef.value.contains(e.target)) {
+    isWaOpen.value = false;
+    dismissWaHint();
+  }
+};
+
 onMounted(() => {
-  setTimeout(() => {
-    fadeOutBanner.value = true; // Inicia la animación de desvanecimiento
-    setTimeout(() => {
-      showCreditBanner.value = false; // Elimina completamente el banner del DOM después del fade-out
-    }, 1000); // Coincide con la duración de la transición CSS
-  }, 7000); 
-    // Lógica para animar los iconos de ventajas al hacer scroll
-  const advantageCards = document.querySelectorAll('.advantage-card');
+  document.addEventListener('click', handleWaOutsideClick);
 
-  const observerOptions = {
-    root: null, // Observa el viewport
-    rootMargin: '0px',
-    threshold: 0.5 // Dispara cuando el 50% del elemento es visible
-  };
+  if (!sessionStorage.getItem('rc-wa-hint-shown')) {
+    waPulse.value = true;
+    waHintShowTimeout = setTimeout(() => {
+      showWaHint.value = true;
+      waHintHideTimeout = setTimeout(() => { showWaHint.value = false; }, 7000);
+    }, 3000);
+    waPulseTimeout = setTimeout(() => { waPulse.value = false; }, 12000);
+  }
+});
 
-  const observer = new IntersectionObserver((entries, observer) => {
+onUnmounted(() => {
+  document.removeEventListener('click', handleWaOutsideClick);
+  clearTimeout(waHintShowTimeout);
+  clearTimeout(waHintHideTimeout);
+  clearTimeout(waPulseTimeout);
+});
+
+onMounted(() => {
+  const animatedEls = document.querySelectorAll('.animate-on-scroll');
+  const scrollObserver = new IntersectionObserver((entries, obs) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
-        // Si el elemento entra en la vista
-        entry.target.classList.add('is-visible'); // Añade la clase para animar
-        observer.unobserve(entry.target); // Deja de observar el elemento una vez que se ha animado
+        entry.target.classList.add('is-visible');
+        obs.unobserve(entry.target);
       }
     });
-  }, observerOptions);
-
-  // Observa cada tarjeta de ventaja
-  advantageCards.forEach(card => {
-    observer.observe(card);
-  });
-  // Hide preloader after a delay (e.g., 3 seconds)
-  // In a real app, you might wait for actual data/image loading
-  setTimeout(() => {
-    fadingOut.value = true; // Start fade-out animation
-    document.body.style.overflow = ''; // Re-enable scrolling
-
-    // After the fade-out animation completes (e.g., 1s for transition)
-    setTimeout(() => {
-      showPreloader.value = false; // Completely remove preloader from DOM
-      fadingOut.value = false; // Reset fade-out state
-    }, 1000); // Should match CSS transition duration for .preloader-overlay.fade-out
-  }, 3000); // Preloader visible for 3 seconds
-
-  // Prevent scrolling while preloader is active
-  document.body.style.overflow = 'hidden';
-
-  // Your existing checkCookie logic
+  }, { threshold: 0.12 });
+  animatedEls.forEach(el => scrollObserver.observe(el));
   checkCookie();
 });
 
-const scrollToCreditImpot = () => {
-  const targetElement = document.getElementById('sectionCreditImpot');
-  if (targetElement) {
-    targetElement.scrollIntoView({ behavior: 'smooth' });
-    // Registramos un evento en Firebase Analytics cuando el banner es clicado
-    logEvent(analytics, 'credit_banner_clicked', { action: 'scroll_to_section' });
-  }
-  // Opcional: Hacer que el banner desaparezca inmediatamente después de hacer clic
-  fadeOutBanner.value = true;
-  setTimeout(() => {
-    showCreditBanner.value = false;
-  }, 1000); // Coincide con la duración de la transición CSS
-};
-// --- Validation Functions ---
-const validatePrenom = () => {
-  prenomError.value = ""; // Clear previous error
-  if (!prenom.value.trim()) {
-    prenomError.value = "El nombre es obligatorio.";
-    return false;
-  }
-  return true;
-};
-
-const validateEmail = () => {
-  emailError.value = ""; // Clear previous error
-  if (!email.value.trim()) {
-    emailError.value = "Se requiere dirección de correo electrónico.";
-    return false;
-  }
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(email.value)) {
-    emailError.value = "Por favor, introduce una dirección de correo electrónico válida.";
-    return false;
-  }
-  return true;
-};
-
-const validatePhone = () => {
-  phoneError.value = ""; // Clear previous error
-  if (!phone.value.trim()) {
-    phoneError.value = "Se requiere el número de teléfono.";
-    return false;
-  }
-  // This regex allows digits, spaces, hyphens, and parentheses
-  const phoneRegex = /^[\d\s\-\(\)]+$/;
-  if (!phoneRegex.test(phone.value)) {
-    phoneError.value = "Ingrese un número de teléfono válido.";
-    return false;
-  }
-  // Optional: Check minimum length after stripping non-digits
-  if (phone.value.trim().replace(/[\s\-\(\)]/g, '').length < 9) {
-    phoneError.value = "El número de teléfono debe contener al menos 9 dígitos.";
-    return false;
-  }
-  return true;
-};
-
-const validateMessage = () => {
-  messageError.value = ""; // Clear previous error
-  if (!message.value.trim()) {
-    messageError.value = "El mensaje es obligatorio.";
-    return false;
-  }
-  if (message.value.trim().length < 10) {
-    messageError.value = "El mensaje debe contener al menos 10 caracteres.";
-    return false;
-  }
-  return true;
-};
-
-// --- Overall Form Validation (used before submission) ---
-const validateForm = () => {
-  userStore.mensaje = ''; // Clear general message before re-validating
-  userStore.timeOut = false; // Reset timeout for general messages
-
-  const isPrenomValid = validatePrenom();
-  const isEmailValid = validateEmail();
-  const isPhoneValid = validatePhone();
-  const isMessageValid = validateMessage();
-
-  return isPrenomValid && isEmailValid && isPhoneValid && isMessageValid;
-};
-
-// Computed property to determine if the form is generally valid for button enabling
-const isFormValid = computed(() => {
-  // Check if all fields have content AND no specific field errors
-  return prenom.value.trim() !== '' && !prenomError.value &&
-         email.value.trim() !== '' && !emailError.value &&
-         phone.value.trim() !== '' && !phoneError.value &&
-         message.value.trim() !== '' && !messageError.value;
-});
-
-// --- Send Message Function (modified to integrate validation) ---
-const enviarMensaje = async () => {
-  if (isSubmitting.value) return;
-
-  const formIsValid = validateForm();
-  if (!formIsValid) {
-    userStore.mensajeAlerta("Corrija cualquier error en el formulario antes de enviarlo.");
-    // ... logEvent existente ...
-    return;
-  }
-
-  isSubmitting.value = true;
-
-  try {
-    const contactParams = {
-      prenom: prenom.value,
-      email: email.value,
-      message: message.value,
-      phone: phone.value,
-    };
-
-    // 1. Envía el email (tu lógica existente)
-    await emailjs.send(
-      "service_emqkbc7",
-      "template_lu5kxwz",
-      contactParams,
-      "rFNGy51A07Q9Pt33i"
-    );
-
-    // 2. Guarda el mensaje en Firestore
-    await addDoc(collection(db, "mensajes"), {
-      prenom: prenom.value,
-      email: email.value,
-      message: message.value,
-      phone: phone.value,
-      timestamp: serverTimestamp(), // Guarda la fecha y hora del servidor
-      read: false // Por defecto, el mensaje está "no leído"
-    });
-
-    // Éxito: Limpiar campos y mostrar mensaje
-    prenom.value = "";
-    email.value = "";
-    message.value = "";
-    phone.value = "";
-    prenomError.value = "";
-    emailError.value = "";
-    phoneError.value = "";
-    messageError.value = "";
-
-    userStore.mensajeAlerta("¡Bien hecho! El mensaje se envió correctamente.");
-    // ... logEvent existente ...
-
-  } catch (error: any) {
-    console.error("Error al enviar mensaje o guardar en Firestore:", error);
-    userStore.mensajeAlerta("¡Ups! Hubo un problema al enviar el mensaje.");
-    // ... logEvent existente ...
-  } finally {
-    isSubmitting.value = false;
-  }
-};
-
-function closeBanner() {
-  userStore.isActive = true;
-  logEvent(analytics, 'cookie_banner_closed', { action: 'dismiss' });
-}
-
 function checkCookie() {
-  var check = getCookie("cookieConsent-ANALYTICS");
-  if (check !== "") {
-    userStore.cookie = true;
-  }
-  // Corrected condition: getCookie returns a string, 'false' is a string
-  else if (check === "false") {
-    document.cookie = "cookieConsent-ANALYTICS" + "=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;";
-  } else {
-    userStore.cookie = false;
-  }
-}
-
-function setCookie(cname: string, cvalue: boolean, exdays: number) {
-  var d = new Date();
-  d.setTime(d.getTime() + exdays * 24 * 60 * 60 * 1000);
-  var expires = "expires=" + d.toUTCString();
-  document.cookie = cname + "=" + cvalue + "; " + expires + "; Path=/; Secure; SameSite=Lax";
-  userStore.isActive = true;
-  if (typeof (window as any).gtag === 'function') {
-    (window as any).gtag("consent", "update", {
-      ad_storage: "granted",
-      analytics_storage: "granted",
-    });
-  }
-  logEvent(analytics, 'cookie_banner_accepted', {
-    consent_type: cname,
-    value: cvalue
-  });
-}
-
-function refuseCookie(cname: string, cvalue: boolean, exdays: number) {
-  var d = new Date();
-  d.setTime(d.getTime() + exdays * 24 * 60 * 60 * 1000);
-  var expires = "expires=" + d.toUTCString();
-  document.cookie = cname + "=" + cvalue + "; " + expires + "; Path=/; Secure; SameSite=Lax";
-  userStore.isActive = true;
-  if (typeof (window as any).gtag === 'function') {
-    (window as any).gtag("consent", "update", {
-      ad_storage: "denied",
-      analytics_storage: "denied",
-    });
-  }
-  logEvent(analytics, 'cookie_banner_refused', {
-    consent_type: cname,
-    value: cvalue
-  });
+  const check = getCookie("cookieConsent-ANALYTICS");
+  if (check !== "") { userStore.cookie = true; }
+  else if (check === "false") { document.cookie = "cookieConsent-ANALYTICS=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;"; }
+  else { userStore.cookie = false; }
 }
 
 function getCookie(cname: string): string {
-  var name = cname + "=";
-  var ca = document.cookie.split(";");
-  for (var i = 0; i < ca.length; i++) {
-    var c = ca[i].trim();
+  const name = cname + "=";
+  const ca = document.cookie.split(";");
+  for (let i = 0; i < ca.length; i++) {
+    const c = ca[i].trim();
     if (c.indexOf(name) === 0) return c.substring(name.length, c.length);
   }
   return "";
@@ -738,842 +265,323 @@ function getCookie(cname: string): string {
 </script>
 
 <style scoped>
-.intro{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;background:#fff;transition:opacity 1s ease-out,visibility 1s ease-out;z-index:1000;position:fixed;top:0;left:0;right:0;bottom:0}
-.intro img{width:220px;animation:fadeIn 2s ease-in-out;z-index:2;position:relative}
-.waves{position:absolute;bottom:0;width:100%;height:120px;overflow:hidden;line-height:0;z-index:1}
-.waves svg{position:relative;display:block;width:200%;height:120px;animation:waveMove 8s linear infinite}
-.wave1{fill:#4a7bd4;opacity:.6}
-.wave2{fill:#6fa5f4;opacity:.5;animation-delay:-2s}
-.wave3{fill:#4a7bd4;opacity:.3;animation-delay:-4s}
-@keyframes fadeIn{0%{opacity:0;transform:scale(.8)}100%{opacity:1;transform:scale(1)}}
-@keyframes waveMove{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
-.content{opacity:0;transition:opacity 1s ease-in}
-.content.show{opacity:1}
-
-  #app {
-    max-width: 98%;
-    margin: auto;
-  }
-
-  .underlineSVG::before {
-    content: '';
-    position: absolute;
-    bottom: -0.125rem;
-    left: -0.5rem;
-    right: -0.5rem;
-    height: 0.75rem;
-    z-index: -1;
-    background-image: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/664131/underline.svg');
-    background-repeat: no-repeat;
-    background-size: cover;
-  }
-
-  .intro {
-    background-color: white;
-    top: -134vh;
-    width: 100vw;
-    position: fixed;
-    height: 110vh;
-    z-index: 3;
-  }
-
-  .logo-parts {
-    font-size: 4rem;
-    position: relative;
-    display: inline-block;
-    opacity: 0;
-  }
-
-  logo-parts.active {
-    transition: ease-in-out .5s;
-    opacity: 1;
-
-
-  }
-
-  logo-parts.fade {
-    transition: ease-in-out .5s;
-    bottom: 250px;
-    opacity: 0;
-    transition: ease-in-out .5s;
-
-  }
-
-  .cartaPrecio {
-    background-color: #151515;
-    box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
-    border-radius: 5%;
-  }
-
-  ul li {
-    font-size: 1.3rem;
-  }
-
-  .iconoPrix {
-    width: 9rem;
-  }
-
-  .formulario {
-
-    background-color: #151515;
-    margin-bottom: 0px;
-    margin-right: 20px;
-    margin-left: 20px;
-  }
-
-  .landigParragraf {
-    font-size: 1.6rem;
-  }
-
-  .textAnimation {
-    background: rgb(33, 44, 171);
-    background: linear-gradient(90deg,
-        rgb(51, 49, 176) 0%,
-        rgb(33, 18, 145) 51%,
-        rgb(30, 5, 156) 100%);
-    background-size: auto auto;
-    background-clip: border-box;
-    background-size: 200% auto;
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    animation: textclip 4s linear infinite;
-    display: inline-block;
-  }
-
-  .bg-image {
-    background-color: #ffffff;
-    border-radius: 15px;
-  }
-
-  .cookies {
-    font-size: 15px;
-    color: white;
-  }
-
-  .cookie-disclaimer {
-    background: #151515;
-    color: #151515;
-    width: 100%;
-    bottom: 0px;
-    left: 0;
-    z-index: 3;
-    height: auto;
-    position: fixed;
-    padding: 20px;
-  }
-
-  .cookie-disclaimer .container {
-    padding-top: 0px;
-    padding-bottom: 20px;
-  }
-
-  .cookie-disclaimer .cookie-close {
-    float: right;
-    padding: 10px;
-    cursor: pointer;
-  }
-
-  .tiempo2 {
-    color: #b7b335;
-    font-size: 2rem;
-  }
-
-  .imagen {
-    border-radius: 20px;
-    clip-path: polygon(20% 0%, 100% 0, 100% 100%, 9% 100%);
-  }
-
-  .imagenPartiesCommunes {
-    max-width: 27em;
-    width: -webkit-fill-available;
-  }
-
-  .imagenPartiesCommunes2 {
-    max-width: 21em;
-    width: -webkit-fill-available;
-  }
-
-  .imagen2 {
-    border-radius: 20px;
-    clip-path: polygon(0 0, 100% 0, 93% 100%, 0 100%);
-
-  }
-
-  .imagen6 {
-    border-radius: 20px;
-    max-height: 32rem;
-    clip-path: polygon(0 0, 100% 0, 93% 100%, 0 100%);
-
-  }
-
-  .imagen3 {
-    border-radius: 50px;
-    max-width: 37rem;
-    height: auto;
-  }
-
-  .imagen4 {
-    border-radius: 20px;
-    max-width: 13rem;
-    height: auto;
-  }
-
-  .carta {
-    border-radius: 20px;
-    margin: 1rem 0rem 1rem 0rem;
-    box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
-    background-color: #d8d8da;
-  }
-
-  /* .carta1 {
-  background: rgb(0, 0, 0);
-  background: linear-gradient(
-    90deg,
-    rgba(0, 0, 0, 1) 41%,
-    rgba(31, 31, 2, 1) 100%
-  );
+/* ── WRAPPER ── */
+.padre {
+  max-width: 1200px;
+  margin: 0 auto;
 }
-.carta2 {
-  background: rgb(0, 0, 0);
-  background: linear-gradient(90deg, rgba(0, 0, 0, 1) 41%, rgb(2, 25, 31) 100%);
+
+/* ── HERO ── */
+.principal {
+  background: url('/fondo_jabon.webp') center/cover no-repeat;
+  background-color: #0f1729;
+  position: relative;
+  overflow: hidden;
+  min-height: 500px;
+  border-radius: var(--r-lg);
+  margin-top: 12px;
 }
-.carta3 {
-  background: rgb(0, 0, 0);
-  background: linear-gradient(90deg, rgba(0, 0, 0, 1) 41%, rgb(7, 31, 2) 100%);
+.principal::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(15,23,41,0.72) 0%, rgba(15,23,41,0.38) 100%);
+  border-radius: inherit;
+  z-index: 1;
+  pointer-events: none;
 }
-.carta4 {
-  background: rgb(0, 0, 0);
-  background: linear-gradient(90deg, rgba(0, 0, 0, 1) 41%, rgb(31, 20, 2) 100%);
-} */
-  .seccion2 {
-    background-color: #151515;
-  }
-
-
-  .principal {
-    background: url("../assets/img/bannerssss.jpg");
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center;
-    background-attachment: local;
-
-  }
-
-  .texto-principal-nosotros {
-    flex-direction: column;
-    padding: 0px 20px 0px 20px;
-    background-color: #fff;
-    background-size: contain;
-    height: 580px;
-    display: flex;
-    /*align-items: center; */
-    margin: 15px 15px 0px 15px;
-    border-radius: 15px 15px 0px 0px;
-    font-family: 'Raleway', sans-serif;
-    height: auto;
-    font-size: 20px;
-    text-align: justify;
-  }
-
-  .imagen-nosotros {
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center;
-    background-attachment: local;
-    border-radius: 15px;
-    height: auto;
-  }
-
-  .imagen-descripcion {
-
-    display: flex;
-    /*flex: content;*/
-    text-align: left;
-    margin-top: 10px;
-    height: 43px;
-  }
-
-  .ofrecerte-imagen {
-    width: 40px;
-    height: 40px;
-
-  }
-
-
-  h1 {
-    /*background: #151515;*/
-
-    font-family: 'Anton', sans-serif;
-    color: #151515;
-    font-weight: 400;
-    text-align: left;
-    line-height: 1, 6;
-    font-size: 21px;
-
-    padding: 8px;
-
-  }
-
-  .section2 {
-    display: flex;
-    padding: 0px;
-    /*background:white;*/
-    margin: 0px 0px 0px 0px;
-    border-radius: 0px 0px 15px 15px;
-    /* padding: 0px 20px 0px 20px; */
-  }
-
-  .section2-nosotros {
-    display: flex;
-    padding: 20px;
-    background: white;
-    margin: 0px 15px 0px 15px;
-    border-radius: 0px 0px 0px 0px;
-    /* padding: 0px 20px 0px 20px; */
-  }
-
-  .section3 {
-    background: white;
-    /*background-image: url('../assets/img/nuestros_clientes.jpg');*/
-    padding: 20px;
-    border-radius: 0px 0px 15px 15px;
-    /* padding: 0px 20px 0px 20px; */
-    margin: 0px 15px 15px 15px;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-attachment: local;
-    height: auto;
-  }
-
-  .section3 img {
-    flex: auto;
-
-  }
-
-
-
-  .div-profesional {
-    background: none;
-    display: block;
-    flex: 1 1 50%;
-    padding: 0px;
-
-  }
-
-  #titulo-profesional {
-    text-transform: uppercase;
-    /*letter-spacing: -1px;*/
-    color: #151515;
-    font-size: x-large;
-    font-weight: 400;
-    text-align: left;
-    font-size: 35px;
-    padding: 0px;
-    margin: 0px;
-
-  }
-
-  /* .linea-vertical{
-                    border-left: 1px solid #151515;
-                    height: 100px;
-                    align-self:center ;
-                    
-                }*/
-
-  .titulo-profesional2 {
-    letter-spacing: 1px;
-    color: #151515;
-    font-weight: 100;
-    text-align: left;
-    font-size: 29px;
-    padding: 10px 30px 10px 10px;
-    margin: 0px;
-    border-right-style: double;
-
-  }
-
-  .parrafogratuito {
-    font-family: 'Raleway', sans-serif;
-    color: #151515;
-    padding: 10px;
-    text-align: justify;
-    font-size: 20px;
-    margin: 0px;
-  }
-
-  .icono {
-    width: 30px;
-    height: 30px;
-    align-items: center;
-    /* margin-left: 20px;*/
-  }
-
-  .gratuito-verde {
-    color: #4970B6;
-
-  }
-
-  .gratuito-verde a {
-    text-decoration: none;
-    color: #4970B6;
-
-  }
-
-  .gratuito-verde a:hover {
-    text-decoration: none;
-    color: #838383;
-
-  }
-
-  .div-enlace-presupuesto {
-    background: none;
-    display: block;
-    flex: 1 1 50%;
-
-
-
-
-
-
-
-  }
-
-
-  .titulo-descripcion {
-    align-content: left;
-    display: flex;
-  }
-
-  .titulo-descripcion img {
-    object-fit: fill;
-  }
-
-  .section {
-    background: #151515;
-    display: flex;
-    padding: 0px 15px 15px 15px;
-
-
-
-  }
-
-
-
-  .section img {
-    width: 500px;
-    height: 300px;
-    display: flex;
-  }
-
-  .articulos {
-    background: white;
-    flex: 2 1 auto;
-    display: flex;
-    flex-flow: row wrap;
-    border-radius: 5px 0px 0px 5px;
-  }
-
-  .article {
-    background: rgb(255, 255, 255);
-    flex: 1 1 40%;
-    /*flex-wrap:wrap;*/
-    padding: 10px;
-    font-size: 13px;
-    letter-spacing: 1px;
-    border-radius: 5px 0px 0px 5px;
-
-  }
-
-  .article img {
-    width: 100%;
-  }
-
-  h3 {
-    color: #fff;
-    font-size: 13px;
-    padding: 10px 0 0 10px;
-    margin-top: -100px;
-
-  }
-
-  h2 {
-    color: #fff;
-    font-size: 25px;
-    padding: 0px 0 10px 10px;
-    text-transform: uppercase;
-    font-family: 'Raleway', sans-serif;
-    font-weight: 600;
-
-
-  }
-
-  .navegacion {
-    background: aliceblue;
-    flex: 1 1 100%;
-    padding: 10px;
-    text-align: center;
-    text-decoration: none;
-    border-radius: 0 0 0 5px;
-  }
-
-  .navegacion a {
-    color: #151515;
-  }
-
-  .navegacion a:hover {
-    color: #4970B6;
-  }
-
-  .aside {
-    background: white;
-    flex: 1 1 40%;
-    padding: 15px;
-    border-radius: 0 5px 5px 0;
-
-  }
-
-  .aside img {
-    flex: 1 1 auto;
-    /*width:100%;*/
-    padding: 10px 0 0px 0px;
-  }
-
-  .publicidad {
-    background: white;
-
-  }
-
-  /*SERVICIOS*/
-  .texto-principal-servicios {
-    display: flex;
-    flex-direction: column;
-    padding: 0px 20px 0px 20px;
-    background-color: #fff;
-    background-size: contain;
-    height: 280px;
-    align-items: center;
-    /* Centra horizontalmente los ítems */
-    justify-content: center;
-    /* Centra verticalmente si hay altura */
-    text-align: left;
-    margin: 15px 15px 15px 15px;
-    border-radius: 15px 15px 15px 15px;
-    font-family: 'Raleway', sans-serif;
-    height: auto;
-    font-size: 20px;
-  }
-
-  .ofrecerte {
-    display: flex;
-    border-radius: 5px;
-    padding: 20px;
-    margin-top: 30px;
-    color: #4970B6;
-    font-weight: 600;
-    font-style: italic;
-    font-size: 18px;
-
-  }
-
-  .contenedor-servicios {
-    display: flex;
-    flex-direction: row;
-    font-family: 'Raleway', sans-serif;
-    flex-wrap: wrap;
-
-
-    background-color: #151515;
-    color: #fff;
-    border-radius: 15px;
-    padding: 5px;
-    margin-top: 40px;
-    width: 50%;
-    align-self: center;
-    align-items: center;
-    /* Centra horizontalmente los ítems */
-    justify-content: center;
-    /* Centra verticalmente si hay altura */
-    text-align: justify;
-  }
-
-  .imagen-servicios {
-    display: flex;
-    max-width: 100%;
-    border-radius: 15px;
-    max-height: 100%;
-    height: auto;
-    size: cover;
-    text-align: left;
-  }
-
-  .subtitulo-medio {
-    display: flex;
-    font-size: 40px;
-    margin: 20px;
-
-  }
-
-  .subtitulo-grande1 {
-    display: flex;
-    max-width: 100%;
-    font-weight: 700;
-    font-size: 70px;
-    margin: 0px 20px 20px 20px;
-    color: #4DABED;
-    line-height: 90%;
-  }
-
-  .subtitulo-grande2 {
-    max-width: 100%;
-    font-weight: 700;
-    font-size: 70px;
-    margin: 0px 0px 0px 0px;
-    color: #DCEFFE;
-    line-height: 90%;
-    display: flex;
-  }
-
-  .subtitulo-grande3 {
-    max-width: 100%;
-    font-weight: 700;
-    font-size: 70px;
-    margin: 0px 0px 0px 0px;
-    color: #BABABA;
-    line-height: 90%;
-    display: flex;
-  }
-
-  .subtitulo-grande4 {
-    max-width: 100%;
-    font-weight: 700;
-    font-size: 70px;
-    margin: 0px 0px 0px 0px;
-    color: #F7F000;
-    line-height: 90%;
-    display: flex;
-  }
-
-  .descripcion-servicio-texto {
-    display: flex;
-
-    flex-wrap: nowrap;
-    text-align: justify;
-    float: right;
-    margin: 14px 0px 0px 20px;
-  }
-
-  .contenedor-titulos {
-    display: flex;
-    flex: 2 1 auto;
-    font-family: 'Roboto Condensed', sans-serif;
-
-
-  }
-
-  .btn1 {
-
-    background-color: #4DABED;
-    border-radius: 15px;
-    color: #151515;
-    transition: all 0.5s;
-    cursor: pointer;
-    border: none;
-    text-align: center;
-    padding: 5px 10px 5px 10px;
-    font-weight: 600;
-    float: right;
-
-  }
-
-  .btn2 {
-    background-color: #DCEFFE;
-    border-radius: 15px;
-    color: #151515;
-    transition: all 0.5s;
-    cursor: pointer;
-    border: none;
-    text-align: center;
-    padding: 5px 10px 5px 10px;
-    font-weight: 600;
-    float: right;
-  }
-
-  .btn3 {
-    background-color: #BABABA;
-    border-radius: 15px;
-    color: #151515;
-    transition: all 0.5s;
-    cursor: pointer;
-    border: none;
-    text-align: center;
-    padding: 5px 10px 5px 10px;
-    font-weight: 600;
-    float: right;
-  }
-
-  .btn4 {
-    background-color: #F7F000;
-    border-radius: 15px;
-    color: #151515;
-    transition: all 0.5s;
-    cursor: pointer;
-    border: none;
-    text-align: center;
-    padding: 5px 10px 5px 10px;
-    font-weight: 600;
-    float: right;
-  }
-
-  .btn1:hover {
-    background-color: #367bac;
-    transition: all 0.4s;
-  }
-
-  .btn2:hover {
-    background-color: #aab8c4;
-    transition: all 0.4s;
-  }
-
-  .btn3:hover {
-    background-color: #858484;
-    transition: all 0.4s;
-  }
-
-  .btn4:hover {
-    background-color: #c5bf00;
-    transition: all 0.4s;
-  }
-
-  .gota {
-    display: block;
-    margin: auto;
-
-  }
-
-  .imagen-gota {
-    margin-top: 40px;
-  }
-
-  .contenedor-servicios {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    max-width: 600px;
-    margin: 40px auto;
-    padding: 20px;
-    box-sizing: border-box;
-  }
-
-  .contener-imagen-servicios {
-    width: 100%;
-    align-self: flex-start;
-    margin-bottom: 20px;
-  }
-
-  .contener-imagen-servicios img {
-    width: 100%;
-    height: auto;
-    border-radius: 8px;
-    object-fit: cover;
-  }
-
-  .contenedor-titulos {
-    margin-bottom: 15px;
-  }
-
-  .subtitulo-medio {
-    font-size: 18px;
-    margin: 0;
-  }
-
-  .subtitulo-grande1,
-  .subtitulo-grande2,
-  .subtitulo-grande3,
-  .subtitulo-grande4 {
-    font-size: 24px;
-    font-weight: bold;
-    margin: 5px 0;
-  }
-
-  .descripcion-servicio-texto {
-    margin: 10px 0;
-    max-width: 500px;
-  }
-
-  .contenedor-boton {
-    margin-top: 15px;
-  }
-
-  .btn1,
-  .btn2,
-  .btn3,
-  .btn4 {
-    padding: 10px 20px;
-    font-size: 16px;
-    background-color: #007BFF;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-
-  .btn1:hover,
-  .btn2:hover,
-  .btn3:hover,
-  .btn4:hover {
-    background-color: #0056b3;
-  }
-
-
-
-
-  /*End footer */
-
-  @keyframes slidein {
-    from {
-      margin-left: 0%;
-    }
-
-    to {
-      margin-left: -10%;
-    }
-  }
-
-  @keyframes textclip {
-    to {
-      background-position: 200% center;
-    }
-  }
-
-  @media (max-width: 768px) {
-    .imagen {
-      border-radius: 20px 20px 0px 0px;
-      clip-path: none;
-    }
-
-    .imagen2 {
-      border-radius: 20px 20px 0px 0px;
-      clip-path: none;
-    }
-
-    .imagen6 {
-      border-radius: 20px;
-      clip-path: none;
-    }
-
-    .section {
-      background-color: #ffffff;
-      background-repeat: round;
-      background-size: contain;
-
-    }
-    .prof{
-      color: #fff;
-
-    }
-  }
+.principal > * { position: relative; z-index: 2; }
+.hero-stats { padding: 0 16px 18px; }
+.hero-stats :deep(.section3) { margin: 0; }
+.prof { color: #fff; text-shadow: 0 2px 18px rgba(0,0,0,0.8); }
+.hero-proof {
+  color: rgba(255,255,255,0.9);
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.95rem;
+  margin: 0;
+  text-shadow: 0 1px 8px rgba(0,0,0,0.6);
+}
+.hero-proof-stars { color: #fbbf24; letter-spacing: 1px; margin-right: 4px; }
+.hero-title {
+  font-family: 'Anton', sans-serif;
+  font-weight: 400;
+  font-size: 2.9rem;
+  line-height: 1.1;
+  margin: 0 0 14px;
+}
+.hero-sub {
+  display: block;
+  font-family: 'Raleway', sans-serif;
+  font-weight: 600;
+  font-size: 1.1rem;
+  line-height: 1.4;
+  margin-top: 12px;
+}
+.hero-ctas { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+.hero-wa { background: #25d366; color: #fff; border: none; }
+.hero-wa:hover { background: #1ebe5b; color: #fff; }
+.textAnimation {
+  background: linear-gradient(90deg, #60a5fa 0%, #93c5fd 50%, #60a5fa 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* â”€â”€ FORMULARIO â”€â”€ */
+.formulario {
+  background: rgba(10, 16, 30, 0.62);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: var(--r-md);
+  padding: 28px 24px 20px;
+}
+.fh { text-align: center; margin-bottom: 22px; }
+.fh-badge {
+  display: inline-flex;
+  align-items: center;
+  background: rgba(37,99,235,0.18);
+  border: 1px solid rgba(96,165,250,0.3);
+  color: #93c5fd;
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  border-radius: 20px;
+  margin-bottom: 12px;
+}
+.fh-title { font-family: 'Anton', sans-serif; color: #fff; font-size: 1.5rem; line-height: 1.2; margin: 0 0 6px; }
+.fh-accent { background: linear-gradient(90deg, #60a5fa, #93c5fd); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+
+.ff { display: flex; gap: 10px; margin-bottom: 13px; }
+.ff-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.ff-icon {
+  width: 34px; min-width: 34px; height: 34px;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(37,99,235,0.12);
+  border: 1px solid rgba(96,165,250,0.18);
+  border-radius: 8px;
+  color: #60a5fa;
+  font-size: 0.8rem;
+  margin-top: 20px;
+  flex-shrink: 0;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+}
+.ff-icon--top { align-self: flex-start; margin-top: 20px; }
+.ff:focus-within .ff-icon { background: rgba(37,99,235,0.28); border-color: rgba(96,165,250,0.5); color: #93c5fd; }
+.ff--ok .ff-icon { border-color: rgba(52,211,153,0.4); color: #34d399; background: rgba(52,211,153,0.08); }
+.ff--err .ff-icon { border-color: rgba(239,68,68,0.4); color: #f87171; background: rgba(239,68,68,0.08); }
+
+.ff-body { flex: 1; min-width: 0; }
+.ff-body label {
+  display: block; font-family: 'Raleway', sans-serif; font-weight: 700;
+  font-size: 0.68rem; color: rgba(255,255,255,0.45);
+  text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 5px;
+}
+.ff-body input, .ff-body textarea {
+  width: 100%; background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1); border-radius: 8px;
+  padding: 8px 11px; color: #fff;
+  font-family: 'Raleway', sans-serif; font-size: 0.86rem;
+  outline: none; transition: border-color 0.2s, background 0.2s, box-shadow 0.2s; resize: none;
+}
+.ff-body input::placeholder, .ff-body textarea::placeholder { color: rgba(255,255,255,0.22); }
+.ff-body input:focus, .ff-body textarea:focus {
+  border-color: rgba(96,165,250,0.55); background: rgba(255,255,255,0.08);
+  box-shadow: 0 0 0 3px rgba(37,99,235,0.15);
+}
+.ff--ok .ff-body input, .ff--ok .ff-body textarea { border-color: rgba(52,211,153,0.45); }
+.ff--err .ff-body input, .ff--err .ff-body textarea { border-color: rgba(239,68,68,0.5); box-shadow: 0 0 0 3px rgba(239,68,68,0.1); }
+
+.ff-msg { display: block; font-family: 'Raleway', sans-serif; font-size: 0.7rem; font-weight: 600; margin-top: 3px; color: #f87171; }
+.ff-msg--ok { color: #34d399; }
+.ff-add-email {
+  display: block;
+  background: none; border: none; padding: 0;
+  margin: -4px 0 12px 44px;
+  color: #93c5fd;
+  font-family: 'Raleway', sans-serif; font-size: 0.75rem; font-weight: 600;
+  cursor: pointer;
+}
+.ff-add-email:hover { text-decoration: underline; }
+
+.f-success {
+  background: rgba(52,211,153,0.1); border: 1px solid rgba(52,211,153,0.3);
+  border-radius: 9px; color: #6ee7b7; font-family: 'Raleway', sans-serif;
+  font-size: 0.82rem; font-weight: 600; padding: 10px 14px; margin-bottom: 12px; text-align: center;
+}
+.ff-error {
+  background: rgba(239,68,68,0.12); border: 1px solid rgba(239,68,68,0.35);
+  border-radius: 9px; color: #f87171; font-family: 'Raleway', sans-serif;
+  font-size: 0.82rem; font-weight: 600; padding: 10px 14px; margin-bottom: 12px; text-align: center;
+}
+.f-submit {
+  width: 100%; background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  color: #fff; font-family: 'Raleway', sans-serif; font-weight: 700; font-size: 0.93rem;
+  padding: 13px 20px; border: none; border-radius: 11px; cursor: pointer;
+  position: relative; overflow: hidden;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  margin-bottom: 14px; transition: transform 0.2s, box-shadow 0.2s;
+}
+.f-submit:not(:disabled):hover { transform: translateY(-2px); box-shadow: 0 8px 26px rgba(37,99,235,0.45); }
+.f-submit:disabled { opacity: 0.45; cursor: not-allowed; }
+.f-submit::after {
+  content: ''; position: absolute; top: -50%; left: -70%;
+  width: 45%; height: 200%;
+  background: rgba(255,255,255,0.15); transform: skewX(-20deg); transition: left 0.55s ease;
+}
+.f-submit:not(:disabled):hover::after { left: 130%; }
+.f-submit-loading { display: flex; align-items: center; gap: 8px; }
+.f-spinner {
+  width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: #fff; border-radius: 50%; animation: spin 0.7s linear infinite; display: inline-block;
+}
+.f-trust {
+  display: flex; justify-content: center; gap: 14px; flex-wrap: wrap;
+  color: rgba(255,255,255,0.28); font-family: 'Raleway', sans-serif;
+  font-size: 0.68rem; font-weight: 600;
+}
+
+
+/* â”€â”€ FORMULARIO MODO CLARO â”€â”€ */
+:root:not([data-theme="dark"]) .formulario {
+  background: rgba(255, 255, 255, 0.94);
+  border-color: rgba(0,0,0,0.07);
+  box-shadow: 0 8px 40px rgba(0,0,0,0.18);
+}
+:root:not([data-theme="dark"]) .fh-title { color: #1e293b; }
+:root:not([data-theme="dark"]) .ff-icon {
+  background: rgba(37,99,235,0.08);
+  border-color: rgba(37,99,235,0.2);
+  color: #2563eb;
+}
+:root:not([data-theme="dark"]) .ff:focus-within .ff-icon {
+  background: rgba(37,99,235,0.15);
+  border-color: rgba(37,99,235,0.45);
+  color: #1d4ed8;
+}
+:root:not([data-theme="dark"]) .ff-body label { color: rgba(0,0,0,0.45); }
+:root:not([data-theme="dark"]) .ff-body input,
+:root:not([data-theme="dark"]) .ff-body textarea {
+  background: #f8fafc;
+  border-color: #e2e8f0;
+  color: #1e293b;
+}
+:root:not([data-theme="dark"]) .ff-body input::placeholder,
+:root:not([data-theme="dark"]) .ff-body textarea::placeholder { color: #94a3b8; }
+:root:not([data-theme="dark"]) .ff-body input:focus,
+:root:not([data-theme="dark"]) .ff-body textarea:focus {
+  border-color: rgba(37,99,235,0.5);
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+}
+:root:not([data-theme="dark"]) .ff--ok .ff-body input,
+:root:not([data-theme="dark"]) .ff--ok .ff-body textarea { border-color: rgba(16,185,129,0.5); }
+:root:not([data-theme="dark"]) .ff--err .ff-body input,
+:root:not([data-theme="dark"]) .ff--err .ff-body textarea { border-color: rgba(239,68,68,0.5); }
+:root:not([data-theme="dark"]) .f-trust { color: rgba(0,0,0,0.35); }
+
+/* â”€â”€ WHATSAPP FLOAT â”€â”€ */
+.wa-widget {
+  position: fixed; bottom: 28px; right: 28px;
+  z-index: 999;
+  display: flex; flex-direction: column; align-items: flex-end; gap: 14px;
+}
+.whatsapp-float {
+  position: relative;
+  width: 56px; height: 56px; background: #25D366; color: var(--white);
+  border: none; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-size: 1.75rem; box-shadow: 0 4px 16px rgba(37,211,102,0.45);
+  transition: transform var(--t), box-shadow var(--t); text-decoration: none; cursor: pointer;
+  flex-shrink: 0;
+}
+.whatsapp-float:hover { transform: scale(1.12); box-shadow: 0 6px 24px rgba(37,211,102,0.6); color: var(--white); }
+.whatsapp-float svg { pointer-events: none; }
+
+.whatsapp-float.wa-pulse::before {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  border: 2px solid #25D366;
+  animation: wa-pulse-ring 2s ease-out infinite;
+}
+@keyframes wa-pulse-ring {
+  0%   { transform: scale(0.9); opacity: 0.8; }
+  100% { transform: scale(1.6); opacity: 0; }
+}
+
+.wa-hint {
+  position: relative;
+  background: var(--white);
+  color: var(--text);
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.83rem;
+  font-weight: 600;
+  line-height: 1.4;
+  padding: 12px 16px;
+  border-radius: 14px;
+  box-shadow: 0 8px 28px rgba(0,0,0,0.18);
+  max-width: 200px;
+  cursor: pointer;
+}
+.wa-hint::after {
+  content: '';
+  position: absolute;
+  bottom: -6px; right: 22px;
+  width: 12px; height: 12px;
+  background: var(--white);
+  transform: rotate(45deg);
+}
+.wa-hint-pop-enter-active, .wa-hint-pop-leave-active { transition: opacity 0.25s, transform 0.25s; }
+.wa-hint-pop-enter-from, .wa-hint-pop-leave-to { opacity: 0; transform: translateY(10px); }
+
+.wa-menu {
+  background: var(--white);
+  border-radius: 16px;
+  box-shadow: 0 10px 36px rgba(0,0,0,0.18);
+  padding: 14px;
+  width: 250px;
+  display: flex; flex-direction: column; gap: 6px;
+}
+.wa-menu-title {
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.78rem; font-weight: 700; color: var(--text-muted);
+  padding: 0 6px 8px; border-bottom: 1px solid var(--border); margin-bottom: 4px;
+}
+.wa-menu-item {
+  display: flex; align-items: center; gap: 10px;
+  font-family: 'Raleway', sans-serif; font-size: 0.85rem; font-weight: 600;
+  color: var(--text); text-decoration: none;
+  padding: 9px 8px; border-radius: 9px;
+  transition: background 0.2s, color 0.2s;
+}
+.wa-menu-item svg { color: #25D366; font-size: 0.95rem; flex-shrink: 0; }
+.wa-menu-item:hover { background: #f0fdf4; color: #166534; }
+
+.wa-pop-enter-active, .wa-pop-leave-active { transition: opacity 0.18s, transform 0.18s; }
+.wa-pop-enter-from, .wa-pop-leave-to { opacity: 0; transform: translateY(8px) scale(0.96); }
+
+/* â”€â”€ KEYFRAMES â”€â”€ */
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* â”€â”€ RESPONSIVE â”€â”€ */
+@media (max-width: 768px) {
+  .principal { min-height: 360px; border-radius: var(--r-md); }
+  .hero-title { font-size: 2.1rem; padding-top: 14px; }
+  .hero-sub { font-size: 0.98rem; }
+}
+@media (max-width: 480px) {
+  .ff-row { grid-template-columns: 1fr; }
+  .formulario { padding: 22px 16px 16px; }
+  .col-md-6.p-3 { padding-left: 12px !important; padding-right: 12px !important; }
+  .hero-ctas .btn {
+    flex: 1;
+    display: inline-flex; align-items: center; justify-content: center;
+    white-space: nowrap;
+    padding-left: 12px !important; padding-right: 12px !important;
+  }
+}
 </style>
