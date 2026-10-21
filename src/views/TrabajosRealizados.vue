@@ -79,8 +79,13 @@ const tipos = [
 .tr-breadcrumb a:hover { text-decoration: underline; }
 .tr-breadcrumb .sep { margin: 0 8px; opacity: 0.6; }
 
+.tr-header {
+  /* Foto del cepillo de agua pura con velo oscuro para que el texto se lea */
+  background: linear-gradient(135deg, rgba(15,23,41,0.88) 0%, rgba(15,23,41,0.5) 100%),
+              url('../assets/img/cabecera-agua-pura.webp') center/cover no-repeat;
+}
+.tr-card { background: var(--white); }
 .tr-header, .tr-card {
-  background: var(--white);
   border-radius: var(--r-lg);
   margin: 12px 20px;
   padding: 32px;
@@ -90,14 +95,14 @@ const tipos = [
   font-weight: 400;
   font-size: 2.4rem;
   line-height: 1.15;
-  color: var(--text);
+  color: #fff;
   margin: 0 0 14px;
 }
-.tr-accent { color: var(--blue); }
+.tr-accent { color: #93c5fd; }
 .tr-intro {
   font-size: 1rem;
   line-height: 1.7;
-  color: var(--text-muted);
+  color: rgba(255,255,255,0.85);
   margin: 0;
   max-width: 780px;
 }

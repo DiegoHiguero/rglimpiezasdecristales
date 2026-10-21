@@ -3,9 +3,12 @@
 
     <!-- Header -->
     <div class="ct-header">
-      <span class="ct-label">Contact</span>
-      <h1 class="ct-title">Window <span class="ct-accent">cleaning quote</span> in Madrid</h1>
-      <p class="ct-sub">Tell us which windows or glass you need cleaned and we'll prepare a free, no-obligation quote within 24 hours.</p>
+      <div class="ct-header-text">
+        <span class="ct-label">Contact</span>
+        <h1 class="ct-title">Window <span class="ct-accent">cleaning quote</span> in Madrid</h1>
+        <p class="ct-sub">Tell us which windows or glass you need cleaned and we'll prepare a free, no-obligation quote within 24 hours.</p>
+      </div>
+      <img src="../assets/img/ilustraciones/limpiacristales.webp" class="ct-header-ilus" alt="Illustration of a window cleaner with a pole" />
     </div>
 
     <!-- Contact cards -->
@@ -82,25 +85,42 @@
             </div>
           </div>
           <div class="ff">
-            <div class="ff-icon"><font-awesome-icon :icon="['fas', 'house']" /></div>
+            <div class="ff-icon"><font-awesome-icon :icon="['fas', 'location-dot']" /></div>
             <div class="ff-body">
-              <label>Type of space</label>
-              <select v-model="tipoServicio">
-                <option value="">Select an option</option>
-                <option value="Vivienda">Home</option>
-                <option value="Negocio o local">Business or shop</option>
-                <option value="Comunidad de vecinos">Residential community</option>
-                <option value="Otro">Other</option>
-              </select>
+              <label>Area or approximate address</label>
+              <input type="text" placeholder="E.g. Getafe, Madrid centre..." v-model.trim="zona" />
             </div>
           </div>
         </div>
 
-        <div class="ff">
-          <div class="ff-icon"><font-awesome-icon :icon="['fas', 'location-dot']" /></div>
-          <div class="ff-body">
-            <label>Area or approximate address</label>
-            <input type="text" placeholder="E.g. Getafe, Madrid centre..." v-model.trim="zona" />
+        <div class="ct-tipos">
+          <span class="ct-tipos-label">What do you need?</span>
+          <div class="ct-tipos-grid">
+            <button type="button" class="ct-tipo" :class="{ 'ct-tipo--on': tipoServicio === 'Vivienda' }"
+                    :aria-pressed="tipoServicio === 'Vivienda'" @click="elegirTipo('Vivienda')">
+              <img :src="imgVivienda" alt="" class="ct-tipo-img" />
+              <span>Home</span>
+            </button>
+            <button type="button" class="ct-tipo" :class="{ 'ct-tipo--on': tipoServicio === 'Negocio o comunidad' }"
+                    :aria-pressed="tipoServicio === 'Negocio o comunidad'" @click="elegirTipo('Negocio o comunidad')">
+              <img :src="imgEdificio" alt="" class="ct-tipo-img" />
+              <span>Business or building</span>
+            </button>
+            <button type="button" class="ct-tipo" :class="{ 'ct-tipo--on': tipoServicio === 'Agua a presión' }"
+                    :aria-pressed="tipoServicio === 'Agua a presión'" @click="elegirTipo('Agua a presión')">
+              <img :src="imgAguaPresion" alt="" class="ct-tipo-img" />
+              <span>Pressure washing</span>
+            </button>
+            <button type="button" class="ct-tipo" :class="{ 'ct-tipo--on': tipoServicio === 'Limpieza en altura' }"
+                    :aria-pressed="tipoServicio === 'Limpieza en altura'" @click="elegirTipo('Limpieza en altura')">
+              <img :src="imgAguaPura" alt="" class="ct-tipo-img" />
+              <span>Cleaning at height</span>
+            </button>
+            <button type="button" class="ct-tipo" :class="{ 'ct-tipo--on': tipoServicio === 'Otro' }"
+                    :aria-pressed="tipoServicio === 'Otro'" @click="elegirTipo('Otro')">
+              <span class="ct-tipo-icon"><font-awesome-icon :icon="['fas', 'ellipsis']" /></span>
+              <span>Other</span>
+            </button>
           </div>
         </div>
 
@@ -114,7 +134,7 @@
           </div>
         </div>
 
-        <button type="submit" class="f-submit" :disabled="sending || !isFormValid">
+        <button type="submit" class="f-submit" :disabled="sending">
           <span v-if="!sending"><font-awesome-icon :icon="['fas', 'paper-plane']" class="me-2" />Send enquiry</span>
           <span v-else class="f-submit-loading"><span class="f-spinner"></span>Sending...</span>
         </button>
@@ -132,18 +152,26 @@
 
 <script setup>
 import { useContactForm } from '../composables/useContactForm';
+import imgVivienda    from '../assets/img/ilustraciones/vivienda.webp';
+import imgEdificio    from '../assets/img/ilustraciones/edificio.webp';
+import imgAguaPresion from '../assets/img/ilustraciones/agua-presion.webp';
+import imgAguaPura    from '../assets/img/ilustraciones/agua-pura.webp';
 
 const {
   prenom, email, phone, message, tipoServicio, zona,
-  errors, sending, feedback, isFormValid,
+  errors, sending, feedback,
   validatePrenom, validateEmail, validatePhone, validateMessage,
   enviarMensaje,
 } = useContactForm('en');
+
+// Selector "¿Qué necesitas?": el valor llega en español en el aviso por correo;
+// pulsar otra vez la opción elegida la desmarca
+const elegirTipo = (valor) => { tipoServicio.value = tipoServicio.value === valor ? '' : valor; };
 </script>
 
 <style scoped>
 .ct-wrap { min-height: calc(100vh - 72px); padding: 52px 16px 72px; background: var(--slate); display: flex; flex-direction: column; align-items: center; }
-.ct-header { text-align: center; max-width: 600px; margin-bottom: 40px; }
+.ct-header { margin-bottom: 40px; }
 .ct-label { display: inline-block; font-family: 'Raleway', sans-serif; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--blue); background: var(--blue-pale); border: 1px solid rgba(37,99,235,0.2); border-radius: 20px; padding: 4px 14px; margin-bottom: 16px; }
 .ct-title { font-family: 'Anton', sans-serif; font-size: 2.8rem; color: var(--text); line-height: 1.1; margin: 0 0 14px; }
 .ct-accent { color: var(--blue); }
@@ -236,8 +264,35 @@ a.ct-card:hover { background: var(--blue-pale); border-color: rgba(37,99,235,0.3
 @keyframes ct-spin { to { transform: rotate(360deg); } }
 .f-trust { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; color: var(--text-muted); font-family: 'Raleway', sans-serif; font-size: 0.7rem; font-weight: 600; }
 
+/* ── Cabecera con ilustración ── */
+.ct-header { display: flex; align-items: center; gap: 36px; max-width: 860px; text-align: left; }
+.ct-header-ilus { height: 230px; width: auto; flex-shrink: 0; }
+
+/* ── Selector "¿Qué necesitas?" con ilustraciones ── */
+.ct-tipos { margin-bottom: 16px; }
+.ct-tipos-label { display: block; font-family: 'Raleway', sans-serif; font-weight: 700; font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 8px; }
+.ct-tipos-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+.ct-tipo {
+  display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 8px;
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  border-radius: 14px;
+  padding: 14px 8px 12px;
+  font-family: 'Raleway', sans-serif; font-size: 0.78rem; font-weight: 700; color: var(--text);
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s, transform 0.2s;
+}
+.ct-tipo:hover { border-color: rgba(37,99,235,0.45); transform: translateY(-2px); }
+.ct-tipo--on { border-color: var(--blue); background: var(--blue-pale); box-shadow: 0 0 0 3px rgba(37,99,235,0.12); }
+.ct-tipo-img { height: 54px; width: 60px; object-fit: contain; }
+.ct-tipo-icon { height: 54px; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; color: var(--blue); }
+:root[data-theme="dark"] .ct-tipo--on { background: rgba(37,99,235,0.15); }
+
 @media (max-width: 860px) { .ct-cards { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 640px) {
+  .ct-header { flex-direction: column-reverse; text-align: center; gap: 12px; }
+  .ct-header-ilus { height: 120px; }
+  .ct-tipos-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
   .ct-title { font-size: 2.1rem; }
   .ct-cards { grid-template-columns: repeat(2, 1fr); gap: 8px; }
   .ct-card { padding: 16px 10px; }

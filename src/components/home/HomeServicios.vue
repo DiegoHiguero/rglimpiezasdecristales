@@ -105,7 +105,7 @@
 
           <div class="svc-card svc-card--extra" data-stagger="1" v-if="showAll" key="oficinas">
             <div class="svc-img-wrap">
-              <img src="../../assets/img/locales.webp" class="svc-img" alt="Limpieza de cristales en empresas" />
+              <img src="../../assets/img/unger-oficinas.webp" class="svc-img" style="object-position: center top" alt="Limpieza de cristales en empresas" />
               <div class="svc-overlay"></div>
               <span class="svc-tag svc-tag--purple">Empresas</span>
             </div>

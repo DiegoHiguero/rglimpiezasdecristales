@@ -159,24 +159,26 @@ onMounted(() => {
 
 /* ── Header ── */
 .pr-header {
-  background: var(--white);
+  /* Foto del cepillo de agua pura con velo oscuro para que el texto se lea */
+  background: linear-gradient(135deg, rgba(15,23,41,0.88) 0%, rgba(15,23,41,0.5) 100%),
+              url('../assets/img/cabecera-agua-pura.webp') center/cover no-repeat;
   border-radius: var(--r-lg);
   margin: 12px 20px;
-  padding: 36px 32px;
+  padding: 44px 32px;
 }
 .pr-title {
   font-family: 'Anton', sans-serif;
   font-weight: 400;
   font-size: 2.6rem;
   line-height: 1.15;
-  color: var(--text);
+  color: #fff;
   margin: 0 0 14px;
 }
-.pr-accent { color: var(--blue); }
+.pr-accent { color: #93c5fd; }
 .pr-intro {
   font-size: 1rem;
   line-height: 1.7;
-  color: var(--text-muted);
+  color: rgba(255,255,255,0.85);
   margin: 0;
   max-width: 760px;
 }
