@@ -17,12 +17,12 @@
             <li><router-link to="/en">Home</router-link></li>
             <li><router-link to="/en#about">About me</router-link></li>
             <li><router-link to="/en#services">Window Cleaning</router-link></li>
-            <li><router-link to="/agua-pura-altura">Pure water at height</router-link></li>
+            <li><router-link to="/agua-pura-altura">Cleaning at height</router-link></li>
             <li><router-link to="/limpieza-cristales-hogares">Home cleaning</router-link></li>
             <li><router-link to="/limpieza-cristales-comunidades">Community cleaning</router-link></li>
             <li><router-link to="/limpieza-cristales-locales-comerciales">Shop cleaning</router-link></li>
             <li><router-link to="/limpieza-cristales-oficinas">Office window cleaning</router-link></li>
-            <li><router-link to="/limpieza-cristales-altura">Cleaning at height</router-link></li>
+            <li><router-link to="/limpieza-agua-a-presion">Pressure washing</router-link></li>
             <li><router-link to="/en#pricing">Pricing</router-link></li>
             <li><router-link to="/blog">Blog</router-link></li>
             <li><router-link to="/en/contact">Contact</router-link></li>

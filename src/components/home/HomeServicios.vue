@@ -15,20 +15,20 @@
           <font-awesome-icon :icon="['fas', 'trophy']" class="me-1" />Servicio exclusivo
         </div>
         <div class="svc-img-wrap">
-          <img src="../../assets/img/20261006-pertiga-fachada.webp" class="svc-img" alt="Limpieza con sistema de agua pura Unger HydroPower en altura" />
+          <img src="../../assets/img/20261006-pertiga-fachada.webp" class="svc-img" alt="Limpieza de cristales en altura con pértiga y agua pura" />
           <div class="svc-overlay"></div>
-          <span class="svc-tag svc-tag--teal">Agua pura</span>
+          <span class="svc-tag svc-tag--teal">Altura</span>
         </div>
         <div class="svc-body">
           <div class="svc-body-head">
             <span class="svc-icon svc-icon--teal"><font-awesome-icon :icon="['fas', 'droplet']" /></span>
-            <h3 class="svc-name">Agua pura en altura (Unger HydroPower)</h3>
+            <h3 class="svc-name">Limpieza en altura: pértiga y agua pura</h3>
           </div>
-          <p class="svc-desc">Para donde la pértiga no llega: agua pura filtrada hasta 10 metros de altura, que se seca sola sin dejar marcas.</p>
+          <p class="svc-desc">Ventanas y fachadas sin andamios: con pértiga hasta 4 plantas y con agua pura Unger HydroPower hasta 10 metros, sin marcas.</p>
           <ul class="svc-list">
-            <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Hasta 10 metros de alcance</li>
-            <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Sistema Unger HydroPower exclusivo</li>
-            <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Acabado sin marcas ni repaso manual</li>
+            <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Pértiga telescópica hasta 4 plantas</li>
+            <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Agua pura Unger HydroPower hasta 10 m</li>
+            <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Sin andamios ni marcas</li>
           </ul>
           <router-link to="/agua-pura-altura" class="svc-btn-secondary">Saber más</router-link>
           <router-link to="/contacto" class="svc-btn svc-btn--teal">Consultar precio</router-link>
@@ -125,24 +125,24 @@
             </div>
           </div>
 
-          <div class="svc-card svc-card--extra" data-stagger="2" v-if="showAll" key="altura">
+          <div class="svc-card svc-card--extra" data-stagger="2" v-if="showAll" key="presion">
             <div class="svc-img-wrap">
-              <img src="../../assets/img/Header_Fensterreiniger_Glas_ANW_Toplock_000313.webp" class="svc-img" alt="Limpieza de cristales en altura con pértiga telescópica" />
+              <img src="../../assets/img/20250917_131013.webp" class="svc-img" alt="Limpieza con agua a presión de patios y terrazas" />
               <div class="svc-overlay"></div>
-              <span class="svc-tag svc-tag--orange">Altura</span>
+              <span class="svc-tag svc-tag--orange">Agua a presión</span>
             </div>
             <div class="svc-body">
               <div class="svc-body-head">
-                <span class="svc-icon svc-icon--orange"><font-awesome-icon :icon="['fas', 'arrow-up-from-water-pump']" /></span>
-                <h3 class="svc-name">Limpieza en altura (pértiga)</h3>
+                <span class="svc-icon svc-icon--orange"><font-awesome-icon :icon="['fas', 'shower']" /></span>
+                <h3 class="svc-name">Limpieza con agua a presión</h3>
               </div>
-              <p class="svc-desc">Ventanas y fachadas de hasta 4 plantas con pértiga telescópica, trabajando desde el suelo y sin andamios.</p>
+              <p class="svc-desc">Patios, terrazas, fachadas, toldos y suelos exteriores como nuevos, con la presión justa para cada superficie.</p>
               <ul class="svc-list">
-                <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Hasta 4 plantas desde el suelo</li>
-                <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Ideal para alturas medias</li>
-                <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Sin andamios ni permisos municipales</li>
+                <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Patios, terrazas y suelos exteriores</li>
+                <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Fachadas, muros y toldos</li>
+                <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Presión adaptada a cada material</li>
               </ul>
-              <router-link to="/limpieza-cristales-altura" class="svc-btn-secondary">Saber más</router-link>
+              <router-link to="/limpieza-agua-a-presion" class="svc-btn-secondary">Saber más</router-link>
               <router-link to="/contacto" class="svc-btn svc-btn--orange">Consultar precio</router-link>
             </div>
           </div>

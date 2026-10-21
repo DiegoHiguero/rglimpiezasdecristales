@@ -161,7 +161,9 @@ const routes = [
     { path: '/limpieza-cristales-comunidades', component: ServicioDetalle, meta: { servicio: 'limpieza-cristales-comunidades' } },
     { path: '/limpieza-cristales-locales-comerciales', component: ServicioDetalle, meta: { servicio: 'limpieza-cristales-locales-comerciales' } },
     { path: '/limpieza-cristales-oficinas', component: ServicioDetalle, meta: { servicio: 'limpieza-cristales-oficinas' } },
-    { path: '/limpieza-cristales-altura', component: ServicioDetalle, meta: { servicio: 'limpieza-cristales-altura' } },
+    // Unificada con agua pura en una sola página de altura (301 también en firebase.json)
+    { path: '/limpieza-cristales-altura', redirect: '/agua-pura-altura' },
+    { path: '/limpieza-agua-a-presion', component: ServicioDetalle, meta: { servicio: 'limpieza-agua-a-presion' } },
     { path: '/limpieza-placas-solares', component: ServicioDetalle, meta: { servicio: 'limpieza-placas-solares' } },
     { path: '/limpieza-fin-de-obra', component: ServicioDetalle, meta: { servicio: 'limpieza-fin-de-obra' } },
     { path: '/limpieza-grafitis', component: ServicioDetalle, meta: { servicio: 'limpieza-grafitis' } },

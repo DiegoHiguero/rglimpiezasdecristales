@@ -15,20 +15,20 @@
           <font-awesome-icon :icon="['fas', 'trophy']" class="me-1" />Exclusive service
         </div>
         <div class="svc-img-wrap">
-          <img src="../../assets/img/20261006-pertiga-fachada.webp" class="svc-img" alt="Pure water cleaning at height with Unger HydroPower" />
+          <img src="../../assets/img/20261006-pertiga-fachada.webp" class="svc-img" alt="Window cleaning at height with a telescopic pole and pure water" />
           <div class="svc-overlay"></div>
-          <span class="svc-tag svc-tag--teal">Pure water</span>
+          <span class="svc-tag svc-tag--teal">Height</span>
         </div>
         <div class="svc-body">
           <div class="svc-body-head">
             <span class="svc-icon svc-icon--teal"><font-awesome-icon :icon="['fas', 'droplet']" /></span>
-            <h3 class="svc-name">Pure water at height (Unger HydroPower)</h3>
+            <h3 class="svc-name">Cleaning at height: pole and pure water</h3>
           </div>
-          <p class="svc-desc">Where a standard pole can't reach: filtered pure water up to 10 metres high that dries on its own without streaks.</p>
+          <p class="svc-desc">Windows and façades with no scaffolding: telescopic pole up to 4 storeys and Unger HydroPower pure water up to 10 metres, streak-free.</p>
           <ul class="svc-list">
-            <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Up to 10 metres of reach</li>
-            <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Exclusive Unger HydroPower system</li>
-            <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Streak-free finish, no manual wiping</li>
+            <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Telescopic pole up to 4 storeys</li>
+            <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Unger HydroPower pure water up to 10 m</li>
+            <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />No scaffolding, no streaks</li>
           </ul>
           <router-link to="/agua-pura-altura" class="svc-btn-secondary">Learn more</router-link>
           <router-link to="/en/contact" class="svc-btn svc-btn--teal">Get a quote</router-link>
@@ -125,24 +125,24 @@
             </div>
           </div>
 
-          <div class="svc-card svc-card--extra" data-stagger="2" v-if="showAll" key="altura">
+          <div class="svc-card svc-card--extra" data-stagger="2" v-if="showAll" key="presion">
             <div class="svc-img-wrap">
-              <img src="../../assets/img/Header_Fensterreiniger_Glas_ANW_Toplock_000313.webp" class="svc-img" alt="Window cleaning at height with a telescopic pole" />
+              <img src="../../assets/img/20250917_131013.webp" class="svc-img" alt="Pressure washing of patios and terraces" />
               <div class="svc-overlay"></div>
-              <span class="svc-tag svc-tag--orange">Height</span>
+              <span class="svc-tag svc-tag--orange">Pressure washing</span>
             </div>
             <div class="svc-body">
               <div class="svc-body-head">
-                <span class="svc-icon svc-icon--orange"><font-awesome-icon :icon="['fas', 'arrow-up-from-water-pump']" /></span>
-                <h3 class="svc-name">Height cleaning (telescopic pole)</h3>
+                <span class="svc-icon svc-icon--orange"><font-awesome-icon :icon="['fas', 'shower']" /></span>
+                <h3 class="svc-name">Pressure washing</h3>
               </div>
-              <p class="svc-desc">Windows and façades up to 4 storeys with a telescopic pole, working from the ground with no scaffolding.</p>
+              <p class="svc-desc">Patios, terraces, façades, awnings and outdoor floors like new, with the right pressure for each surface.</p>
               <ul class="svc-list">
-                <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Up to 4 storeys from the ground</li>
-                <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Ideal for mid-height buildings</li>
-                <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />No scaffolding or council permits</li>
+                <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Patios, terraces and outdoor floors</li>
+                <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Façades, walls and awnings</li>
+                <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Pressure adapted to each material</li>
               </ul>
-              <router-link to="/limpieza-cristales-altura" class="svc-btn-secondary">Learn more</router-link>
+              <router-link to="/limpieza-agua-a-presion" class="svc-btn-secondary">Learn more</router-link>
               <router-link to="/en/contact" class="svc-btn svc-btn--orange">Get a quote</router-link>
             </div>
           </div>

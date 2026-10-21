@@ -2,7 +2,8 @@ import imgHogares  from '../assets/img/casamadera.webp';
 import imgComunidades from '../assets/img/comunidad-pertiga-fachada-h.webp';
 import imgLocales  from '../assets/img/restaurant.webp';
 import imgOficinas from '../assets/img/20260528_141113.webp';
-import imgAltura   from '../assets/img/Header_Fensterreiniger_Glas_ANW_Toplock_000313.webp';
+// Provisional hasta tener una foto real de hidrolimpieza
+import imgPresion  from '../assets/img/20250917_131013.webp';
 import imgAguaPura from '../assets/img/20261006-pertiga-fachada.webp';
 import imgPlacas   from '../assets/img/limpieza-panel-thumb.webp';
 import imgObras    from '../assets/img/20260323_184851.webp';
@@ -12,51 +13,60 @@ import imgVinilos  from '../assets/img/vinilo.webp';
 export const servicios = [
   {
     slug: 'agua-pura-altura',
-    breadcrumbLabel: 'Agua pura en altura',
-    title: 'Limpieza con sistema de agua pura en altura (Unger HydroPower)',
-    excerpt: 'Servicio exclusivo con equipo profesional Unger HydroPower: limpieza de cristales en altura con agua pura hasta 10 metros, sin andamios.',
-    metaTitle: 'Limpieza con Agua Pura en Altura en Madrid',
-    metaDescription: 'Servicio exclusivo de limpieza de cristales con sistema de agua pura Unger HydroPower. Alcance de hasta 10 metros sin andamios. Presupuesto gratis en 24 h.',
-    keywords: 'limpieza cristales agua pura madrid, sistema unger hydropower, limpieza en altura 10 metros, limpiacristales agua desionizada madrid, water fed pole madrid',
+    breadcrumbLabel: 'Limpieza en altura',
+    title: 'Limpieza de cristales en altura: pértiga y agua pura',
+    excerpt: 'Ventanas y fachadas en altura sin andamios: con pértiga telescópica hasta 4 plantas y con nuestro sistema exclusivo de agua pura Unger HydroPower hasta 10 metros.',
+    metaTitle: 'Limpieza de Cristales en Altura en Madrid',
+    metaDescription: 'Limpieza de cristales y fachadas en altura en Madrid: pértiga hasta 4 plantas y agua pura Unger HydroPower hasta 10 m, sin andamios. Presupuesto gratis en 24 h.',
+    keywords: 'limpieza cristales en altura madrid, limpieza fachadas acristaladas, limpieza ventanas altura sin andamios, pertiga telescopica limpieza cristales, limpieza cristales agua pura madrid, sistema unger hydropower',
     icon: ['fas', 'droplet'],
     image: imgAguaPura,
     color: '#0d9488',
     colorPale: '#f0fdfa',
-    tag: 'Exclusivo',
+    tag: 'Altura',
     content: `
-      <h2>Un servicio exclusivo: sistema de agua pura Unger HydroPower</h2>
-      <p>En <strong>Royall Clean</strong> incorporamos el sistema profesional <strong>Unger HydroPower</strong>, un equipo de agua pura que no todas las empresas de limpieza de cristales de Madrid tienen. El agua se purifica con resinas desionizadoras, eliminando los minerales que forman la cal: se seca sola al aire y el cristal queda transparente, sin marcas ni repaso manual. La pértiga alcanza <strong>hasta 10 metros</strong> (unas 3-4 plantas, según el edificio), siempre operada desde el suelo y sin necesidad de andamios.</p>
+      <h2>Limpieza en altura sin andamios</h2>
+      <p>Las fachadas acristaladas, los ventanales de plantas altas o los miradores de difícil acceso necesitan un equipo y una técnica distintos a la limpieza de cristales convencional. En <strong>Royall Clean</strong> los limpiamos siempre <strong>desde el suelo</strong>, sin montar andamios, sin trabajos verticales con cuerdas y sin pedir permisos especiales, con dos sistemas según la altura del edificio.</p>
 
-      <h2>Qué incluye el servicio</h2>
+      <h2>Dos sistemas según la altura</h2>
       <ul>
-        <li><strong>Fachadas acristaladas y ventanales en altura</strong> de viviendas, comunidades, oficinas y locales.</li>
-        <li><strong>Agua pura desionizada en origen</strong>, filtrada sobre el terreno con el propio equipo.</li>
-        <li><strong>Acabado sin marcas ni repaso manual.</strong></li>
-        <li><strong>Trabajo desde el suelo</strong>, sin andamios ni permisos de ocupación de vía pública.</li>
+        <li><strong>Pértiga telescópica, hasta 4 plantas.</strong> La opción ideal para alturas medias: ventanas, miradores y cristaleras de pisos, comunidades y locales.</li>
+        <li><strong>Agua pura Unger HydroPower, hasta 10 metros.</strong> Nuestro servicio exclusivo: el agua se purifica con resinas desionizadoras, eliminando los minerales que forman la cal, y se seca sola al aire sin marcas ni repaso manual.</li>
       </ul>
 
-      <h2>¿Para quién es este servicio?</h2>
+      <h2>¿Cuándo se necesita limpieza en altura?</h2>
       <ul>
-        <li>Comunidades de vecinos con fachadas acristaladas en plantas altas.</li>
-        <li>Oficinas y edificios comerciales con grandes superficies de cristal.</li>
-        <li>Chalets y viviendas con ventanales de difícil acceso.</li>
-        <li>Naves industriales con cerramientos acristalados en altura.</li>
+        <li>Ventanales y miradores de pisos altos sin terraza desde donde acceder.</li>
+        <li>Fachadas acristaladas de oficinas, locales o edificios de varias plantas.</li>
+        <li>Comunidades de vecinos con cristaleras exteriores que no se pueden limpiar desde dentro.</li>
+        <li>Chalets con ventanales de doble altura y naves con cerramientos acristalados.</li>
+      </ul>
+
+      <h2>Ventajas frente al andamio o la cuerda</h2>
+      <ul>
+        <li><strong>Sin permisos de ocupación de vía pública</strong>, que sí suele exigir un andamio en la calle.</li>
+        <li><strong>Sin interrumpir el paso</strong> de peatones ni el acceso al edificio.</li>
+        <li><strong>Montaje inmediato:</strong> empezamos a trabajar el mismo día, sin tiempos de instalación.</li>
+        <li><strong>Acabado sin marcas</strong>, especialmente con agua pura.</li>
       </ul>
 
       <h2>Zonas que cubrimos</h2>
-      <p>Ofrecemos este servicio en Madrid capital y en Getafe, Leganés, Alcorcón, Fuenlabrada, Móstoles, Alcobendas, Pozuelo de Alarcón, Las Rozas, Majadahonda, Boadilla del Monte, Torrejón de Ardoz y el resto de la Comunidad de Madrid.</p>
+      <p>Ofrecemos limpieza en altura en Madrid capital y en Getafe, Leganés, Alcorcón, Fuenlabrada, Móstoles, Alcobendas, Pozuelo de Alarcón, Las Rozas, Majadahonda, Boadilla del Monte, Torrejón de Ardoz y el resto de la Comunidad de Madrid.</p>
 
-      <h2>Preguntas frecuentes sobre el sistema de agua pura en altura</h2>
+      <h2>Preguntas frecuentes sobre limpieza en altura</h2>
+      <h3>¿Hasta qué altura podéis limpiar sin andamio?</h3>
+      <p>Con pértiga telescópica llegamos hasta 4 plantas, y con nuestro sistema de agua pura Unger HydroPower hasta 10 metros, siempre trabajando desde el suelo. Para edificios más altos estudiamos cada caso.</p>
       <h3>¿Qué significa "agua pura" y por qué no deja marcas en el cristal?</h3>
       <p>El sistema purifica el agua mediante resinas desionizadoras, eliminando los minerales que forman la cal. Al secarse de forma natural al aire, el cristal queda transparente, sin repasar con gamuza ni producto.</p>
-      <h3>¿A cuántas plantas equivalen los 10 metros de alcance?</h3>
-      <p>Dependiendo de la altura de cada planta, suelen ser unas 3-4 alturas, sin necesidad de andamio ni trabajos verticales.</p>
+      <h3>¿Necesito pedir algún permiso para este tipo de limpieza?</h3>
+      <p>Normalmente no: al trabajar desde el suelo, sin andamios ni ocupación de la vía pública, no suele hacer falta ningún permiso municipal.</p>
       <h3>¿Por qué decís que es un servicio exclusivo?</h3>
       <p>Porque disponemos del sistema profesional Unger HydroPower, un equipo que no todas las empresas de limpieza de la zona tienen.</p>
     `,
     faqs: [
+      { q: '¿Hasta qué altura podéis limpiar sin andamio?', a: 'Con pértiga telescópica llegamos hasta 4 plantas, y con nuestro sistema de agua pura Unger HydroPower hasta 10 metros, siempre trabajando desde el suelo. Para edificios más altos estudiamos cada caso.' },
       { q: '¿Qué significa "agua pura" y por qué no deja marcas en el cristal?', a: 'El sistema purifica el agua mediante resinas desionizadoras, eliminando los minerales que forman la cal. Al secarse de forma natural al aire, el cristal queda transparente, sin repasar con gamuza ni producto.' },
-      { q: '¿A cuántas plantas equivalen los 10 metros de alcance?', a: 'Dependiendo de la altura de cada planta, suelen ser unas 3-4 alturas, sin necesidad de andamio ni trabajos verticales.' },
+      { q: '¿Necesito pedir algún permiso para este tipo de limpieza?', a: 'Normalmente no: al trabajar desde el suelo, sin andamios ni ocupación de la vía pública, no suele hacer falta ningún permiso municipal.' },
       { q: '¿Por qué decís que es un servicio exclusivo?', a: 'Porque disponemos del sistema profesional Unger HydroPower, un equipo que no todas las empresas de limpieza de la zona tienen.' },
     ],
   },
@@ -319,70 +329,48 @@ export const servicios = [
     ],
   },
   {
-    slug: 'limpieza-cristales-altura',
-    breadcrumbLabel: 'Limpieza en altura',
-    title: 'Limpieza de cristales en altura y fachadas en Madrid',
-    excerpt: 'Fachadas acristaladas y ventanales en altura, limpios con pértiga telescópica hasta 4 plantas, sin andamios ni cuerdas.',
-    metaTitle: 'Limpieza de Cristales en Altura y Fachadas en Madrid',
-    metaDescription: 'Limpieza de fachadas y cristales en altura en Madrid con pértiga telescópica, sin andamios. Hasta 4 plantas. Presupuesto gratis en 24 h.',
-    keywords: 'limpieza cristales en altura madrid, limpieza fachadas acristaladas, limpieza ventanas altura sin andamios, pertiga telescopica limpieza cristales',
-    icon: ['fas', 'arrow-up-from-water-pump'],
-    image: imgAltura,
+    slug: 'limpieza-agua-a-presion',
+    breadcrumbLabel: 'Agua a presión',
+    title: 'Limpieza con agua a presión en Madrid: patios, fachadas y toldos',
+    excerpt: 'Patios, terrazas, fachadas, toldos y suelos exteriores como nuevos: limpieza con agua a presión, con la presión justa para cada superficie.',
+    metaTitle: 'Limpieza con Agua a Presión en Madrid',
+    metaDescription: 'Limpieza con agua a presión en Madrid: patios, terrazas, fachadas, toldos y suelos exteriores, con la presión justa para cada superficie. Presupuesto gratis en 24 h.',
+    keywords: 'limpieza agua a presion madrid, hidrolimpieza patios madrid, limpieza fachadas agua a presion, limpieza toldos madrid, limpieza terrazas agua a presion',
+    icon: ['fas', 'shower'],
+    image: imgPresion,
     color: '#c2410c',
     colorPale: '#fff7ed',
-    tag: 'Altura',
+    tag: 'Agua a presión',
     content: `
-      <h2>Limpieza de fachadas y cristales en altura sin andamios</h2>
-      <p>Las fachadas acristaladas, los ventanales de salón en plantas altas o los miradores de difícil acceso necesitan un equipo y una técnica distintos a la limpieza de cristales convencional. En <strong>Royall Clean</strong> resolvemos este tipo de trabajos con <strong>pértigas telescópicas de hasta 4 plantas de altura</strong>, lo que evita la necesidad de montar andamios, contratar trabajos verticales con cuerdas o pedir permisos especiales.</p>
+      <h2>Limpieza con agua a presión para exteriores</h2>
+      <p>Además de cristales, en <strong>Royall Clean</strong> limpiamos con agua a presión las superficies exteriores que acumulan suciedad, verdín y manchas con el paso del tiempo: patios, terrazas, fachadas, toldos y suelos exteriores. Con una hidrolimpiadora profesional y la presión adecuada para cada material, recuperamos su aspecto sin dañarlos.</p>
 
-      <h2>¿Cuándo se necesita limpieza en altura?</h2>
+      <h2>Qué limpiamos</h2>
       <ul>
-        <li>Ventanales y miradores de pisos altos sin terraza practicable desde donde acceder.</li>
-        <li>Fachadas acristaladas de oficinas, locales o edificios de varias plantas.</li>
-        <li>Comunidades de vecinos con cristaleras exteriores que no se pueden limpiar desde dentro de las viviendas.</li>
-        <li>Naves industriales o comercios con grandes superficies de cristal en altura.</li>
+        <li><strong>Patios y terrazas</strong>: suelos de baldosa, piedra o cemento con verdín, manchas y suciedad incrustada.</li>
+        <li><strong>Fachadas y muros</strong>: polvo, contaminación y manchas de humedad.</li>
+        <li><strong>Toldos y lonas</strong>: polvo, hojas, excrementos de pájaros y moho, con presión baja.</li>
+        <li><strong>Suelos exteriores y accesos</strong>: entradas, rampas, portales y zonas comunes.</li>
       </ul>
 
-      <h2>Pértiga telescópica frente a andamio o cuerda</h2>
-      <p>Para edificios de hasta 4 plantas, la pértiga telescópica con agua desionizada es, en la mayoría de los casos, la solución más rápida y económica frente al andamiaje o los trabajos verticales con cuerdas:</p>
-      <ul>
-        <li><strong>Sin necesidad de permisos de ocupación de vía pública</strong>, que sí suele exigir un andamio en la calle.</li>
-        <li><strong>Sin interrumpir el paso</strong> de peatones ni el acceso al edificio.</li>
-        <li><strong>Montaje inmediato:</strong> el equipo empieza a trabajar el mismo día, sin tiempos de instalación.</li>
-        <li><strong>Acabado sin marcas</strong>, porque el agua desionizada se seca sola sin dejar residuos de cal.</li>
-      </ul>
-      <p>Para alturas superiores a 4 plantas o accesos especialmente complicados, valoramos cada caso de forma personalizada y, si es necesario, coordinamos con empresas especializadas en trabajos verticales.</p>
+      <h2>La presión justa para cada superficie</h2>
+      <p>No todo se limpia igual: una baldosa de exterior aguanta mucha más presión que un toldo o una junta de fachada. Ajustamos la presión y la boquilla a cada material para limpiar a fondo sin levantar juntas, rayar ni romper tejidos.</p>
 
-      <h2>Seguridad en el trabajo</h2>
-      <p>Todo nuestro personal está formado en el uso de equipos de limpieza en altura y trabaja siguiendo las medidas de seguridad necesarias en cada tipo de superficie y acceso. La pértiga telescópica, al operarse desde el suelo, elimina además gran parte de los riesgos asociados a otros métodos de trabajo en altura.</p>
+      <h2>Para viviendas, comunidades y negocios</h2>
+      <p>Trabajamos en chalets y viviendas con patio o terraza, en zonas comunes de comunidades de vecinos y en terrazas de bares y locales. Si además necesitas los cristales, podemos hacerlo todo en la misma visita.</p>
 
-      <h2>Frecuencia recomendada</h2>
-      <p>Las fachadas acristaladas en altura suelen necesitar una limpieza cada <strong>3 a 6 meses</strong>, dependiendo de la exposición a la contaminación, la lluvia y el polen. En comunidades de vecinos y edificios de oficinas es habitual incluir esta limpieza dentro de un contrato de mantenimiento anual junto con el resto de zonas comunes.</p>
-
-      <h2>Zonas que cubrimos</h2>
-      <p>Realizamos limpieza de fachadas y cristales en altura en Madrid capital y en Getafe, Leganés, Alcorcón, Fuenlabrada, Móstoles, Alcobendas, Pozuelo de Alarcón, Las Rozas, Boadilla del Monte, Torrejón de Ardoz y el resto de la Comunidad de Madrid.</p>
-
-      <h2>Preguntas frecuentes sobre limpieza de cristales en altura</h2>
-      <h3>¿Hasta qué altura podéis limpiar sin andamio?</h3>
-      <p>Con pértiga telescópica llegamos sin problema hasta 4 plantas de altura. Para edificios más altos, estudiamos cada caso de forma individual.</p>
-      <h3>¿Necesito pedir algún permiso para este tipo de limpieza?</h3>
-      <p>Con pértiga telescópica, al no ocupar la vía pública ni requerir instalación de andamios, normalmente no se necesita ningún permiso municipal.</p>
-      <h3>¿El agua que usáis deja marcas en el cristal?</h3>
-      <p>No, trabajamos con agua desionizada, que se seca sin dejar restos de cal ni marcas, a diferencia del agua del grifo convencional.</p>
+      <h2>Preguntas frecuentes sobre limpieza con agua a presión</h2>
+      <h3>¿La presión puede dañar los toldos o la fachada?</h3>
+      <p>No. Ajustamos la presión y la boquilla a cada superficie: los toldos y las lonas se limpian con presión baja, y las juntas y materiales delicados con cuidado para no levantarlos ni rayarlos.</p>
+      <h3>¿Podéis limpiar también los cristales en la misma visita?</h3>
+      <p>Sí. Si además necesitas limpiar ventanas, cerramientos o barandillas de cristal, podemos hacerlo todo en la misma visita.</p>
+      <h3>¿Cuánto cuesta una limpieza con agua a presión?</h3>
+      <p>Depende de la superficie y de lo sucia que esté. Mándanos unas fotos por WhatsApp y te damos presupuesto gratis en menos de 24 horas.</p>
     `,
     faqs: [
-      {
-        q: '¿Hasta qué altura podéis limpiar sin andamio?',
-        a: 'Con pértiga telescópica llegamos sin problema hasta 4 plantas de altura. Para edificios más altos, estudiamos cada caso de forma individual.',
-      },
-      {
-        q: '¿Necesito pedir algún permiso para este tipo de limpieza?',
-        a: 'Con pértiga telescópica, al no ocupar la vía pública ni requerir instalación de andamios, normalmente no se necesita ningún permiso municipal.',
-      },
-      {
-        q: '¿El agua que usáis deja marcas en el cristal?',
-        a: 'No, trabajamos con agua desionizada, que se seca sin dejar restos de cal ni marcas, a diferencia del agua del grifo convencional.',
-      },
+      { q: '¿La presión puede dañar los toldos o la fachada?', a: 'No. Ajustamos la presión y la boquilla a cada superficie: los toldos y las lonas se limpian con presión baja, y las juntas y materiales delicados con cuidado para no levantarlos ni rayarlos.' },
+      { q: '¿Podéis limpiar también los cristales en la misma visita?', a: 'Sí. Si además necesitas limpiar ventanas, cerramientos o barandillas de cristal, podemos hacerlo todo en la misma visita.' },
+      { q: '¿Cuánto cuesta una limpieza con agua a presión?', a: 'Depende de la superficie y de lo sucia que esté. Mándanos unas fotos por WhatsApp y te damos presupuesto gratis en menos de 24 horas.' },
     ],
   },
   {

@@ -17,12 +17,12 @@
             <li><router-link to="/">Inicio</router-link></li>
             <li><router-link to="/sobre-mi">Sobre mí</router-link></li>
             <li><router-link to="/#servicios">Limpieza de cristales</router-link></li>
-            <li><router-link to="/agua-pura-altura">Agua pura en altura</router-link></li>
+            <li><router-link to="/agua-pura-altura">Limpieza en altura</router-link></li>
             <li><router-link to="/limpieza-cristales-hogares">Limpieza para hogares</router-link></li>
             <li><router-link to="/limpieza-cristales-comunidades">Limpieza para comunidades</router-link></li>
             <li><router-link to="/limpieza-cristales-locales-comerciales">Limpieza de locales</router-link></li>
             <li><router-link to="/limpieza-cristales-oficinas">Limpieza de oficinas</router-link></li>
-            <li><router-link to="/limpieza-cristales-altura">Limpieza en altura</router-link></li>
+            <li><router-link to="/limpieza-agua-a-presion">Agua a presión</router-link></li>
             <li><router-link to="/precios">Precios</router-link></li>
             <li><router-link to="/trabajos-realizados">Trabajos realizados</router-link></li>
             <li><router-link to="/blog">Blog</router-link></li>
