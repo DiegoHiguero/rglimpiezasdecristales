@@ -1,11 +1,11 @@
 <template>
   <section class="section2" id="precios">
 
-    <span class="svc-label"><font-awesome-icon :icon="['fas', 'tag']" class="me-1" />Tarifas</span>
+    <span class="svc-label" v-if="header"><font-awesome-icon :icon="['fas', 'tag']" class="me-1" />Tarifas</span>
 
     <div class="container pb-3">
 
-      <div class="pricing-header">
+      <div class="pricing-header" v-if="header">
         <h2 class="pricing-title">Precios claros,<br><span class="pricing-accent">sin sorpresas</span></h2>
         <p class="pricing-sub">Tarifas orientativas — cada presupuesto es personalizado y gratuito.</p>
       </div>
@@ -147,11 +147,24 @@
         </div>
 
       </div>
+
+      <div class="pc-more" v-if="detailLink">
+        <router-link to="/precios" class="pc-more-link">
+          Ver precios en detalle: qué incluye y cómo se calcula
+          <font-awesome-icon :icon="['fas', 'arrow-right']" class="ms-1" />
+        </router-link>
+      </div>
     </div>
   </section>
 </template>
 
 <script setup>
+// En la propia página /precios no tiene sentido enlazarse a sí misma, y su
+// cabecera repetiría el H1 y la introducción de la página
+defineProps({
+  detailLink: { type: Boolean, default: true },
+  header: { type: Boolean, default: true },
+});
 </script>
 
 <style scoped>
@@ -329,6 +342,14 @@
 /* ── Responsive ── */
 @media (max-width: 900px) { .pc-grid { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 768px) { .section2 { margin: 10px 10px; border-radius: var(--r-md); } }
+.pc-more { text-align: center; padding: 8px 0 28px; }
+.pc-more-link {
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.88rem; font-weight: 700;
+  color: var(--blue);
+  text-decoration: none;
+}
+.pc-more-link:hover { text-decoration: underline; }
 .pc-swipe { display: none; }
 /* En móvil las tarifas van en carrusel horizontal en vez de 6 tarjetas apiladas */
 @media (max-width: 560px) {

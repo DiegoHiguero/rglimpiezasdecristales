@@ -2,6 +2,7 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import fs from 'fs'
 import path from 'path'
+import { preciosMeta, preciosFaqs } from './src/data/precios.js'
 
 const SITE = 'https://royallclean.es'
 
@@ -192,6 +193,14 @@ const staticPages = [
     hreflang: { es: 'contacto', en: 'en/contact' },
   },
   {
+    route: 'precios',
+    title: preciosMeta.title,
+    description: preciosMeta.description,
+    keywords: preciosMeta.keywords,
+    breadcrumbLabel: 'Precios',
+    faqs: preciosFaqs,
+  },
+  {
     route: 'politica-privacidad',
     title: 'Política de Privacidad | Royall Clean',
     description: 'Consulta la política de privacidad de Royall Clean. Información sobre el tratamiento de tus datos personales conforme al RGPD.',
@@ -292,12 +301,36 @@ function injectBlogHtmlPlugin() {
       // sitemap/canonical (que usan la URL sin barra) y hace que Google nunca llegue
       // al contenido real — exactamente el aviso "Página con redirección".
       for (const page of staticPages) {
+        const pageUrl = `${SITE}/${page.route}`
         let html = patchHtml(baseHtmlNoFaq, {
           fullTitle: page.title,
           description: page.description,
-          url: `${SITE}/${page.route}`,
+          keywords: page.keywords,
+          url: pageUrl,
         })
         html = injectHreflang(html, page.hreflang)
+        // Páginas con FAQ propia (p. ej. /precios): breadcrumb + FAQPage que
+        // coinciden con el contenido visible
+        if (page.faqs) {
+          const breadcrumbLd = JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'BreadcrumbList',
+            'itemListElement': [
+              { '@type': 'ListItem', 'position': 1, 'name': 'Inicio', 'item': `${SITE}/` },
+              { '@type': 'ListItem', 'position': 2, 'name': page.breadcrumbLabel, 'item': pageUrl },
+            ],
+          })
+          const faqLd = JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'FAQPage',
+            'mainEntity': page.faqs.map((f) => ({
+              '@type': 'Question',
+              'name': f.q,
+              'acceptedAnswer': { '@type': 'Answer', 'text': f.a },
+            })),
+          })
+          html = html.replace('</head>', `<script type="application/ld+json">${breadcrumbLd}</script>\n<script type="application/ld+json">${faqLd}</script>\n</head>`)
+        }
         const outPath = path.join(distDir, `${page.route}.html`)
         fs.mkdirSync(path.dirname(outPath), { recursive: true })
         fs.writeFileSync(outPath, html)

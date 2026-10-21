@@ -14,6 +14,7 @@ const Register          = () => import("./views/Register.vue");
 const MisClientes       = () => import("./views/MisClientes.vue");
 const MisFacturas       = () => import("./views/MisFacturas.vue");
 const Contacto          = () => import("./views/Contacto.vue");
+const Precios           = () => import("./views/Precios.vue");
 const ContactoEN        = () => import("./views/ContactoEN.vue");
 const Confidentialite   = () => import("./views/Confidentialite.vue");
 const MentionsLegales   = () => import("./views/MentionsLegales.vue");
@@ -32,6 +33,7 @@ const GenerarArticulo   = () => import("./views/GenerarArticulo.vue");
 const SheetView         = () => import("./views/SheetView.vue");
 import { articles } from "./data/blog.js";
 import { getServicioBySlug } from "./data/servicios.js";
+import { preciosMeta } from "./data/precios.js";
 
 // import Editar from "./views/Editar.vue";
 
@@ -127,6 +129,11 @@ const routes = [
             title: 'Presupuesto Limpieza de Cristales en Madrid | Royall Clean',
             description: 'Pide tu presupuesto gratuito de limpieza de cristales y ventanas en Madrid. Sin compromiso, respuesta en menos de 24 horas. ☎ 625 950 506',
         },
+    },
+    {
+        path: '/precios',
+        component: Precios,
+        meta: { title: preciosMeta.title, description: preciosMeta.description },
     },
     { path: '/servicios', redirect: '/' },
     { path: '/agua-pura-altura', component: ServicioDetalle, meta: { servicio: 'agua-pura-altura' } },
