@@ -1,5 +1,5 @@
 <template>
-  <section class="zonas-section">
+  <section class="zonas-section" id="zonas">
 
     <span class="zonas-label">
       <font-awesome-icon :icon="['fas', 'location-dot']" class="me-1" />
@@ -26,7 +26,8 @@
         <ul class="zona-lista">
           <li v-for="municipio in zona.municipios" :key="municipio">
             <font-awesome-icon :icon="['fas', 'check']" class="zona-check" />
-            {{ municipio }}
+            <router-link v-if="paginasZona[municipio]" :to="paginasZona[municipio]" class="zona-link">{{ municipio }}</router-link>
+            <template v-else>{{ municipio }}</template>
           </li>
         </ul>
       </div>
@@ -56,6 +57,14 @@ import { ref } from 'vue';
 // En móvil cada zona se pliega; los municipios siguen en el HTML (SEO local)
 const abierta = ref(null);
 
+// Municipios con página propia (src/data/zonas.js)
+const paginasZona = {
+  'Centro': '/limpieza-cristales-madrid-centro',
+  'Getafe': '/limpieza-cristales-getafe',
+  'Griñón': '/limpieza-cristales-grinon',
+  'Pozuelo de Alarcón': '/limpieza-cristales-pozuelo-de-alarcon',
+};
+
 const zonas = [
   {
     nombre: 'Madrid Capital',
@@ -67,7 +76,7 @@ const zonas = [
     nombre: 'Sur',
     icono: ['fas', 'compass'],
     color: '#16a34a', colorPale: '#f0fdf4',
-    municipios: ['Getafe', 'Leganés', 'Alcorcón', 'Fuenlabrada', 'Móstoles', 'Parla', 'Pinto', 'Valdemoro', 'Aranjuez'],
+    municipios: ['Getafe', 'Leganés', 'Alcorcón', 'Fuenlabrada', 'Móstoles', 'Parla', 'Pinto', 'Valdemoro', 'Griñón', 'Aranjuez'],
   },
   {
     nombre: 'Norte',
@@ -91,7 +100,11 @@ const zonas = [
 </script>
 
 <style scoped>
+.zona-link { color: var(--blue); font-weight: 600; text-decoration: none; }
+.zona-link:hover { text-decoration: underline; }
+
 .zonas-section {
+  scroll-margin-top: 88px;
   background: var(--white);
   margin: 12px 20px;
   border-radius: var(--r-lg);

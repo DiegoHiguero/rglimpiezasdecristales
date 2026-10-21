@@ -4,7 +4,7 @@
     <div class="article-breadcrumb">
       <router-link to="/">Inicio</router-link>
       <span class="sep">/</span>
-      <router-link to="/#servicios">Servicios</router-link>
+      <router-link :to="esZona ? '/#zonas' : '/#servicios'">{{ esZona ? 'Zonas' : 'Servicios' }}</router-link>
       <span class="sep">/</span>
       <span class="breadcrumb-current">{{ servicio.breadcrumbLabel }}</span>
     </div>
@@ -28,7 +28,7 @@
 
       <div class="article-cta">
         <div class="article-cta-inner">
-          <h2 class="article-cta-title">¿Necesitas este servicio?</h2>
+          <h2 class="article-cta-title">{{ esZona ? `¿Necesitas limpiar tus cristales en ${servicio.breadcrumbLabel}?` : '¿Necesitas este servicio?' }}</h2>
           <p class="article-cta-sub">Cubrimos Madrid y toda la Comunidad de Madrid. Presupuesto gratuito en menos de 24 h.</p>
           <div class="article-cta-btns">
             <a href="tel:+34625950506" class="article-btn article-btn--primary">
@@ -42,7 +42,7 @@
       </div>
 
       <div class="article-related" v-if="related.length">
-        <h3 class="related-title">Otros servicios</h3>
+        <h3 class="related-title">{{ esZona ? 'Otras zonas' : 'Otros servicios' }}</h3>
         <div class="related-grid">
           <router-link
             v-for="s in related"
@@ -77,20 +77,27 @@
 import { computed, onMounted, onUnmounted, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { servicios, getServicioBySlug } from '../data/servicios.js';
+import { zonas, getZonaBySlug } from '../data/zonas.js';
 import DOMPurify from 'dompurify';
 
 const purify = (html) => DOMPurify.sanitize(html, { USE_PROFILES: { html: true } });
 
 const route = useRoute();
-const servicio = computed(() => getServicioBySlug(route.meta?.servicio));
+// La misma plantilla sirve para servicios (meta.servicio) y para las páginas
+// por municipio (meta.zona); cambian los datos, las migas y "Otros/Otras".
+const esZona = computed(() => !!route.meta?.zona);
+const lista = computed(() => (esZona.value ? zonas : servicios));
+const slugActual = computed(() => route.meta?.zona || route.meta?.servicio);
+const servicio = computed(() => (esZona.value ? getZonaBySlug(slugActual.value) : getServicioBySlug(slugActual.value)));
 // Rota circularmente (siguiente 3 del array) en vez de tomar siempre los 3
 // primeros: así cada servicio recibe enlaces internos desde otras 3 páginas
 // en vez de que los últimos del array queden huérfanos de enlaces.
 const related = computed(() => {
-  const idx = servicios.findIndex((s) => s.slug === route.meta?.servicio);
-  if (idx === -1) return servicios.slice(0, 3);
-  const n = servicios.length;
-  return [1, 2, 3].map((offset) => servicios[(idx + offset) % n]);
+  const items = lista.value;
+  const idx = items.findIndex((s) => s.slug === slugActual.value);
+  if (idx === -1) return items.slice(0, 3);
+  const n = items.length;
+  return [1, 2, 3].filter((offset) => offset < n).map((offset) => items[(idx + offset) % n]);
 });
 
 // El HTML estático (generado en build) ya incluye el schema Service+Breadcrumb+FAQ
@@ -114,7 +121,9 @@ function injectSchema(s) {
         name: s.title,
         description: s.metaDescription,
         provider: { '@id': 'https://royallclean.es/#business' },
-        areaServed: { '@type': 'State', name: 'Comunidad de Madrid' },
+        areaServed: s.areaServed
+          ? { '@type': 'City', name: s.areaServed }
+          : { '@type': 'State', name: 'Comunidad de Madrid' },
         url,
       },
       {

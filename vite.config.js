@@ -3,6 +3,7 @@ import vue from '@vitejs/plugin-vue'
 import fs from 'fs'
 import path from 'path'
 import { preciosMeta, preciosFaqs } from './src/data/precios.js'
+import { zonas } from './src/data/zonas.js'
 
 const SITE = 'https://royallclean.es'
 
@@ -185,6 +186,18 @@ const serviceRoutes = [
   },
 ]
 
+// Páginas por municipio: mismo formato que serviceRoutes, con su ciudad
+const zonaRoutes = zonas.map((z) => ({
+  slug: z.slug,
+  name: z.title,
+  title: z.metaTitle,
+  description: z.metaDescription,
+  keywords: z.keywords,
+  breadcrumbLabel: z.breadcrumbLabel,
+  faqs: z.faqs,
+  areaServed: z.areaServed,
+}))
+
 const staticPages = [
   {
     route: 'contacto',
@@ -346,7 +359,7 @@ function injectBlogHtmlPlugin() {
       )
 
       // Service pages
-      for (const service of serviceRoutes) {
+      for (const service of [...serviceRoutes, ...zonaRoutes]) {
         const serviceUrl = `${SITE}/${service.slug}`
         const fullTitle = `${service.title} | Royall Clean`
 
@@ -357,7 +370,9 @@ function injectBlogHtmlPlugin() {
           name: service.name,
           description: service.description,
           provider: { '@id': `${SITE}/#business` },
-          areaServed: { '@type': 'State', name: 'Comunidad de Madrid' },
+          areaServed: service.areaServed
+            ? { '@type': 'City', name: service.areaServed }
+            : { '@type': 'State', name: 'Comunidad de Madrid' },
           url: serviceUrl,
         })
 

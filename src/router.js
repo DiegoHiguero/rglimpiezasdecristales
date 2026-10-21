@@ -33,6 +33,7 @@ const GenerarArticulo   = () => import("./views/GenerarArticulo.vue");
 const SheetView         = () => import("./views/SheetView.vue");
 import { articles } from "./data/blog.js";
 import { getServicioBySlug } from "./data/servicios.js";
+import { getZonaBySlug } from "./data/zonas.js";
 import { preciosMeta } from "./data/precios.js";
 
 // import Editar from "./views/Editar.vue";
@@ -146,6 +147,10 @@ const routes = [
     { path: '/limpieza-fin-de-obra', component: ServicioDetalle, meta: { servicio: 'limpieza-fin-de-obra' } },
     { path: '/limpieza-grafitis', component: ServicioDetalle, meta: { servicio: 'limpieza-grafitis' } },
     { path: '/retirada-de-vinilos', component: ServicioDetalle, meta: { servicio: 'retirada-de-vinilos' } },
+    { path: '/limpieza-cristales-getafe', component: ServicioDetalle, meta: { zona: 'limpieza-cristales-getafe' } },
+    { path: '/limpieza-cristales-pozuelo-de-alarcon', component: ServicioDetalle, meta: { zona: 'limpieza-cristales-pozuelo-de-alarcon' } },
+    { path: '/limpieza-cristales-grinon', component: ServicioDetalle, meta: { zona: 'limpieza-cristales-grinon' } },
+    { path: '/limpieza-cristales-madrid-centro', component: ServicioDetalle, meta: { zona: 'limpieza-cristales-madrid-centro' } },
     {
         path: '/politica-privacidad',
         component: Confidentialite,
@@ -221,7 +226,8 @@ const router = createRouter({
 
 router.afterEach((to) => {
     const article  = (to.meta?.dynamic && to.params?.slug) ? articles.find(a => a.slug === to.params.slug) : null;
-    const servicio = to.meta?.servicio ? getServicioBySlug(to.meta.servicio) : null;
+    const servicio = to.meta?.servicio ? getServicioBySlug(to.meta.servicio)
+        : to.meta?.zona ? getZonaBySlug(to.meta.zona) : null;
 
     // Un slug de blog/servicio que no existe también es un 404, aunque la
     // ruta en sí coincida (:slug acepta cualquier texto) — sin esto, se
@@ -229,7 +235,7 @@ router.afterEach((to) => {
     // en vez de un 404 real.
     const isNotFound = to.meta?.notFound
         || (to.meta?.dynamic && !article)
-        || (to.meta?.servicio && !servicio);
+        || ((to.meta?.servicio || to.meta?.zona) && !servicio);
 
     let title = to.meta?.title || BASE_TITLE;
     let desc  = to.meta?.description || BASE_DESC;

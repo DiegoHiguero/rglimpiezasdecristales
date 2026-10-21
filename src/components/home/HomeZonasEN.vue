@@ -67,7 +67,7 @@ const zonas = [
     nombre: 'South',
     icono: ['fas', 'compass'],
     color: '#16a34a', colorPale: '#f0fdf4',
-    municipios: ['Getafe', 'Leganés', 'Alcorcón', 'Fuenlabrada', 'Móstoles', 'Parla', 'Pinto', 'Valdemoro', 'Aranjuez'],
+    municipios: ['Getafe', 'Leganés', 'Alcorcón', 'Fuenlabrada', 'Móstoles', 'Parla', 'Pinto', 'Valdemoro', 'Griñón', 'Aranjuez'],
   },
   {
     nombre: 'North',
