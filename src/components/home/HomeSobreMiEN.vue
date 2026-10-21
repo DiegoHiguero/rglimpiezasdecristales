@@ -13,7 +13,7 @@
       <div class="ns-content animate-on-scroll">
         <h2 class="ns-title">Hi, I'm<br><span class="ns-title-accent">Roys Abreu!</span></h2>
         <p class="ns-role">Founder of Royall Clean · Madrid</p>
-        <p class="ns-text">I work independently, so you deal directly with me: from the quote to the very last pane. I like to get things right the first time and see clients come back.</p>
+        <p class="ns-text">I have been cleaning windows in Madrid since 2013 and I specialise in <strong>difficult jobs</strong>, the ones others won't take on. I work independently, so you deal directly with me, and I would rather take a little longer and have you happy with the result.</p>
         <!-- Contacto directo, coherente con "tratas directamente conmigo" -->
         <div class="ns-ctas">
           <a href="tel:+34625950506" class="ns-cta">

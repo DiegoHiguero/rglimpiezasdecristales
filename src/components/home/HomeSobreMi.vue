@@ -13,7 +13,8 @@
       <div class="ns-content animate-on-scroll">
         <h2 class="ns-title">¡Hola, soy<br><span class="ns-title-accent">Roys Abreu!</span></h2>
         <p class="ns-role">Fundador de Royall Clean · Madrid</p>
-        <p class="ns-text">Trabajo como autónomo, así que tratas directamente conmigo: desde el presupuesto hasta el último cristal. Me gusta hacer las cosas bien a la primera y que el cliente repita.</p>
+        <p class="ns-text">Limpio cristales en Madrid desde 2013 y me especializo en los <strong>trabajos difíciles</strong>, los que otros no quieren hacer. Trabajo como autónomo, así que tratas directamente conmigo, y prefiero tardar un poco más y que quedes contento con el resultado.</p>
+        <router-link to="/sobre-mi" class="ns-more">Conóceme mejor <font-awesome-icon :icon="['fas', 'arrow-right']" class="ms-1" /></router-link>
         <!-- Contacto directo, coherente con "tratas directamente conmigo" -->
         <div class="ns-ctas">
           <a href="tel:+34625950506" class="ns-cta">
@@ -110,6 +111,8 @@
   margin: 0 0 24px;
 }
 .ns-text strong { color: var(--text); }
+.ns-more { font-size: 0.88rem; font-weight: 700; color: var(--blue); text-decoration: none; margin: -6px 0 18px; width: fit-content; }
+.ns-more:hover { text-decoration: underline; }
 .ns-cta {
   display: inline-flex;
   align-items: center;

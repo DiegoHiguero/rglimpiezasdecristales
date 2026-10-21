@@ -16,6 +16,7 @@ const MisFacturas       = () => import("./views/MisFacturas.vue");
 const Contacto          = () => import("./views/Contacto.vue");
 const Precios           = () => import("./views/Precios.vue");
 const TrabajosRealizados = () => import("./views/TrabajosRealizados.vue");
+const SobreMi           = () => import("./views/SobreMi.vue");
 const ContactoEN        = () => import("./views/ContactoEN.vue");
 const Confidentialite   = () => import("./views/Confidentialite.vue");
 const MentionsLegales   = () => import("./views/MentionsLegales.vue");
@@ -143,6 +144,14 @@ const routes = [
         meta: {
             title: 'Trabajos Realizados de Limpieza de Cristales | Royall Clean',
             description: 'Fotos reales y antes/después de nuestros trabajos de limpieza de cristales en Madrid: viviendas, comunidades, locales, oficinas y fachadas en altura.',
+        },
+    },
+    {
+        path: '/sobre-mi',
+        component: SobreMi,
+        meta: {
+            title: 'Sobre mí: Roys Abreu, Limpiacristales en Madrid | Royall Clean',
+            description: 'Limpio cristales en Madrid desde 2013 y me especializo en los trabajos difíciles que otros no quieren hacer. Trato directo, sin prisas y con el cliente contento.',
         },
     },
     { path: '/servicios', redirect: '/' },

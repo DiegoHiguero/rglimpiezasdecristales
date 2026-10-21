@@ -221,6 +221,13 @@ const staticPages = [
     breadcrumbLabel: 'Trabajos realizados',
   },
   {
+    route: 'sobre-mi',
+    title: 'Sobre mí: Roys Abreu, Limpiacristales en Madrid | Royall Clean',
+    description: 'Limpio cristales en Madrid desde 2013 y me especializo en los trabajos difíciles que otros no quieren hacer. Trato directo, sin prisas y con el cliente contento.',
+    keywords: 'roys abreu limpiacristales, limpiacristales madrid autonomo, limpieza cristales trabajos dificiles, royall clean',
+    breadcrumbLabel: 'Sobre mí',
+  },
+  {
     route: 'politica-privacidad',
     title: 'Política de Privacidad | Royall Clean',
     description: 'Consulta la política de privacidad de Royall Clean. Información sobre el tratamiento de tus datos personales conforme al RGPD.',

@@ -1,5 +1,5 @@
 <template>
-  <div class="testimonials-section">
+  <div class="testimonials-section" id="testimonios">
 
     <span class="ti-label">
       <svg class="g-icon" viewBox="0 0 24 24" width="15" height="15" aria-hidden="true">
@@ -66,6 +66,7 @@ onMounted(() => {
 
 <style scoped>
 .testimonials-section {
+  scroll-margin-top: 88px;
   background: var(--white);
   margin: 12px 20px;
   border-radius: var(--r-lg);
