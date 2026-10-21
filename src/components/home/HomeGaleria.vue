@@ -169,6 +169,7 @@ import img20260319    from '../../assets/img/20260319_124222.webp';
 import img20260324    from '../../assets/img/20260324_122426.webp';
 import img20260528b   from '../../assets/img/20260528_140444.webp';
 import imgPadelVacio  from '../../assets/img/padel-cristales-vacio.webp';
+import imgComunidad   from '../../assets/img/comunidad-pertiga-fachada.webp';
 
 // completa: modo de la página /trabajos-realizados (todas las fotos, sin la
 // cabecera de sección porque la página ya tiene su H1)
@@ -199,6 +200,7 @@ watch(tab, async (val) => {
 
 // Resto de trabajos: solo en la página completa, detrás de los destacados
 const fotosExtra = [
+  { src: imgComunidad,  label: 'Fachada de comunidad de vecinos con pértiga' },
   { src: img20260324,   label: 'Techo de cristal de terraza en Las Rozas · Mar 2026' },
   { src: img20260311,   label: 'Cristalera de local a pie de calle · Mar 2026' },
   { src: img20260319,   label: 'Techo de cristal en terraza · Mar 2026' },

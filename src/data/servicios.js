@@ -1,5 +1,5 @@
 import imgHogares  from '../assets/img/casamadera.webp';
-import imgComunidades from '../assets/img/office-buildings.webp';
+import imgComunidades from '../assets/img/comunidad-pertiga-fachada-h.webp';
 import imgLocales  from '../assets/img/restaurant.webp';
 import imgOficinas from '../assets/img/20260528_141113.webp';
 import imgAltura   from '../assets/img/Header_Fensterreiniger_Glas_ANW_Toplock_000313.webp';

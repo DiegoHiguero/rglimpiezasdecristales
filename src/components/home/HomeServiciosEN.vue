@@ -81,7 +81,7 @@
 
       <div class="svc-card animate-on-scroll">
         <div class="svc-img-wrap">
-          <img src="../../assets/img/office-buildings.webp" class="svc-img" alt="Window cleaning for residential communities" />
+          <img src="../../assets/img/comunidad-pertiga-fachada-h.webp" class="svc-img" alt="Window cleaning for residential communities" />
           <div class="svc-overlay"></div>
           <span class="svc-tag svc-tag--indigo">Communities</span>
         </div>

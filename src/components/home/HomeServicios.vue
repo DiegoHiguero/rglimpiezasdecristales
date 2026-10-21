@@ -81,7 +81,7 @@
 
       <div class="svc-card animate-on-scroll">
         <div class="svc-img-wrap">
-          <img src="../../assets/img/office-buildings.webp" class="svc-img" alt="Limpieza de cristales en comunidades de vecinos" />
+          <img src="../../assets/img/comunidad-pertiga-fachada-h.webp" class="svc-img" alt="Limpieza de cristales en comunidades de vecinos" />
           <div class="svc-overlay"></div>
           <span class="svc-tag svc-tag--indigo">Comunidades</span>
         </div>
