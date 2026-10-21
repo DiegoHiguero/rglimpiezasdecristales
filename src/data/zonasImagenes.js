@@ -4,11 +4,16 @@ import imgGetafe   from '../assets/img/20261006-fachada-acristalada.webp';
 import imgGrinon   from '../assets/img/20260528_141113.webp';
 import imgLasRozas from '../assets/img/20260324_122426.webp';
 import imgMadrid   from '../assets/img/IMG-20230901-WA0000.webp';
+import imgPozuelo  from '../assets/img/casamadera.webp';
 
 export const imagenesZona = {
   'limpieza-cristales-getafe': {
     src: imgGetafe,
     pie: 'Fachada acristalada que limpiamos en Getafe',
+  },
+  'limpieza-cristales-pozuelo-de-alarcon': {
+    src: imgPozuelo,
+    pie: 'Chalet con ventanales y barandilla de cristal que limpiamos en Pozuelo de Alarcón',
   },
   'limpieza-cristales-grinon': {
     src: imgGrinon,
