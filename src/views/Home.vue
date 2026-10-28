@@ -572,6 +572,24 @@ function getCookie(cname: string): string {
 
 
 /* â”€â”€ FORMULARIO MODO CLARO â”€â”€ */
+
+/* ── PANEL DEL HERO MODO CLARO (a juego con el formulario) ── */
+:root:not([data-theme="dark"]) .hero-panel {
+  background: rgba(255, 255, 255, 0.94);
+  border-color: rgba(0,0,0,0.07);
+  box-shadow: 0 8px 40px rgba(0,0,0,0.18);
+}
+:root:not([data-theme="dark"]) .prof { color: #1e293b; }
+:root:not([data-theme="dark"]) .hero-panel .textAnimation {
+  background: linear-gradient(90deg, #2563eb 0%, #3b82f6 50%, #2563eb 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+}
+:root:not([data-theme="dark"]) .hero-proof { color: #475569; text-shadow: none; }
+:root:not([data-theme="dark"]) .hero-proof strong { color: #1e293b; }
+/* El botón blanco de llamar se perdería sobre el panel blanco */
+:root:not([data-theme="dark"]) .hero-ctas .btn-light { background: #1e293b; border-color: #1e293b; color: #fff; }
+:root:not([data-theme="dark"]) .hero-ctas .btn-light:hover { background: #0f172a; color: #fff; }
 :root:not([data-theme="dark"]) .formulario {
   background: rgba(255, 255, 255, 0.94);
   border-color: rgba(0,0,0,0.07);
