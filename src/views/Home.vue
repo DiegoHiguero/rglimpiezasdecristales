@@ -4,26 +4,42 @@
     <!-- â”€â”€ HERO â”€â”€ -->
     <div class="row d-flex justify-content-center ms-3 mx-3 bg-image principal mt-3 bg-body-tertiary rounded-4 align-items-md-stretch">
 
-      <div class="col-md-6 p-3 d-flex flex-column justify-content-center">
+      <div class="col-md-6 d-flex align-items-stretch py-4">
+        <!-- Panel de cristal: titular, prueba social y botones a la izquierda;
+             el vídeo en el móvil a la derecha, a toda la altura del bloque -->
+        <div class="hero-panel w-100">
+          <h1 class="hero-title">
+            <span class="prof">Limpieza de cristales y ventanas en Madrid</span>
+          </h1>
+          <p class="textAnimation hero-sub">Ventanas · escaparates · oficinas · comunidades · altura · agua a presión</p>
 
-        <h1 class="hero-title px-3">
-          <span class="prof">Limpieza de cristales y ventanas en Madrid</span>
-          <span class="textAnimation hero-sub">Escaparates · ventanas · fachadas · comunidades</span>
-        </h1>
+          <p class="hero-proof">
+            <span class="hero-proof-item"><span class="hero-proof-stars">★★★★★</span><strong>5.0</strong> en Google</span> <span class="hero-proof-sep">·</span> <span class="hero-proof-item">Presupuesto gratis en 24 h</span>
+          </p>
 
-        <p class="hero-proof px-3">
-          <span class="hero-proof-stars">★★★★★</span><strong>5.0</strong> en Google · Presupuesto gratis en 24 h
-        </p>
+          <div class="hero-ctas">
+            <a href="tel:+34625950506" class="btn btn-light fw-bold px-4">
+              <font-awesome-icon :icon="['fas', 'phone']" class="me-2" />625 950 506
+            </a>
+            <a href="https://wa.me/34625950506?text=Hola%2C%20quiero%20un%20presupuesto%20para%20limpieza%20de%20cristales" target="_blank" rel="noopener noreferrer" class="btn hero-wa fw-bold px-4">
+              <font-awesome-icon :icon="['fab', 'whatsapp']" class="me-2" />WhatsApp
+            </a>
+          </div>
 
-        <div class="hero-ctas px-3">
-          <a href="tel:+34625950506" class="btn btn-light fw-bold px-4">
-            <font-awesome-icon :icon="['fas', 'phone']" class="me-2" />625 950 506
-          </a>
-          <a href="https://wa.me/34625950506?text=Hola%2C%20quiero%20un%20presupuesto%20para%20limpieza%20de%20cristales" target="_blank" rel="noopener noreferrer" class="btn hero-wa fw-bold px-4">
-            <font-awesome-icon :icon="['fab', 'whatsapp']" class="me-2" />WhatsApp
-          </a>
+          <div class="phone-mockup" aria-hidden="true">
+            <video
+              class="phone-mockup-video"
+              :class="{ 'phone-mockup-video--fading': heroFading }"
+              :src="heroVideoSrc"
+              muted loop playsinline autoplay
+              @loadedmetadata="onHeroVideoLoaded"
+              @timeupdate="onHeroVideoTimeUpdate"
+            ></video>
+            <img src="../assets/img/phone-mockup-azul.webp" alt="" class="phone-mockup-frame" />
+            <!-- Precargan los dos clips para que el cambio de vídeo sea instantáneo -->
+            <video v-for="clip in HERO_CLIPS" :key="clip.src" :src="clip.src" preload="auto" muted playsinline class="phone-mockup-preload"></video>
+          </div>
         </div>
-
       </div>
 
       <div class="col-md-6 d-flex align-items-center justify-content-center py-4" style="z-index:2;">
@@ -163,7 +179,7 @@
 
 <script setup lang="ts">
 import { useUserStore } from "../stores/user";
-import { onMounted, onUnmounted, ref } from "vue";
+import { onMounted, onUnmounted, ref, computed } from "vue";
 import { useContactForm } from '../composables/useContactForm';
 import HomeStats      from '../components/home/HomeStats.vue';
 import HomeServicios  from '../components/home/HomeServicios.vue';
@@ -174,6 +190,8 @@ import HomeSobreMi    from '../components/home/HomeSobreMi.vue';
 import HomeZonas      from '../components/home/HomeZonas.vue';
 import HomeBlog       from '../components/home/HomeBlog.vue';
 import HomeFaq        from '../components/home/HomeFaq.vue';
+import heroVideoA from '../assets/img/videoplayback.mp4';
+import heroVideoB from '../assets/img/VID-20251022-WA0013.mp4';
 
 const {
   prenom, email, phone, message,
@@ -182,6 +200,29 @@ const {
   enviarMensaje,
 } = useContactForm('es', { emailOptional: true });
 const showEmail = ref(false);
+
+// Vídeo del hero: los dos vídeos reales de la galería, uno detrás del otro
+// (cada uno con su tramo bueno), con un fundido al cambiar.
+const HERO_CLIPS = [
+  { src: heroVideoA, start: 1.5, end: 7 },
+  { src: heroVideoB, start: 0.2, end: 3.4 },
+];
+const heroVideoIndex = ref(0);
+const heroVideoSrc = computed(() => HERO_CLIPS[heroVideoIndex.value].src);
+const heroFading = ref(false);
+
+const onHeroVideoLoaded = (e) => {
+  e.target.currentTime = HERO_CLIPS[heroVideoIndex.value].start;
+  e.target.play().catch(() => {});
+  heroFading.value = false;
+};
+const onHeroVideoTimeUpdate = (e) => {
+  const clip = HERO_CLIPS[heroVideoIndex.value];
+  if (e.target.currentTime >= clip.end) {
+    heroFading.value = true;
+    heroVideoIndex.value = (heroVideoIndex.value + 1) % HERO_CLIPS.length;
+  }
+};
 
 const userStore = useUserStore();
 
@@ -302,6 +343,72 @@ function getCookie(cname: string): string {
   text-shadow: 0 1px 8px rgba(0,0,0,0.6);
 }
 .hero-proof-stars { color: #fbbf24; letter-spacing: 1px; margin-right: 4px; }
+.hero-panel {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  /* Título a todo el ancho; debajo, servicios, datos y botones junto al móvil */
+  grid-template-areas:
+    "title title"
+    "sub   phone"
+    "proof phone"
+    "ctas  phone";
+  column-gap: 28px;
+  align-items: center;
+  /* Estirado a la altura del formulario; el contenido, centrado en vertical */
+  align-content: center;
+  /* Mismo cristal que la franja de cifras: el hero queda en tres piezas a juego */
+  background: rgba(10, 16, 30, 0.45);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--r-md);
+  padding: 30px;
+}
+.hero-panel .hero-title { grid-area: title; margin: 0 0 4px; font-size: 2.55rem; }
+.hero-panel .hero-sub { grid-area: sub; margin: 0; align-self: end; }
+.hero-panel .hero-proof { grid-area: proof; margin-top: 16px; }
+/* Valoración y presupuesto, cada uno en su línea (al lado del móvil no caben juntos) */
+.hero-proof-item { display: block; }
+.hero-proof-sep { display: none; }
+.hero-panel .hero-ctas  { grid-area: ctas; margin-top: 18px; }
+.hero-panel .phone-mockup { grid-area: phone; width: 128px; margin-top: 14px; }
+.phone-mockup {
+  position: relative;
+  width: 128px;
+  aspect-ratio: 394 / 783;
+  flex-shrink: 0;
+  filter: drop-shadow(0 12px 24px rgba(0,0,0,0.45));
+}
+.phone-mockup-video {
+  position: absolute;
+  left: 7.1%;
+  top: 3.1%;
+  width: 86.3%;
+  height: 94%;
+  object-fit: cover;
+  border-radius: 10.5% / 5%;
+  display: block;
+  background: #000;
+  transition: opacity 0.25s ease;
+  z-index: 1;
+}
+.phone-mockup-video--fading { opacity: 0; }
+.phone-mockup-frame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  pointer-events: none;
+  display: block;
+}
+.phone-mockup-preload {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
 .hero-title {
   font-family: 'Anton', sans-serif;
   font-weight: 400;
@@ -571,12 +678,22 @@ function getCookie(cname: string): string {
 @media (max-width: 768px) {
   .principal { min-height: 360px; border-radius: var(--r-md); }
   .hero-title { font-size: 2.1rem; padding-top: 14px; }
+  .hero-panel {
+    grid-template-areas:
+      "title title"
+      "sub   phone"
+      "proof phone"
+      "ctas  ctas";
+    column-gap: 14px;
+    padding: 20px 16px;
+  }
+  .hero-panel .hero-title { font-size: 2rem; padding-top: 0; }
+  .hero-panel .phone-mockup { width: 86px; margin-top: 10px; }
   .hero-sub { font-size: 0.98rem; }
 }
 @media (max-width: 480px) {
   .ff-row { grid-template-columns: 1fr; }
   .formulario { padding: 22px 16px 16px; }
-  .col-md-6.p-3 { padding-left: 12px !important; padding-right: 12px !important; }
   .hero-ctas .btn {
     flex: 1;
     display: inline-flex; align-items: center; justify-content: center;
