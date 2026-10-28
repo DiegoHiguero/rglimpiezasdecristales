@@ -363,6 +363,7 @@ function getCookie(cname: string): string {
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: var(--r-md);
   padding: 30px;
+  transform: translateZ(0); /* capa propia: evita artefactos al repintar el vídeo */
 }
 .hero-panel .hero-title { grid-area: title; margin: 0 0 4px; font-size: 2.55rem; }
 .hero-panel .hero-sub { grid-area: sub; margin: 0; align-self: end; }
@@ -377,7 +378,6 @@ function getCookie(cname: string): string {
   width: 128px;
   aspect-ratio: 394 / 783;
   flex-shrink: 0;
-  filter: drop-shadow(0 12px 24px rgba(0,0,0,0.45));
 }
 .phone-mockup-video {
   position: absolute;
@@ -401,6 +401,10 @@ function getCookie(cname: string): string {
   z-index: 2;
   pointer-events: none;
   display: block;
+  /* La sombra va en el marco (imagen fija) y no en todo el móvil: si envolvía
+     también al vídeo, cada fundido la recalculaba y Chrome pintaba una línea
+     oscura en el formulario (backdrop-filter) de al lado */
+  filter: drop-shadow(0 12px 24px rgba(0,0,0,0.45));
 }
 .phone-mockup-preload {
   position: absolute;
@@ -439,6 +443,7 @@ function getCookie(cname: string): string {
   background: rgba(10, 16, 30, 0.62);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
+  transform: translateZ(0); /* capa propia: evita artefactos al repintar el vídeo */
   border: 1px solid rgba(255,255,255,0.08);
   border-radius: var(--r-md);
   padding: 28px 24px 20px;
