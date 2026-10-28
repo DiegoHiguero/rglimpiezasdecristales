@@ -70,12 +70,8 @@ onMounted(() => {
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
-  background: rgba(10, 16, 30, 0.45);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255,255,255,0.1);
-  border-radius: var(--r-md);
-  padding: 12px 8px;
+  border-top: 1px solid rgba(255,255,255,0.12);
+  padding: 16px 8px 4px;
 }
 .stat-item, .perk {
   display: flex;
@@ -107,20 +103,8 @@ onMounted(() => {
 }
 .perk-icon { color: #60a5fa; font-size: 0.95rem; }
 
-/* Modo claro: franja blanca, a juego con el panel y el formulario del hero */
-:root:not([data-theme="dark"]) .section3 {
-  background: rgba(255, 255, 255, 0.94);
-  border-color: rgba(0,0,0,0.07);
-  box-shadow: 0 8px 30px rgba(0,0,0,0.12);
-}
-:root:not([data-theme="dark"]) .stat-number { color: #1e293b; }
-:root:not([data-theme="dark"]) .stat-label { color: #475569; }
-:root:not([data-theme="dark"]) .perk-icon { color: #2563eb; }
-:root:not([data-theme="dark"]) .stat-item,
-:root:not([data-theme="dark"]) .perk { border-color: rgba(0,0,0,0.1); }
-
 @media (max-width: 768px) {
-  .section3 { padding: 10px 4px; row-gap: 8px; }
+  .section3 { padding: 14px 0 0; row-gap: 8px; }
   .stat-item {
     flex-direction: column;
     align-items: center;
