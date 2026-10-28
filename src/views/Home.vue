@@ -4,14 +4,14 @@
     <!-- â”€â”€ HERO â”€â”€ -->
     <div class="row d-flex justify-content-center ms-3 mx-3 bg-image principal mt-3 bg-body-tertiary rounded-4 align-items-md-stretch">
 
-      <div class="col-md-6 d-flex align-items-stretch py-4">
+      <div class="col-md-6 col-lg-8 d-flex align-items-stretch py-4">
         <!-- Panel de cristal: titular, prueba social y botones a la izquierda;
              el vídeo en el móvil a la derecha, a toda la altura del bloque -->
         <div class="hero-panel w-100">
           <h1 class="hero-title">
             <span class="prof">Limpieza de cristales <br class="br-movil">y ventanas en Madrid</span>
           </h1>
-          <p class="textAnimation hero-sub">Ventanas · escaparates · oficinas · comunidades · altura · agua a presión</p>
+          <p class="textAnimation hero-sub">Ventanas · escaparates · oficinas · comunidades · altura · agua a presión</p>
 
           <p class="hero-proof">
             <span class="hero-proof-item"><span class="hero-proof-stars">★★★★★</span><strong>5.0</strong> en Google</span> <span class="hero-proof-sep">·</span> <span class="hero-proof-item">Presupuesto gratis en 24 h</span>
@@ -42,7 +42,7 @@
         </div>
       </div>
 
-      <div class="col-md-6 d-flex align-items-stretch justify-content-center py-4" style="z-index:2;">
+      <div class="col-md-6 col-lg-4 d-flex align-items-stretch justify-content-center py-4" style="z-index:2;">
         <div class="formulario w-100">
 
           <div class="fh">
@@ -372,8 +372,9 @@ function getCookie(cname: string): string {
   padding: 30px;
   transform: translateZ(0); /* capa propia: evita artefactos al repintar el vídeo */
 }
-.br-movil { display: none; }
-.hero-panel .hero-title { grid-area: title; margin: 0 0 22px; font-size: 2.55rem; }
+/* Título siempre en 2 líneas equilibradas */
+.br-movil { display: inline; }
+.hero-panel .hero-title { grid-area: title; margin: 0 0 22px; font-size: 3rem; line-height: 1.05; }
 .hero-panel .hero-sub { grid-area: sub; margin: 0; }
 .hero-panel .hero-proof { grid-area: proof; margin: 0; align-self: center; }
 /* Valoración y presupuesto, cada uno en su línea (al lado del móvil no caben juntos) */
@@ -382,7 +383,7 @@ function getCookie(cname: string): string {
 .hero-panel .hero-ctas  { grid-area: ctas; margin-top: 18px; align-self: end; flex-direction: column; gap: 10px; }
 /* Botones apilados y del mismo ancho, como en el móvil */
 .hero-panel .hero-ctas .btn { width: 100%; max-width: 300px; display: inline-flex; align-items: center; justify-content: center; padding-top: 11px; padding-bottom: 11px; }
-.hero-panel .phone-mockup { grid-area: phone; width: 140px; margin: 0; }
+.hero-panel .phone-mockup { grid-area: phone; width: 175px; margin: 0; }
 .phone-mockup {
   position: relative;
   width: 128px;
@@ -482,7 +483,8 @@ function getCookie(cname: string): string {
 .fh-accent { background: linear-gradient(90deg, #60a5fa, #93c5fd); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
 
 .ff { display: flex; gap: 10px; margin-bottom: 13px; }
-.ff-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+/* Formulario estrecho (1/3 del ancho): nombre y teléfono uno bajo otro */
+.ff-row { display: grid; grid-template-columns: 1fr; gap: 0; }
 .ff-icon {
   width: 34px; min-width: 34px; height: 34px;
   display: flex; align-items: center; justify-content: center;
