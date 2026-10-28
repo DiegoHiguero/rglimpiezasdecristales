@@ -374,8 +374,10 @@ function getCookie(cname: string): string {
 /* Valoración y presupuesto, cada uno en su línea (al lado del móvil no caben juntos) */
 .hero-proof-item { display: block; }
 .hero-proof-sep { display: none; }
-.hero-panel .hero-ctas  { grid-area: ctas; margin-top: 18px; align-self: end; }
-.hero-panel .phone-mockup { grid-area: phone; width: 128px; margin: 0; }
+.hero-panel .hero-ctas  { grid-area: ctas; margin-top: 18px; align-self: end; flex-direction: column; gap: 10px; }
+/* Botones apilados y del mismo ancho, como en el móvil */
+.hero-panel .hero-ctas .btn { width: 100%; max-width: 300px; display: inline-flex; align-items: center; justify-content: center; padding-top: 11px; padding-bottom: 11px; }
+.hero-panel .phone-mockup { grid-area: phone; width: 140px; margin: 0; }
 .phone-mockup {
   position: relative;
   width: 128px;
