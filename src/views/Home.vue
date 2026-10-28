@@ -9,7 +9,7 @@
              el vídeo en el móvil a la derecha, a toda la altura del bloque -->
         <div class="hero-panel w-100">
           <h1 class="hero-title">
-            <span class="prof">Limpieza de cristales y ventanas en Madrid</span>
+            <span class="prof">Limpieza de cristales <br class="br-movil">y ventanas en Madrid</span>
           </h1>
           <p class="textAnimation hero-sub">Ventanas · escaparates · oficinas · comunidades · altura · agua a presión</p>
 
@@ -365,6 +365,7 @@ function getCookie(cname: string): string {
   padding: 30px;
   transform: translateZ(0); /* capa propia: evita artefactos al repintar el vídeo */
 }
+.br-movil { display: none; }
 .hero-panel .hero-title { grid-area: title; margin: 0 0 4px; font-size: 2.55rem; }
 .hero-panel .hero-sub { grid-area: sub; margin: 0; align-self: end; }
 .hero-panel .hero-proof { grid-area: proof; margin-top: 16px; }
@@ -688,24 +689,28 @@ function getCookie(cname: string): string {
   .hero-panel {
     grid-template-columns: 1fr auto;
     grid-template-areas:
-      "title phone"
+      "title title"
       "sub   phone"
-      "proof proof"
-      "ctas  ctas";
-    /* El espacio sobrante junto al móvil va debajo de los servicios, no entre ellos y el título */
-    grid-template-rows: auto 1fr auto auto;
+      "proof phone"
+      "ctas  phone";
+    /* Servicios, valoración y botones, centrados en vertical junto al móvil */
+    grid-template-rows: auto 1fr auto 1fr;
     column-gap: 16px;
     padding: 20px 16px;
   }
-  /* El título se ajusta al ancho de su columna */
-  .hero-panel .hero-title { font-size: clamp(1.5rem, 8vw, 2.2rem); line-height: 1.05; padding-top: 0; }
+  /* Título encima de todo, a lo ancho del panel */
+  /* Título en 2 líneas que ocupan el ancho del panel */
+  .hero-panel .hero-title { font-size: 8.4vw; line-height: 1.05; padding-top: 0; margin-bottom: 14px; white-space: nowrap; }
+  .br-movil { display: inline; }
   .hero-panel .hero-sub { font-size: 0.85rem; margin-top: 10px; }
-  /* Valoración en una línea a todo el ancho, con su punto separador */
-  .hero-panel .hero-proof { font-size: 0.8rem; margin-top: 16px; }
-  .hero-proof-item { display: inline; white-space: nowrap; }
-  .hero-proof-sep { display: inline; }
+  .hero-panel .hero-proof { font-size: clamp(0.7rem, 3.3vw, 0.8rem); margin-top: 12px; align-self: start; }
+  .hero-panel .hero-proof-item { white-space: nowrap; }
+  .hero-panel .hero-proof-stars { letter-spacing: 0; }
   .hero-panel .phone-mockup { width: clamp(110px, 31vw, 150px); margin: 0; align-self: center; }
-  .hero-panel .hero-sub { align-self: start; }
+  .hero-panel .hero-sub { align-self: end; }
+  /* Botones apilados en la columna del texto */
+  .hero-panel .hero-ctas { flex-direction: column; gap: 8px; margin-top: 14px; align-self: start; }
+  .hero-panel .hero-ctas .btn { flex: none; width: 100%; justify-content: center; display: inline-flex; align-items: center; white-space: nowrap; font-size: 0.9rem; padding: 9px 10px !important; }
 }
 @media (max-width: 480px) {
   .ff-row { grid-template-columns: 1fr; }
