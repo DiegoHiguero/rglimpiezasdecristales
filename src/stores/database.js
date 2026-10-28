@@ -1,674 +1,628 @@
-import { defineStore } from 'pinia';
-import dayjs from "dayjs";
-import relativeTime from "dayjs/plugin/relativeTime";
+/**
+ * database.js — Store de datos principal.
+ * Lee/escribe directamente sobre las pestañas reales de la hoja de facturación
+ * (CLIENTES, REGISTRO, GASTOS) vía sheetDB.js genérico
+ * (getSheetRaw/appendSheetRow/updateSheetRow/deleteSheetRow), sin columna de ID:
+ * cada fila se identifica por su número de fila (_row), expuesto también como `id`.
+ * Mensajes se gestionan en Firestore (formulario público).
+ */
 
-import {
-    addDoc,
-    collection,
-    deleteDoc,
-    doc,
-    limit,
-    getDocs,
-    query,
-    where,
-    orderBy,
-    serverTimestamp,
-    getDoc,
-    updateDoc,
-    // No utilizados en esta versión: runTransaction, Timestamp, onAuthStateChanged (auth handling is in user store)
-} from 'firebase/firestore';
+import { defineStore } from 'pinia'
+import dayjs from 'dayjs'
+import relativeTime from 'dayjs/plugin/relativeTime'
+import { getSheetRaw, appendSheetRow, updateSheetRow, deleteSheetRow } from '../services/sheetDB'
+import { saveCache, loadCache, hasChanges } from '../services/localCache'
 
-// Si usas Storage, asegúrate de importarlo correctamente
-// import { getStorage, ref as storageRef, getDownloadURL } from 'firebase/storage';
+dayjs.extend(relativeTime)
 
-import { db, auth } from '../firebaseConfig'; // Asegúrate de que auth se importe si es necesario para permisos
-import { useUserStore } from './user'; // Importa el user store para permisos
+// ─── Pestañas y cabeceras reales ───────────────────────────────────────────────
 
+const TAB = {
+  clientes:  'CLIENTES',
+  facturas:  'REGISTRO',
+  gastos:    'GASTOS',
+}
 
-// Extender dayjs para usar from() para fechas relativas
-dayjs.extend(relativeTime);
+const CLIENTES_HEADERS = ['Nombre / Razón social', 'NIF/CIF', 'Dirección', 'Teléfono', 'Email', 'Persona contacto', 'Notas', 'Precio habitual', 'Categoria']
+const FACTURAS_HEADERS = ['Nº Factura', 'Fecha', 'Cliente', 'NIF', 'Concepto', 'Base', 'IVA', 'Total', 'Estado', 'F. cobro', 'Trim.', 'Enlace PDF', 'Notas']
+const GASTOS_HEADERS   = ['Fecha', 'Proveedor', 'NIF', 'Concepto', 'Categoría', 'Base', 'IVA sop.', 'Total', '% Ded.', 'IVA deduc.', 'Base deduc.', 'Trim.', 'Recibo (foto)', 'Nº Factura']
+
+// ─── Helpers de formato (la hoja usa formato español: 1.234,56 € y DD/MM/AAAA) ──
+
+function parseEuroNumber(str) {
+  if (str === null || str === undefined || str === '') return 0
+  if (typeof str === 'number') return str
+  const s = String(str).replace(/[€\s]/g, '').trim()
+  if (!s) return 0
+  const n = parseFloat(s.replace(/\./g, '').replace(',', '.'))
+  return isNaN(n) ? 0 : n
+}
+
+function formatEuroNumber(n) {
+  return (Number(n) || 0).toFixed(2).replace('.', ',')
+}
+
+function isoToEuDate(iso) {
+  if (!iso) return ''
+  const d = dayjs(iso)
+  return d.isValid() ? d.format('DD/MM/YYYY') : String(iso)
+}
+
+function euDateToIso(eu) {
+  if (!eu) return ''
+  const [d, m, y] = String(eu).trim().split('/')
+  if (!d || !m || !y) return ''
+  return `${y}-${m.padStart(2, '0')}-${d.padStart(2, '0')}`
+}
+
+function quarterOf(iso) {
+  if (!iso) return ''
+  const d = dayjs(iso)
+  return d.isValid() ? `T${Math.floor(d.month() / 3) + 1}` : ''
+}
+
+function computeNextFactura(limpiezas) {
+  const year   = new Date().getFullYear()
+  const prefix = `F-${year}-`
+  let maxSeq = 0
+  for (const l of limpiezas) {
+    if (l.factura?.startsWith(prefix)) {
+      const n = parseInt(l.factura.slice(prefix.length)) || 0
+      if (n > maxSeq) maxSeq = n
+    }
+  }
+  return `${prefix}${String(maxSeq + 1).padStart(3, '0')}`
+}
+
+function matchesMonthYear(isoDateStr, month, year) {
+  if (!isoDateStr) return false
+  const d = dayjs(isoDateStr)
+  const yearOk  = !year  || d.year()  === parseInt(year)
+  const monthOk = month === '' || d.month() === parseInt(month)
+  return yearOk && monthOk
+}
+
+// ─── Mapeo fila ↔ objeto ────────────────────────────────────────────────────────
+
+function clienteFromRow(r) {
+  return {
+    id:              r._row,
+    _row:            r._row,
+    nombre:          r['Nombre / Razón social'] || '',
+    nifCif:          r['NIF/CIF'] || '',
+    direccion:       r['Dirección'] || '',
+    telefono:        r['Teléfono'] || '',
+    email:           r['Email'] || '',
+    personaContacto: r['Persona contacto'] || '',
+    notas:           r['Notas'] || '',
+    precioHabitual:  parseEuroNumber(r['Precio habitual']),
+    tipoCliente:     r['Categoria'] || '',
+  }
+}
+
+function clienteToRow(d) {
+  return {
+    'Nombre / Razón social': d.nombre || '',
+    'NIF/CIF':               d.nifCif || '',
+    'Dirección':             d.direccion || '',
+    'Teléfono':               d.telefono || '',
+    'Email':                 d.email || '',
+    'Persona contacto':      d.personaContacto || '',
+    'Notas':                 d.notas || '',
+    'Precio habitual':       d.precioHabitual ? formatEuroNumber(d.precioHabitual) : '',
+    'Categoria':             d.tipoCliente || '',
+  }
+}
+
+function facturaFromRow(r) {
+  const fechaIso = euDateToIso(r['Fecha'])
+  const estado   = r['Estado'] || 'Pendiente'
+  return {
+    id:                     r._row,
+    _row:                   r._row,
+    factura:                r['Nº Factura'] || '',
+    fechaPrincipalLimpieza: fechaIso,
+    clienteId:              r['Cliente'] || '',   // nombre del cliente — hace de clave de referencia
+    cliente:                r['Cliente'] || '',    // alias de solo lectura para mostrar en tablas
+    nif:                    r['NIF'] || '',
+    descripcion:            r['Concepto'] || '',
+    base:                   parseEuroNumber(r['Base']),
+    iva:                    parseEuroNumber(r['IVA']),
+    precioBruto:            parseEuroNumber(r['Total']),
+    importe:                parseEuroNumber(r['Total']),
+    estado,
+    fechaPago:              estado === 'Pagada' ? (euDateToIso(r['F. cobro']) || fechaIso) : null,
+    trimestre:              r['Trim.'] || '',
+    enlacePDF:              r['Enlace PDF'] || '',
+    notas:                  r['Notas'] || '',
+  }
+}
+
+function facturaToRow(d) {
+  const total = Number(d.precioBruto ?? d.importe ?? 0)
+  const base  = d.base != null ? Number(d.base) : total / 1.21
+  const iva   = d.iva  != null ? Number(d.iva)  : total - base
+  const fecha = d.fechaPrincipalLimpieza || ''
+  return {
+    'Nº Factura': d.factura || '',
+    'Fecha':      isoToEuDate(fecha),
+    'Cliente':    d.clienteId || '',
+    'NIF':        d.nif || '',
+    'Concepto':   d.descripcion || 'LIMPIEZA DE CRISTALES',
+    'Base':       formatEuroNumber(base),
+    'IVA':        formatEuroNumber(iva),
+    'Total':      formatEuroNumber(total),
+    'Estado':     d.estado || (d.fechaPago ? 'Pagada' : 'Pendiente'),
+    'F. cobro':   d.fechaPago ? isoToEuDate(d.fechaPago) : '',
+    'Trim.':      d.trimestre || quarterOf(fecha),
+    'Enlace PDF': d.enlacePDF || '',
+    'Notas':      d.notas || '',
+  }
+}
+
+function gastoFromRow(r) {
+  return {
+    id:            r._row,
+    _row:          r._row,
+    fechaFactura:  euDateToIso(r['Fecha']),
+    proveedor:     r['Proveedor'] || '',
+    nif:           r['NIF'] || '',
+    tipo:          r['Categoría'] || 'Otros',
+    concepto:      r['Concepto'] || '',
+    precioSinIVA:  parseEuroNumber(r['Base']),
+    iva:           parseEuroNumber(r['IVA sop.']),
+    precioConIVA:  parseEuroNumber(r['Total']),
+    trimestre:     r['Trim.'] || '',
+    numeroFactura: r['Nº Factura'] || '',
+  }
+}
+
+function gastoToRow(d) {
+  const total = Number(d.precioConIVA ?? 0)
+  const base  = total / 1.21
+  const ivaSop = total - base
+  const fecha = d.fechaFactura || ''
+  return {
+    'Fecha':          isoToEuDate(fecha),
+    'Proveedor':      d.proveedor || '',
+    'NIF':            d.nif || '',
+    'Concepto':       d.concepto || d.tipo || '',
+    'Categoría':      d.tipo || 'Otros',
+    'Base':           formatEuroNumber(base),
+    'IVA sop.':       formatEuroNumber(ivaSop),
+    'Total':          formatEuroNumber(total),
+    '% Ded.':         '100%',
+    'IVA deduc.':     formatEuroNumber(ivaSop),
+    'Base deduc.':    formatEuroNumber(base),
+    'Trim.':          d.trimestre || quarterOf(fecha),
+    'Recibo (foto)':  d.recibo || '',
+    'Nº Factura':     d.numeroFactura || '',
+  }
+}
+
+// ─── Store ────────────────────────────────────────────────────────────────────
 
 export const useDatabaseStore = defineStore('database', {
-    state: () => ({
-        // --- ESTADO PARA GESTIÓN DE LIMPIEZAS MENSUALES ---
-        limpiezas: [], // Lista principal de registros de limpieza
-        nextFacturaFormatted: 'Calculando...', // Próximo número de factura
-        
-        // Estados de carga y error para operaciones de limpieza
-        isLoadingLimpiezas: false, // Carga al obtener limpiezas
-        errorLimpiezas: null,     // Errores al obtener limpiezas
-        isAddingLimpieza: false,  // Carga al añadir limpieza
-        addLimpiezaError: null,   // Errores al añadir limpieza
-        isUpdatingLimpieza: false,// Carga al actualizar limpieza
-        updateLimpiezaError: null,// Errores al actualizar limpieza
-        isDeletingLimpieza: false,// Carga al eliminar limpieza
-        deleteLimpiezaError: null,// Errores al eliminar limpieza
+  state: () => ({
+    // Limpiezas / Facturas
+    limpiezas:          [],
+    _allLimpiezas:      [],       // caché sin filtrar
+    nextFacturaFormatted: 'Calculando...',
+    isLoadingLimpiezas: false,
+    errorLimpiezas:     null,
+    isAddingLimpieza:   false,
+    addLimpiezaError:   null,
+    isUpdatingLimpieza: false,
+    updateLimpiezaError: null,
+    isDeletingLimpieza: false,
+    deleteLimpiezaError: null,
+    selectedMonth: '',
+    selectedYear:  '',
 
-        // Filtros actuales para la vista de limpiezas
-        selectedMonth: '',
-        selectedYear: '',
+    // Clientes
+    clientes:           [],
+    isLoadingClientes:  false,
+    errorClientes:      null,
+    isAddingClient:     false,
+    addClientError:     null,
+    isUpdatingClient:   false,
+    updateClientError:  null,
+    isDeletingClient:   false,
+    deleteClientError:  null,
 
-        // --- ESTADO PARA GESTIÓN DE CLIENTES ---
-        clientes: [], // Lista de clientes
-        
-        // Estados de carga y error para operaciones de clientes
-        isLoadingClientes: false, // Carga al obtener clientes
-        errorClientes: null,     // Errores al obtener clientes
-        isAddingClient: false,   // Carga al añadir cliente
-        addClientError: null,    // Errores al añadir cliente
-        isUpdatingClient: false, // Carga al actualizar cliente
-        updateClientError: null, // Errores al actualizar cliente
-        isDeletingClient: false, // Carga al eliminar cliente
-        deleteClientError: null, // Errores al eliminar cliente
-        // --- ESTADO PARA GESTIÓN DE GASTOS ---
-gastos: [],
-isLoadingGastos: false,
-errorGastos: null,
-isAddingGasto: false,
-addGastoError: null,
-isUpdatingGasto: false,
-updateGastoError: null,
-isDeletingGasto: false,
-deleteGastoError: null,
-selectedMonthGastos: '',
-selectedYearGastos: '',
-    }),
+    // Gastos
+    gastos:             [],
+    _allGastos:         [],
+    isLoadingGastos:    false,
+    errorGastos:        null,
+    isAddingGasto:      false,
+    addGastoError:      null,
+    isUpdatingGasto:    false,
+    updateGastoError:   null,
+    isDeletingGasto:    false,
+    deleteGastoError:   null,
+    selectedMonthGastos: '',
+    selectedYearGastos:  '',
+  }),
 
-    actions: {
-        // --- ACCIONES DE GESTIÓN DE GASTOS ---
+  // ─── Getters ──────────────────────────────────────────────────────────────
 
-async addGasto(gastoData) {
-  this.isAddingGasto = true;
-  this.addGastoError = null;
-  try {
-    const dataToSave = {
-      ...gastoData,
-      createdAt: serverTimestamp(),
-    };
-    const docRef = await addDoc(collection(db, 'gastosMensuales'), dataToSave);
-    console.log("Nuevo gasto añadido con ID:", docRef.id);
-    await this.fetchGastos(this.selectedMonthGastos, this.selectedYearGastos);
-  } catch (err) {
-    this.addGastoError = err;
-    console.error("Error al añadir gasto:", err);
-    throw err;
-  } finally {
-    this.isAddingGasto = false;
-  }
-},
+  getters: {
+    pendingLimpiezas: (state) =>
+      state._allLimpiezas
+        .filter(l => l.estado !== 'Pagada')
+        .sort((a, b) => new Date(a.fechaPrincipalLimpieza || 0) - new Date(b.fechaPrincipalLimpieza || 0)),
 
-async fetchGastos(month = '', year = '') {
-  this.isLoadingGastos = true;
-  this.errorGastos = null;
-  this.selectedMonthGastos = month;
-  this.selectedYearGastos = year;
+    getClientById: (state) => (nombre) =>
+      state.clientes.find(c => c.nombre === nombre) || null,
 
-  try {
-    const gastosRef = collection(db, 'gastosMensuales');
-    let q;
+    totalBrutoLimpiezas: (state) =>
+      state.limpiezas.reduce((s, l) => s + (Number(l.precioBruto) || 0), 0),
 
-    if (year !== '') {
-      const yearNum = parseInt(year);
-      const monthNum = month !== '' ? parseInt(month) : null;
-      let startDate, endDate;
+    totalNetoLimpiezas: (state) =>
+      state.limpiezas.reduce((s, l) => {
+        const b = Number(l.precioBruto)
+        return s + (isNaN(b) ? 0 : b - b * 0.232)
+      }, 0),
 
-      if (monthNum !== null) {
-        startDate = dayjs().year(yearNum).month(monthNum).startOf('month').format('YYYY-MM-DD');
-        endDate = dayjs().year(yearNum).month(monthNum).endOf('month').format('YYYY-MM-DD');
+    totalCotizacionLimpiezas: (state) =>
+      state.limpiezas.reduce((s, l) => {
+        const b = Number(l.precioBruto)
+        return s + (isNaN(b) ? 0 : b * 0.232)
+      }, 0),
+
+    totalGastosConIVA: (state) =>
+      state.gastos.reduce((s, g) => s + (Number(g.precioConIVA) || 0), 0),
+
+    totalGastosSinIVA: (state) =>
+      state.gastos.reduce((s, g) => s + (Number(g.precioSinIVA) || 0), 0),
+
+    totalIVA: (state) =>
+      state.gastos.reduce((s, g) => s + (Number(g.iva) || 0), 0),
+
+    isProcessing: (state) =>
+      state.isLoadingLimpiezas || state.isAddingLimpieza || state.isUpdatingLimpieza || state.isDeletingLimpieza ||
+      state.isLoadingClientes  || state.isAddingClient   || state.isUpdatingClient   || state.isDeletingClient,
+
+    hasError: (state) =>
+      state.errorLimpiezas || state.addLimpiezaError || state.updateLimpiezaError || state.deleteLimpiezaError ||
+      state.errorClientes  || state.addClientError   || state.updateClientError   || state.deleteClientError || null,
+  },
+
+  // ─── Actions ──────────────────────────────────────────────────────────────
+
+  actions: {
+
+    // ── Factura numbering (esquema real: F-AAAA-NNN, secuencia continua por año) ──
+
+    /**
+     * Lee la hoja EN VIVO (no la caché local) y calcula el siguiente número
+     * de factura. Es la fuente autoritativa que se usa justo antes de
+     * escribir una factura nueva, para no duplicar números aunque la
+     * caché en memoria esté desactualizada (otra pestaña, otro día, etc.).
+     */
+    async fetchNextFacturaFormattedNumber() {
+      const { records } = await getSheetRaw(TAB.facturas)
+      this.nextFacturaFormatted = computeNextFactura(records.map(facturaFromRow))
+      return this.nextFacturaFormatted
+    },
+
+    // ── Limpiezas / Facturas ───────────────────────────────────────────────
+
+    async fetchLimpiezas(month = '', year = '') {
+      this.selectedMonth = month
+      this.selectedYear  = year
+
+      if (!this._allLimpiezas.length) {
+        const cached = loadCache('limpiezas')
+        if (cached?.records?.length) {
+          this._allLimpiezas = cached.records
+          this.limpiezas = this._filterLimpiezas(cached.records, month, year)
+        }
       } else {
-        startDate = dayjs().year(yearNum).startOf('year').format('YYYY-MM-DD');
-        endDate = dayjs().year(yearNum).endOf('year').format('YYYY-MM-DD');
+        this.limpiezas = this._filterLimpiezas(this._allLimpiezas, month, year)
       }
 
-      q = query(
-        gastosRef,
-        where('fechaFactura', '>=', startDate),
-        where('fechaFactura', '<=', endDate),
-        orderBy('fechaFactura', 'asc')
-      );
-    } else {
-      q = query(gastosRef, orderBy('fechaFactura', 'desc'));
-    }
-
-    const querySnapshot = await getDocs(q);
-    this.gastos = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-  } catch (e) {
-    this.errorGastos = e;
-    console.error("Error al obtener gastos:", e);
-  } finally {
-    this.isLoadingGastos = false;
-  }
-},
-
-async updateGasto(id, updatedData) {
-  this.isUpdatingGasto = true;
-  this.updateGastoError = null;
-  try {
-    const docRef = doc(db, 'gastosMensuales', id);
-    await updateDoc(docRef, updatedData);
-    console.log("Gasto actualizado con ID:", id);
-    await this.fetchGastos(this.selectedMonthGastos, this.selectedYearGastos);
-  } catch (err) {
-    this.updateGastoError = err;
-    console.error("Error al actualizar gasto:", err);
-    throw err;
-  } finally {
-    this.isUpdatingGasto = false;
-  }
-},
-
-async deleteGasto(id) {
-  this.isDeletingGasto = true;
-  this.deleteGastoError = null;
-  try {
-    const docRef = doc(db, 'gastosMensuales', id);
-    await deleteDoc(docRef);
-    console.log("Gasto eliminado con ID:", id);
-    this.gastos = this.gastos.filter(g => g.id !== id);
-  } catch (err) {
-    this.deleteGastoError = err;
-    console.error("Error al eliminar gasto:", err);
-    throw err;
-  } finally {
-    this.isDeletingGasto = false;
-  }
-},
-
-        // --- ACCIONES DE LIMPIEZAS MENSUALES ---
-
-        /**
-         * Añade un nuevo registro de limpieza a Firestore.
-         * Calcula el próximo número de factura y lo asigna.
-         * @param {Object} limpiezaData - Datos del registro de limpieza a añadir.
-         */
-        async addLimpieza(limpiezaData) {
-        this.isAddingLimpieza = true;
-        this.addLimpiezaError = null;
-        try {
-            let finalFacturaNumber;
-
-            // 1. Verificar si limpiezaData ya contiene un número de factura (el manual)
-            // y si no está vacío o solo con espacios.
-            if (limpiezaData.factura && String(limpiezaData.factura).trim() !== '') {
-                finalFacturaNumber = String(limpiezaData.factura).trim(); // Usar el número manual
-            } else {
-                // 2. Si no hay número manual, entonces SÍ, calculamos el siguiente automático.
-                await this.fetchNextFacturaFormattedNumber(); // Asegura el número de factura automático
-                finalFacturaNumber = this.nextFacturaFormatted; // Usar el número automático
-            }
-
-            const dataToSave = {
-                ...limpiezaData,
-                factura: finalFacturaNumber, // <-- ¡Ahora asigna el número de factura final, ya sea manual o automático!
-                createdAt: serverTimestamp(), // Fecha de creación en el servidor
-            };
-
-            const docRef = await addDoc(collection(db, 'limpiezasMensuales'), dataToSave);
-            console.log("Documento de limpieza añadido con ID: ", docRef.id, "y factura #", finalFacturaNumber);
-
-            // Importante: Después de añadir el documento (con factura manual o automática),
-            // necesitamos recalcular el siguiente número automático para futuras adiciones.
-            await this.fetchNextFacturaFormattedNumber(); // Re-calcula para la próxima vez
-
-            // Recarga los datos para que la tabla se actualice y el número de factura se recalcule
-            // Se pasan los filtros actuales para mantener el contexto
-            await this.fetchLimpiezas(this.selectedMonth, this.selectedYear);
-
-        } catch (e) {
-            console.error("Error añadiendo el documento de limpieza: ", e);
-            this.addLimpiezaError = e;
-            throw e; // Re-lanza el error para que el componente lo capture
-        } finally {
-            this.isAddingLimpieza = false;
+      this.isLoadingLimpiezas = true
+      this.errorLimpiezas     = null
+      try {
+        const { records } = await getSheetRaw(TAB.facturas)
+        const fresh = records.map(facturaFromRow)
+        if (hasChanges(this._allLimpiezas, fresh)) {
+          this._allLimpiezas = fresh
+          saveCache('limpiezas', fresh)
+          this.limpiezas = this._filterLimpiezas(fresh, month, year)
         }
-    },
-      async updatePaymentStatus(limpiezaId, newFechaPago, newFormaPago) {
-            this.isUpdatingLimpieza = true; // Usa el estado de carga que ya tienes
-            this.updateLimpiezaError = null; // Limpia errores previos
-
-            // --- Chequeo de permisos (para esta operación sensible) ---
-            const userStore = useUserStore();
-            if (!userStore.userData || (userStore.userData.email !== "higuerodiego@gmail.com" && userStore.userData.email !== "familiahiguero@gmail.com")) {
-                console.warn("Firebase Permissions: Attempted to update payment status without admin privileges or valid user.");
-                this.updateLimpiezaError = new Error("No tienes permisos suficientes para actualizar el estado de pago.");
-                this.isUpdatingLimpieza = false;
-                throw this.updateLimpiezaError;
-            }
-            // --- FIN Chequeo de permisos ---
-
-            try {
-                const docRef = doc(db, 'limpiezasMensuales', limpiezaId);
-                await updateDoc(docRef, {
-                    fechaPago: newFechaPago, // Firestore aceptará null para quitar el campo si newFechaPago es null
-                    formaPago: newFormaPago,
-                });
-
-                console.log(`Pago para limpieza ${limpiezaId} actualizado en Firestore.`);
-
-                // Refetch todas las limpiezas para asegurar que la lista de pendientes se actualice
-                // y el item desaparezca de la vista si se marcó como pagado.
-                await this.fetchLimpiezas(this.selectedMonth, this.selectedYear);
-
-            } catch (error) {
-                console.error("Error al actualizar el estado de pago en Firestore:", error);
-                this.updateLimpiezaError = error;
-                throw error; // Re-lanza el error para que el componente pueda manejarlo
-            } finally {
-                this.isUpdatingLimpieza = false;
-            }
-        },
-        /**
-         * Obtiene los registros de limpiezas mensuales de Firestore, aplicando filtros de mes/año.
-         * @param {string} month - Mes (0-11) como string, o '' para todos.
-         * @param {string} year - Año como string, o '' para todos.
-         */
-               async fetchLimpiezas(month = '', year = '') {
-            this.isLoadingLimpiezas = true;
-            this.errorLimpiezas = null;
-
-            const userStore = useUserStore();
-            if (!userStore.userData || (userStore.userData.email !== "higuerodiego@gmail.com" && userStore.userData.email !== "roys.abreu@gmail.com")) {
-                this.errorLimpiezas = new Error("No tienes permisos suficientes para acceder a la información de limpiezas.");
-                this.isLoadingLimpiezas = false;
-                return;
-            }
-            this.selectedMonth = month;
-            this.selectedYear = year;
-
-            try {
-                let limpiezasRef = collection(db, 'limpiezasMensuales');
-                let combinedDocs = new Map(); // Usamos un Map para almacenar documentos únicos por ID
-
-                if (year !== '') {
-                    const yearNum = parseInt(year);
-                    const monthNum = month !== '' ? parseInt(month) : null;
-
-                    let queryStartDate, queryEndDate;
-                    if (monthNum !== null) {
-                        queryStartDate = dayjs().year(yearNum).month(monthNum).startOf('month').format('YYYY-MM-DD');
-                        queryEndDate = dayjs().year(yearNum).month(monthNum).endOf('month').format('YYYY-MM-DD');
-                    } else {
-                        // Si solo hay año (mes es '')
-                        queryStartDate = dayjs().year(yearNum).startOf('year').format('YYYY-MM-DD');
-                        queryEndDate = dayjs().year(yearNum).endOf('year').format('YYYY-MM-DD');
-                    }
-
-                    // Consulta 1: Basada en 'fechaPrincipalLimpieza'
-                    // Necesitarás un índice compuesto en Firestore para (fechaPrincipalLimpieza ASC, factura DESC)
-                    let q1 = query(
-                        limpiezasRef,
-                        where('fechaPrincipalLimpieza', '>=', queryStartDate),
-                        where('fechaPrincipalLimpieza', '<=', queryEndDate),
-                        orderBy('fechaPrincipalLimpieza', 'asc'), // Necesario para la consulta de rango
-                        orderBy('factura', 'desc') // Orden secundario para la consulta
-                    );
-                    const snapshot1 = await getDocs(q1);
-                    snapshot1.forEach(doc => combinedDocs.set(doc.id, { id: doc.id, ...doc.data() }));
-
-                    // Consulta 2: Basada en 'fechaPago' (solo si hay fecha de pago)
-                    // Necesitarás un índice compuesto en Firestore para (fechaPago ASC, factura DESC)
-                    let q2 = query(
-                        limpiezasRef,
-                        where('fechaPago', '>=', queryStartDate),
-                        where('fechaPago', '<=', queryEndDate),
-                        orderBy('fechaPago', 'asc'), // Necesario para la consulta de rango
-                        orderBy('factura', 'desc') // Orden secundario para la consulta
-                    );
-                    const snapshot2 = await getDocs(q2);
-                    snapshot2.forEach(doc => combinedDocs.set(doc.id, { id: doc.id, ...doc.data() }));
-
-                    // Convertir los documentos únicos del Map a un array
-                    this.limpiezas = Array.from(combinedDocs.values());
-
-                } else {
-                    // Si no hay filtro de mes/año (ambos vacíos), carga todos los registros (comportamiento actual para esta situación)
-                    // Si la colección es muy grande, considera limitar esto o forzar un filtro.
-                    const qAll = query(limpiezasRef, orderBy('factura', 'desc'));
-                    const querySnapshotAll = await getDocs(qAll);
-                    this.limpiezas = querySnapshotAll.docs.map(doc => ({
-                        id: doc.id,
-                        ...doc.data()
-                    }));
-                }
-                
-
-            } catch (e) {
-                this.errorLimpiezas = e;
-                console.error("Error fetching limpiezas:", e);
-            } finally {
-                this.isLoadingLimpiezas = false;
-            }
-        },
-        /**
-         * Calcula el próximo número de factura secuencial basado en el mes y año actuales.
-         */
-        async fetchNextFacturaFormattedNumber() {
-            try {
-                const now = new Date();
-                const year = now.getFullYear();
-                const month = (now.getMonth() + 1).toString().padStart(2, '0'); // Mes 1-indexado, con 2 dígitos
-
-                const prefix = `F${year}-${month}-`;
-
-                const q = query(
-                    collection(db, 'limpiezasMensuales'),
-                    where('factura', '>=', prefix),
-                    where('factura', '<', prefix + '\uf8ff'), // Rango para buscar facturas con el prefijo
-                    orderBy('factura', 'desc'),
-                    limit(1) // Solo necesitamos la última
-                );
-
-                const querySnapshot = await getDocs(q);
-                let nextSequentialNumber = 1;
-
-                if (!querySnapshot.empty) {
-                    const lastFacturaDoc = querySnapshot.docs[0];
-                    const lastFactura = lastFacturaDoc.data().factura;
-
-                    // Extrae el número secuencial de la última factura (ej. 'F2023-11-005' -> 5)
-                    const parts = lastFactura.split('-');
-                    const currentSequential = parseInt(parts[parts.length - 1], 10);
-
-                    nextSequentialNumber = currentSequential + 1;
-                }
-
-                // Formatea el número secuencial a 3 dígitos (ej. 1 -> '001')
-                const formattedSequential = nextSequentialNumber.toString().padStart(3, '0');
-                this.nextFacturaFormatted = `${prefix}${formattedSequential}`;
-
-            } catch (err) {
-                console.error("Error al calcular el próximo número de factura:", err);
-                this.nextFacturaFormatted = 'Error al calcular factura';
-                throw err; // Re-lanza el error
-            }
-        },
-
-        /**
-         * Actualiza un registro de limpieza existente en Firestore.
-         * @param {string} id - ID del documento de limpieza a actualizar.
-         * @param {Object} updatedData - Datos a actualizar.
-         */
-        async updateLimpieza(id, updatedData) {
-            this.isUpdatingLimpieza = true;
-            this.updateLimpiezaError = null;
-
-            try {
-                const docRef = doc(db, 'limpiezasMensuales', id);
-                await updateDoc(docRef, updatedData);
-
-                console.log("Documento de limpieza actualizado con ID:", id);
-
-                // Re-fetch para asegurar la consistencia de los datos en la tabla
-                await this.fetchLimpiezas(this.selectedMonth, this.selectedYear);
-
-            } catch (err) {
-                this.updateLimpiezaError = err;
-                console.error("Error actualizando limpieza:", err);
-                throw err; // Re-lanza el error para que el componente lo maneje
-            } finally {
-                this.isUpdatingLimpieza = false;
-            }
-        },
-
-        /**
-         * Elimina un registro de limpieza de Firestore.
-         * @param {string} id - ID del documento de limpieza a eliminar.
-         */
-        async deleteLimpieza(id) {
-            this.isDeletingLimpieza = true;
-            this.deleteLimpiezaError = null;
-
-            try {
-                const docRef = doc(db, 'limpiezasMensuales', id);
-                await deleteDoc(docRef);
-
-                console.log("Documento de limpieza eliminado con ID:", id);
-
-                // Actualizar estado local: filtrar el array para remover el documento
-                this.limpiezas = this.limpiezas.filter(limpieza => limpieza.id !== id);
-
-            } catch (err) {
-                this.deleteLimpiezaError = err;
-                console.error("Error eliminando limpieza:", err);
-                throw err; // Re-lanza el error
-            } finally {
-                this.isDeletingLimpieza = false;
-            }
-        },
-
-        // --- ACCIONES DE GESTIÓN DE CLIENTES ---
-
-        /**
-         * Añade un nuevo cliente a Firestore.
-         * @param {Object} clientData - Datos del cliente a añadir.
-         */
-        async addClient(clientData) {
-            this.isAddingClient = true;
-            this.addClientError = null;
-            try {
-                const dataToSave = {
-                    ...clientData,
-                    createdAt: serverTimestamp(),
-                };
-                const docRef = await addDoc(collection(db, 'clientes'), dataToSave);
-                console.log("Nuevo cliente añadido con ID:", docRef.id);
-            } catch (err) {
-                this.addClientError = err;
-                console.error("Error al añadir el cliente:", err);
-                throw err;
-            } finally {
-                this.isAddingClient = false;
-            }
-        },
-
-        /**
-         * Obtiene todos los clientes de Firestore.
-         */
-        async fetchClientes() {
-            this.isLoadingClientes = true;
-            this.errorClientes = null;
-            try {
-                const clientesQuery = query(collection(db, 'clientes'), orderBy('nombre', 'asc'));
-                const querySnapshot = await getDocs(clientesQuery);
-
-                this.clientes = querySnapshot.docs.map(doc => ({
-                    id: doc.id,
-                    ...doc.data(),
-                }));
-            } catch (err) {
-                this.errorClientes = err;
-                console.error("Error fetching clientes:", err);
-                this.clientes = []; // Limpia la lista en caso de error
-            } finally {
-                this.isLoadingClientes = false;
-            }
-        },
-
-        /**
-         * Obtiene un cliente específico por su ID.
-         * Intenta buscarlo en el estado local primero (caché), luego en Firestore.
-         * @param {string} clientId - ID del cliente a buscar.
-         * @returns {Object|null} El objeto cliente o null si no se encuentra.
-         */
-        async fetchClientById(clientId) {
-            if (!clientId) {
-                console.warn("fetchClientById llamado sin clientId.");
-                return null;
-            }
-            // Intenta encontrarlo en la lista de clientes ya cargados (caché)
-            const cachedClient = this.clientes.find(c => c.id === clientId);
-            if (cachedClient) {
-                return cachedClient;
-            }
-
-            // Si no está en caché, ve a Firestore
-            try {
-                const clientRef = doc(db, 'clientes', clientId);
-                const clientSnap = await getDoc(clientRef);
-                if (clientSnap.exists()) {
-                    console.log(`Cliente ${clientId} encontrado en Firestore.`);
-                    const fetchedClient = { id: clientSnap.id, ...clientSnap.data() };
-                    // Añade el cliente a la caché local si no estaba
-                    this.clientes.push(fetchedClient);
-                    return fetchedClient;
-                } else {
-                    console.log(`No se encontró el cliente con ID: ${clientId}`);
-                    return null;
-                }
-            } catch (error) {
-                console.error(`Error al obtener cliente con ID ${clientId}:`, error);
-                throw error;
-            }
-        },
-
-        /**
-         * Actualiza un cliente existente en Firestore.
-         * @param {string} clientId - ID del cliente a actualizar.
-         * @param {Object} clientData - Datos a actualizar.
-         */
-        async updateClient(clientId, clientData) {
-            this.isUpdatingClient = true;
-            this.updateClientError = null;
-            try {
-                const clientRef = doc(db, 'clientes', clientId);
-                await updateDoc(clientRef, clientData);
-
-                console.log("Cliente actualizado con ID:", clientId);
-
-                // Actualizar el estado local de clientes después de la actualización exitosa
-                const index = this.clientes.findIndex(c => c.id === clientId);
-                if (index !== -1) {
-                    // Actualiza el objeto en el array, manteniendo la reactividad.
-                    this.clientes[index] = { ...this.clientes[index], ...clientData };
-                }
-            } catch (error) {
-                console.error("Error al actualizar cliente:", error);
-                this.updateClientError = error;
-                throw error;
-            } finally {
-                this.isUpdatingClient = false;
-            }
-        },
-
-        /**
-         * Elimina un cliente de Firestore.
-         * @param {string} clientId - ID del cliente a eliminar.
-         */
-        async deleteClient(clientId) {
-            this.isDeletingClient = true;
-            this.deleteClientError = null;
-            try {
-                const clientRef = doc(db, 'clientes', clientId);
-                await deleteDoc(clientRef);
-
-                console.log("Cliente eliminado con ID:", clientId);
-
-                // Eliminar el cliente del estado local
-                this.clientes = this.clientes.filter(c => c.id !== clientId);
-            } catch (error) {
-                console.error("Error al eliminar cliente:", error);
-                this.deleteClientError = error;
-                throw error;
-            } finally {
-                this.isDeletingClient = false;
-            }
-        },
-
-        // --- ACCIONES DE UTILIDAD ---
-
-        /**
-         * Calcula los días restantes desde la última fecha de limpieza.
-         * @param {Array} dias - Array de objetos con fechas de limpieza.
-         * @returns {string} - Cadena de texto indicando el tiempo relativo o "aun no hay datos".
-         */
-        ultimoDia(dias) {
-            if (dias && dias.length > 0) {
-                const lastday = dias[dias.length - 1].fechaLimp;
-                const date = dayjs(lastday);
-                const lastDayFormat = date.format('DD-MM-YYYY');
-                return dayjs(lastDayFormat).fromNow(); // Usa fromNow() para tiempo relativo
-            } else {
-                return "aun no hay datos";
-            }
-        },
+        // Vista previa del próximo número — barata (ya tenemos "fresh" en memoria)
+        // y siempre se recalcula, para que nunca se quede en "Calculando...".
+        this.nextFacturaFormatted = computeNextFactura(fresh)
+      } catch (e) {
+        this.errorLimpiezas = e
+        console.error('[DB] fetchLimpiezas:', e)
+      } finally {
+        this.isLoadingLimpiezas = false
+      }
     },
 
-    getters: {
-        // --- GETTERS DE GASTOS ---
-totalGastosConIVA: (state) => {
-  return state.gastos.reduce((acc, g) => acc + (Number(g.precioConIVA) || 0), 0);
-},
-totalGastosSinIVA: (state) => {
-  return state.gastos.reduce((acc, g) => acc + (Number(g.precioSinIVA) || 0), 0);
-},
-totalIVA: (state) => {
-  return state.gastos.reduce((acc, g) => acc + (Number(g.iva) || 0), 0);
-},
+    _filterLimpiezas(all, month, year) {
+      if (!year) return [...all]
+      return all.filter(l =>
+        matchesMonthYear(l.fechaPrincipalLimpieza, month, year) ||
+        matchesMonthYear(l.fechaPago, month, year)
+      )
+    },
 
-        /**
-         * Calcula el total bruto de todas las limpiezas cargadas.
-         * @returns {number}
-         */
-        totalBrutoLimpiezas: (state) => {
-            return state.limpiezas.reduce((acc, limpieza) => {
-                const bruto = Number(limpieza.precioBruto);
-                return acc + (isNaN(bruto) ? 0 : bruto);
-            }, 0);
-        },
-       pendingLimpiezas: (state) => {
-            // Filtra las limpiezas que no tienen fechaPago (es decir, null o una cadena vacía)
-            return state.limpiezas.filter(limpieza => !limpieza.fechaPago)
-                                  .sort((a, b) => {
-                                      // Ordena por fechaPrincipalLimpieza, las más antiguas primero
-                                      const dateA = a.fechaPrincipalLimpieza ? new Date(a.fechaPrincipalLimpieza) : new Date(0); // Usa new Date(0) para limpiezas sin fecha, poniéndolas al principio
-                                      const dateB = b.fechaPrincipalLimpieza ? new Date(b.fechaPrincipalLimpieza) : new Date(0);
-                                      return dateA.getTime() - dateB.getTime();
-                                  });
-        },
-          getClientById: (state) => (clientId) => {
-            return state.clientes.find(cliente => cliente.id === clientId);
-        },
-        /**
-         * Calcula el total neto de todas las limpiezas cargadas.
-         * Aplica un cálculo del 23.2% de cotización.
-         * @returns {number}
-         */
-        totalNetoLimpiezas: (state) => {
-            return state.limpiezas.reduce((acc, limpieza) => {
-                const bruto = Number(limpieza.precioBruto);
-                if (isNaN(bruto)) return acc;
-                const cotizacion = bruto * 0.232;
-                return acc + (bruto - cotizacion);
-            }, 0);
-        },
-
-        /**
-         * Calcula la cotización total de todas las limpiezas cargadas.
-         * @returns {number}
-         */
-        totalCotizacionLimpiezas: (state) => {
-            return state.limpiezas.reduce((acc, limpieza) => {
-                const bruto = Number(limpieza.precioBruto);
-                return acc + (isNaN(bruto) ? 0 : bruto * 0.232);
-            }, 0);
-        },
-
-        /**
-         * Determina si alguna operación (añadir, actualizar, eliminar) está en curso.
-         * @returns {boolean}
-         */
-        isProcessing: (state) => {
-            return state.isLoadingLimpiezas || state.isAddingLimpieza || state.isUpdatingLimpieza || state.isDeletingLimpieza ||
-                   state.isLoadingClientes || state.isAddingClient || state.isUpdatingClient || state.isDeletingClient;
-        },
-        
-        /**
-         * Combina todos los errores activos en un solo objeto o null.
-         * Útil para mostrar un mensaje de error general.
-         */
-        hasError: (state) => {
-            return state.errorLimpiezas || state.addLimpiezaError || state.updateLimpiezaError || state.deleteLimpiezaError ||
-                   state.errorClientes || state.addClientError || state.updateClientError || state.deleteClientError || null;
+    async addLimpieza(data) {
+      this.isAddingLimpieza = true
+      this.addLimpiezaError = null
+      try {
+        let factura = data.factura?.trim()
+        if (!factura) {
+          // Autoritativo: lee la hoja en vivo justo antes de guardar, no la
+          // caché en memoria — evita duplicar el número si ha pasado tiempo
+          // desde la última carga (u otra factura se creó mientras tanto).
+          factura = await this.fetchNextFacturaFormattedNumber()
         }
+        const c = this.clientes.find(cl => cl.nombre === data.clienteId)
+
+        await appendSheetRow(TAB.facturas, FACTURAS_HEADERS, facturaToRow({
+          ...data, factura, nif: c?.nifCif || '',
+        }))
+        await this.fetchLimpiezas(this.selectedMonth, this.selectedYear)
+        return factura
+      } catch (e) {
+        this.addLimpiezaError = e
+        console.error('[DB] addLimpieza:', e)
+        throw e
+      } finally {
+        this.isAddingLimpieza = false
+      }
     },
-});
+
+    async updateLimpieza(row, data) {
+      this.isUpdatingLimpieza  = true
+      this.updateLimpiezaError = null
+      try {
+        const existing = this._allLimpiezas.find(l => l._row === row) || {}
+        const c = this.clientes.find(cl => cl.nombre === (data.clienteId ?? existing.clienteId))
+        const merged = { ...existing, ...data, nif: c?.nifCif || existing.nif }
+        await updateSheetRow(TAB.facturas, row, FACTURAS_HEADERS, facturaToRow(merged))
+        await this.fetchLimpiezas(this.selectedMonth, this.selectedYear)
+      } catch (e) {
+        this.updateLimpiezaError = e
+        console.error('[DB] updateLimpieza:', e)
+        throw e
+      } finally {
+        this.isUpdatingLimpieza = false
+      }
+    },
+
+    async deleteLimpieza(row) {
+      this.isDeletingLimpieza  = true
+      this.deleteLimpiezaError = null
+      try {
+        await deleteSheetRow(TAB.facturas, row)
+        this.limpiezas     = this.limpiezas.filter(l => l._row !== row)
+        this._allLimpiezas = this._allLimpiezas.filter(l => l._row !== row)
+      } catch (e) {
+        this.deleteLimpiezaError = e
+        console.error('[DB] deleteLimpieza:', e)
+        throw e
+      } finally {
+        this.isDeletingLimpieza = false
+      }
+    },
+
+    async updatePaymentStatus(row, newFechaPago) {
+      this.isUpdatingLimpieza  = true
+      this.updateLimpiezaError = null
+      try {
+        const existing = this._allLimpiezas.find(l => l._row === row) || {}
+        const merged = { ...existing, fechaPago: newFechaPago || null, estado: newFechaPago ? 'Pagada' : 'Pendiente' }
+        await updateSheetRow(TAB.facturas, row, FACTURAS_HEADERS, facturaToRow(merged))
+        await this.fetchLimpiezas(this.selectedMonth, this.selectedYear)
+      } catch (e) {
+        this.updateLimpiezaError = e
+        console.error('[DB] updatePaymentStatus:', e)
+        throw e
+      } finally {
+        this.isUpdatingLimpieza = false
+      }
+    },
+
+    // ── Clientes ──────────────────────────────────────────────────────────
+
+    async fetchClientes() {
+      if (!this.clientes.length) {
+        const cached = loadCache('clientes')
+        if (cached?.records?.length) {
+          this.clientes = this._sortClientes(cached.records)
+        }
+      }
+
+      this.isLoadingClientes = true
+      this.errorClientes     = null
+      try {
+        const { records } = await getSheetRaw(TAB.clientes)
+        // Filas con validación de datos preparadas para futuros clientes
+        // (u otra fila sin rellenar) pueden tener algo en alguna columna sin
+        // ser un cliente real todavía — solo cuenta como cliente si tiene
+        // Nombre / Razón social.
+        const fresh = records.map(clienteFromRow).filter(c => c.nombre)
+        if (hasChanges(this.clientes, fresh)) {
+          this.clientes = this._sortClientes(fresh)
+          saveCache('clientes', fresh)
+        }
+      } catch (e) {
+        this.errorClientes = e
+        console.error('[DB] fetchClientes:', e)
+        if (!this.clientes.length) this.clientes = []
+      } finally {
+        this.isLoadingClientes = false
+      }
+    },
+
+    _sortClientes(records) {
+      return [...records].sort((a, b) => (a.nombre || '').localeCompare(b.nombre || '', 'es'))
+    },
+
+    async fetchClientById(nombre) {
+      if (!nombre) return null
+      const cached = this.clientes.find(c => c.nombre === nombre)
+      if (cached) return cached
+      await this.fetchClientes()
+      return this.clientes.find(c => c.nombre === nombre) || null
+    },
+
+    async addClient(data) {
+      this.isAddingClient = true
+      this.addClientError = null
+      try {
+        await appendSheetRow(TAB.clientes, CLIENTES_HEADERS, clienteToRow(data))
+        await this.fetchClientes()
+      } catch (e) {
+        this.addClientError = e
+        console.error('[DB] addClient:', e)
+        throw e
+      } finally {
+        this.isAddingClient = false
+      }
+    },
+
+    async updateClient(row, data) {
+      this.isUpdatingClient  = true
+      this.updateClientError = null
+      try {
+        const existing = this.clientes.find(c => c._row === row) || {}
+        await updateSheetRow(TAB.clientes, row, CLIENTES_HEADERS, clienteToRow({ ...existing, ...data }))
+        // Recarga desde la hoja en vez de parchear en memoria: si antes se
+        // borró un cliente en esta sesión, las filas de los que venían
+        // detrás quedaron desfasadas (_row) hasta el próximo fetch — parchear
+        // localmente con un _row obsoleto podría escribir en la fila de otro
+        // cliente. Releer siempre corrige esto.
+        await this.fetchClientes()
+      } catch (e) {
+        this.updateClientError = e
+        console.error('[DB] updateClient:', e)
+        throw e
+      } finally {
+        this.isUpdatingClient = false
+      }
+    },
+
+    async deleteClient(row) {
+      this.isDeletingClient  = true
+      this.deleteClientError = null
+      try {
+        await deleteSheetRow(TAB.clientes, row)
+        // Borrar una fila desplaza hacia arriba todas las siguientes en la
+        // hoja real; recargar en vez de filtrar en memoria evita que el
+        // resto de clientes se queden con un _row obsoleto (que apuntaría a
+        // la fila de otro cliente en la siguiente edición o borrado).
+        await this.fetchClientes()
+      } catch (e) {
+        this.deleteClientError = e
+        console.error('[DB] deleteClient:', e)
+        throw e
+      } finally {
+        this.isDeletingClient = false
+      }
+    },
+
+    // ── Gastos ────────────────────────────────────────────────────────────
+
+    async fetchGastos(month = '', year = '') {
+      this.selectedMonthGastos = month
+      this.selectedYearGastos  = year
+
+      if (!this.gastos.length) {
+        const cached = loadCache('gastos')
+        if (cached?.records?.length) {
+          this.gastos = this._filterGastos(cached.records, month, year)
+          this._allGastos = cached.records
+        }
+      } else {
+        this.gastos = this._filterGastos(this._allGastos || this.gastos, month, year)
+      }
+
+      this.isLoadingGastos = true
+      this.errorGastos     = null
+      try {
+        const { records } = await getSheetRaw(TAB.gastos)
+        const fresh = records.map(gastoFromRow)
+        if (hasChanges(this._allGastos || this.gastos, fresh)) {
+          this._allGastos = fresh
+          saveCache('gastos', fresh)
+          this.gastos = this._filterGastos(fresh, month, year)
+        }
+      } catch (e) {
+        this.errorGastos = e
+        console.error('[DB] fetchGastos:', e)
+      } finally {
+        this.isLoadingGastos = false
+      }
+    },
+
+    _filterGastos(all, month, year) {
+      if (!year) return [...all]
+      return all.filter(g => matchesMonthYear(g.fechaFactura, month, year))
+    },
+
+    async addGasto(data) {
+      this.isAddingGasto = true
+      this.addGastoError = null
+      try {
+        await appendSheetRow(TAB.gastos, GASTOS_HEADERS, gastoToRow(data))
+        await this.fetchGastos(this.selectedMonthGastos, this.selectedYearGastos)
+      } catch (e) {
+        this.addGastoError = e
+        console.error('[DB] addGasto:', e)
+        throw e
+      } finally {
+        this.isAddingGasto = false
+      }
+    },
+
+    async updateGasto(row, data) {
+      this.isUpdatingGasto  = true
+      this.updateGastoError = null
+      try {
+        const existing = this._allGastos.find(g => g._row === row) || {}
+        await updateSheetRow(TAB.gastos, row, GASTOS_HEADERS, gastoToRow({ ...existing, ...data }))
+        await this.fetchGastos(this.selectedMonthGastos, this.selectedYearGastos)
+      } catch (e) {
+        this.updateGastoError = e
+        console.error('[DB] updateGasto:', e)
+        throw e
+      } finally {
+        this.isUpdatingGasto = false
+      }
+    },
+
+    async deleteGasto(row) {
+      this.isDeletingGasto  = true
+      this.deleteGastoError = null
+      try {
+        await deleteSheetRow(TAB.gastos, row)
+        this.gastos     = this.gastos.filter(g => g._row !== row)
+        this._allGastos = this._allGastos.filter(g => g._row !== row)
+        saveCache('gastos', this._allGastos)
+      } catch (e) {
+        this.deleteGastoError = e
+        console.error('[DB] deleteGasto:', e)
+        throw e
+      } finally {
+        this.isDeletingGasto = false
+      }
+    },
+
+    // ── Utilidades ────────────────────────────────────────────────────────
+
+    ultimoDia(dias) {
+      if (dias?.length > 0) {
+        return dayjs(dias[dias.length - 1].fechaLimp).fromNow()
+      }
+      return 'aun no hay datos'
+    },
+  },
+})

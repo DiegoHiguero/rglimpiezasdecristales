@@ -1,269 +1,447 @@
 <template>
-  <nav class="navbar navbar-expand-lg py-0 container-fluid" id="scrollspyHeading1">
-    <router-link class="navbar-brand text-center ps-4 " to="/"> <!-- Corregido: navbar-brand en lugar de navbar-expand -->
-      <img
-        class="logo zoom d-inline "
-        src="../assets/img/logoweb.png"
-        alt="RG Limpieza de cristales logo"
-      />
-    </router-link>
-    <button
-      class="navbar-toggler text-end "
-      type="button"
-      data-bs-toggle="collapse"
-      data-bs-target="#navbarNavAltMarkup"
-      aria-controls="navbarNavAltMarkup"
-      aria-expanded="false"
-      aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon mx-4"></span>
-    </button>
-    <div class=" menu collapse navbar-collapse bg-body-tertiary p-2 rounded-bottom-4 " id="navbarNavAltMarkup">
-      <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center"> <!-- Añadido align-items-center para centrado vertical -->
-            <li class="nav-item">
-              <router-link
-                to="/registro"
-                v-if="userStore.userData && userStore.userData.email === 'higuerodiego@gmail.com' || userStore.userData.email === 'roys.abreu@gmail.com'"
-                class="nav-link navbar-custom-btn"
-                ><font-awesome-icon
-                  :icon="['fas', 'address-card']"
-                  class="me-2"
-                />Registro</router-link
-              >
-            </li>
-            <li class="nav-item">
-              <router-link
-                to="/misClientes"
-                v-if="userStore.userData && userStore.userData.email === 'higuerodiego@gmail.com' || userStore.userData.email === 'roys.abreu@gmail.com'"
-                class="nav-link navbar-custom-btn" 
-                ><font-awesome-icon
-                  :icon="['fas', 'rectangle-list']"
-                  class="me-2"
-                />Mis Clientes</router-link
-              >
-            </li>
-            <li class="nav-item">
-              <router-link
-                to="/admin/mensajes"
-                v-if="userStore.userData && userStore.userData.email"
-                class="nav-link navbar-custom-btn position-relative" 
-              >
-                <font-awesome-icon
-                  :icon="['fas', 'file-invoice']"
-                  class="me-2"
-                />Mensajes
-                <span v-if="userStore.unreadMessagesCount > 0" class="badge bg-danger rounded-pill unread-badge">
-                  {{ userStore.unreadMessagesCount }}
-                  <span class="visually-hidden">mensajes no leídos</span>
-                </span>
-              </router-link>
-            </li>
-            <li class="nav-item">
-              <router-link
-                to="/login"
-                v-if="!userStore.userData || !userStore.userData.email"
-                class="nav-link navbar-custom-btn" 
-              >
-                <font-awesome-icon
-                  :icon="['fas', 'user']"
-                  class="me-2 "
-                />Conexion
-              </router-link>
-            </li>
-            <li class="nav-item">
-              <button
-                class="nav-link navbar-custom-btn" 
-                v-if="userStore.userData && userStore.userData.email"
-                @click="userStore.logOutUser"
-              >
-                <font-awesome-icon
-                  :icon="['fas', 'right-from-bracket']"
-                  class="me-2"
-                />Cerrar sesión
-              </button>
-            </li>
-          </ul>
-          </div>
+  <nav class="navbar navbar-expand-lg" :class="{ scrolled: isScrolled }" id="scrollspyHeading1">
+    <div class="nav-inner">
+
+      <router-link class="navbar-brand" to="/">
+        <img class="logo" src="../assets/img/ROYAL_CLEAN_2025_BLANCO.png" alt="Royall Clean logo" />
+      </router-link>
+
+      <button class="toggler" :class="{ open: menuOpen }" type="button"
+        data-bs-toggle="collapse" data-bs-target="#navMenu"
+        aria-controls="navMenu" :aria-expanded="menuOpen" aria-label="Abrir menú"
+        @click="menuOpen = !menuOpen">
+        <span class="bar bar-1"></span>
+        <span class="bar bar-2"></span>
+        <span class="bar bar-3"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navMenu">
+        <ul class="navbar-nav mx-auto">
+          <li class="nav-item"><a class="nl" href="#" @click.prevent="scrollToSection('servicios')">Servicios</a></li>
+          <li class="nav-item"><a class="nl" href="#" @click.prevent="scrollToSection('trabajos-realizados')">Trabajos realizados</a></li>
+          <li class="nav-item"><a class="nl" href="#" @click.prevent="scrollToSection('precios')">Precios</a></li>
+          <li class="nav-item"><a class="nl" href="#" @click.prevent="scrollToSection('texto-principal')">Sobre mí</a></li>
+          <li class="nav-item"><router-link class="nl" to="/blog" @click="closeNavbar">Blog</router-link></li>
+          <li class="nav-item"><router-link class="nl" to="/contacto" @click="closeNavbar">Contacto</router-link></li>
+        </ul>
+
+        <div class="nav-right">
+          <button class="icon-btn theme-toggle" @click="toggleTheme" :title="isDark ? 'Modo claro' : 'Modo oscuro'">
+            <font-awesome-icon :icon="['fas', isDark ? 'sun' : 'moon']" />
+          </button>
+
+          <template v-if="userStore.userData?.email">
+            <router-link v-if="isAdmin(userStore.userData.email)"
+              to="/Register" class="icon-btn" title="Registro" @click="closeNavbar">
+              <font-awesome-icon :icon="['fas', 'address-card']" />
+            </router-link>
+            <router-link v-if="isAdmin(userStore.userData.email)"
+              to="/misClientes" class="icon-btn" title="Mis Clientes" @click="closeNavbar">
+              <font-awesome-icon :icon="['fas', 'rectangle-list']" />
+            </router-link>
+            <router-link to="/admin/mensajes" class="icon-btn msg-btn" title="Mensajes" @click="closeNavbar">
+              <font-awesome-icon :icon="['fas', 'file-invoice']" />
+              <span v-if="userStore.unreadMessagesCount > 0" class="msg-dot">
+                {{ userStore.unreadMessagesCount }}
+              </span>
+            </router-link>
+            <button class="icon-btn" title="Cerrar sesión" @click="userStore.logOutUser">
+              <font-awesome-icon :icon="['fas', 'right-from-bracket']" />
+            </button>
+          </template>
+
+          <span class="nav-divider"></span>
+
+          <router-link to="/en" class="icon-btn" title="English" @click="closeNavbar">
+            EN
+          </router-link>
+
+          <router-link to="/contacto" class="cta-btn" @click="closeNavbar">
+            Presupuesto gratis
+          </router-link>
+        </div>
+      </div>
+
+    </div>
   </nav>
 </template>
 
 <script setup>
-import { useUserStore } from "../stores/user";
-import { onMounted, onUnmounted } from 'vue'; // Importa onMounted y onUnmounted
+import { ref, onMounted, onUnmounted } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
+import { useUserStore } from '../stores/user';
 
 const userStore = useUserStore();
+const router = useRouter();
+const route = useRoute();
+const isScrolled = ref(false);
+const menuOpen = ref(false);
+
+const isDark = ref(false);
+
+const applyTheme = (dark) => {
+  document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+  localStorage.setItem('rc-theme', dark ? 'dark' : 'light');
+};
+
+const toggleTheme = () => {
+  isDark.value = !isDark.value;
+  applyTheme(isDark.value);
+};
+
+const isAdmin = (email) =>
+  email === 'roys.abreu@gmail.com';
+
+const closeNavbar = () => {
+  const menu = document.getElementById('navMenu');
+  if (menu?.classList.contains('show')) {
+    menuOpen.value = false;
+    document.querySelector('.toggler')?.click();
+  }
+};
+
+const scrollToSection = (id) => {
+  closeNavbar();
+  if (route.path === '/') {
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+  } else {
+    router.push(`/#${id}`);
+  }
+};
+
+const handleScroll = () => { isScrolled.value = window.scrollY > 10; };
+
+const handleOutsideClick = (e) => {
+  if (!menuOpen.value) return;
+  const nav = document.getElementById('scrollspyHeading1');
+  if (nav && !nav.contains(e.target)) {
+    closeNavbar();
+  }
+};
 
 onMounted(() => {
-  // Se asume que userStore.currentUser() ya es llamado globalmente o en App.vue
-  // Si userStore.userData está cargado y el usuario es admin, inicia el listener de mensajes no leídos.
-  // Tu `useUserStore` debe contener la lógica para determinar si es admin.
-  // (Como lo tenías en la primera interacción: userStore.isAdminUser(userStore.userData))
-  // Para simplificar aquí, se usa la condición de email, pero ajusta según tu `isAdminUser`
-  if (userStore.userData && userStore.userData.email === 'higuerodiego@gmail.com') { // O tu lógica isAdminUser
-    userStore.startUnreadMessagesListener(); // Esta función debe estar definida en userStore
+  const saved = localStorage.getItem('rc-theme');
+  isDark.value = saved === 'dark';
+  applyTheme(isDark.value);
+
+  window.addEventListener('scroll', handleScroll, { passive: true });
+  document.addEventListener('click', handleOutsideClick);
+  if (userStore.userData && isAdmin(userStore.userData.email)) {
+    userStore.startUnreadMessagesListener();
   }
 });
 
 onUnmounted(() => {
-  // Asegúrate de detener el listener cuando el componente se desmonte para evitar fugas de memoria.
-  if (userStore.userData && userStore.userData.email === 'higuerodiego@gmail.com') {
-    userStore.stopUnreadMessagesListener(); // Esta función también debe estar definida en userStore
-  }
+  window.removeEventListener('scroll', handleScroll);
+  document.removeEventListener('click', handleOutsideClick);
+  userStore.stopUnreadMessagesListener();
 });
 </script>
+
 <style scoped>
-/* Estilos existentes */
-.navbar .navbar-toggler-icon {
-  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='%23007bff' stroke-linecap='round' stroke-miterlimit='10' stroke-width='4' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
- padding-right: 0px;
-}
-a {
-  text-decoration: none;
-}
-.colorfondo {
-  background-color: #4970B6;
-}
-.navbar-toggler:focus {
-  color: #151515;
-}
+/* ── BASE ── */
 .navbar {
-  background-color: #151515;
-  top: 0px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 200;
+  background:
+    radial-gradient(ellipse 60% 100% at 20% 0%, rgba(96, 165, 250, 0.16) 0%, transparent 65%),
+    linear-gradient(180deg, rgba(17, 25, 44, 0.94) 0%, rgba(13, 19, 34, 0.88) 100%);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.04) inset;
+  transition: border-color 0.3s, box-shadow 0.3s, background 0.3s;
+  padding: 0;
+}
+.navbar.scrolled {
+  border-bottom-color: rgba(255, 255, 255, 0.09);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.05) inset, 0 12px 32px -8px rgba(0, 0, 0, 0.5);
+}
+
+/* ── INNER ── */
+/* Mismo ancho que .padre (el contenedor del contenido de la home), para
+   que el logo y el CTA queden alineados con el borde del contenido. */
+.nav-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 72px;
+  padding: 0 16px;
+  max-width: 1200px;
+  margin: 0 auto;
   width: 100%;
-  z-index: 2;
-  /* Margin ajustado para evitar que el navbar se vea afectado por el margin-left del menu */
-  margin: 0;
+  gap: 24px;
 }
+
+/* ── LOGO ── */
+.navbar-brand { margin-right: 24px; }
 .logo {
-  max-width: 10rem;
+  height: 60px;
+  width: auto;
+  display: block;
+  transition: transform 0.25s;
 }
-svg {
-  vertical-align: bottom;
-  height: 1em; /* Ajusta la altura del icono a la altura de la fuente */
-}
-*,
-*::before,
-*::after {
-  -webkit-box-sizing: border-box;
-  box-sizing: border-box;
-}
-img {
-  overflow-clip-margin: content-box;
-  overflow: clip;
-}
+.logo:hover { transform: scale(1.04); }
 
-/* --- Estilos para los botones del Navbar --- */
-
-.menu {
-  /* Eliminar altura fija, permitir que el contenido la defina */
-  /* height: 80px; */
-  border-radius: 0px 0px 15px 15px;
-  background-color: white;
-  margin-right: auto;
-  margin: 0px 15px 0px 15px; /* Mantiene el margen lateral */
-  display: flex; /* Para centrar verticalmente el ul si es necesario */
-  align-items: center; /* Centra el contenido del menú verticalmente */
-  width: auto; /* Permite que el menú se ajuste a su contenido */
-}
-
-ul.navbar-nav {
-  padding: 0; /* Elimina el padding superior que empujaba los elementos */
-  /* align-items-center en el HTML se encarga del centrado vertical */
-}
-
-.navbar-custom-btn {
-  font-family: 'Anton', sans-serif;
-  font-weight: 400;
-  font-size: 1rem; /* Tamaño de fuente más legible */
-  color: #6c757d; /* Color gris suave */
-  background-color: transparent; /* Fondo transparente por defecto */
-  padding: 0.6rem 1rem; /* Padding uniforme para todos los botones */
-  margin: 0 0.5rem; /* Espacio horizontal entre los botones */
-  border-radius: 0.3rem; /* Bordes ligeramente redondeados */
-  transition: all 0.3s ease; /* Animación suave para todas las propiedades */
-  display: flex; /* Para alinear ícono y texto */
-  align-items: center; /* Centrar ícono y texto verticalmente */
-  white-space: nowrap; /* Evitar que el texto del botón se rompa en varias líneas */
-  border: none; /* Asegura que no haya borde */
-  text-decoration: none; /* Asegura que no haya subrayado en router-link */
-}
-
-.navbar-custom-btn:hover {
-  color: #343a40; /* Texto gris más oscuro al pasar el ratón */
-  background-color: rgba(108, 117, 125, 0.1); /* Fondo gris muy suave al pasar el ratón */
-  transform: translateY(-2px); /* Pequeña elevación como animación */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sutil sombra para dar profundidad */
-}
-
-/* El `btn` genérico estaba causando problemas, lo hemos reemplazado por `navbar-custom-btn`.
-   Si tienes otros botones en la app que necesitan el estilo Bootstrap `.btn`, puedes mantenerlo,
-   pero asegúrate de que no afecte a estos. Para estos botones de navegación, la clase `navbar-custom-btn` es la que manda.
-*/
-.btn {
-  /* Estas reglas generales de .btn pueden eliminarse o redefinirse si no se usan en otro lugar.
-     Para los botones del navbar, navbar-custom-btn es más específico. */
-  border: none;
-  font-size: inherit;
-  padding: inherit;
-  background-color: transparent;
-  color: inherit;
-}
-
-/* Limpia los estilos antiguos específicos por ID que podrían entrar en conflicto */
-#boton-master,
-#boton-session,
-#boton-accueil,
-#boton-contact,
-#boton-services {
-  /* Reinicia o anula propiedades que puedan generar conflictos */
+/* ── HAMBURGER ── */
+.toggler {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
   background: transparent;
-  color: inherit; /* Hereda el color de navbar-custom-btn */
-  padding-top: initial; /* Elimina padding-top específico */
-  margin-bottom: initial; /* Elimina margin-bottom específico */
-  font-size: inherit;
+  border: 1.5px solid transparent;
+  padding: 8px;
+  margin-left: auto;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background 0.2s, border-color 0.2s, transform 0.15s;
+}
+.toggler:hover {
+  background: rgba(96, 165, 250, 0.1);
+  border-color: rgba(96, 165, 250, 0.3);
+}
+.toggler:active { transform: scale(0.92); }
+.toggler:focus { outline: none; box-shadow: none; }
+
+.bar {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 2px;
+  transform-origin: center;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 0.3s ease,
+              background 0.2s;
+}
+.toggler:hover .bar { background: #60a5fa; }
+
+/* Estado abierto → X */
+.toggler.open .bar-1 { transform: translateY(7px) rotate(45deg); }
+.toggler.open .bar-2 { opacity: 0; transform: scaleX(0); }
+.toggler.open .bar-3 { transform: translateY(-7px) rotate(-45deg); }
+.toggler.open { border-color: rgba(96, 165, 250, 0.4); background: rgba(96, 165, 250, 0.08); }
+.toggler.open .bar { background: #60a5fa; }
+
+/* ── NAV LINKS ── */
+ul.navbar-nav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
+.nl {
+  position: relative;
+  display: block;
+  color: rgba(255, 255, 255, 0.65);
+  font-family: 'Raleway', sans-serif;
+  font-weight: 600;
+  font-size: 0.9rem;
+  letter-spacing: 0.01em;
+  padding: 9px 16px;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: color 0.2s, background 0.2s;
+  white-space: nowrap;
+}
+.nl::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: 4px;
+  width: 0;
+  height: 2px;
+  border-radius: 2px;
+  /* Puntas que se desvanecen, como el .nav-divider */
+  background: linear-gradient(90deg, transparent 0%, #60a5fa 25%, #93c5fd 50%, #60a5fa 75%, transparent 100%);
+  transform: translateX(-50%);
+  transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.nl:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.07);
+}
+.nl:hover::after { width: calc(100% - 24px); }
+.nl.router-link-exact-active {
+  color: #fff;
+}
+.nl.router-link-exact-active::after { width: calc(100% - 24px); }
 
-/* --- Media Queries (ajustes para dispositivos pequeños) --- */
-@media (max-width: 991.98px) { /* breakpoint 'lg' de Bootstrap */
-  .menu {
-    height: auto;
-    border-radius: 0px 0px 15px 15px;
-    background-color: #ffffff;
-    padding-top: 0px;
-    margin-left: 15px; /* Ajusta el margen izquierdo */
-    text-align: left;
-    margin-top: 10px;
-    flex-direction: column; /* Apila los elementos verticalmente en móvil */
-    align-items: flex-start; /* Alinea los elementos al inicio */
-    width: calc(100% - 30px); /* Ocupa el ancho completo menos los márgenes */
+/* ── RIGHT ACTIONS ── */
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+@media (min-width: 992px) {
+  .nav-right { margin-left: auto; }
+}
+
+/* Rango bajo de escritorio: los enlaces + CTA no caben con el mismo
+   aire que en pantallas grandes, así que se aprieta un poco. */
+@media (min-width: 992px) and (max-width: 1260px) {
+  .nav-inner { padding: 0 20px; }
+  ul.navbar-nav { gap: 0; }
+  .nl { padding: 9px 11px; }
+}
+
+.nav-divider {
+  width: 1px;
+  height: 24px;
+  background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.22), transparent);
+  margin: 0 4px;
+}
+
+.cta-btn {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--blue) 0%, var(--blue-hover) 100%);
+  color: #fff;
+  font-family: 'Raleway', sans-serif;
+  font-weight: 700;
+  font-size: 0.8rem;
+  padding: 7px 16px;
+  border-radius: 20px;
+  text-decoration: none;
+  white-space: nowrap;
+  box-shadow: 0 2px 10px rgba(37, 99, 235, 0.3);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.cta-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, transparent 30%, rgba(255, 255, 255, 0.35) 50%, transparent 70%);
+  transform: translateX(-100%);
+  transition: transform 0.6s ease;
+}
+.cta-btn:hover {
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(37, 99, 235, 0.45);
+}
+.cta-btn:hover::before { transform: translateX(100%); }
+
+.icon-btn {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  color: rgba(255, 255, 255, 0.55);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 0.88rem;
+  transition: color 0.2s, background 0.2s, transform 0.2s;
+  position: relative;
+  padding: 0;
+}
+.icon-btn:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(-1px);
+}
+
+.theme-toggle { color: rgba(255,255,255,0.65); font-size: 0.9rem; }
+.theme-toggle:hover { color: #fbbf24; background: rgba(251,191,36,0.1); }
+
+
+
+.msg-btn { position: relative; }
+.msg-dot {
+  position: absolute;
+  top: 1px;
+  right: 1px;
+  background: #ef4444;
+  color: #fff;
+  font-size: 0.58rem;
+  font-weight: 700;
+  min-width: 15px;
+  height: 15px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 3px;
+  line-height: 1;
+}
+
+/* ── MOBILE ── */
+@media (max-width: 991.98px) {
+  .toggler { display: flex; }
+
+  .navbar-collapse {
+    position: absolute;
+    top: 78px;
+    right: 12px;
+    left: auto;
+    width: auto;
+    min-width: 230px;
+    background: rgba(10, 17, 34, 0.98);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 14px;
+    box-shadow: 0 16px 48px rgba(0,0,0,0.55);
+    padding: 10px 10px 12px;
   }
 
   ul.navbar-nav {
-    padding: 8px 0px 10px 0px;
-    flex-direction: column; /* Asegura que la lista sea vertical */
-    width: 100%; /* Ocupa todo el ancho disponible */
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1px;
+    margin-bottom: 8px;
   }
 
-  .nav-item {
-    width: 100%; /* Cada elemento de la lista ocupa todo el ancho */
-    margin-bottom: 5px; /* Espaciado vertical entre elementos */
+  .nl {
+    padding: 10px 14px;
+    font-size: 0.9rem;
+    border-radius: 8px;
+    white-space: nowrap;
   }
 
-  .navbar-custom-btn {
-    width: 100%; /* El botón ocupa todo el ancho del elemento de la lista */
-    margin: 0; /* Elimina los márgenes horizontales en móvil */
-    text-align: left; /* Alinea el texto a la izquierda */
-    justify-content: flex-start; /* Alinea ícono y texto al inicio */
+  .nav-right {
+    flex-wrap: wrap;
+    gap: 6px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.07);
+    margin-left: 0;
   }
 
-  .navbar-custom-btn:hover {
-    transform: none; /* Desactiva la animación de elevación en móvil para un mejor tacto */
-    box-shadow: none; /* Sin sombra en móvil */
-    background-color: rgba(108, 117, 125, 0.05); /* Hover más sutil en móvil */
+  .nav-divider { display: none; }
+
+  .cta-btn {
+    flex: 1;
+    text-align: center;
+    padding: 9px 14px;
+    font-size: 0.85rem;
+    border-radius: 9px;
   }
 
-  .navbar-toggler {margin-top: 0;} /* Ajusta el margen del toggler */
-  .logo { max-width: 8rem; } /* Logo ligeramente más pequeño en móvil */
+  .icon-btn { width: 36px; height: 36px; font-size: 0.95rem; border-radius: 8px; }
+
+  .nav-inner { padding: 0 16px; }
+  .logo { height: 56px; }
+}
+
+@media (max-width: 400px) {
+  .navbar-collapse {
+    right: 8px;
+    left: 8px;
+    min-width: 0;
+    width: auto;
+  }
 }
 </style>
-
