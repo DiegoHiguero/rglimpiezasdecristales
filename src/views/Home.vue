@@ -42,7 +42,7 @@
         </div>
       </div>
 
-      <div class="col-md-6 d-flex align-items-center justify-content-center py-4" style="z-index:2;">
+      <div class="col-md-6 d-flex align-items-stretch justify-content-center py-4" style="z-index:2;">
         <div class="formulario w-100">
 
           <div class="fh">
@@ -332,7 +332,8 @@ function getCookie(cname: string): string {
   pointer-events: none;
 }
 .principal > * { position: relative; z-index: 2; }
-.hero-stats { padding: 0 16px 18px; }
+/* Mismo margen lateral que las dos columnas (gutter de Bootstrap): bordes alineados */
+.hero-stats { padding: 0 calc(var(--bs-gutter-x, 1.5rem) * .5) 18px; }
 .hero-stats :deep(.section3) { margin: 0; }
 .prof { color: #fff; text-shadow: 0 2px 18px rgba(0,0,0,0.8); }
 .hero-proof {
@@ -446,6 +447,10 @@ function getCookie(cname: string): string {
 
 /* â”€â”€ FORMULARIO â”€â”€ */
 .formulario {
+  /* Misma altura que el panel de la izquierda; el contenido, centrado */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   background: rgba(10, 16, 30, 0.62);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
