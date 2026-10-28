@@ -351,8 +351,11 @@ function getCookie(cname: string): string {
     "sub   phone"
     "proof phone"
     "ctas  phone";
+  /* La columna del texto mide lo mismo que el móvil: servicios arriba,
+     botones abajo, alineados con su borde superior e inferior */
+  grid-template-rows: auto auto 1fr auto;
   column-gap: 28px;
-  align-items: center;
+  align-items: start;
   /* Estirado a la altura del formulario; el contenido, centrado en vertical */
   align-content: center;
   /* Mismo cristal que la franja de cifras: el hero queda en tres piezas a juego */
@@ -365,14 +368,14 @@ function getCookie(cname: string): string {
   transform: translateZ(0); /* capa propia: evita artefactos al repintar el vídeo */
 }
 .br-movil { display: none; }
-.hero-panel .hero-title { grid-area: title; margin: 0 0 4px; font-size: 2.55rem; }
-.hero-panel .hero-sub { grid-area: sub; margin: 0; align-self: end; }
-.hero-panel .hero-proof { grid-area: proof; margin-top: 16px; }
+.hero-panel .hero-title { grid-area: title; margin: 0 0 22px; font-size: 2.55rem; }
+.hero-panel .hero-sub { grid-area: sub; margin: 0; }
+.hero-panel .hero-proof { grid-area: proof; margin: 0; align-self: center; }
 /* Valoración y presupuesto, cada uno en su línea (al lado del móvil no caben juntos) */
 .hero-proof-item { display: block; }
 .hero-proof-sep { display: none; }
-.hero-panel .hero-ctas  { grid-area: ctas; margin-top: 18px; }
-.hero-panel .phone-mockup { grid-area: phone; width: 128px; margin-top: 14px; }
+.hero-panel .hero-ctas  { grid-area: ctas; margin-top: 18px; align-self: end; }
+.hero-panel .phone-mockup { grid-area: phone; width: 128px; margin: 0; }
 .phone-mockup {
   position: relative;
   width: 128px;
@@ -692,23 +695,20 @@ function getCookie(cname: string): string {
       "sub   phone"
       "proof phone"
       "ctas  phone";
-    /* Servicios, valoración y botones, centrados en vertical junto al móvil */
-    grid-template-rows: auto 1fr auto 1fr;
+    grid-template-rows: auto auto 1fr auto;
     column-gap: 16px;
     padding: 20px 16px;
   }
-  /* Título encima de todo, a lo ancho del panel */
   /* Título en 2 líneas que ocupan el ancho del panel */
   .hero-panel .hero-title { font-size: 8.4vw; line-height: 1.05; padding-top: 0; margin-bottom: 14px; white-space: nowrap; }
   .br-movil { display: inline; }
-  .hero-panel .hero-sub { font-size: 0.85rem; margin-top: 10px; }
-  .hero-panel .hero-proof { font-size: clamp(0.7rem, 3.3vw, 0.8rem); margin-top: 12px; align-self: start; }
+  .hero-panel .hero-sub { font-size: 0.85rem; margin-top: 0; }
+  .hero-panel .hero-proof { font-size: clamp(0.7rem, 3.3vw, 0.8rem); margin: 10px 0; }
   .hero-panel .hero-proof-item { white-space: nowrap; }
   .hero-panel .hero-proof-stars { letter-spacing: 0; }
-  .hero-panel .phone-mockup { width: clamp(110px, 31vw, 150px); margin: 0; align-self: center; }
-  .hero-panel .hero-sub { align-self: end; }
+  .hero-panel .phone-mockup { width: clamp(110px, 31vw, 150px); margin: 0; }
   /* Botones apilados en la columna del texto */
-  .hero-panel .hero-ctas { flex-direction: column; gap: 8px; margin-top: 14px; align-self: start; }
+  .hero-panel .hero-ctas { flex-direction: column; gap: 8px; margin-top: 14px; }
   .hero-panel .hero-ctas .btn { flex: none; width: 100%; justify-content: center; display: inline-flex; align-items: center; white-space: nowrap; font-size: 0.9rem; padding: 9px 10px !important; }
 }
 @media (max-width: 480px) {
