@@ -11,10 +11,10 @@
           <h1 class="hero-title">
             <span class="prof">Window and glass cleaning in Madrid</span>
           </h1>
-          <p class="textAnimation hero-sub">Windows · shop fronts · offices · communities · height · pressure washing</p>
+          <p class="textAnimation hero-sub">Windows · shop fronts · offices · communities · height · pressure washing</p>
 
           <p class="hero-proof">
-            <span class="hero-proof-item"><span class="hero-proof-stars">★★★★★</span><strong>5.0</strong> on Google</span> <span class="hero-proof-sep">·</span> <span class="hero-proof-item">Free quote within 24 h</span>
+            <span class="hero-proof-item"><span class="hero-proof-stars">★★★★★</span><strong>5.0</strong> on Google</span> <span class="hero-proof-sep">·</span> <span class="hero-proof-item">Free quote within 24 h</span>
           </p>
 
           <div class="hero-ctas">
@@ -682,18 +682,28 @@ function getCookie(cname: string): string {
 @media (max-width: 768px) {
   .principal { min-height: 360px; border-radius: var(--r-md); }
   .hero-title { font-size: 2.1rem; padding-top: 14px; }
+  /* Móvil: 50/50, texto a la izquierda y vídeo a la derecha; botones debajo */
   .hero-panel {
+    grid-template-columns: 1fr 1fr;
     grid-template-areas:
-      "title title"
+      "title phone"
       "sub   phone"
-      "proof phone"
+      "proof proof"
       "ctas  ctas";
-    column-gap: 14px;
+    /* El espacio sobrante junto al móvil va debajo de los servicios, no entre ellos y el título */
+    grid-template-rows: auto 1fr auto auto;
+    column-gap: 16px;
     padding: 20px 16px;
   }
-  .hero-panel .hero-title { font-size: 2rem; padding-top: 0; }
-  .hero-panel .phone-mockup { width: 86px; margin-top: 10px; }
-  .hero-sub { font-size: 0.98rem; }
+  /* El título se ajusta al ancho de su media columna */
+  .hero-panel .hero-title { font-size: clamp(1.45rem, 7.4vw, 2.1rem); line-height: 1.05; padding-top: 0; }
+  .hero-panel .hero-sub { font-size: 0.85rem; margin-top: 10px; }
+  /* Valoración en una línea a todo el ancho, con su punto separador */
+  .hero-panel .hero-proof { font-size: 0.8rem; margin-top: 16px; }
+  .hero-proof-item { display: inline; white-space: nowrap; }
+  .hero-proof-sep { display: inline; }
+  .hero-panel .phone-mockup { width: 100%; max-width: 175px; margin: 0; justify-self: center; align-self: center; }
+  .hero-panel .hero-sub { align-self: start; }
 }
 @media (max-width: 480px) {
   .ff-row { grid-template-columns: 1fr; }
