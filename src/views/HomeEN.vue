@@ -336,7 +336,8 @@ function getCookie(cname: string): string {
 /* Mismo margen lateral que las dos columnas (gutter de Bootstrap): bordes alineados */
 .hero-stats { padding: 0 calc(var(--bs-gutter-x, 1.5rem) * .5) 18px; }
 .hero-stats :deep(.section3) { margin: 0; }
-.prof { color: #fff; text-shadow: 0 2px 18px rgba(0,0,0,0.8); }
+/* Sin sombra: el panel oscuro ya da el contraste (sobre la foto sí hacía falta) */
+.prof { color: #fff; }
 .hero-proof {
   color: rgba(255,255,255,0.9);
   font-family: 'Raleway', sans-serif;
