@@ -350,15 +350,17 @@ function getCookie(cname: string): string {
   display: grid;
   grid-template-columns: 1fr auto;
   /* Título a todo el ancho; debajo, servicios, datos y botones junto al móvil */
+  /* Escritorio: todo el texto agrupado y centrado en vertical a la izquierda;
+     el móvil, grande, ocupa toda la altura a la derecha */
   grid-template-areas:
-    "title title"
+    ".     phone"
+    "title phone"
     "sub   phone"
     "proof phone"
-    "ctas  phone";
-  /* La columna del texto mide lo mismo que el móvil: servicios arriba,
-     botones abajo, alineados con su borde superior e inferior */
-  grid-template-rows: auto auto 1fr auto;
-  column-gap: 28px;
+    "ctas  phone"
+    ".     phone";
+  grid-template-rows: 1fr auto auto auto auto 1fr;
+  column-gap: 40px;
   align-items: start;
   /* Estirado a la altura del formulario; el contenido, centrado en vertical */
   align-content: center;
@@ -375,14 +377,14 @@ function getCookie(cname: string): string {
 .br-movil { display: inline; }
 .hero-panel .hero-title { grid-area: title; margin: 0 0 22px; font-size: 3rem; line-height: 1.05; }
 .hero-panel .hero-sub { grid-area: sub; margin: 0; }
-.hero-panel .hero-proof { grid-area: proof; margin: 0; align-self: center; }
+.hero-panel .hero-proof { grid-area: proof; margin: 18px 0 0; }
 /* Valoración y presupuesto, cada uno en su línea (al lado del móvil no caben juntos) */
 .hero-proof-item { display: block; }
 .hero-proof-sep { display: none; }
-.hero-panel .hero-ctas  { grid-area: ctas; margin-top: 18px; align-self: end; flex-direction: column; gap: 10px; }
-/* Botones apilados y del mismo ancho, como en el móvil */
-.hero-panel .hero-ctas .btn { width: 100%; max-width: 300px; display: inline-flex; align-items: center; justify-content: center; padding-top: 11px; padding-bottom: 11px; }
-.hero-panel .phone-mockup { grid-area: phone; width: 175px; margin: 0; }
+.hero-panel .hero-ctas  { grid-area: ctas; margin-top: 22px; flex-wrap: nowrap; gap: 10px; }
+/* Botones uno al lado del otro y del mismo ancho */
+.hero-panel .hero-ctas .btn { flex: 1; max-width: 230px; display: inline-flex; align-items: center; justify-content: center; padding-top: 11px; padding-bottom: 11px; }
+.hero-panel .phone-mockup { grid-area: phone; width: 215px; margin: 0; align-self: center; }
 .phone-mockup {
   position: relative;
   width: 128px;
@@ -713,6 +715,25 @@ function getCookie(cname: string): string {
 @keyframes spin { to { transform: rotate(360deg); } }
 
 /* â”€â”€ RESPONSIVE â”€â”€ */
+/* Tableta: el panel ocupa la mitad; título a lo ancho, móvil menor y botones apilados */
+@media (min-width: 769px) and (max-width: 991.98px) {
+  .hero-panel {
+    grid-template-areas:
+      "title title"
+      "sub   phone"
+      "proof phone"
+      "ctas  phone";
+    grid-template-rows: auto auto 1fr auto;
+    column-gap: 20px;
+    padding: 24px 20px;
+  }
+  .hero-panel .hero-title { font-size: 2.1rem; }
+  .hero-panel .hero-sub { font-size: 0.95rem; }
+  .hero-panel .hero-proof { font-size: 0.85rem; }
+  .hero-panel .phone-mockup { width: 130px; align-self: start; }
+  .hero-panel .hero-ctas { flex-direction: column; gap: 8px; }
+  .hero-panel .hero-ctas .btn { max-width: none; width: 100%; }
+}
 @media (max-width: 768px) {
   .principal { min-height: 360px; border-radius: var(--r-md); }
   .hero-title { font-size: 2.1rem; padding-top: 14px; }
