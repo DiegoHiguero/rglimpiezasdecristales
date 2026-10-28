@@ -7,8 +7,14 @@
       <p class="svc-subtitle">Trabajamos sin interrumpir tu día a día, en casa o en tu negocio</p>
     </div>
 
+    <!-- Móvil: chips para saltar a un servicio del carrusel -->
+    <div class="svc-chips" v-if="esMovil && etiquetas.length" ref="chipsRef">
+      <button v-for="(et, i) in etiquetas" :key="et" type="button" class="svc-chip"
+              :class="{ 'svc-chip--on': activo === i }" @click="irA(i)">{{ et }}</button>
+    </div>
+
     <div class="svc-grid-wrap">
-    <div class="svc-grid">
+    <div class="svc-grid" ref="gridRef" @scroll.passive="onScroll">
 
       <div class="svc-card svc-card--featured animate-on-scroll">
         <div class="svc-featured-badge">
@@ -103,7 +109,7 @@
 
       <TransitionGroup name="svc-reveal">
 
-          <div class="svc-card svc-card--extra" data-stagger="1" v-if="showAll" key="oficinas">
+          <div class="svc-card svc-card--extra" data-stagger="1" v-if="mostrarTodas" key="oficinas">
             <div class="svc-img-wrap">
               <img src="../../assets/img/unger-oficinas.webp" class="svc-img" style="object-position: center top" alt="Limpieza de cristales en empresas" />
               <div class="svc-overlay"></div>
@@ -125,7 +131,7 @@
             </div>
           </div>
 
-          <div class="svc-card svc-card--extra" data-stagger="2" v-if="showAll" key="presion">
+          <div class="svc-card svc-card--extra" data-stagger="2" v-if="mostrarTodas" key="presion">
             <div class="svc-img-wrap">
               <img src="../../assets/img/presion.webp" class="svc-img" alt="Limpieza con agua a presión de patios y terrazas" />
               <div class="svc-overlay"></div>
@@ -147,7 +153,7 @@
             </div>
           </div>
 
-          <div class="svc-card svc-card--extra" data-stagger="3" v-if="showAll" key="placas">
+          <div class="svc-card svc-card--extra" data-stagger="3" v-if="mostrarTodas" key="placas">
             <div class="svc-img-wrap">
               <img src="../../assets/img/limpieza-panel-thumb.webp" class="svc-img" alt="Limpieza de placas solares" />
               <div class="svc-overlay"></div>
@@ -169,7 +175,7 @@
             </div>
           </div>
 
-          <div class="svc-card svc-card--extra" data-stagger="4" v-if="showAll" key="obras">
+          <div class="svc-card svc-card--extra" data-stagger="4" v-if="mostrarTodas" key="obras">
             <div class="svc-img-wrap">
               <img src="../../assets/img/20260323_184851.webp" class="svc-img" alt="Limpieza de obras y fin de obra" />
               <div class="svc-overlay"></div>
@@ -191,7 +197,7 @@
             </div>
           </div>
 
-          <div class="svc-card svc-card--extra" data-stagger="5" v-if="showAll" key="grafitis">
+          <div class="svc-card svc-card--extra" data-stagger="5" v-if="mostrarTodas" key="grafitis">
             <div class="svc-img-wrap">
               <img src="../../assets/img/grafitis.webp" class="svc-img" alt="Limpieza y eliminación de grafitis" />
               <div class="svc-overlay"></div>
@@ -213,7 +219,7 @@
             </div>
           </div>
 
-          <div class="svc-card svc-card--extra" data-stagger="6" v-if="showAll" key="vinilos">
+          <div class="svc-card svc-card--extra" data-stagger="6" v-if="mostrarTodas" key="vinilos">
             <div class="svc-img-wrap">
               <img src="../../assets/img/vinilo.webp" class="svc-img" alt="Retirada de vinilos en escaparates y cristales" />
               <div class="svc-overlay"></div>
@@ -238,10 +244,15 @@
       </TransitionGroup>
     </div>
 
-    <div class="svc-fade-mask" :class="{ 'svc-fade-mask--hidden': showAll }"></div>
+    <div class="svc-fade-mask" :class="{ 'svc-fade-mask--hidden': mostrarTodas }"></div>
     </div>
 
-    <div class="svc-footer">
+    <!-- Móvil: puntos indicadores del carrusel -->
+    <div class="svc-dots" v-if="esMovil && etiquetas.length" aria-hidden="true">
+      <span v-for="(et, i) in etiquetas" :key="et" class="svc-dot" :class="{ 'svc-dot--on': activo === i }"></span>
+    </div>
+
+    <div class="svc-footer" v-if="!esMovil">
       <button type="button" class="svc-toggle-btn" :class="{ 'svc-toggle-btn--open': showAll }" @click="showAll = !showAll">
         <span class="svc-toggle-text">{{ showAll ? 'Mostrar menos' : 'Ver más servicios' }}</span>
         <span class="svc-toggle-badge" v-if="!showAll">+{{ extraCount }}</span>
@@ -253,9 +264,57 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, computed, watch, nextTick, onMounted, onUnmounted } from 'vue';
 const showAll = ref(false);
 const extraCount = 6;
+
+// En móvil las tarjetas van en un carrusel horizontal con todos los servicios
+// (sin "Ver más"), chips para saltar a uno y puntos que marcan la posición.
+const esMovil = ref(false);
+const mostrarTodas = computed(() => showAll.value || esMovil.value);
+const gridRef = ref(null);
+const chipsRef = ref(null);
+const etiquetas = ref([]);
+const activo = ref(0);
+let mq = null;
+
+const tarjetas = () => (gridRef.value ? [...gridRef.value.querySelectorAll('.svc-card')] : []);
+
+const leerEtiquetas = async () => {
+  await nextTick();
+  etiquetas.value = tarjetas().map((c) => c.querySelector('.svc-tag')?.textContent.trim() || '');
+};
+
+const irA = (i) => {
+  const cards = tarjetas();
+  if (!cards[i]) return;
+  gridRef.value.scrollTo({ left: cards[i].offsetLeft - cards[0].offsetLeft, behavior: 'smooth' });
+};
+
+const onScroll = () => {
+  if (!esMovil.value) return;
+  const cards = tarjetas();
+  if (cards.length < 2) return;
+  const paso = cards[1].offsetLeft - cards[0].offsetLeft;
+  const i = Math.max(0, Math.min(cards.length - 1, Math.round(gridRef.value.scrollLeft / paso)));
+  if (i !== activo.value) {
+    activo.value = i;
+    // El chip activo se mantiene visible en su fila (sin mover la página)
+    const chip = chipsRef.value?.children[i];
+    if (chip) chipsRef.value.scrollTo({ left: chip.offsetLeft - chipsRef.value.clientWidth / 2 + chip.clientWidth / 2, behavior: 'smooth' });
+  }
+};
+
+const actualizarMovil = (e) => { esMovil.value = e.matches; };
+watch(esMovil, (v) => { if (v) leerEtiquetas(); activo.value = 0; });
+
+onMounted(() => {
+  mq = window.matchMedia('(max-width: 768px)');
+  esMovil.value = mq.matches;
+  mq.addEventListener('change', actualizarMovil);
+  if (esMovil.value) leerEtiquetas();
+});
+onUnmounted(() => mq?.removeEventListener('change', actualizarMovil));
 </script>
 
 <style scoped>
@@ -574,7 +633,54 @@ const extraCount = 6;
 @media (max-width: 768px) {
   .svc-section { margin: 10px 10px; padding: 32px 14px 24px; border-radius: var(--r-md); }
   .svc-title { font-size: 1.9rem; }
-  .svc-grid { grid-template-columns: 1fr; gap: 12px; }
   .svc-toggle-btn { width: 100%; justify-content: center; }
+
+  /* Carrusel horizontal: asoma la siguiente tarjeta para que se note que hay más */
+  .svc-grid {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-left: 14px;
+    margin: 0 -14px;
+    padding: 4px 14px 6px;
+    scrollbar-width: none;
+  }
+  .svc-grid::-webkit-scrollbar { display: none; }
+  .svc-grid .svc-card {
+    flex: 0 0 84%;
+    scroll-snap-align: start;
+    opacity: 1;
+    transform: none;
+  }
+  .svc-fade-mask { display: none; }
+
+  .svc-chips {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    margin: 0 -14px 14px;
+    padding: 2px 14px;
+    scrollbar-width: none;
+  }
+  .svc-chips::-webkit-scrollbar { display: none; }
+  .svc-chip {
+    flex: none;
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    background: var(--white);
+    border: 1.5px solid var(--border);
+    border-radius: 20px;
+    padding: 6px 14px;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+  }
+  .svc-chip--on { background: var(--blue); border-color: var(--blue); color: #fff; }
+
+  .svc-dots { display: flex; justify-content: center; gap: 6px; margin-top: 14px; }
+  .svc-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--border); transition: width 0.25s, background 0.25s; }
+  .svc-dot--on { width: 20px; border-radius: 4px; background: var(--blue); }
 }
 </style>

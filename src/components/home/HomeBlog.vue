@@ -238,6 +238,21 @@ const latest = computed(() => articles.slice(0, 3));
 @media (max-width: 600px) {
   .hb-section { margin: 10px 10px; padding: 32px 16px 28px; }
   .hb-title { font-size: 1.7rem; }
-  .hb-side { flex-direction: column; }
+  /* Carrusel horizontal con los 3 artículos (asoma el siguiente) */
+  .hb-grid {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-left: 16px;
+    margin: 0 -16px 22px;
+    padding: 2px 16px 6px;
+    scrollbar-width: none;
+  }
+  .hb-grid::-webkit-scrollbar { display: none; }
+  .hb-side { display: contents; }
+  .hb-featured, .hb-card { flex: 0 0 84%; scroll-snap-align: start; }
+  .hb-featured-title { font-size: 1.05rem; }
+  .hb-card-img-wrap { aspect-ratio: 16 / 9; }
 }
 </style>
