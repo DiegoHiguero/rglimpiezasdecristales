@@ -192,6 +192,7 @@ import HomeBlog       from '../components/home/HomeBlog.vue';
 import HomeFaq        from '../components/home/HomeFaq.vue';
 import heroVideoA from '../assets/img/videoplayback.mp4';
 import heroVideoB from '../assets/img/VID-20251022-WA0013.mp4';
+import heroVideoC from '../assets/img/video-padel-web.mp4';
 
 const {
   prenom, email, phone, message,
@@ -206,6 +207,7 @@ const showEmail = ref(false);
 const HERO_CLIPS = [
   { src: heroVideoA, start: 1.5, end: 7 },
   { src: heroVideoB, start: 0.2, end: 3.4 },
+  { src: heroVideoC, start: 0.3, end: 8.4 },
 ];
 const heroVideoIndex = ref(0);
 const heroVideoSrc = computed(() => HERO_CLIPS[heroVideoIndex.value].src);
