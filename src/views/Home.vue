@@ -4,24 +4,18 @@
     <!-- â”€â”€ HERO â”€â”€ -->
     <div class="row d-flex justify-content-center ms-3 mx-3 bg-image principal mt-3 bg-body-tertiary rounded-4 align-items-md-stretch">
 
-      <div class="col-md-6 d-flex align-items-center py-4">
-        <!-- Sin caja: texto y vídeo directamente sobre el fondo; la única
-             tarjeta del hero es el formulario -->
-        <div class="hero-intro w-100">
-          <p class="hero-badge">
-            <span class="hero-badge-stars">★★★★★</span><strong>5.0</strong> en Google <span class="hero-badge-sep">·</span> Presupuesto gratis en 24 h
-          </p>
+      <div class="col-md-6 d-flex align-items-stretch py-4">
+        <!-- Panel de cristal: titular, prueba social y botones a la izquierda;
+             el vídeo en el móvil a la derecha, a toda la altura del bloque -->
+        <div class="hero-panel w-100">
           <h1 class="hero-title">
             <span class="prof">Limpieza de cristales <br class="br-movil">y ventanas en Madrid</span>
           </h1>
-          <ul class="hero-pills">
-            <li>Ventanas</li>
-            <li>Escaparates</li>
-            <li>Oficinas</li>
-            <li>Comunidades</li>
-            <li>Altura</li>
-            <li>Agua a presión</li>
-          </ul>
+          <p class="textAnimation hero-sub">Ventanas · escaparates · oficinas · comunidades · altura · agua a presión</p>
+
+          <p class="hero-proof">
+            <span class="hero-proof-item"><span class="hero-proof-stars">★★★★★</span><strong>5.0</strong> en Google</span> <span class="hero-proof-sep">·</span> <span class="hero-proof-item">Presupuesto gratis en 24 h</span>
+          </p>
 
           <div class="hero-ctas">
             <a href="tel:+34625950506" class="btn btn-light fw-bold px-4">
@@ -52,7 +46,7 @@
         <div class="formulario w-100">
 
           <div class="fh">
-            <h2 class="fh-title">¿Cuánto cuesta limpiar<br><span class="fh-accent">tus cristales?</span></h2>
+            <h2 class="fh-title">¿Cuánto cuesta limpiar<br><span class="fh-accent">tu espacio?</span></h2>
           </div>
 
           <form @submit.prevent="enviarMensaje" novalidate>
@@ -334,9 +328,7 @@ function getCookie(cname: string): string {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(90deg, rgba(10,16,30,0.9) 0%, rgba(10,16,30,0.72) 55%, rgba(10,16,30,0.55) 100%);
-  backdrop-filter: blur(3px);
-  -webkit-backdrop-filter: blur(3px);
+  background: linear-gradient(135deg, rgba(15,23,41,0.72) 0%, rgba(15,23,41,0.38) 100%);
   border-radius: inherit;
   z-index: 1;
   pointer-events: none;
@@ -347,64 +339,50 @@ function getCookie(cname: string): string {
 .hero-stats :deep(.section3) { margin: 0; }
 /* Sin sombra: el panel oscuro ya da el contraste (sobre la foto sí hacía falta) */
 .prof { color: #fff; }
-.hero-intro {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  grid-template-areas:
-    "badge badge"
-    "title title"
-    "pills phone"
-    "ctas  phone";
-  /* Píldoras y botones agrupados y centrados en vertical junto al móvil */
-  grid-template-rows: auto auto 1fr 1fr;
-  column-gap: 28px;
-  align-items: start;
-  padding: 8px 12px 8px 16px;
-}
-.hero-badge {
-  grid-area: badge;
-  justify-self: start;
-  display: inline-flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin: 0 0 16px;
-  padding: 6px 14px;
-  border-radius: 20px;
-  background: rgba(255,255,255,0.08);
-  border: 1px solid rgba(255,255,255,0.14);
+.hero-proof {
   color: rgba(255,255,255,0.9);
   font-family: 'Raleway', sans-serif;
-  font-size: 0.82rem;
-}
-.hero-badge strong { color: #fff; }
-.hero-badge-stars { color: #fbbf24; letter-spacing: 1px; }
-.hero-badge-sep { opacity: 0.5; }
-.br-movil { display: none; }
-.hero-intro .hero-title { grid-area: title; margin: 0 0 22px; font-size: 2.6rem; }
-.hero-pills {
-  grid-area: pills;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px 8px;
-  list-style: none;
+  font-size: 0.95rem;
   margin: 0;
-  padding: 0;
+  text-shadow: 0 1px 8px rgba(0,0,0,0.6);
 }
-.hero-pills li {
-  font-family: 'Raleway', sans-serif;
-  font-size: 0.88rem;
-  font-weight: 600;
-  color: #dbeafe;
-  background: rgba(96,165,250,0.12);
-  border: 1px solid rgba(96,165,250,0.3);
-  border-radius: 20px;
-  padding: 6px 14px;
+.hero-proof-stars { color: #fbbf24; letter-spacing: 1px; margin-right: 4px; }
+.hero-panel {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  /* Título a todo el ancho; debajo, servicios, datos y botones junto al móvil */
+  grid-template-areas:
+    "title title"
+    "sub   phone"
+    "proof phone"
+    "ctas  phone";
+  /* La columna del texto mide lo mismo que el móvil: servicios arriba,
+     botones abajo, alineados con su borde superior e inferior */
+  grid-template-rows: auto auto 1fr auto;
+  column-gap: 28px;
+  align-items: start;
+  /* Estirado a la altura del formulario; el contenido, centrado en vertical */
+  align-content: center;
+  /* Mismo cristal que la franja de cifras: el hero queda en tres piezas a juego */
+  background: rgba(10, 16, 30, 0.45);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--r-md);
+  padding: 30px;
+  transform: translateZ(0); /* capa propia: evita artefactos al repintar el vídeo */
 }
-.hero-intro .hero-pills { align-self: end; }
-.hero-intro .hero-ctas { grid-area: ctas; margin: 22px 0 0; align-self: start; flex-wrap: nowrap; }
-.hero-intro .hero-ctas .btn { flex: 1; display: inline-flex; align-items: center; justify-content: center; white-space: nowrap; padding: 11px 14px; }
-.hero-intro .phone-mockup { grid-area: phone; width: 128px; margin: 0; }
+.br-movil { display: none; }
+.hero-panel .hero-title { grid-area: title; margin: 0 0 22px; font-size: 2.55rem; }
+.hero-panel .hero-sub { grid-area: sub; margin: 0; }
+.hero-panel .hero-proof { grid-area: proof; margin: 0; align-self: center; }
+/* Valoración y presupuesto, cada uno en su línea (al lado del móvil no caben juntos) */
+.hero-proof-item { display: block; }
+.hero-proof-sep { display: none; }
+.hero-panel .hero-ctas  { grid-area: ctas; margin-top: 18px; align-self: end; flex-direction: column; gap: 10px; }
+/* Botones apilados y del mismo ancho, como en el móvil */
+.hero-panel .hero-ctas .btn { width: 100%; max-width: 300px; display: inline-flex; align-items: center; justify-content: center; padding-top: 11px; padding-bottom: 11px; }
+.hero-panel .phone-mockup { grid-area: phone; width: 140px; margin: 0; }
 .phone-mockup {
   position: relative;
   width: 128px;
@@ -595,6 +573,23 @@ function getCookie(cname: string): string {
 
 /* â”€â”€ FORMULARIO MODO CLARO â”€â”€ */
 
+/* ── PANEL DEL HERO MODO CLARO (a juego con el formulario) ── */
+:root:not([data-theme="dark"]) .hero-panel {
+  background: rgba(255, 255, 255, 0.94);
+  border-color: rgba(0,0,0,0.07);
+  box-shadow: 0 8px 40px rgba(0,0,0,0.18);
+}
+:root:not([data-theme="dark"]) .prof { color: #1e293b; }
+:root:not([data-theme="dark"]) .hero-panel .textAnimation {
+  background: linear-gradient(90deg, #2563eb 0%, #3b82f6 50%, #2563eb 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+}
+:root:not([data-theme="dark"]) .hero-proof { color: #475569; text-shadow: none; }
+:root:not([data-theme="dark"]) .hero-proof strong { color: #1e293b; }
+/* El botón blanco de llamar se perdería sobre el panel blanco */
+:root:not([data-theme="dark"]) .hero-ctas .btn-light { background: #1e293b; border-color: #1e293b; color: #fff; }
+:root:not([data-theme="dark"]) .hero-ctas .btn-light:hover { background: #0f172a; color: #fff; }
 :root:not([data-theme="dark"]) .formulario {
   background: rgba(255, 255, 255, 0.94);
   border-color: rgba(0,0,0,0.07);
@@ -720,17 +715,30 @@ function getCookie(cname: string): string {
 @media (max-width: 768px) {
   .principal { min-height: 360px; border-radius: var(--r-md); }
   .hero-title { font-size: 2.1rem; padding-top: 14px; }
-  /* Móvil: título y sello a lo ancho; píldoras y botones a la izquierda
-     del vídeo, que se ajusta a la pantalla */
-  .hero-intro { column-gap: 14px; padding: 4px 4px 4px 6px; }
-  .hero-badge { font-size: 0.72rem; padding: 5px 11px; margin-bottom: 12px; }
-  .hero-intro .hero-title { font-size: 8.4vw; line-height: 1.05; padding-top: 0; margin-bottom: 14px; white-space: nowrap; }
+  /* Móvil: texto a la izquierda (todo el sitio que quede) y vídeo a la derecha
+     con un ancho que se ajusta a la pantalla; botones debajo */
+  .hero-panel {
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      "title title"
+      "sub   phone"
+      "proof phone"
+      "ctas  phone";
+    grid-template-rows: auto auto 1fr auto;
+    column-gap: 16px;
+    padding: 20px 16px;
+  }
+  /* Título en 2 líneas que ocupan el ancho del panel */
+  .hero-panel .hero-title { font-size: 8.4vw; line-height: 1.05; padding-top: 0; margin-bottom: 14px; white-space: nowrap; }
   .br-movil { display: inline; }
-  .hero-pills { gap: 6px; }
-  .hero-pills li { font-size: 0.72rem; padding: 4px 9px; }
-  .hero-intro .phone-mockup { width: clamp(110px, 31vw, 150px); }
-  .hero-intro .hero-ctas { flex-direction: column; gap: 8px; margin-top: 14px; }
-  .hero-intro .hero-ctas .btn { flex: none; width: 100%; font-size: 0.9rem; padding: 9px 10px !important; }
+  .hero-panel .hero-sub { font-size: 0.85rem; margin-top: 0; }
+  .hero-panel .hero-proof { font-size: clamp(0.7rem, 3.3vw, 0.8rem); margin: 10px 0; }
+  .hero-panel .hero-proof-item { white-space: nowrap; }
+  .hero-panel .hero-proof-stars { letter-spacing: 0; }
+  .hero-panel .phone-mockup { width: clamp(110px, 31vw, 150px); margin: 0; }
+  /* Botones apilados en la columna del texto */
+  .hero-panel .hero-ctas { flex-direction: column; gap: 8px; margin-top: 14px; }
+  .hero-panel .hero-ctas .btn { flex: none; width: 100%; justify-content: center; display: inline-flex; align-items: center; white-space: nowrap; font-size: 0.9rem; padding: 9px 10px !important; }
 }
 @media (max-width: 480px) {
   .ff-row { grid-template-columns: 1fr; }
