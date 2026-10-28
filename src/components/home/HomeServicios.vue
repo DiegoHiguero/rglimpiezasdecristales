@@ -653,6 +653,14 @@ onUnmounted(() => mq?.removeEventListener('change', actualizarMovil));
     opacity: 1;
     transform: none;
   }
+  /* Tarjeta compacta: foto más baja y textos más juntos */
+  .svc-grid .svc-img { height: 140px; }
+  .svc-grid .svc-body { padding: 14px 16px 16px; }
+  .svc-grid .svc-desc { line-height: 1.5; margin-bottom: 10px; font-size: 0.82rem; }
+  .svc-grid .svc-list { margin-bottom: 12px; gap: 6px; }
+  .svc-grid .svc-list li { font-size: 0.8rem; }
+  .svc-grid .svc-btn-secondary { margin-bottom: 6px; }
+  .svc-grid .svc-btn { padding: 9px 14px; }
   .svc-fade-mask { display: none; }
 
   .svc-chips {

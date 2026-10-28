@@ -352,10 +352,29 @@
   }
   .pc-grid::-webkit-scrollbar { display: none; }
   .pc-card {
-    flex: 0 0 82%;
+    flex: 0 0 86%;
     scroll-snap-align: start;
     opacity: 1;
     transform: none;
   }
+  /* Tarjeta compacta: menos aire y cabecera en horizontal (icono + nombre) */
+  .section2 { padding: 32px 14px 0; }
+  .pricing-sub { margin-bottom: 20px; }
+  .pc-inner { padding: 14px 16px 14px; }
+  .pc-top {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    column-gap: 12px;
+    align-items: center;
+    text-align: left;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+  }
+  .pc-icon-wrap { grid-row: span 2; width: 42px; height: 42px; border-radius: 12px; font-size: 1.2rem; margin: 0; }
+  .pc-name { font-size: 0.98rem; margin: 0; }
+  .pc-price-wrap { padding-bottom: 10px; margin-bottom: 8px; }
+  .pc-price { font-size: 1.9rem; }
+  .pc-list { margin-bottom: 8px; }
+  .pc-list li { padding: 4px 0; font-size: 0.8rem; }
 }
 </style>
