@@ -8,7 +8,7 @@
       :class="{ 'is-visible': hasAnimated }"
       :style="{ transitionDelay: (i * 0.08) + 's' }"
     >
-      <span class="stat-number">{{ s.prefix }}{{ displayValues[i] }}</span>
+      <span class="stat-number">{{ s.prefix }}{{ displayValues[i].toLocaleString('en-GB') }}</span>
       <span class="stat-label">{{ s.label }}</span>
     </div>
     <div class="perk" v-for="p in perks" :key="p.titulo">
@@ -22,9 +22,11 @@
 import { ref, onMounted } from 'vue';
 
 const stats = [
-  { target: 10,  prefix: '+', label: 'years of experience' },
-  { target: 500, prefix: '+', label: 'jobs' },
-  { target: 200, prefix: '+', label: 'clients' },
+  // Desde 2013
+  { target: 13,    prefix: '+', label: 'years of experience' },
+  // 8-12 servicios al día, ~200 días al año, 13 años (cálculo por lo bajo)
+  { target: 20000, prefix: '+', label: 'jobs' },
+  { target: 300,   prefix: '+', label: 'clients' },
 ];
 
 const perks = [
