@@ -3,7 +3,9 @@
     <div class="nav-inner">
 
       <router-link class="navbar-brand" to="/">
-        <img class="logo" src="../assets/img/ROYAL_CLEAN_2025_BLANCO.png" alt="Royall Clean logo" />
+        <!-- Logo a color en modo claro y blanco en modo oscuro -->
+        <img class="logo logo--claro" src="../assets/img/ROYAL_CLEAN_2025_COLOR.png" alt="Royall Clean logo" />
+        <img class="logo logo--oscuro" src="../assets/img/ROYAL_CLEAN_2025_BLANCO.png" alt="" aria-hidden="true" />
       </router-link>
 
       <button class="toggler" :class="{ open: menuOpen }" type="button"
@@ -443,5 +445,45 @@ ul.navbar-nav {
     min-width: 0;
     width: auto;
   }
+}
+
+/* ── MODO CLARO: barra blanca translúcida con el mismo brillo azul ── */
+.logo--oscuro { display: none; }
+:root[data-theme="dark"] .logo--claro { display: none; }
+:root[data-theme="dark"] .logo--oscuro { display: block; }
+
+:root:not([data-theme="dark"]) .navbar {
+  background:
+    radial-gradient(ellipse 60% 100% at 20% 0%, rgba(37, 99, 235, 0.07) 0%, transparent 65%),
+    rgba(255, 255, 255, 0.86);
+  border-bottom-color: #e2e8f0;
+  box-shadow: none;
+}
+:root:not([data-theme="dark"]) .navbar.scrolled {
+  border-bottom-color: #dbe3ef;
+  box-shadow: 0 10px 30px -12px rgba(15, 23, 41, 0.18);
+}
+:root:not([data-theme="dark"]) .nl { color: #475569; }
+:root:not([data-theme="dark"]) .nl:hover { color: #1e293b; background: rgba(15, 23, 41, 0.05); }
+:root:not([data-theme="dark"]) .nl.router-link-exact-active { color: #1e293b; }
+:root:not([data-theme="dark"]) .nl::after {
+  background: linear-gradient(90deg, transparent 0%, #2563eb 25%, #3b82f6 50%, #2563eb 75%, transparent 100%);
+}
+:root:not([data-theme="dark"]) .bar { background: #1e293b; }
+:root:not([data-theme="dark"]) .toggler:hover .bar,
+:root:not([data-theme="dark"]) .toggler.open .bar { background: #2563eb; }
+:root:not([data-theme="dark"]) .nav-divider { background: linear-gradient(180deg, transparent, rgba(15, 23, 41, 0.18), transparent); }
+:root:not([data-theme="dark"]) .icon-btn { color: #64748b; }
+:root:not([data-theme="dark"]) .icon-btn:hover { color: #1e293b; background: rgba(15, 23, 41, 0.06); }
+:root:not([data-theme="dark"]) .theme-toggle { color: #475569; }
+:root:not([data-theme="dark"]) .theme-toggle:hover { color: #2563eb; background: rgba(37, 99, 235, 0.08); }
+
+@media (max-width: 991.98px) {
+  :root:not([data-theme="dark"]) .navbar-collapse {
+    background: rgba(255, 255, 255, 0.98);
+    border-color: #e2e8f0;
+    box-shadow: 0 16px 40px rgba(15, 23, 41, 0.14);
+  }
+  :root:not([data-theme="dark"]) .nav-right { border-top-color: #e2e8f0; }
 }
 </style>
