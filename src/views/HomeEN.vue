@@ -317,8 +317,11 @@ function getCookie(cname: string): string {
 
 /* ── HERO ── */
 .principal {
-  background: url('/fondo_jabon.webp') center/cover no-repeat;
-  background-color: #0f1729;
+  /* Mismo fondo que la franja de reseñas: azul marino con brillos azules */
+  background:
+    radial-gradient(circle at 88% 0%, rgba(37,99,235,0.38), transparent 50%),
+    radial-gradient(circle at 0% 100%, rgba(59,130,246,0.18), transparent 45%),
+    linear-gradient(160deg, #0f1729 0%, #16213a 100%);
   position: relative;
   overflow: hidden;
   min-height: 500px;
@@ -329,7 +332,7 @@ function getCookie(cname: string): string {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, rgba(15,23,41,0.72) 0%, rgba(15,23,41,0.38) 100%);
+  background: none;
   border-radius: inherit;
   z-index: 1;
   pointer-events: none;
