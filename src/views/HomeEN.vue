@@ -582,10 +582,18 @@ function getCookie(cname: string): string {
 /* â”€â”€ FORMULARIO MODO CLARO â”€â”€ */
 
 /* ── PANEL DEL HERO MODO CLARO (a juego con el formulario) ── */
+/* Modo claro: el mismo fondo con brillos, pero en azul muy claro */
+:root:not([data-theme="dark"]) .principal {
+  background:
+    radial-gradient(circle at 88% 0%, rgba(37,99,235,0.16), transparent 50%),
+    radial-gradient(circle at 0% 100%, rgba(96,165,250,0.18), transparent 45%),
+    linear-gradient(160deg, #f5f8ff 0%, #e3ecfd 100%);
+  border: 1px solid #dbe5f7;
+}
 :root:not([data-theme="dark"]) .hero-panel {
   background: rgba(255, 255, 255, 0.94);
-  border-color: rgba(0,0,0,0.07);
-  box-shadow: 0 8px 40px rgba(0,0,0,0.18);
+  border-color: #dbe5f7;
+  box-shadow: 0 10px 30px rgba(30,64,175,0.08);
 }
 :root:not([data-theme="dark"]) .prof { color: #1e293b; }
 :root:not([data-theme="dark"]) .hero-panel .textAnimation {
@@ -600,10 +608,11 @@ function getCookie(cname: string): string {
 :root:not([data-theme="dark"]) .hero-ctas .btn-light:hover { background: #0f172a; color: #fff; }
 :root:not([data-theme="dark"]) .formulario {
   background: rgba(255, 255, 255, 0.94);
-  border-color: rgba(0,0,0,0.07);
-  box-shadow: 0 8px 40px rgba(0,0,0,0.18);
+  border-color: #dbe5f7;
+  box-shadow: 0 10px 30px rgba(30,64,175,0.08);
 }
 :root:not([data-theme="dark"]) .fh-title { color: #1e293b; }
+:root:not([data-theme="dark"]) .fh-accent { background-image: linear-gradient(90deg, #2563eb, #3b82f6); }
 :root:not([data-theme="dark"]) .ff-icon {
   background: rgba(37,99,235,0.08);
   border-color: rgba(37,99,235,0.2);

@@ -110,8 +110,8 @@ onMounted(() => {
 /* Modo claro: franja blanca, a juego con el panel y el formulario del hero */
 :root:not([data-theme="dark"]) .section3 {
   background: rgba(255, 255, 255, 0.94);
-  border-color: rgba(0,0,0,0.07);
-  box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+  border-color: #dbe5f7;
+  box-shadow: 0 10px 30px rgba(30,64,175,0.08);
 }
 :root:not([data-theme="dark"]) .stat-number { color: #1e293b; }
 :root:not([data-theme="dark"]) .stat-label { color: #475569; }
