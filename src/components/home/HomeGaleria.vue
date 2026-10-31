@@ -125,7 +125,7 @@
       </div>
     </Teleport>
 
-    <div class="gl-footer">
+    <div class="gl-footer" v-if="completa">
       <div class="gl-footer-left">
         <font-awesome-icon :icon="['fas', 'camera']" class="gl-footer-icon" />
         <p class="gl-footer-text">¿Quieres ver tu espacio aquí? Pide tu presupuesto gratis hoy.</p>

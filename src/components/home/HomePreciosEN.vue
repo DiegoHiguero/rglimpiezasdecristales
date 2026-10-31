@@ -31,7 +31,7 @@
               <li><font-awesome-icon :icon="['fas', 'check']" class="pc-check" />Door cleaning</li>
               <li><font-awesome-icon :icon="['fas', 'check']" class="pc-check" />Glass disinfection</li>
             </ul>
-            <router-link to="/en/contact" class="pc-btn">Choose this plan<font-awesome-icon :icon="['fas', 'arrow-right']" class="pc-btn-arrow" /></router-link>
+            <router-link v-if="cardButtons" to="/en/contact" class="pc-btn">Choose this plan<font-awesome-icon :icon="['fas', 'arrow-right']" class="pc-btn-arrow" /></router-link>
           </div>
         </div>
 
@@ -52,7 +52,7 @@
               <li><font-awesome-icon :icon="['fas', 'check']" class="pc-check" />Door cleaning</li>
               <li><font-awesome-icon :icon="['fas', 'check']" class="pc-check" />Glass disinfection</li>
             </ul>
-            <router-link to="/en/contact" class="pc-btn">Choose this plan<font-awesome-icon :icon="['fas', 'arrow-right']" class="pc-btn-arrow" /></router-link>
+            <router-link v-if="cardButtons" to="/en/contact" class="pc-btn">Choose this plan<font-awesome-icon :icon="['fas', 'arrow-right']" class="pc-btn-arrow" /></router-link>
           </div>
         </div>
 
@@ -73,7 +73,7 @@
               <li><font-awesome-icon :icon="['fas', 'check']" class="pc-check" />Door cleaning</li>
               <li><font-awesome-icon :icon="['fas', 'check']" class="pc-check" />Glass disinfection</li>
             </ul>
-            <router-link to="/en/contact" class="pc-btn">Choose this plan<font-awesome-icon :icon="['fas', 'arrow-right']" class="pc-btn-arrow" /></router-link>
+            <router-link v-if="cardButtons" to="/en/contact" class="pc-btn">Choose this plan<font-awesome-icon :icon="['fas', 'arrow-right']" class="pc-btn-arrow" /></router-link>
           </div>
         </div>
 
@@ -94,7 +94,7 @@
               <li><font-awesome-icon :icon="['fas', 'check']" class="pc-check" />Balcony cleaning</li>
               <li><font-awesome-icon :icon="['fas', 'check']" class="pc-check" />Glass disinfection</li>
             </ul>
-            <router-link to="/en/contact" class="pc-btn">Choose this plan<font-awesome-icon :icon="['fas', 'arrow-right']" class="pc-btn-arrow" /></router-link>
+            <router-link v-if="cardButtons" to="/en/contact" class="pc-btn">Choose this plan<font-awesome-icon :icon="['fas', 'arrow-right']" class="pc-btn-arrow" /></router-link>
           </div>
         </div>
 
@@ -119,7 +119,7 @@
               <li><font-awesome-icon :icon="['fas', 'check']" class="pc-check" />Railing cleaning</li>
               <li><font-awesome-icon :icon="['fas', 'check']" class="pc-check" />Glass disinfection</li>
             </ul>
-            <router-link to="/en/contact" class="pc-btn pc-btn--filled">Choose this plan<font-awesome-icon :icon="['fas', 'arrow-right']" class="pc-btn-arrow" /></router-link>
+            <router-link v-if="cardButtons" to="/en/contact" class="pc-btn pc-btn--filled">Choose this plan<font-awesome-icon :icon="['fas', 'arrow-right']" class="pc-btn-arrow" /></router-link>
           </div>
         </div>
 
@@ -142,7 +142,7 @@
               <li><font-awesome-icon :icon="['fas', 'check']" class="pc-check" />Railing cleaning</li>
               <li><font-awesome-icon :icon="['fas', 'check']" class="pc-check" />Glass disinfection</li>
             </ul>
-            <router-link to="/en/contact" class="pc-btn">Choose this plan<font-awesome-icon :icon="['fas', 'arrow-right']" class="pc-btn-arrow" /></router-link>
+            <router-link v-if="cardButtons" to="/en/contact" class="pc-btn">Choose this plan<font-awesome-icon :icon="['fas', 'arrow-right']" class="pc-btn-arrow" /></router-link>
           </div>
         </div>
 
@@ -152,6 +152,10 @@
 </template>
 
 <script setup>
+defineProps({
+  // On the homepage they are hidden: contact stays in the hero and the closing block
+  cardButtons: { type: Boolean, default: true },
+});
 </script>
 
 <style scoped>

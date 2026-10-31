@@ -35,16 +35,8 @@
     <div class="zonas-footer">
       <p class="zonas-nota">
         <font-awesome-icon :icon="['fas', 'circle-info']" class="me-2" />
-        Don't see your municipality? Give us a call and we'll confirm.
+        Don't see your municipality? Call us on <a href="tel:+34625950506" class="zonas-tel">625 950 506</a> and we'll confirm.
       </p>
-      <div class="zonas-ctas">
-        <a href="tel:+34625950506" class="zonas-btn zonas-btn--primary">
-          <font-awesome-icon :icon="['fas', 'phone']" class="me-2" />Call now
-        </a>
-        <a href="https://wa.me/34625950506" target="_blank" rel="noopener noreferrer" class="zonas-btn zonas-btn--whatsapp">
-          <font-awesome-icon :icon="['fab', 'whatsapp']" class="me-2" />WhatsApp
-        </a>
-      </div>
     </div>
 
   </section>
@@ -233,49 +225,42 @@ const zonas = [
   margin: 0;
 }
 
-.zonas-ctas {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-}
 
-.zonas-btn {
-  display: inline-flex;
-  align-items: center;
-  font-family: 'Raleway', sans-serif;
-  font-weight: 700;
-  font-size: 0.86rem;
-  padding: 10px 20px;
-  border-radius: 10px;
-  text-decoration: none;
-  transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
-  white-space: nowrap;
-}
-.zonas-btn--primary {
-  background: var(--blue);
-  color: #fff;
-}
-.zonas-btn--primary:hover {
-  background: var(--blue-hover);
-  color: #fff;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 18px rgba(37,99,235,0.35);
-}
-.zonas-btn--whatsapp {
-  background: #25D366;
-  color: var(--navy);
-}
-.zonas-btn--whatsapp:hover {
-  background: #1ebe5d;
-  color: var(--navy);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 18px rgba(37,211,102,0.35);
+
+/* Un solo color para los iconos de zona (el pastel de cada una va inline) */
+.zona-icon-box { background: var(--blue-pale) !important; color: var(--blue) !important; }
+
+/* Escritorio: una fila por zona con los municipios como etiquetas, en lugar de
+   cinco columnas de listas; los que tienen página propia van resaltados */
+@media (min-width: 769px) {
+  .zonas-grid { display: flex; flex-direction: column; gap: 0; border-top: 1px solid var(--border); }
+  .zona-card {
+    display: grid;
+    grid-template-columns: 190px 1fr;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 4px;
+    border: 0;
+    border-bottom: 1px solid var(--border);
+    border-radius: 0;
+    background: none;
+  }
+  .zona-card:hover { transform: none; box-shadow: none; }
+  .zona-card-head { margin: 0; padding: 0; border: 0; }
+  .zona-lista { flex-direction: row; flex-wrap: wrap; gap: 8px; }
+  .zona-lista li {
+    font-size: 0.82rem;
+    padding: 5px 12px;
+    border-radius: 20px;
+    background: var(--slate);
+    border: 1px solid var(--border);
+  }
+  .zona-lista li:has(.zona-link) { background: var(--blue-pale); border-color: transparent; }
+  :root[data-theme="dark"] .zona-link { color: #93c5fd; }
+  .zona-check { display: none; }
 }
 
 /* ── Responsive ── */
-@media (max-width: 1100px) {
-  .zonas-grid { grid-template-columns: repeat(3, 1fr); }
-}
 @media (max-width: 768px) {
   .zonas-grid { grid-template-columns: 1fr; gap: 10px; margin-bottom: 24px; }
   .zona-card { padding: 12px 14px; }
@@ -288,7 +273,7 @@ const zonas = [
   .zonas-section { margin: 10px 10px; padding: 32px 16px 28px; border-radius: var(--r-md); }
   .zonas-title { font-size: 1.7rem; }
   .zonas-footer { flex-direction: column; align-items: flex-start; }
-  .zonas-ctas { width: 100%; }
-  .zonas-btn { flex: 1; justify-content: center; }
 }
+.zonas-tel { color: var(--blue); font-weight: 700; text-decoration: none; white-space: nowrap; }
+.zonas-tel:hover { text-decoration: underline; }
 </style>

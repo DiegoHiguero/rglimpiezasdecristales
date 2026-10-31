@@ -4,7 +4,7 @@
       <div class="ft-top">
         <div class="ft-brand">
           <img src="../assets/img/ROYAL_CLEAN_2025_BLANCO.png" alt="Royall Clean" class="ft-logo" />
-          <p class="ft-tagline">Limpieza profesional de cristales y fachadas en Madrid y alrededores. Más de 10 años de experiencia a tu servicio.</p>
+          <p class="ft-tagline">Limpieza profesional de cristales y fachadas en Madrid y alrededores. Más de 13 años de experiencia a tu servicio.</p>
           <div class="ft-social">
             <a href="https://www.instagram.com/royall_clean_madrid/" target="_blank" rel="noopener noreferrer" class="ft-social-link" aria-label="Instagram"><font-awesome-icon :icon="['fab', 'instagram']" /></a>
             <a href="https://share.google/DLNHmdGwTFC8h4F7Y" target="_blank" rel="noopener noreferrer" class="ft-social-link" aria-label="Google Business"><font-awesome-icon :icon="['fab', 'google']" /></a>

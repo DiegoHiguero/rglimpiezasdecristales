@@ -241,7 +241,7 @@ const staticPages = [
   {
     route: 'en',
     title: 'Window & Glass Cleaning in Madrid | Royall Clean',
-    description: 'Window and glass cleaning in Madrid for homes, communities and shops. Over 10 years of experience. Free quote within 24 h! ☎ +34 625 950 506',
+    description: 'Window and glass cleaning in Madrid for homes, communities and shops. Over 13 years of experience. Free quote within 24 h! ☎ +34 625 950 506',
     hreflang: { es: '', en: 'en' },
   },
   {

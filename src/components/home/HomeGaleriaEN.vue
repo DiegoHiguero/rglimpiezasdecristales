@@ -118,16 +118,6 @@
       </div>
     </Teleport>
 
-    <div class="gl-footer">
-      <div class="gl-footer-left">
-        <font-awesome-icon :icon="['fas', 'camera']" class="gl-footer-icon" />
-        <p class="gl-footer-text">Want to see your space here? Get your free quote today.</p>
-      </div>
-      <router-link to="/en/contact" class="gl-footer-btn">
-        <font-awesome-icon :icon="['fas', 'paper-plane']" class="me-2" />Request a quote
-      </router-link>
-    </div>
-
   </div>
 </template>
 

@@ -46,7 +46,7 @@
         <div class="formulario w-100">
 
           <div class="fh">
-            <h2 class="fh-title">How much does it cost<br><span class="fh-accent">to clean your space?</span></h2>
+            <h2 class="fh-title">How much does it cost<br><span class="fh-accent">to clean your windows?</span></h2>
           </div>
 
           <form @submit.prevent="enviarMensaje" novalidate>
@@ -138,7 +138,7 @@
     <HomeGaleriaEN />
     <HomeSobreMiEN />
     <HomeTestimoniosEN />
-    <HomePreciosEN />
+    <HomePreciosEN :card-buttons="false" />
     <HomeZonasEN />
     <HomeFaqEN />
     <HomeBlogEN />

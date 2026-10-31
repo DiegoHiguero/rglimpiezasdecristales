@@ -31,7 +31,7 @@
               <li><font-awesome-icon :icon="['fas', 'check']" class="pc-check" />Limpieza de puertas</li>
               <li><font-awesome-icon :icon="['fas', 'check']" class="pc-check" />Desinfección de cristales</li>
             </ul>
-            <router-link to="/contacto" class="pc-btn">Elegir esta tarifa<font-awesome-icon :icon="['fas', 'arrow-right']" class="pc-btn-arrow" /></router-link>
+            <router-link v-if="cardButtons" to="/contacto" class="pc-btn">Elegir esta tarifa<font-awesome-icon :icon="['fas', 'arrow-right']" class="pc-btn-arrow" /></router-link>
           </div>
         </div>
 
@@ -52,7 +52,7 @@
               <li><font-awesome-icon :icon="['fas', 'check']" class="pc-check" />Limpieza de puertas</li>
               <li><font-awesome-icon :icon="['fas', 'check']" class="pc-check" />Desinfección de cristales</li>
             </ul>
-            <router-link to="/contacto" class="pc-btn">Elegir esta tarifa<font-awesome-icon :icon="['fas', 'arrow-right']" class="pc-btn-arrow" /></router-link>
+            <router-link v-if="cardButtons" to="/contacto" class="pc-btn">Elegir esta tarifa<font-awesome-icon :icon="['fas', 'arrow-right']" class="pc-btn-arrow" /></router-link>
           </div>
         </div>
 
@@ -73,7 +73,7 @@
               <li><font-awesome-icon :icon="['fas', 'check']" class="pc-check" />Limpieza de puertas</li>
               <li><font-awesome-icon :icon="['fas', 'check']" class="pc-check" />Desinfección de cristales</li>
             </ul>
-            <router-link to="/contacto" class="pc-btn">Elegir esta tarifa<font-awesome-icon :icon="['fas', 'arrow-right']" class="pc-btn-arrow" /></router-link>
+            <router-link v-if="cardButtons" to="/contacto" class="pc-btn">Elegir esta tarifa<font-awesome-icon :icon="['fas', 'arrow-right']" class="pc-btn-arrow" /></router-link>
           </div>
         </div>
 
@@ -94,7 +94,7 @@
               <li><font-awesome-icon :icon="['fas', 'check']" class="pc-check" />Limpieza de balcones</li>
               <li><font-awesome-icon :icon="['fas', 'check']" class="pc-check" />Desinfección de cristales</li>
             </ul>
-            <router-link to="/contacto" class="pc-btn">Elegir esta tarifa<font-awesome-icon :icon="['fas', 'arrow-right']" class="pc-btn-arrow" /></router-link>
+            <router-link v-if="cardButtons" to="/contacto" class="pc-btn">Elegir esta tarifa<font-awesome-icon :icon="['fas', 'arrow-right']" class="pc-btn-arrow" /></router-link>
           </div>
         </div>
 
@@ -119,7 +119,7 @@
               <li><font-awesome-icon :icon="['fas', 'check']" class="pc-check" />Limpieza de barandillas</li>
               <li><font-awesome-icon :icon="['fas', 'check']" class="pc-check" />Desinfección de cristales</li>
             </ul>
-            <router-link to="/contacto" class="pc-btn pc-btn--filled">Elegir esta tarifa<font-awesome-icon :icon="['fas', 'arrow-right']" class="pc-btn-arrow" /></router-link>
+            <router-link v-if="cardButtons" to="/contacto" class="pc-btn pc-btn--filled">Elegir esta tarifa<font-awesome-icon :icon="['fas', 'arrow-right']" class="pc-btn-arrow" /></router-link>
           </div>
         </div>
 
@@ -142,7 +142,7 @@
               <li><font-awesome-icon :icon="['fas', 'check']" class="pc-check" />Limpieza de barandillas</li>
               <li><font-awesome-icon :icon="['fas', 'check']" class="pc-check" />Desinfección de cristales</li>
             </ul>
-            <router-link to="/contacto" class="pc-btn">Elegir esta tarifa<font-awesome-icon :icon="['fas', 'arrow-right']" class="pc-btn-arrow" /></router-link>
+            <router-link v-if="cardButtons" to="/contacto" class="pc-btn">Elegir esta tarifa<font-awesome-icon :icon="['fas', 'arrow-right']" class="pc-btn-arrow" /></router-link>
           </div>
         </div>
 
@@ -163,6 +163,8 @@
 // cabecera repetiría el H1 y la introducción de la página
 defineProps({
   detailLink: { type: Boolean, default: true },
+  // En la portada se ocultan: el contacto queda en el hero y en el bloque final
+  cardButtons: { type: Boolean, default: true },
   header: { type: Boolean, default: true },
 });
 </script>

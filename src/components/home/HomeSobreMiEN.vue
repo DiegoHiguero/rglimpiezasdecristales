@@ -14,15 +14,6 @@
         <h2 class="ns-title">Hi, I'm<br><span class="ns-title-accent">Roys Abreu!</span></h2>
         <p class="ns-role">Founder of Royall Clean · Madrid</p>
         <p class="ns-text">I have been cleaning windows in Madrid since 2013 and I specialise in <strong>difficult jobs</strong>, the ones others won't take on. I work independently, so you deal directly with me, and I would rather take a little longer and have you happy with the result.</p>
-        <!-- Contacto directo, coherente con "tratas directamente conmigo" -->
-        <div class="ns-ctas">
-          <a href="tel:+34625950506" class="ns-cta">
-            <font-awesome-icon :icon="['fas', 'phone']" class="me-2" />Call me: 625 950 506
-          </a>
-          <a href="https://wa.me/34625950506?text=Hi%20Roys%2C%20I%27d%20like%20a%20quote" target="_blank" rel="noopener noreferrer" class="ns-cta ns-cta--wa">
-            <font-awesome-icon :icon="['fab', 'whatsapp']" class="me-2" />WhatsApp
-          </a>
-        </div>
       </div>
     </div>
   </div>
@@ -110,29 +101,6 @@
   margin: 0 0 24px;
 }
 .ns-text strong { color: var(--text); }
-.ns-cta {
-  display: inline-flex;
-  align-items: center;
-  width: fit-content;
-  background: var(--blue);
-  color: #fff;
-  font-family: 'Raleway', sans-serif;
-  font-weight: 700;
-  font-size: 0.92rem;
-  padding: 12px 26px;
-  border-radius: 12px;
-  text-decoration: none;
-  transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
-}
-.ns-ctas { display: flex; flex-wrap: wrap; gap: 10px; }
-.ns-cta--wa { background: #25d366; }
-.ns-cta--wa:hover { background: #1ebe5b !important; box-shadow: 0 6px 22px rgba(37,211,102,0.35) !important; }
-.ns-cta:hover {
-  background: var(--blue-hover);
-  color: #fff;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 22px rgba(37,99,235,0.38);
-}
 
 /* ── RESPONSIVE ── */
 @media (max-width: 900px) {
@@ -145,6 +113,5 @@
   .texto-principal-nosotros { margin: 10px; border-radius: var(--r-md); }
 }
 @media (max-width: 480px) {
-  .ns-cta { width: 100%; justify-content: center; }
 }
 </style>

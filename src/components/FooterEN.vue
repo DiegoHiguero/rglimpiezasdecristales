@@ -4,7 +4,7 @@
       <div class="ft-top">
         <div class="ft-brand">
           <img src="../assets/img/ROYAL_CLEAN_2025_BLANCO.png" alt="Royall Clean" class="ft-logo" />
-          <p class="ft-tagline">Professional window and façade cleaning in Madrid and surrounding areas. Over 10 years of experience at your service.</p>
+          <p class="ft-tagline">Professional window and façade cleaning in Madrid and surrounding areas. Over 13 years of experience at your service.</p>
           <div class="ft-social">
             <a href="https://www.instagram.com/royall_clean_madrid/" target="_blank" rel="noopener noreferrer" class="ft-social-link" aria-label="Instagram"><font-awesome-icon :icon="['fab', 'instagram']" /></a>
             <a href="https://share.google/DLNHmdGwTFC8h4F7Y" target="_blank" rel="noopener noreferrer" class="ft-social-link" aria-label="Google Business"><font-awesome-icon :icon="['fab', 'google']" /></a>

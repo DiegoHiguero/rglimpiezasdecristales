@@ -84,7 +84,7 @@ export const servicios = [
     tag: 'Hogares',
     content: `
       <h2>Limpieza de cristales para casas y pisos en Madrid</h2>
-      <p>Unos cristales limpios cambian por completo la luz y la sensación de orden en cualquier hogar. En <strong>Royall Clean</strong> llevamos más de 10 años limpiando ventanas, balcones y terrazas en viviendas particulares de Madrid capital y de toda la Comunidad de Madrid, dejando un acabado profesional que es muy difícil de conseguir con la mopa y el limpiacristales de la cocina.</p>
+      <p>Unos cristales limpios cambian por completo la luz y la sensación de orden en cualquier hogar. En <strong>Royall Clean</strong> llevamos más de 13 años limpiando ventanas, balcones y terrazas en viviendas particulares de Madrid capital y de toda la Comunidad de Madrid, dejando un acabado profesional que es muy difícil de conseguir con la mopa y el limpiacristales de la cocina.</p>
       <p>Trabajamos tanto en pisos de comunidad como en chalets y casas unifamiliares, adaptando el servicio al tipo de vivienda, a la altura de las ventanas y a las necesidades concretas de cada cliente.</p>
 
       <h2>Qué incluye el servicio</h2>

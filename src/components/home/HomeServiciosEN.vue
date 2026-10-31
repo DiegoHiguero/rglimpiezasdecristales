@@ -36,8 +36,7 @@
             <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Unger HydroPower pure water up to 10 m</li>
             <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />No scaffolding, no streaks</li>
           </ul>
-          <router-link to="/agua-pura-altura" class="svc-btn-secondary">Learn more</router-link>
-          <router-link to="/en/contact" class="svc-btn svc-btn--teal">Get a quote</router-link>
+          <router-link to="/agua-pura-altura" class="svc-btn">Learn more</router-link>
         </div>
       </div>
 
@@ -58,8 +57,7 @@
             <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Frames, seals and railings</li>
             <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />100% eco-friendly products</li>
           </ul>
-          <router-link to="/limpieza-cristales-hogares" class="svc-btn-secondary">Learn more</router-link>
-          <router-link to="/en/contact" class="svc-btn svc-btn--green">Get a quote</router-link>
+          <router-link to="/limpieza-cristales-hogares" class="svc-btn">Learn more</router-link>
         </div>
       </div>
 
@@ -80,8 +78,7 @@
             <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Cleaning without closing your business</li>
             <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Fortnightly or monthly frequency</li>
           </ul>
-          <router-link to="/limpieza-cristales-locales-comerciales" class="svc-btn-secondary">Learn more</router-link>
-          <router-link to="/en/contact" class="svc-btn svc-btn--blue">Get a quote</router-link>
+          <router-link to="/limpieza-cristales-locales-comerciales" class="svc-btn">Learn more</router-link>
         </div>
       </div>
 
@@ -102,8 +99,7 @@
             <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Maintenance contract</li>
             <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Quotes for property managers</li>
           </ul>
-          <router-link to="/limpieza-cristales-comunidades" class="svc-btn-secondary">Learn more</router-link>
-          <router-link to="/en/contact" class="svc-btn svc-btn--indigo">Get a quote</router-link>
+          <router-link to="/limpieza-cristales-comunidades" class="svc-btn">Learn more</router-link>
         </div>
       </div>
 
@@ -126,8 +122,7 @@
                 <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Schedules adapted to your business</li>
                 <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Contract and business invoicing</li>
               </ul>
-              <router-link to="/limpieza-cristales-oficinas" class="svc-btn-secondary">Learn more</router-link>
-              <router-link to="/en/contact" class="svc-btn svc-btn--purple">Get a quote</router-link>
+              <router-link to="/limpieza-cristales-oficinas" class="svc-btn">Learn more</router-link>
             </div>
           </div>
 
@@ -148,8 +143,7 @@
                 <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Façades, walls and awnings</li>
                 <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Pressure adapted to each material</li>
               </ul>
-              <router-link to="/limpieza-agua-a-presion" class="svc-btn-secondary">Learn more</router-link>
-              <router-link to="/en/contact" class="svc-btn svc-btn--orange">Get a quote</router-link>
+              <router-link to="/limpieza-agua-a-presion" class="svc-btn">Learn more</router-link>
             </div>
           </div>
 
@@ -170,8 +164,7 @@
                 <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />No harsh chemicals</li>
                 <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Regular maintenance</li>
               </ul>
-              <router-link to="/limpieza-placas-solares" class="svc-btn-secondary">Learn more</router-link>
-              <router-link to="/en/contact" class="svc-btn svc-btn--yellow">Get a quote</router-link>
+              <router-link to="/limpieza-placas-solares" class="svc-btn">Learn more</router-link>
             </div>
           </div>
 
@@ -192,8 +185,7 @@
                 <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Removal of adhesives and paint</li>
                 <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Windows, floors and tiles</li>
               </ul>
-              <router-link to="/limpieza-fin-de-obra" class="svc-btn-secondary">Learn more</router-link>
-              <router-link to="/en/contact" class="svc-btn svc-btn--cyan">Get a quote</router-link>
+              <router-link to="/limpieza-fin-de-obra" class="svc-btn">Learn more</router-link>
             </div>
           </div>
 
@@ -214,8 +206,7 @@
                 <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Entrances and common areas</li>
                 <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />No damage to the surface</li>
               </ul>
-              <router-link to="/limpieza-grafitis" class="svc-btn-secondary">Learn more</router-link>
-              <router-link to="/en/contact" class="svc-btn svc-btn--rose">Get a quote</router-link>
+              <router-link to="/limpieza-grafitis" class="svc-btn">Learn more</router-link>
             </div>
           </div>
 
@@ -236,8 +227,7 @@
                 <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />No scratching or damage to the glass</li>
                 <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Adhesive residue removal</li>
               </ul>
-              <router-link to="/retirada-de-vinilos" class="svc-btn-secondary">Learn more</router-link>
-              <router-link to="/en/contact" class="svc-btn svc-btn--fuchsia">Get a quote</router-link>
+              <router-link to="/retirada-de-vinilos" class="svc-btn">Learn more</router-link>
             </div>
           </div>
 

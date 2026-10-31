@@ -36,8 +36,7 @@
             <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Agua pura Unger HydroPower hasta 10 m</li>
             <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Sin andamios ni marcas</li>
           </ul>
-          <router-link to="/agua-pura-altura" class="svc-btn-secondary">Saber más</router-link>
-          <router-link to="/contacto" class="svc-btn svc-btn--teal">Consultar precio</router-link>
+          <router-link to="/agua-pura-altura" class="svc-btn">Saber más</router-link>
         </div>
       </div>
 
@@ -58,8 +57,7 @@
             <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Marcos, juntas y barandillas</li>
             <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Productos 100% ecológicos</li>
           </ul>
-          <router-link to="/limpieza-cristales-hogares" class="svc-btn-secondary">Saber más</router-link>
-          <router-link to="/contacto" class="svc-btn svc-btn--green">Consultar precio</router-link>
+          <router-link to="/limpieza-cristales-hogares" class="svc-btn">Saber más</router-link>
         </div>
       </div>
 
@@ -80,8 +78,7 @@
             <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Limpieza sin cerrar el negocio</li>
             <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Frecuencia quincenal o mensual</li>
           </ul>
-          <router-link to="/limpieza-cristales-locales-comerciales" class="svc-btn-secondary">Saber más</router-link>
-          <router-link to="/contacto" class="svc-btn svc-btn--blue">Consultar precio</router-link>
+          <router-link to="/limpieza-cristales-locales-comerciales" class="svc-btn">Saber más</router-link>
         </div>
       </div>
 
@@ -102,8 +99,7 @@
             <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Contrato de mantenimiento</li>
             <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Presupuesto para administradores</li>
           </ul>
-          <router-link to="/limpieza-cristales-comunidades" class="svc-btn-secondary">Saber más</router-link>
-          <router-link to="/contacto" class="svc-btn svc-btn--indigo">Consultar precio</router-link>
+          <router-link to="/limpieza-cristales-comunidades" class="svc-btn">Saber más</router-link>
         </div>
       </div>
 
@@ -126,8 +122,7 @@
                 <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Horarios adaptados a tu empresa</li>
                 <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Contrato y factura para empresas</li>
               </ul>
-              <router-link to="/limpieza-cristales-oficinas" class="svc-btn-secondary">Saber más</router-link>
-              <router-link to="/contacto" class="svc-btn svc-btn--purple">Consultar precio</router-link>
+              <router-link to="/limpieza-cristales-oficinas" class="svc-btn">Saber más</router-link>
             </div>
           </div>
 
@@ -148,8 +143,7 @@
                 <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Fachadas, muros y toldos</li>
                 <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Presión adaptada a cada material</li>
               </ul>
-              <router-link to="/limpieza-agua-a-presion" class="svc-btn-secondary">Saber más</router-link>
-              <router-link to="/contacto" class="svc-btn svc-btn--orange">Consultar precio</router-link>
+              <router-link to="/limpieza-agua-a-presion" class="svc-btn">Saber más</router-link>
             </div>
           </div>
 
@@ -170,8 +164,7 @@
                 <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Sin productos químicos agresivos</li>
                 <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Mantenimiento periódico</li>
               </ul>
-              <router-link to="/limpieza-placas-solares" class="svc-btn-secondary">Saber más</router-link>
-              <router-link to="/contacto" class="svc-btn svc-btn--yellow">Consultar precio</router-link>
+              <router-link to="/limpieza-placas-solares" class="svc-btn">Saber más</router-link>
             </div>
           </div>
 
@@ -192,8 +185,7 @@
                 <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Eliminación de adhesivos y pintura</li>
                 <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Cristales, suelos y azulejos</li>
               </ul>
-              <router-link to="/limpieza-fin-de-obra" class="svc-btn-secondary">Saber más</router-link>
-              <router-link to="/contacto" class="svc-btn svc-btn--cyan">Consultar precio</router-link>
+              <router-link to="/limpieza-fin-de-obra" class="svc-btn">Saber más</router-link>
             </div>
           </div>
 
@@ -214,8 +206,7 @@
                 <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Portales y zonas comunes</li>
                 <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Sin dañar la superficie</li>
               </ul>
-              <router-link to="/limpieza-grafitis" class="svc-btn-secondary">Saber más</router-link>
-              <router-link to="/contacto" class="svc-btn svc-btn--rose">Consultar precio</router-link>
+              <router-link to="/limpieza-grafitis" class="svc-btn">Saber más</router-link>
             </div>
           </div>
 
@@ -236,8 +227,7 @@
                 <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Sin rayar ni dañar el cristal</li>
                 <li><font-awesome-icon :icon="['fas', 'check']" class="svc-check" />Eliminación de restos de adhesivo</li>
               </ul>
-              <router-link to="/retirada-de-vinilos" class="svc-btn-secondary">Saber más</router-link>
-              <router-link to="/contacto" class="svc-btn svc-btn--fuchsia">Consultar precio</router-link>
+              <router-link to="/retirada-de-vinilos" class="svc-btn">Saber más</router-link>
             </div>
           </div>
 

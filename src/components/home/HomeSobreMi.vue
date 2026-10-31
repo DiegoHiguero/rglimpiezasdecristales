@@ -15,15 +15,6 @@
         <p class="ns-role">Fundador de Royall Clean · Madrid</p>
         <p class="ns-text">Limpio cristales en Madrid desde 2013 y me especializo en los <strong>trabajos difíciles</strong>, los que otros no quieren hacer. Trabajo como autónomo, así que tratas directamente conmigo, y prefiero tardar un poco más y que quedes contento con el resultado.</p>
         <router-link to="/sobre-mi" class="ns-more">Conóceme mejor <font-awesome-icon :icon="['fas', 'arrow-right']" class="ms-1" /></router-link>
-        <!-- Contacto directo, coherente con "tratas directamente conmigo" -->
-        <div class="ns-ctas">
-          <a href="tel:+34625950506" class="ns-cta">
-            <font-awesome-icon :icon="['fas', 'phone']" class="me-2" />Llámame: 625 950 506
-          </a>
-          <a href="https://wa.me/34625950506?text=Hola%20Roys%2C%20quiero%20un%20presupuesto" target="_blank" rel="noopener noreferrer" class="ns-cta ns-cta--wa">
-            <font-awesome-icon :icon="['fab', 'whatsapp']" class="me-2" />WhatsApp
-          </a>
-        </div>
       </div>
     </div>
   </div>
@@ -113,29 +104,6 @@
 .ns-text strong { color: var(--text); }
 .ns-more { font-size: 0.88rem; font-weight: 700; color: var(--blue); text-decoration: none; margin: -6px 0 18px; width: fit-content; }
 .ns-more:hover { text-decoration: underline; }
-.ns-cta {
-  display: inline-flex;
-  align-items: center;
-  width: fit-content;
-  background: var(--blue);
-  color: #fff;
-  font-family: 'Raleway', sans-serif;
-  font-weight: 700;
-  font-size: 0.92rem;
-  padding: 12px 26px;
-  border-radius: 12px;
-  text-decoration: none;
-  transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
-}
-.ns-ctas { display: flex; flex-wrap: wrap; gap: 10px; }
-.ns-cta--wa { background: #25d366; }
-.ns-cta--wa:hover { background: #1ebe5b !important; box-shadow: 0 6px 22px rgba(37,211,102,0.35) !important; }
-.ns-cta:hover {
-  background: var(--blue-hover);
-  color: #fff;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 22px rgba(37,99,235,0.38);
-}
 
 /* ── RESPONSIVE ── */
 @media (max-width: 900px) {
@@ -148,6 +116,5 @@
   .texto-principal-nosotros { margin: 10px; border-radius: var(--r-md); }
 }
 @media (max-width: 480px) {
-  .ns-cta { width: 100%; justify-content: center; }
 }
 </style>

@@ -89,10 +89,10 @@ const redirigeAdminAlPanel = async (to, from, next) => {
 };
 
 const BASE_TITLE = 'Limpieza de Cristales en Madrid | Royall Clean';
-const BASE_DESC  = 'Limpieza de cristales y ventanas en Madrid para hogares, comunidades y locales. Más de 10 años de experiencia. ¡Presupuesto gratis en 24 h! ☎ 625 950 506';
+const BASE_DESC  = 'Limpieza de cristales y ventanas en Madrid para hogares, comunidades y locales. Más de 13 años de experiencia. ¡Presupuesto gratis en 24 h! ☎ 625 950 506';
 
 const EN_TITLE = 'Window & Glass Cleaning in Madrid | Royall Clean';
-const EN_DESC  = 'Window and glass cleaning in Madrid for homes, communities and shops. Over 10 years of experience. Free quote within 24 h! ☎ +34 625 950 506';
+const EN_DESC  = 'Window and glass cleaning in Madrid for homes, communities and shops. Over 13 years of experience. Free quote within 24 h! ☎ +34 625 950 506';
 
 const routes = [
     {
