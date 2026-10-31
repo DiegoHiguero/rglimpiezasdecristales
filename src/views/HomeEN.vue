@@ -582,13 +582,25 @@ function getCookie(cname: string): string {
 /* â”€â”€ FORMULARIO MODO CLARO â”€â”€ */
 
 /* ── PANEL DEL HERO MODO CLARO (a juego con el formulario) ── */
-/* Modo claro: el mismo fondo con brillos, pero en azul muy claro */
+/* Modo claro: sin fondo, las tarjetas quedan sobre el fondo de la página
+   (!important por bg-body-tertiary de Bootstrap) */
 :root:not([data-theme="dark"]) .principal {
-  background:
-    radial-gradient(circle at 88% 0%, rgba(37,99,235,0.16), transparent 50%),
-    radial-gradient(circle at 0% 100%, rgba(96,165,250,0.18), transparent 45%),
-    linear-gradient(160deg, #f5f8ff 0%, #e3ecfd 100%);
-  border: 1px solid #dbe5f7;
+  background: transparent !important;
+  border: none;
+  /* Sin caja, las tarjetas se alinean con los bordes de las secciones
+     (20px / 10px en móvil), descontando el gutter de las columnas */
+  margin-left: calc(20px - var(--bs-gutter-x, 1.5rem) * .5) !important;
+  margin-right: calc(20px - var(--bs-gutter-x, 1.5rem) * .5) !important;
+}
+/* Mismo hueco bajo las cifras que entre secciones */
+:root:not([data-theme="dark"]) .hero-stats { padding-bottom: 12px; }
+@media (max-width: 768px) {
+  :root:not([data-theme="dark"]) .principal {
+    margin-left: calc(10px - var(--bs-gutter-x, 1.5rem) * .5) !important;
+    margin-right: calc(10px - var(--bs-gutter-x, 1.5rem) * .5) !important;
+  }
+  /* Columnas apiladas: 24px entre tarjetas, como en escritorio */
+  :root:not([data-theme="dark"]) .principal > .py-4 + .py-4 { padding-top: 0 !important; }
 }
 :root:not([data-theme="dark"]) .hero-panel {
   background: rgba(255, 255, 255, 0.94);
