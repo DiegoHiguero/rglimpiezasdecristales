@@ -142,6 +142,7 @@
     <HomeZonasEN />
     <HomeFaqEN />
     <HomeBlogEN />
+    <HomeCtaFinal lang="en" />
 
     <!-- Floating WhatsApp -->
     <div class="wa-widget" ref="waWidgetRef">
@@ -189,6 +190,7 @@ import HomeSobreMiEN    from '../components/home/HomeSobreMiEN.vue';
 import HomeZonasEN      from '../components/home/HomeZonasEN.vue';
 import HomeBlogEN       from '../components/home/HomeBlogEN.vue';
 import HomeFaqEN        from '../components/home/HomeFaqEN.vue';
+import HomeCtaFinal   from '../components/home/HomeCtaFinal.vue';
 import heroVideoA from '../assets/img/videoplayback.mp4';
 import heroVideoB from '../assets/img/VID-20251022-WA0013.mp4';
 import heroVideoC from '../assets/img/video-padel-web.mp4';

@@ -529,6 +529,23 @@ onUnmounted(() => mq?.removeEventListener('change', actualizarMovil));
 }
 .svc-btn-secondary:hover { color: rgba(255,255,255,0.85); }
 
+/* Sin difuminado sobre las últimas tarjetas: el botón "Ver más" ya indica que hay más */
+.svc-fade-mask { display: none; }
+
+/* Modo claro: tarjetas claras como las del blog (la foto conserva su degradado) */
+:root:not([data-theme="dark"]) .svc-card { background: var(--slate); border-color: var(--border); }
+:root:not([data-theme="dark"]) .svc-card:hover { box-shadow: 0 16px 36px rgba(15,23,41,0.12); border-color: #cbd5e1; }
+:root:not([data-theme="dark"]) .svc-card--featured { border-color: rgba(249,115,22,0.45); }
+:root:not([data-theme="dark"]) .svc-name { color: var(--text); }
+:root:not([data-theme="dark"]) .svc-desc { color: var(--text-muted); }
+:root:not([data-theme="dark"]) .svc-list li { color: #334155; }
+:root:not([data-theme="dark"]) .svc-icon,
+:root:not([data-theme="dark"]) .svc-check { background: var(--blue-pale); color: var(--blue); }
+:root:not([data-theme="dark"]) .svc-btn { color: var(--blue); border-color: rgba(37,99,235,0.3); background: #fff; }
+:root:not([data-theme="dark"]) .svc-btn:hover { color: #fff; border-color: var(--blue); background: var(--blue); box-shadow: 0 6px 18px rgba(37,99,235,0.25); }
+:root:not([data-theme="dark"]) .svc-btn-secondary { color: var(--text-muted); }
+:root:not([data-theme="dark"]) .svc-btn-secondary:hover { color: var(--text); }
+
 /* ── Footer strip ── */
 .svc-footer {
   margin-top: 24px;

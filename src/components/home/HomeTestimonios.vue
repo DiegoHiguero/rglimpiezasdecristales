@@ -54,13 +54,13 @@
 
     <div class="ti-nav">
       <button type="button" class="ti-arrow" :aria-label="t.prev" :disabled="activo === 0" @click="mover(-1)">
-        <font-awesome-icon :icon="['fas', 'arrow-left']" />
+        <font-awesome-icon :icon="['fas', 'chevron-left']" />
       </button>
       <div class="ti-dots" aria-hidden="true">
         <span v-for="(r, i) in resenas" :key="r.nombre" class="ti-dot" :class="{ 'ti-dot--on': activo === i }"></span>
       </div>
       <button type="button" class="ti-arrow" :aria-label="t.next" :disabled="activo >= resenas.length - 1" @click="mover(1)">
-        <font-awesome-icon :icon="['fas', 'arrow-right']" />
+        <font-awesome-icon :icon="['fas', 'chevron-right']" />
       </button>
     </div>
 
