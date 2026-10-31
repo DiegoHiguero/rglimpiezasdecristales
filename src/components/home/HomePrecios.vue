@@ -6,7 +6,7 @@
     <div class="container pb-3">
 
       <div class="pricing-header" v-if="header">
-        <h2 class="pricing-title">Precios claros,<br><span class="pricing-accent">sin sorpresas</span></h2>
+        <h2 class="pricing-title">Precios claros,<br>sin sorpresas</h2>
         <p class="pricing-sub">Tarifas orientativas — cada presupuesto es personalizado y gratuito.</p>
       </div>
 
@@ -169,12 +169,9 @@ defineProps({
 
 <style scoped>
 /* ── Color tokens per tier ── */
-.pc-card--blue   { --cc: #3b82f6; --cp: #eff6ff; }
-.pc-card--purple { --cc: #8b5cf6; --cp: #f5f3ff; }
-.pc-card--teal   { --cc: #0891b2; --cp: #ecfeff; }
-.pc-card--green  { --cc: #10b981; --cp: #ecfdf5; }
-.pc-card--amber  { --cc: #f59e0b; --cp: #fffbeb; }
-.pc-card--orange { --cc: #f97316; --cp: #fff7ed; }
+/* Un solo color de marca; el ámbar marca solo la tarifa más pedida */
+.pc-card        { --cc: #3b82f6; --cp: #eff6ff; }
+.pc-card--amber { --cc: #f59e0b; --cp: #fffbeb; }
 
 /* ── Section ── */
 .section2 { scroll-margin-top: 88px; background: var(--white); border-radius: var(--r-lg); margin: 12px 20px; padding: 40px 28px 0; }

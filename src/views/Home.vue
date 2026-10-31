@@ -137,12 +137,12 @@
          nav siempre avance hacia abajo, nunca salte hacia atrás. -->
     <HomeServicios />
     <HomeGaleria />
+    <HomeSobreMi />
     <HomeTestimonios />
     <HomePrecios />
-    <HomeSobreMi />
     <HomeZonas />
-    <HomeBlog />
     <HomeFaq />
+    <HomeBlog />
 
     <!-- WhatsApp flotante -->
     <div class="wa-widget" ref="waWidgetRef">

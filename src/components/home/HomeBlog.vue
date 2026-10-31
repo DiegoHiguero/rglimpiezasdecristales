@@ -6,7 +6,7 @@
       Blog &amp; Consejos
     </span>
     <div class="hb-header">
-      <h2 class="hb-title">Guías de <span class="hb-accent">limpieza de cristales</span></h2>
+      <h2 class="hb-title">Guías de limpieza de cristales</h2>
       <p class="hb-sub">Consejos profesionales para cada época del año</p>
     </div>
 

@@ -2,7 +2,7 @@
   <div class="faq-section">
     <span class="svc-label"><font-awesome-icon :icon="['fas', 'comments']" class="me-1" />Frequently asked questions</span>
     <div class="faq-header">
-      <h2 class="faq-title">What people <span class="faq-accent">ask us most</span></h2>
+      <h2 class="faq-title">What people ask us most</h2>
       <p class="faq-sub">Everything you need to know before requesting your quote</p>
     </div>
     <div class="faq-list">

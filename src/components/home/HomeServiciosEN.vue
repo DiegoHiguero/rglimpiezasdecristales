@@ -428,16 +428,8 @@ onUnmounted(() => mq?.removeEventListener('change', actualizarMovil));
   letter-spacing: 0.5px;
   line-height: 1;
 }
-.svc-tag--blue   { color: #60a5fa; }
-.svc-tag--green  { color: #34d399; }
-.svc-tag--purple { color: #a78bfa; }
-.svc-tag--orange { color: #fb923c; }
-.svc-tag--yellow  { color: #facc15; }
-.svc-tag--cyan    { color: #22d3ee; }
-.svc-tag--rose    { color: #fb7185; }
-.svc-tag--fuchsia { color: #e879f9; }
-.svc-tag--teal    { color: #2dd4bf; }
-.svc-tag--indigo  { color: #818cf8; }
+/* Un solo color para todas las tarjetas: la foto ya las distingue */
+.svc-tag { color: #fff; }
 
 /* ── Body ── */
 .svc-body {
@@ -460,16 +452,7 @@ onUnmounted(() => mq?.removeEventListener('change', actualizarMovil));
   font-size: 1rem;
   flex-shrink: 0;
 }
-.svc-icon--blue   { background: rgba(96,165,250,0.15); color: #60a5fa; }
-.svc-icon--green  { background: rgba(52,211,153,0.15); color: #34d399; }
-.svc-icon--purple { background: rgba(167,139,250,0.15); color: #a78bfa; }
-.svc-icon--orange { background: rgba(251,146,60,0.15); color: #fb923c; }
-.svc-icon--yellow  { background: rgba(250,204,21,0.15);  color: #facc15; }
-.svc-icon--cyan    { background: rgba(34,211,238,0.15);  color: #22d3ee; }
-.svc-icon--rose    { background: rgba(251,113,133,0.15); color: #fb7185; }
-.svc-icon--fuchsia { background: rgba(232,121,249,0.15); color: #e879f9; }
-.svc-icon--teal    { background: rgba(45,212,191,0.15);  color: #2dd4bf; }
-.svc-icon--indigo  { background: rgba(129,140,248,0.15); color: #818cf8; }
+.svc-icon { background: rgba(96,165,250,0.14); color: #60a5fa; }
 
 .svc-name {
   font-family: 'Raleway', sans-serif;
@@ -507,10 +490,10 @@ onUnmounted(() => mq?.removeEventListener('change', actualizarMovil));
   gap: 9px;
 }
 .svc-check {
-  color: #34d399;
+  color: #60a5fa;
   font-size: 0.65rem;
   flex-shrink: 0;
-  background: rgba(52,211,153,0.12);
+  background: rgba(96,165,250,0.14);
   width: 18px; height: 18px;
   border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
@@ -529,27 +512,9 @@ onUnmounted(() => mq?.removeEventListener('change', actualizarMovil));
   border: 1.5px solid transparent;
   transition: background 0.2s, color 0.2s, transform 0.15s, box-shadow 0.2s;
 }
-.svc-btn--blue   { color: #60a5fa; border-color: rgba(96,165,250,0.4);   background: rgba(96,165,250,0.07); }
-.svc-btn--green  { color: #34d399; border-color: rgba(52,211,153,0.4);   background: rgba(52,211,153,0.07); }
-.svc-btn--purple { color: #a78bfa; border-color: rgba(167,139,250,0.4);  background: rgba(167,139,250,0.07); }
-.svc-btn--orange { color: #fb923c; border-color: rgba(251,146,60,0.4);   background: rgba(251,146,60,0.07); }
-.svc-btn--yellow  { color: #facc15; border-color: rgba(250,204,21,0.4);  background: rgba(250,204,21,0.07); }
-.svc-btn--cyan    { color: #22d3ee; border-color: rgba(34,211,238,0.4);  background: rgba(34,211,238,0.07); }
-.svc-btn--rose    { color: #fb7185; border-color: rgba(251,113,133,0.4); background: rgba(251,113,133,0.07); }
-.svc-btn--fuchsia { color: #e879f9; border-color: rgba(232,121,249,0.4); background: rgba(232,121,249,0.07); }
-.svc-btn--teal    { color: #2dd4bf; border-color: rgba(45,212,191,0.4);  background: rgba(45,212,191,0.07); }
-.svc-btn--indigo  { color: #818cf8; border-color: rgba(129,140,248,0.4); background: rgba(129,140,248,0.07); }
+.svc-btn { color: #93c5fd; border-color: rgba(96,165,250,0.35); background: rgba(96,165,250,0.07); }
 
-.svc-btn--blue:hover    { background: #60a5fa; color: #fff; }
-.svc-btn--green:hover   { background: #34d399; color: #fff; }
-.svc-btn--purple:hover  { background: #a78bfa; color: #fff; }
-.svc-btn--orange:hover  { background: #fb923c; color: #fff; }
-.svc-btn--yellow:hover  { background: #facc15; color: #1e293b; }
-.svc-btn--cyan:hover    { background: #22d3ee; color: #1e293b; }
-.svc-btn--rose:hover    { background: #fb7185; color: #fff; }
-.svc-btn--fuchsia:hover { background: #e879f9; color: #1e293b; }
-.svc-btn--teal:hover    { background: #2dd4bf; color: #1e293b; }
-.svc-btn--indigo:hover  { background: #818cf8; color: #fff; }
+.svc-btn:hover { background: var(--blue); border-color: var(--blue); color: #fff; }
 .svc-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(0,0,0,0.25); }
 
 .svc-btn-secondary {

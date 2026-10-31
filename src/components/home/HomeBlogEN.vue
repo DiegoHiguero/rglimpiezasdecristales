@@ -6,7 +6,7 @@
       Blog &amp; Tips
     </span>
     <div class="hb-header">
-      <h2 class="hb-title">Window <span class="hb-accent">cleaning guides</span></h2>
+      <h2 class="hb-title">Window cleaning guides</h2>
       <p class="hb-sub">Professional tips for every season (currently published in Spanish)</p>
     </div>
 

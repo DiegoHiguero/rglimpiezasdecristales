@@ -136,12 +136,12 @@
          clicking through the nav always scrolls down, never jumps back up. -->
     <HomeServiciosEN />
     <HomeGaleriaEN />
+    <HomeSobreMiEN />
     <HomeTestimoniosEN />
     <HomePreciosEN />
-    <HomeSobreMiEN />
     <HomeZonasEN />
-    <HomeBlogEN />
     <HomeFaqEN />
+    <HomeBlogEN />
 
     <!-- Floating WhatsApp -->
     <div class="wa-widget" ref="waWidgetRef">

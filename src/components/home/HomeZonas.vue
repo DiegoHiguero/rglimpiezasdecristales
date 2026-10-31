@@ -6,7 +6,7 @@
       Cobertura geográfica
     </span>
     <div class="zonas-header">
-      <h2 class="zonas-title">Limpieza de cristales en <span class="zonas-accent">toda la Comunidad de Madrid</span></h2>
+      <h2 class="zonas-title">Limpieza de cristales en toda la Comunidad de Madrid</h2>
       <p class="zonas-sub">
         Madrid capital y todos los municipios del área metropolitana.
       </p>

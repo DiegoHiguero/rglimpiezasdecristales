@@ -6,7 +6,7 @@
       Service area
     </span>
     <div class="zonas-header">
-      <h2 class="zonas-title">Window cleaning across <span class="zonas-accent">the whole Madrid region</span></h2>
+      <h2 class="zonas-title">Window cleaning across the whole Madrid region</h2>
       <p class="zonas-sub">
         Madrid city and every municipality across the metropolitan area.
       </p>
