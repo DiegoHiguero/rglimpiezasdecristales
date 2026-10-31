@@ -1,9 +1,6 @@
 <template>
   <!-- About -->
   <div class="texto-principal-nosotros" id="about">
-    <span class="ns-label">
-      <font-awesome-icon :icon="['fas', 'user-tie']" class="me-2" />About me
-    </span>
     <div class="ns-grid">
       <div class="ns-img-wrap animate-on-scroll">
         <img class="ns-img" src="../../assets/img/yomismo.webp"
@@ -11,6 +8,9 @@
         <div class="ns-img-overlay"></div>
       </div>
       <div class="ns-content animate-on-scroll">
+        <span class="ns-label">
+          <font-awesome-icon :icon="['fas', 'user-tie']" class="me-1" />About me
+        </span>
         <h2 class="ns-title">Hi, I'm<br><span class="ns-title-accent">Roys Abreu!</span></h2>
         <p class="ns-role">Founder of Royall Clean · Madrid</p>
         <p class="ns-text">I have been cleaning windows in Madrid since 2013 and I specialise in <strong>difficult jobs</strong>, the ones others won't take on. I work independently, so you deal directly with me, and I would rather take a little longer and have you happy with the result.</p>
@@ -74,7 +74,7 @@
   text-transform: uppercase;
   padding: 5px 14px;
   border-radius: 20px;
-  margin-bottom: 24px;
+  margin-bottom: 16px;
 }
 .ns-title {
   font-family: 'Anton', sans-serif;
@@ -84,6 +84,7 @@
   margin: 0 0 10px;
 }
 .ns-title-accent { color: var(--blue); }
+:root[data-theme="dark"] .ns-label { color: var(--blue-light); }
 :root[data-theme="dark"] .ns-title-accent { color: var(--blue-light); }
 .ns-role {
   font-family: 'Raleway', sans-serif;
