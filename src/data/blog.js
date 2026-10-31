@@ -4,7 +4,7 @@ import imgPrimavera    from '../assets/img/housemaid-wearing.webp';
 import imgOtono        from '../assets/img/hojas-otono.webp';
 import imgPaloma       from '../assets/img/paloma.webp';
 import imgCintaAdhesiva from '../assets/img/cintaadhesiva.webp';
-import imgPlacasSolares from '../assets/img/limpieza-panel-thumb.webp';
+import imgPlacasSolares from '../assets/img/limpieza-placas-solares-pertiga.webp';
 
 export const articles = [
   {
