@@ -4,8 +4,89 @@ import imgPrimavera    from '../assets/img/housemaid-wearing.webp';
 import imgOtono        from '../assets/img/hojas-otono.webp';
 import imgPaloma       from '../assets/img/paloma.webp';
 import imgCintaAdhesiva from '../assets/img/cintaadhesiva.webp';
+import imgPlacasSolares from '../assets/img/limpieza-panel-thumb.webp';
 
 export const articles = [
+  {
+    slug: 'limpieza-paneles-solares-otono-guia-paso-a-paso',
+    title: 'Limpieza de paneles solares en otoño: guía paso a paso',
+    excerpt: 'Las hojas, el polvo y los excrementos de aves restan rendimiento a tus placas justo cuando hay menos horas de sol. Te explicamos paso a paso cómo limpiarlas en otoño sin dañarlas y cuándo conviene llamar a un profesional.',
+    date: '2026-10-31',
+    dateLabel: '31 de octubre de 2026',
+    season: 'Otoño',
+    icon: ['fas', 'leaf'],
+    image: imgPlacasSolares,
+    color: '#c2410c',
+    colorPale: '#fff7ed',
+    metaDescription: 'Guía de limpieza de paneles solares en otoño: pasos, errores a evitar y frecuencia recomendada para comercios, oficinas y comunidades en Madrid.',
+    keywords: 'limpieza de paneles solares, limpiar placas solares, limpieza placas solares otono, paneles solares madrid, limpieza fotovoltaica comunidades, agua pura paneles solares',
+    content: `
+      <p>El otoño es una de las estaciones en las que más se nota el estado de una instalación fotovoltaica. Los días se acortan, el sol está más bajo y, a la vez, los paneles acumulan hojas, polvo del verano y restos de aves. Si tu negocio, tu oficina o tu comunidad de vecinos tiene placas en la cubierta, una buena <strong>limpieza de paneles solares</strong> en esta época ayuda a aprovechar al máximo cada hora de luz antes de que llegue el invierno.</p>
+      <p>En esta guía te contamos por qué el otoño es un momento clave, cómo hacerlo paso a paso de forma segura y qué errores conviene evitar para no dañar los módulos ni perder la garantía.</p>
+      <h2>Por qué el otoño es el momento clave para la limpieza de paneles solares</h2>
+      <p>Después de un verano largo y seco, como suele ser en Madrid, los paneles llegan al otoño con una capa de polvo que no siempre se ve a simple vista. Las primeras lluvias no la eliminan: muchas veces solo la reparten y, al secarse, dejan cercos de barro y cal sobre el vidrio.</p>
+      <h3>Hojas, polvo y excrementos de aves</h3>
+      <p>En otoño se suman tres tipos de suciedad que afectan especialmente a las placas:</p>
+      <ul>
+      <li><strong>Hojas secas</strong> que se quedan atrapadas en los bordes del marco y en las uniones entre módulos, donde retienen humedad y suciedad.</li>
+      <li><strong>Polvo acumulado</strong> durante los meses de calor, que forma una película opaca sobre el cristal.</li>
+      <li><strong>Excrementos de aves</strong>, que son el problema más serio: tapan zonas concretas de una célula y pueden reducir la producción de toda una fila de paneles.</li>
+      </ul>
+      <h3>Menos horas de sol, cada kilovatio cuenta</h3>
+      <p>En otoño e invierno el sol entra con un ángulo más bajo y durante menos horas. Con menos luz disponible, cualquier pérdida por suciedad se nota más en la factura. Para un comercio o una oficina que consume sobre todo de día, mantener los paneles limpios en esta época supone aprovechar mejor la energía que ya ha pagado con su instalación.</p>
+      <h2>Antes de empezar: seguridad y garantía</h2>
+      <p>Antes de tocar una sola placa, conviene revisar estos puntos:</p>
+      <ul>
+      <li><strong>Consulta el manual del fabricante.</strong> Muchos indican qué productos y herramientas están permitidos. Usar algo no recomendado puede anular la garantía.</li>
+      <li><strong>No subas a la cubierta sin medidas de seguridad.</strong> En edificios de oficinas y comunidades de vecinos, el trabajo en altura requiere línea de vida, arnés y formación. Si no se dan esas condiciones, es un trabajo para profesionales.</li>
+      <li><strong>Nunca pises los paneles.</strong> El peso puede provocar microfisuras en las células que no se ven, pero que reducen la producción durante años.</li>
+      <li><strong>Ten en cuenta la parte eléctrica.</strong> Los paneles generan tensión mientras reciben luz. No manipules cables ni conectores, y si ves algún cable dañado, avisa a tu instalador.</li>
+      </ul>
+      <h2>Cómo limpiar paneles solares paso a paso</h2>
+      <p>Si la instalación es accesible desde el suelo o desde una zona segura, puedes seguir este proceso.</p>
+      <h3>Paso 1: Revisa la producción y el estado de los paneles</h3>
+      <p>Antes de limpiar, mira en la aplicación del inversor cuánto están produciendo las placas. Así podrás comparar después y ver la mejora. Revisa también a simple vista si hay cristales rotos, marcos sueltos o zonas con manchas muy concentradas, como excrementos de aves o resina de árboles.</p>
+      <h3>Paso 2: Elige el momento adecuado</h3>
+      <p>Limpia a primera hora de la mañana o al final de la tarde, cuando los paneles están fríos. Echar agua sobre un cristal muy caliente puede provocar un choque térmico y, además, el agua se evapora enseguida y deja marcas. Evita también los días de viento, que vuelven a depositar polvo mientras trabajas.</p>
+      <h3>Paso 3: Retira hojas y suciedad suelta</h3>
+      <p>Empieza en seco. Con un cepillo de cerdas suaves o un soplador de hojas a baja potencia, retira hojas, ramas y polvo suelto, prestando atención a los bordes y a las uniones entre módulos. Si empiezas directamente con agua, convertirás ese polvo en barro y costará más dejar el cristal limpio.</p>
+      <h3>Paso 4: Lava con agua pura y cepillo suave</h3>
+      <p>Lo ideal es usar <strong>agua pura</strong>, es decir, agua sin minerales, con un cepillo de cerdas suaves montado en una pértiga. El agua pura arrastra la suciedad y se seca sin dejar restos de cal, por lo que no hace falta jabón. Si usas agua del grifo, puedes añadir una pequeña cantidad de jabón neutro, sin amoníaco ni productos abrasivos.</p>
+      <p>Para las manchas difíciles, como los excrementos de aves, humedécelas primero y deja que el agua actúe unos minutos antes de cepillar. Nunca rasques con cuchillas ni con estropajos.</p>
+      <h3>Paso 5: Aclara bien y deja secar sin marcas</h3>
+      <p>Si has usado jabón, aclara de arriba abajo hasta que no quede espuma, porque los restos atraen el polvo. Con agua pura, el propio aclarado deja el cristal listo para secarse al aire. Si usas agua del grifo, puedes pasar una rasqueta de goma suave para evitar cercos.</p>
+      <h3>Paso 6: Comprueba el resultado</h3>
+      <p>Al día siguiente, con un sol parecido, vuelve a mirar la producción en la aplicación del inversor. Si los paneles estaban muy sucios, la diferencia suele notarse. Anota la fecha de limpieza para planificar la siguiente.</p>
+      <h2>Errores frecuentes que dañan los paneles</h2>
+      <p>Estos son los fallos que más vemos y que conviene evitar:</p>
+      <ul>
+      <li><strong>Usar máquinas de agua a presión.</strong> La presión puede dañar las juntas, meter agua en el marco y deteriorar la capa antirreflectante del vidrio.</li>
+      <li><strong>Limpiar con productos agresivos.</strong> La lejía, el amoníaco o los disolventes atacan el cristal y las juntas.</li>
+      <li><strong>Frotar con estropajos o rascar.</strong> Las rayas en el cristal dispersan la luz y son permanentes.</li>
+      <li><strong>Esperar a que llueva.</strong> La lluvia no limpia los paneles: deja cercos y no elimina los excrementos de aves ni la suciedad adherida.</li>
+      <li><strong>Limpiar a mediodía en pleno sol.</strong> Además del riesgo de choque térmico, el agua se seca demasiado rápido y deja marcas.</li>
+      </ul>
+      <h2>Cada cuánto limpiar los paneles en comercios, oficinas y comunidades</h2>
+      <p>La frecuencia depende del entorno, pero como orientación:</p>
+      <ul>
+      <li><strong>Comercios y oficinas en zonas urbanas</strong>: una o dos limpiezas al año, siendo el otoño un buen momento para una de ellas.</li>
+      <li><strong>Comunidades de vecinos</strong>: al menos una limpieza anual, coordinada con el administrador de fincas para incluirla en el mantenimiento del edificio.</li>
+      <li><strong>Instalaciones cerca de árboles, obras o carreteras</strong>: conviene revisar cada pocos meses, porque la suciedad se acumula mucho más rápido.</li>
+      </ul>
+      <p>En Madrid, donde los veranos son secos y con mucho polvo en suspensión, programar una limpieza al empezar el otoño ayuda a llegar al invierno con la instalación rindiendo al máximo.</p>
+      <h2>Cuándo conviene llamar a un profesional</h2>
+      <p>Hay situaciones en las que no merece la pena arriesgarse:</p>
+      <ul>
+      <li>Los paneles están en una cubierta inclinada o a varias alturas.</li>
+      <li>No hay línea de vida ni acceso seguro.</li>
+      <li>La instalación es grande, como la de una comunidad de vecinos o un edificio de oficinas.</li>
+      <li>Hay suciedad muy incrustada o manchas que no salen con agua.</li>
+      </ul>
+      <p>Un servicio profesional trabaja con pértigas telescópicas y agua pura, sin pisar los paneles ni usar productos que comprometan la garantía, y puede organizar la limpieza en horarios que no interfieran con la actividad de tu negocio.</p>
+      <h2>Royall Clean: limpieza de paneles solares en Madrid</h2>
+      <p>En <strong>Royall Clean</strong> llevamos más de 13 años limpiando cristales en Madrid y en toda la Comunidad de Madrid, y nos especializamos en los trabajos difíciles. Limpiamos placas solares de comercios, oficinas y comunidades de vecinos con agua pura y pértiga, sin andamios y sin dejar marcas. Si quieres preparar tu instalación para el otoño y el invierno, llámanos al <strong>625 950 506</strong> y te preparamos un presupuesto gratis y sin compromiso.</p>
+    `,
+  },
   {
     slug: 'como-quitar-pegamento-cristal',
     title: 'Cómo quitar pegamento de un cristal: guía paso a paso',

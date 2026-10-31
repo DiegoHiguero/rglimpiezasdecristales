@@ -9,6 +9,13 @@ const SITE = 'https://royallclean.es'
 
 const blogRoutes = [
   {
+    slug: 'limpieza-paneles-solares-otono-guia-paso-a-paso',
+    title: 'Limpieza de paneles solares en otoño: guía paso a paso',
+    description: 'Guía de limpieza de paneles solares en otoño: pasos, errores a evitar y frecuencia recomendada para comercios, oficinas y comunidades en Madrid.',
+    keywords: 'limpieza de paneles solares, limpiar placas solares, limpieza placas solares otono, paneles solares madrid, limpieza fotovoltaica comunidades, agua pura paneles solares',
+    date: '2026-10-31',
+  },
+  {
     slug: 'como-quitar-pegamento-cristal',
     title: 'Cómo quitar pegamento de un cristal: guía paso a paso',
     description: 'Aprende a quitar pegamento de un cristal como lo hacen los profesionales: con un rascador de vitrocerámica. Rápido, económico y sin rayar el vidrio.',
