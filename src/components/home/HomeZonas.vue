@@ -1,13 +1,13 @@
 <template>
   <section class="zonas-section" id="zonas">
 
-    <span class="zonas-label">
+    <span class="sec-label">
       <font-awesome-icon :icon="['fas', 'location-dot']" class="me-1" />
       Cobertura geográfica
     </span>
-    <div class="zonas-header">
-      <h2 class="zonas-title">Limpieza de cristales en toda la Comunidad de Madrid</h2>
-      <p class="zonas-sub">
+    <div class="sec-head">
+      <h2 class="sec-title">Trabajamos en toda la Comunidad de Madrid</h2>
+      <p class="sec-sub">
         Madrid capital y todos los municipios del área metropolitana.
       </p>
     </div>
@@ -106,46 +106,9 @@ const zonas = [
 }
 
 /* ── Header ── */
-.zonas-header {
-  text-align: center;
-  margin-bottom: 36px;
-}
 
-.zonas-label {
-  display: flex;
-  width: fit-content;
-  align-items: center;
-  gap: 6px;
-  background: var(--blue-pale);
-  color: var(--blue-hover);
-  font-family: 'Raleway', sans-serif;
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-  padding: 5px 14px;
-  border-radius: 20px;
-  margin-bottom: 18px;
-}
 
-.zonas-title {
-  font-family: 'Anton', sans-serif;
-  font-size: 2.2rem;
-  color: var(--text);
-  margin: 0 0 14px;
-  line-height: 1.15;
-}
-.zonas-accent { color: var(--blue); }
 
-.zonas-sub {
-  font-family: 'Raleway', sans-serif;
-  font-size: 0.97rem;
-  color: var(--text-muted);
-  max-width: 560px;
-  margin: 0 auto;
-  line-height: 1.6;
-}
-.zonas-sub strong { color: var(--text); }
 
 /* ── Grid de zonas ── */
 .zonas-grid {
@@ -285,7 +248,6 @@ const zonas = [
   .zona-card:not(.zona-card--open) .zona-lista { display: none; }
   .zona-card--open .zona-lista { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); }
   .zonas-section { margin: 10px 10px; padding: 32px 16px 28px; border-radius: var(--r-md); }
-  .zonas-title { font-size: 1.7rem; }
   .zonas-footer { flex-direction: column; align-items: flex-start; }
 }
 .zonas-tel { color: var(--blue); font-weight: 700; text-decoration: none; white-space: nowrap; }

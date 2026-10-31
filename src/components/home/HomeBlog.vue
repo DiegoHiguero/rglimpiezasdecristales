@@ -1,13 +1,13 @@
 <template>
   <section class="hb-section">
 
-    <span class="hb-label">
+    <span class="sec-label">
       <font-awesome-icon :icon="['fas', 'book-open']" class="me-1" />
       Blog &amp; Consejos
     </span>
-    <div class="hb-header">
-      <h2 class="hb-title">Guías de limpieza de cristales</h2>
-      <p class="hb-sub">Consejos profesionales para cada época del año</p>
+    <div class="sec-head">
+      <h2 class="sec-title">Guías de limpieza de cristales</h2>
+      <p class="sec-sub">Consejos profesionales para cada época del año</p>
     </div>
 
     <div class="hb-grid">
@@ -15,7 +15,7 @@
       <router-link :to="`/blog/${latest[0].slug}`" class="hb-featured">
         <div class="hb-featured-img">
           <img :src="latest[0].image" :alt="latest[0].title" loading="lazy" />
-          <span class="hb-badge" :style="{ background: latest[0].color }">
+          <span class="hb-badge">
             <font-awesome-icon :icon="latest[0].icon" class="me-1" />{{ latest[0].season }}
           </span>
         </div>
@@ -23,7 +23,7 @@
           <p class="hb-date">{{ latest[0].dateLabel }}</p>
           <h3 class="hb-featured-title">{{ latest[0].title }}</h3>
           <p class="hb-featured-excerpt">{{ latest[0].excerpt }}</p>
-          <span class="hb-read" :style="{ color: latest[0].color }">
+          <span class="hb-read">
             Leer artículo <font-awesome-icon :icon="['fas', 'arrow-right']" class="ms-1" />
           </span>
         </div>
@@ -39,7 +39,7 @@
         >
           <div class="hb-card-img-wrap">
             <img :src="article.image" :alt="article.title" loading="lazy" class="hb-card-img" />
-            <span class="hb-badge" :style="{ background: article.color }">
+            <span class="hb-badge">
               <font-awesome-icon :icon="article.icon" class="me-1" />{{ article.season }}
             </span>
           </div>
@@ -47,7 +47,7 @@
             <p class="hb-date">{{ article.dateLabel }}</p>
             <h3 class="hb-card-title">{{ article.title }}</h3>
             <p class="hb-card-excerpt">{{ article.excerpt }}</p>
-            <span class="hb-read" :style="{ color: article.color }">
+            <span class="hb-read">
               Leer <font-awesome-icon :icon="['fas', 'arrow-right']" class="ms-1" />
             </span>
           </div>
@@ -79,26 +79,6 @@ const latest = computed(() => articles.slice(0, 3));
   padding: 40px 28px 36px;
 }
 
-.hb-header {
-  text-align: center;
-  margin-bottom: 32px;
-}
-.hb-label {
-  display: flex; width: fit-content; align-items: center; gap: 6px;
-  background: var(--blue-pale); color: var(--blue-hover);
-  font-family: 'Raleway', sans-serif; font-size: 0.72rem;
-  font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase;
-  padding: 5px 14px; border-radius: 20px; margin-bottom: 16px;
-}
-.hb-title {
-  font-family: 'Anton', sans-serif; font-size: 2.2rem;
-  color: var(--text); margin: 0 0 10px; line-height: 1.15;
-}
-.hb-accent { color: var(--blue); }
-.hb-sub {
-  font-family: 'Raleway', sans-serif; font-size: 0.95rem;
-  color: var(--text-muted); margin: 0;
-}
 
 /* ── Grid layout ── */
 .hb-grid {
@@ -211,6 +191,7 @@ const latest = computed(() => articles.slice(0, 3));
   font-size: 0.7rem; color: var(--text-muted); margin: 0;
 }
 .hb-read {
+  color: var(--blue);
   font-family: 'Raleway', sans-serif;
   font-size: 0.78rem; font-weight: 700;
   margin-top: 4px;
@@ -237,7 +218,6 @@ const latest = computed(() => articles.slice(0, 3));
 }
 @media (max-width: 600px) {
   .hb-section { margin: 10px 10px; padding: 32px 16px 28px; }
-  .hb-title { font-size: 1.7rem; }
   /* Carrusel horizontal con los 3 artículos (asoma el siguiente) */
   .hb-grid {
     display: flex;
@@ -255,4 +235,6 @@ const latest = computed(() => articles.slice(0, 3));
   .hb-featured-title { font-size: 1.05rem; }
   .hb-card-img-wrap { aspect-ratio: 16 / 9; }
 }
+/* En la portada, etiqueta neutra sobre la foto en lugar del color de cada estación */
+.hb-badge { background: rgba(15,23,41,0.78); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
 </style>

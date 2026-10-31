@@ -1,9 +1,9 @@
 <template>
   <div class="faq-section">
-    <span class="svc-label"><font-awesome-icon :icon="['fas', 'comments']" class="me-1" />Preguntas frecuentes</span>
-    <div class="faq-header">
-      <h2 class="faq-title">Lo que más nos preguntan</h2>
-      <p class="faq-sub">Todo lo que necesitas saber antes de pedir tu presupuesto</p>
+    <span class="sec-label"><font-awesome-icon :icon="['fas', 'comments']" class="me-1" />Preguntas frecuentes</span>
+    <div class="sec-head">
+      <h2 class="sec-title">Lo que más nos preguntan</h2>
+      <p class="sec-sub">Todo lo que necesitas saber antes de pedir tu presupuesto</p>
     </div>
     <div class="faq-list">
       <div v-for="(item, i) in faqs" :key="i" class="faq-item" :class="{ 'faq-item--open': openFaq === i }">
@@ -39,24 +39,6 @@ const faqs = [
   padding: 40px 28px 32px;
   border-radius: var(--r-lg);
 }
-.faq-header { text-align: center; margin-bottom: 24px; }
-.svc-label {
-  display: block;
-  width: fit-content;
-  background: var(--blue-pale);
-  color: var(--blue-hover);
-  font-family: 'Raleway', sans-serif;
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-  padding: 5px 14px;
-  border-radius: 20px;
-  margin-bottom: 12px;
-}
-.faq-title { font-family: 'Anton', sans-serif; font-size: 2rem; color: var(--text); margin: 0 0 10px; }
-.faq-accent { color: var(--blue); }
-.faq-sub { font-family: 'Raleway', sans-serif; font-size: 0.92rem; color: var(--text-muted); margin: 0; }
 
 .faq-list {
   display: flex;

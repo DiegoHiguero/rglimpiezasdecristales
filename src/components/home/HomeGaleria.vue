@@ -1,12 +1,12 @@
 <template>
   <div id="trabajos-realizados" class="galeria-wrap">
 
-    <span class="gl-label" v-if="!completa">
+    <span class="sec-label" v-if="!completa">
       <font-awesome-icon :icon="['fas', 'images']" class="me-1" />Portfolio
     </span>
-    <div class="gl-header" v-if="!completa">
-      <h2 class="gl-title">Trabajos <span class="gl-accent">realizados</span></h2>
-      <p class="gl-sub">Cada foto es un cliente satisfecho en Madrid y alrededores</p>
+    <div class="sec-head" v-if="!completa">
+      <h2 class="sec-title">Trabajos <span class="sec-accent">realizados</span></h2>
+      <p class="sec-sub">Cada foto es un cliente satisfecho en Madrid y alrededores</p>
     </div>
 
     <div class="gl-tabs">
@@ -292,17 +292,6 @@ onUnmounted(() => {
 }
 
 /* ── Header ── */
-.gl-header { text-align: center; margin-bottom: 28px; }
-.gl-label {
-  display: flex; width: fit-content; align-items: center;
-  background: var(--blue-pale); color: var(--blue-hover);
-  font-family: 'Raleway', sans-serif; font-size: 0.72rem;
-  font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase;
-  padding: 5px 14px; border-radius: 20px; margin-bottom: 14px;
-}
-.gl-title { font-family: 'Anton', sans-serif; color: var(--text); font-size: 2.2rem; line-height: 1.1; margin: 0 0 10px; }
-.gl-accent { color: var(--blue); }
-.gl-sub { font-family: 'Raleway', sans-serif; color: var(--text-muted); font-size: 0.92rem; margin: 0; }
 
 /* ── Tabs ── */
 .gl-tabs {
@@ -568,7 +557,6 @@ onUnmounted(() => {
 /* ── Responsive ── */
 @media (max-width: 768px) {
   .galeria-wrap { margin: 10px 10px; padding: 32px 12px 24px; }
-  .gl-title { font-size: 1.7rem; }
   .gallery-grid { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 160px; }
   .gallery-item--featured { grid-column: span 2; grid-row: span 1; }
   .video-grid { grid-template-columns: 1fr; }

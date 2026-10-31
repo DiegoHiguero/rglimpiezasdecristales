@@ -167,10 +167,10 @@ const mover = (dir) => {
 .g-icon { flex-shrink: 0; }
 .ti-title {
   font-family: 'Anton', sans-serif;
-  font-size: 2.2rem;
-  line-height: 1.15;
+  font-size: 2.4rem;
+  line-height: 1.12;
   color: #fff;
-  margin: 0 0 8px;
+  margin: 0 0 10px;
 }
 .ti-sub {
   font-family: 'Raleway', sans-serif;
@@ -292,7 +292,7 @@ const mover = (dir) => {
 @media (max-width: 768px) {
   .ti-section { margin: 10px 10px; border-radius: var(--r-md); padding: 36px 16px 26px; }
   .ti-head { flex-direction: column; align-items: stretch; gap: 18px; margin-bottom: 22px; }
-  .ti-title { font-size: 1.7rem; }
+  .ti-title { font-size: 1.85rem; }
   .ti-score { padding: 12px 16px; }
   .ti-score-num { font-size: 2.2rem; }
   /* Asoma la siguiente tarjeta para que se note que hay más */

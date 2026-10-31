@@ -80,11 +80,12 @@
 .ns-title {
   font-family: 'Anton', sans-serif;
   color: var(--text);
-  font-size: 2.8rem;
+  font-size: 2.4rem;
   line-height: 1.1;
   margin: 0 0 10px;
 }
 .ns-title-accent { color: var(--blue); }
+:root[data-theme="dark"] .ns-title-accent { color: var(--blue-light); }
 .ns-role {
   font-family: 'Raleway', sans-serif;
   color: var(--text-muted);
@@ -109,7 +110,7 @@
 @media (max-width: 900px) {
   .ns-grid { grid-template-columns: 1fr; gap: 28px; }
   .ns-img { height: 300px; object-position: center 20%; }
-  .ns-title { font-size: 2.1rem; }
+  .ns-title { font-size: 1.85rem; }
   .texto-principal-nosotros { padding: 32px 18px 24px; }
 }
 @media (max-width: 768px) {

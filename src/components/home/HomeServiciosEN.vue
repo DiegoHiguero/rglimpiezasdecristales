@@ -1,10 +1,10 @@
 <template>
   <div class="svc-section" id="services">
 
-    <span class="svc-label"><font-awesome-icon :icon="['fas', 'hand-sparkles']" class="me-1" />What we do</span>
-    <div class="svc-header">
-      <h2 class="svc-title">Professional <span class="svc-accent">cleaning</span><br>for every space</h2>
-      <p class="svc-subtitle">We work without disrupting your day, at home or at your business</p>
+    <span class="sec-label"><font-awesome-icon :icon="['fas', 'hand-sparkles']" class="me-1" />What we do</span>
+    <div class="sec-head">
+      <h2 class="sec-title">Professional <span class="sec-accent">cleaning</span> for every space</h2>
+      <p class="sec-sub">We work without disrupting your day, at home or at your business</p>
     </div>
 
     <!-- Móvil: chips para saltar a un servicio del carrusel -->
@@ -317,36 +317,6 @@ onUnmounted(() => mq?.removeEventListener('change', actualizarMovil));
 }
 
 /* ── Header ── */
-.svc-header { text-align: center; margin-bottom: 28px; }
-.svc-label {
-  display: block;
-  width: fit-content;
-  background: var(--blue-pale);
-  color: var(--blue-hover);
-  font-family: 'Raleway', sans-serif;
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-  padding: 5px 14px;
-  border-radius: 20px;
-  margin-bottom: 14px;
-}
-.svc-title {
-  font-family: 'Anton', sans-serif;
-  color: var(--text);
-  font-size: 2.6rem;
-  line-height: 1.15;
-  margin: 0 0 12px;
-}
-.svc-accent { color: var(--blue); }
-.svc-subtitle {
-  font-family: 'Raleway', sans-serif;
-  color: var(--text-muted);
-  font-size: 0.95rem;
-  margin: 0 auto;
-  max-width: 500px;
-}
 
 /* ── Grid ── */
 .svc-grid-wrap { position: relative; }
@@ -604,7 +574,6 @@ onUnmounted(() => mq?.removeEventListener('change', actualizarMovil));
 /* ── Responsive ── */
 @media (max-width: 768px) {
   .svc-section { margin: 10px 10px; padding: 32px 14px 24px; border-radius: var(--r-md); }
-  .svc-title { font-size: 1.9rem; }
   .svc-toggle-btn { width: 100%; justify-content: center; }
 
   /* Carrusel horizontal: asoma la siguiente tarjeta para que se note que hay más */

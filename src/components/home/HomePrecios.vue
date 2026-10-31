@@ -1,13 +1,13 @@
 <template>
   <section class="section2" id="precios">
 
-    <span class="svc-label" v-if="header"><font-awesome-icon :icon="['fas', 'tag']" class="me-1" />Tarifas</span>
+    <span class="sec-label" v-if="header"><font-awesome-icon :icon="['fas', 'tag']" class="me-1" />Tarifas</span>
 
     <div class="container pb-3">
 
-      <div class="pricing-header" v-if="header">
-        <h2 class="pricing-title">Precios claros,<br>sin sorpresas</h2>
-        <p class="pricing-sub">Tarifas orientativas — cada presupuesto es personalizado y gratuito.</p>
+      <div class="sec-head" v-if="header">
+        <h2 class="sec-title">Precios claros, sin sorpresas</h2>
+        <p class="sec-sub">Tarifas orientativas — cada presupuesto es personalizado y gratuito.</p>
       </div>
 
       <p class="pc-swipe">Desliza para ver todas las tarifas <font-awesome-icon :icon="['fas', 'arrow-right']" class="ms-1" /></p>
@@ -178,18 +178,6 @@ defineProps({
 /* ── Section ── */
 .section2 { scroll-margin-top: 88px; background: var(--white); border-radius: var(--r-lg); margin: 12px 20px; padding: 40px 28px 0; }
 
-.svc-label {
-  display: block;
-  width: fit-content;
-  background: var(--blue-pale); color: var(--blue-hover);
-  font-family: 'Raleway', sans-serif; font-size: 0.72rem;
-  font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase;
-  padding: 5px 14px; border-radius: 20px; margin-bottom: 12px;
-}
-.pricing-header { text-align: center; padding: 12px 0 24px; }
-.pricing-title { font-family: 'Anton', sans-serif; font-size: 2.6rem; color: var(--text); line-height: 1.15; margin: 14px 0 16px; }
-.pricing-accent { color: var(--blue); }
-.pricing-sub { font-family: 'Raleway', sans-serif; font-size: 1rem; color: var(--text-muted); max-width: 540px; margin: 0 auto 28px; line-height: 1.7; }
 
 /* ── Grid ── */
 .pc-grid {
@@ -219,6 +207,8 @@ defineProps({
 .pc-card--featured:hover { box-shadow: 0 16px 40px rgba(245,158,11,0.2), 0 0 0 1px var(--cc); }
 
 /* ── Band ── */
+/* Solo la tarifa destacada lleva franja de color arriba */
+.pc-card:not(.pc-card--featured) .pc-band { height: 0; }
 .pc-band {
   height: 6px;
   background: var(--cc);
@@ -379,7 +369,6 @@ defineProps({
   }
   /* Tarjeta compacta: menos aire y cabecera en horizontal (icono + nombre) */
   .section2 { padding: 32px 14px 0; }
-  .pricing-sub { margin-bottom: 20px; }
   .pc-inner { padding: 14px 16px 14px; }
   .pc-top {
     display: grid;

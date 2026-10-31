@@ -46,3 +46,50 @@ html, body {
   transition: opacity 0.55s ease, transform 0.55s ease;
 }
 .animate-on-scroll.is-visible { opacity: 1; transform: translateY(0); }
+
+/* ── Cabeceras de sección de la portada ──
+   Etiqueta, título y subtítulo con el mismo tamaño y ritmo en todas las
+   secciones centradas (Reseñas y Sobre mí, alineadas a la izquierda, usan
+   las mismas medidas en sus propios estilos). */
+.sec-label {
+  display: flex;
+  width: fit-content;
+  align-items: center;
+  gap: 6px;
+  margin: 0 auto 16px;
+  padding: 5px 14px;
+  border-radius: 20px;
+  background: var(--blue-pale);
+  color: var(--blue-hover);
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+[data-theme="dark"] .sec-label { color: var(--blue-light); }
+.sec-head { text-align: center; margin-bottom: 32px; }
+.sec-title {
+  font-family: 'Anton', sans-serif;
+  font-size: 2.4rem;
+  line-height: 1.12;
+  color: var(--text);
+  margin: 0 0 10px;
+  text-wrap: balance;
+}
+.sec-accent { color: var(--blue); }
+[data-theme="dark"] .sec-accent { color: var(--blue-light); }
+.sec-sub {
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--text-muted);
+  max-width: 560px;
+  margin: 0 auto;
+  text-wrap: balance;
+}
+@media (max-width: 768px) {
+  .sec-label { margin-bottom: 14px; }
+  .sec-head { margin-bottom: 24px; }
+  .sec-title { font-size: 1.85rem; }
+}

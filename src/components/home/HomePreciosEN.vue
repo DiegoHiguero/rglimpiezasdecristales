@@ -1,13 +1,13 @@
 <template>
   <section class="section2" id="pricing">
 
-    <span class="svc-label"><font-awesome-icon :icon="['fas', 'tag']" class="me-1" />Rates</span>
+    <span class="sec-label"><font-awesome-icon :icon="['fas', 'tag']" class="me-1" />Rates</span>
 
     <div class="container pb-3">
 
-      <div class="pricing-header">
-        <h2 class="pricing-title">Clear pricing,<br>no surprises</h2>
-        <p class="pricing-sub">Rates shown are a guide — every quote is free and tailored to you.</p>
+      <div class="sec-head">
+        <h2 class="sec-title">Clear pricing, no surprises</h2>
+        <p class="sec-sub">Rates shown are a guide — every quote is free and tailored to you.</p>
       </div>
 
       <p class="pc-swipe">Swipe to see all rates <font-awesome-icon :icon="['fas', 'arrow-right']" class="ms-1" /></p>
@@ -167,18 +167,6 @@ defineProps({
 /* ── Section ── */
 .section2 { scroll-margin-top: 88px; background: var(--white); border-radius: var(--r-lg); margin: 12px 20px; padding: 40px 28px 0; }
 
-.svc-label {
-  display: block;
-  width: fit-content;
-  background: var(--blue-pale); color: var(--blue-hover);
-  font-family: 'Raleway', sans-serif; font-size: 0.72rem;
-  font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase;
-  padding: 5px 14px; border-radius: 20px; margin-bottom: 12px;
-}
-.pricing-header { text-align: center; padding: 12px 0 24px; }
-.pricing-title { font-family: 'Anton', sans-serif; font-size: 2.6rem; color: var(--text); line-height: 1.15; margin: 14px 0 16px; }
-.pricing-accent { color: var(--blue); }
-.pricing-sub { font-family: 'Raleway', sans-serif; font-size: 1rem; color: var(--text-muted); max-width: 540px; margin: 0 auto 28px; line-height: 1.7; }
 
 /* ── Grid ── */
 .pc-grid {
@@ -208,6 +196,8 @@ defineProps({
 .pc-card--featured:hover { box-shadow: 0 16px 40px rgba(245,158,11,0.2), 0 0 0 1px var(--cc); }
 
 /* ── Band ── */
+/* Solo la tarifa destacada lleva franja de color arriba */
+.pc-card:not(.pc-card--featured) .pc-band { height: 0; }
 .pc-band {
   height: 6px;
   background: var(--cc);
@@ -360,7 +350,6 @@ defineProps({
   }
   /* Tarjeta compacta: menos aire y cabecera en horizontal (icono + nombre) */
   .section2 { padding: 32px 14px 0; }
-  .pricing-sub { margin-bottom: 20px; }
   .pc-inner { padding: 14px 16px 14px; }
   .pc-top {
     display: grid;
