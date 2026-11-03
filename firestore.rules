@@ -3,7 +3,6 @@ service cloud.firestore {
   match /databases/{database}/documents {
     function isSignedInAsAdmin() {
       return request.auth != null && (
-          request.auth.token.email == "higuerodiego@gmail.com" ||
           request.auth.token.email == "roys.abreu@gmail.com"
       );
     }
@@ -19,11 +18,42 @@ service cloud.firestore {
     }
     match /limpiezasMensuales/{document=**} {
        allow read, write,update,create: if isSignedInAsAdmin(); 
-  }
+  }match /gastos/{id} {
+  allow read, update, delete, create: if isSignedInAsAdmin();
+}
+    // Portal público de clientes: acceso por token (enlace único) o por
+    // email verificado (login con Google). Escritura solo por el admin
+    // (se rellena al guardar una factura desde el panel).
+    // 'facturas' y 'firmas' viven como campos array dentro del propio
+    // documento (no como subcolecciones): una subcolección con
+    // `allow read: if true` sería legible por cualquiera vía una
+    // collection-group query, sin conocer ningún token — Firestore evalúa
+    // las reglas por forma de ruta, no por cómo se llegó al documento.
+    match /facturasPublicas/{token} {
+      allow get: if true;   // hace falta conocer el token exacto para leer
+      allow list: if false; // nadie puede enumerar todos los clientes
+      allow write: if isSignedInAsAdmin();
+    }
+    match /clientePortalTokens/{nameSlug} {
+      allow read, write: if isSignedInAsAdmin();
+    }
+    match /clientePortalIndex/{emailSlug} {
+      allow read: if request.auth != null && request.auth.token.email == resource.data.clienteEmail;
+      allow write: if isSignedInAsAdmin();
+    }
+
+    // Los campos reales que escriben los formularios de contacto (Home y
+    // /contacto) son prenom/email/phone/message, no nombre/mensaje — con los
+    // nombres antiguos, hasAll() nunca coincidía y el create fallaba con
+    // permission-denied aunque el email ya se hubiera enviado por EmailJS.
     match /mensajes/{document} {
-      // Permite que cualquier usuario cree un documento (para el formulario de contacto público)
-      allow create;
-      // Solo los administradores pueden leer, actualizar o eliminar mensajes
+      allow create: if
+        request.resource.data.keys().hasAll(['prenom', 'email', 'phone', 'message']) &&
+        request.resource.data.prenom is string && request.resource.data.prenom.size() > 0 && request.resource.data.prenom.size() <= 100 &&
+        request.resource.data.email is string && request.resource.data.email.size() > 0 && request.resource.data.email.size() <= 200 &&
+        request.resource.data.phone is string && request.resource.data.phone.size() > 0 && request.resource.data.phone.size() <= 30 &&
+        request.resource.data.message is string && request.resource.data.message.size() > 0 && request.resource.data.message.size() <= 2000 &&
+        request.resource.data.keys().size() <= 8;
       allow read, update, delete: if isSignedInAsAdmin();
     }
   }

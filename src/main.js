@@ -1,23 +1,26 @@
 import { createApp } from 'vue'
+import 'bootstrap/dist/css/bootstrap.min.css'
+import 'bootstrap/dist/js/bootstrap.bundle.min.js'
 import './style.css'
+import 'bootstrap-icons/font/bootstrap-icons.css'
 import App from './App.vue'
 import router from './router'
 import { createPinia } from 'pinia'
-import './firebaseConfig'; 
-
-// Importación de VueApexCharts
-import VueApexCharts from "vue3-apexcharts"; // <-- ¡Añade esta línea!
+import './firebaseConfig';
 
 // Importaciones de Font Awesome
 import { library } from "@fortawesome/fontawesome-svg-core";
-import { faWaze } from "@fortawesome/free-brands-svg-icons";
+import { faWaze, faWhatsapp, faFacebook, faInstagram, faLinkedin, faXTwitter, faGoogle } from "@fortawesome/free-brands-svg-icons";
 import {
     faTrashCan,
     faEye,
     faFilePen,
     faCheck,
     faMagnifyingGlass,
+    faMagnifyingGlassPlus,
     faArrowUpRightFromSquare,
+    faArrowRight,
+    faArrowUpFromWaterPump,
     faUser, faRightFromBracket,
     faFileInvoice,
     faAddressCard,
@@ -32,10 +35,13 @@ import {
     faClock,
     faPumpSoap,
     faComments,
-    faComment, // Añadí faComment que estaba en tu código de iconos aunque no en library.add
+    faComment,
     faBroom,
     faHandHoldingDollar,
     faChevronDown,
+    faChevronUp,
+    faChevronLeft,
+    faChevronRight,
     faArrowDown,
     faXmark,
     faSolarPanel,
@@ -43,50 +49,99 @@ import {
     faBell,
     faPlus,
     faFilePdf,
+    faHouse,
+    faBuilding,
+    faStore,
+    faTag,
+    faPaperPlane,
+    faLock,
+    faLocationDot,
+    faCirclePlay,
+    faPlay,
+    faStar,
+    faHeart,
+    faDroplet,
+    faShieldHalved,
+    faBolt,
+    faImages,
+    faImage,
+    faVideo,
+    faCamera,
+    faSun,
+    faMoon,
+    faSnowflake,
+    faLeaf,
+    faCompass,
+    faCity,
+    faBookOpen,
+    faCircleInfo,
+    faSprayCan,
+    faScissors,
+    faBars,
+    faReply,
+    faCopy,
+    faCheckDouble,
+    faInbox,
+    faRotateLeft,
+    faEnvelopeOpen,
+    faTableCells,
+    faArrowsRotate,
+    faRotate,
+    faUpload,
+    faDownload,
+    faDatabase,
+    faTriangleExclamation,
+    faScrewdriverWrench,
+    faShower,
+    faEllipsis,
+    faKey,
+    faWandMagicSparkles,
+    faBuildingColumns,
+    faShop,
+    faLink,
+    faTrophy,
+    faRoute,
+    faPaintbrush,
+    faNewspaper,
+    faGaugeHigh,
+    faSignature,
+    faChartLine,
+    faMapLocationDot,
 } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-
-// Importación de Vue3Signature
-import Vue3Signature from "vue3-signature";
 
 // Importación del userStore (que contiene initAuthListener y currentUser)
 import { useUserStore } from './stores/user';
 
 // 1. Configuración de Font Awesome Library
 library.add(
-    faTrashCan,
-    faFilePen,
-    faEye,
-    faWaze,
-    faFilePdf,
-    faMagnifyingGlass,
-    faCheck,
-    faXmark,
-    faArrowUpRightFromSquare,
-    faUser,
-    faRightFromBracket,
-    faFileInvoice,
-    faAddressCard,
-    faRectangleList,
-    faEnvelopeOpenText,
-    faFileArrowDown,
-    faPhone,
-    faEnvelope,
-    faSeedling,
-    faUserTie,
-    faHandSparkles,
-    faClock,
-    faPumpSoap,
-    faComments,
-    faComment, // Asegúrate de añadirlo si lo usas
-    faBroom,
-    faHandHoldingDollar,
-    faChevronDown,
-    faArrowDown,
-    faSolarPanel,
-    faCalendarDays,
-    faBell,
-    faPlus
+    faTrashCan, faFilePen, faEye,
+    faWaze, faWhatsapp, faFacebook, faInstagram, faLinkedin, faXTwitter, faGoogle,
+    faFilePdf, faMagnifyingGlass, faMagnifyingGlassPlus,
+    faCheck, faXmark,
+    faArrowUpRightFromSquare, faArrowRight, faArrowUpFromWaterPump, faArrowDown,
+    faUser, faRightFromBracket,
+    faFileInvoice, faAddressCard, faRectangleList, faEnvelopeOpenText, faFileArrowDown,
+    faPhone, faEnvelope, faLocationDot,
+    faSeedling, faUserTie, faHandSparkles, faClock, faPumpSoap,
+    faComments, faComment, faBroom, faHandHoldingDollar,
+    faChevronDown, faChevronUp, faChevronLeft, faChevronRight,
+    faSolarPanel, faCalendarDays, faBell, faPlus,
+    faHouse, faBuilding, faBuildingColumns, faStore, faShop,
+    faTag, faPaperPlane, faLock,
+    faCirclePlay, faPlay,
+    faStar, faHeart, faDroplet, faShieldHalved, faBolt,
+    faImages, faImage, faVideo, faCamera,
+    faSun, faMoon,
+    faSnowflake, faLeaf, faCompass, faCity, faBookOpen, faCircleInfo,
+    faSprayCan, faScissors,
+    faBars,
+    faReply, faCopy, faCheckDouble, faInbox, faRotateLeft, faEnvelopeOpen,
+    faTableCells, faArrowsRotate, faRotate, faUpload, faDownload,
+    faDatabase, faTriangleExclamation, faScrewdriverWrench, faShower, faEllipsis, faKey, faWandMagicSparkles,
+    faLink, faTrophy,
+    faRoute, faPaintbrush, faNewspaper, faGaugeHigh, faSignature,
+    faChartLine, faMapLocationDot,
 );
 
 // 2. Crear la instancia de la aplicación Vue
@@ -102,9 +157,7 @@ const userStore = useUserStore();
 userStore.initAuthListener();
 
 // 5. Configurar otros plugins y componentes globales en la instancia 'app'
-app.use(Vue3Signature); // Usa Vue3Signature
 app.component("font-awesome-icon", FontAwesomeIcon); // Registra el componente de Font Awesome
-app.use(VueApexCharts); // <-- ¡Añade esta línea para registrar ApexCharts globalmente!
 
 // 6. ESPERAR a que el estado de autenticación inicial de Firebase esté disponible
 // antes de montar el router y la aplicación.

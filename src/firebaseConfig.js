@@ -13,7 +13,7 @@ const firebaseConfig = {
 
   apiKey: "AIzaSyCyqLZfXWsS-AG_pgJ0TQ68BCpBtPMozws",
 
-  authDomain: "royal-clean-services.firebaseapp.com",
+  authDomain: "royallclean.es",
 
   databaseURL: "https://royal-clean-services-default-rtdb.europe-west1.firebasedatabase.app",
 
@@ -46,7 +46,7 @@ if (!getApps().length) {
 } else {
   // Si ya hay una aplicación, la recuperamos.
   firebaseAppInstance = getApp();
-  console.log("DEBUG FirebaseConfig: Firebase App ya estaba inicializada, recuperando la instancia existente.");
+  // Firebase App ya estaba inicializada, recuperando la instancia existente.
 }
 
 // *** ¡Añadamos un console.log justo antes de la línea problematica! ***

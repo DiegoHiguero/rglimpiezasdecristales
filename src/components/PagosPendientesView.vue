@@ -36,7 +36,6 @@
                 <th>Monto Bruto (€)</th>
                 <th>Monto Neto (€)</th> <!-- Nueva columna -->
                 <th>IVA (€)</th> <!-- Nueva columna -->
-                <th>Forma de Pago</th>
                 <th>Fecha de Pago (Registro)</th>
                 <th>Acciones</th>
               </tr>
@@ -57,18 +56,11 @@
                 <td>{{ formatCurrency(calculateCotizacion(limpieza.precioBruto)) }}</td>
                 <!-- Fin valores para las nuevas columnas -->
                 <td>
-                  <select v-model="editingStates[limpieza.id].formaPago" class="form-select form-select-sm">
-                    <option value="Efectivo">Efectivo</option>
-                    <option value="Cheque">Cheque</option>
-                    <option value="Giro Bancario">Giro Bancario</option>
-                  </select>
-                </td>
-                <td>
                   <input type="date" v-model="editingStates[limpieza.id].fechaPago" class="form-control form-control-sm" />
                 </td>
                 <td>
                   <button
-                    @click="handleUpdatePayment(limpieza.id, editingStates[limpieza.id].fechaPago, editingStates[limpieza.id].formaPago)"
+                    @click="handleUpdatePayment(limpieza.id, editingStates[limpieza.id].fechaPago)"
                     class="btn btn-success btn-sm d-flex align-items-center justify-content-center"
                     :disabled="editingStates[limpieza.id].isSaving || databaseStore.isUpdatingLimpieza || !editingStates[limpieza.id].fechaPago"
                   >
@@ -168,7 +160,6 @@ watchEffect(() => {
         if (!editingStates[limpieza.id]) {
             editingStates[limpieza.id] = {
                 fechaPago: dayjs().format('YYYY-MM-DD'),
-                formaPago: limpieza.formaPago || 'Efectivo',
                 isSaving: false,
             };
         }
@@ -185,7 +176,7 @@ watchEffect(() => {
 // Función para obtener el nombre completo del cliente
 const getClientName = (clientId) => {
     const client = databaseStore.getClientById(clientId);
-    return client ? `${client.nombre} ${client.apellido || ''}`.trim() : 'Cliente Desconocido';
+    return client ? client.nombre : (clientId || 'Cliente Desconocido');
 };
 
 // Función para calcular los días que lleva pendiente un pago
@@ -215,14 +206,14 @@ const formatEuropeanDate = (dateValue) => {
 
 
 // Maneja la acción de guardar el pago actualizado
-const handleUpdatePayment = async (limpiezaId, newFechaPago, newFormaPago) => {
+const handleUpdatePayment = async (limpiezaId, newFechaPago) => {
     if (!newFechaPago) {
         alert('Por favor, selecciona una fecha de pago para guardar.');
         return;
     }
     editingStates[limpiezaId].isSaving = true;
     try {
-        await databaseStore.updatePaymentStatus(limpiezaId, newFechaPago, newFormaPago);
+        await databaseStore.updatePaymentStatus(limpiezaId, newFechaPago);
         console.log(`Pago para la limpieza ${limpiezaId} registrado con éxito.`);
     } catch (error) {
         alert('Error al actualizar el pago: ' + error.message);
@@ -240,30 +231,126 @@ onMounted(() => {
 </script>
 
 <style scoped>
-/* Estilos específicos para este componente */
 .table-responsive {
-    max-height: 70vh; /* Permite desplazamiento vertical si la tabla es muy larga */
-    overflow-y: auto;
+  max-height: 70vh;
+  overflow-y: auto;
 }
-
-/* Ajustes para los select e inputs dentro de la tabla */
+.table th, .table td {
+  white-space: nowrap;
+  vertical-align: middle;
+}
 .table td .form-select,
 .table td .form-control {
-    font-size: 0.85rem; /* Hace los controles un poco más pequeños para caber mejor */
-    padding: 0.2rem 0.5rem; /* Ajusta el padding */
+  font-size: 0.85rem;
+  padding: 0.2rem 0.5rem;
 }
+.fw-bold { font-weight: bold !important; }
 
-.table th, .table td {
-    white-space: nowrap; /* Evita que el texto se rompa en varias líneas en columnas cortas */
-    vertical-align: middle; /* Alinea verticalmente el contenido de las celdas */
+/* ── Armonización con el tema del sitio ── */
+h2.bg-white {
+  background: var(--white) !important;
+  color: var(--text) !important;
+  font-family: 'Anton', sans-serif;
+  border-radius: var(--r-md);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
 }
-
-/* Resalta los días pendientes que superen un umbral (ej. 30 días) */
-.text-danger {
-    color: #dc3545 !important;
+h3, h4 {
+  font-family: 'Raleway', sans-serif;
+  color: var(--text);
 }
-
-.fw-bold {
-    font-weight: bold !important;
+.card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  box-shadow: var(--shadow-sm);
 }
+.card-header {
+  background: var(--navy);
+  color: #fff;
+  border-bottom: 1px solid var(--border);
+  border-radius: var(--r-md) var(--r-md) 0 0 !important;
+  padding: 14px 20px;
+  font-family: 'Raleway', sans-serif;
+  font-weight: 700;
+}
+.card-header h3 { color: #fff; font-size: 1rem; margin: 0; }
+.card-body { background: var(--white); color: var(--text); }
+.card-footer {
+  background: var(--slate);
+  border-top: 1px solid var(--border);
+  color: var(--text);
+}
+.form-label {
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+.form-control, .form-select {
+  background: var(--slate);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.88rem;
+}
+.form-control:focus, .form-select:focus {
+  background: var(--slate);
+  border-color: var(--blue);
+  color: var(--text);
+  box-shadow: 0 0 0 3px rgba(37,99,235,0.12);
+}
+.form-select option { background: var(--white); color: var(--text); }
+.table {
+  color: var(--text);
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.84rem;
+  border-color: var(--border);
+}
+.table thead th {
+  background: var(--navy-2);
+  color: rgba(255,255,255,0.85);
+  border-color: rgba(255,255,255,0.08);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.table tbody td {
+  border-color: var(--border);
+  background: var(--white);
+}
+.table-striped tbody tr:nth-of-type(odd) td { background: var(--slate) !important; }
+.table-hover tbody tr:hover td { background: var(--blue-pale) !important; }
+.btn-success {
+  background: #16a34a;
+  border-color: #16a34a;
+  font-family: 'Raleway', sans-serif;
+  font-weight: 700;
+  border-radius: var(--r-sm);
+}
+.btn-success:hover { background: #15803d; border-color: #15803d; }
+.alert-info {
+  background: var(--blue-pale);
+  border-color: rgba(37,99,235,0.2);
+  color: var(--blue);
+  font-family: 'Raleway', sans-serif;
+  border-radius: var(--r-sm);
+}
+.alert-warning {
+  background: rgba(251,191,36,0.1);
+  border-color: rgba(251,191,36,0.3);
+  color: #92400e;
+  font-family: 'Raleway', sans-serif;
+  border-radius: var(--r-sm);
+}
+.alert-danger {
+  background: rgba(239,68,68,0.1);
+  border-color: rgba(239,68,68,0.3);
+  color: #dc2626;
+  font-family: 'Raleway', sans-serif;
+  border-radius: var(--r-sm);
+}
+.text-danger { color: #dc2626 !important; }
+.text-muted { color: var(--text-muted) !important; }
 </style>

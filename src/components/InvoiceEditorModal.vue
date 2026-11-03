@@ -178,9 +178,8 @@ const formatDateForInput = (dateValue) => {
           <div class="row mb-4">
             <div class="col-md-6">
               <h6 class="text-primary">Detalles del Cliente</h6>
-              <p><strong>{{ currentInvoice.clientDetails.nombre }} {{ currentInvoice.clientDetails.apellido }}</strong></p>
+              <p><strong>{{ currentInvoice.clientDetails.nombre }}</strong></p>
               <p>{{ currentInvoice.clientDetails.direccion }}</p>
-              <p>{{ currentInvoice.clientDetails.codigoPostal }} {{ currentInvoice.clientDetails.ciudad }}</p>
               <p>Tel: {{ currentInvoice.clientDetails.telefono }}</p>
               <p>Email: {{ currentInvoice.clientDetails.email }}</p>
             </div>
