@@ -161,7 +161,7 @@ export const articles = [
     image: imgPaloma,
     color: '#15803d',
     colorPale: '#f0fdf4',
-    metaDescription: 'Limpieza de cristales en primavera: cómo eliminar el polen, heces de pájaros e insectos de escaparates y ventanas. Guía profesional para negocios en Madrid.',
+    metaDescription: 'Limpieza de cristales en primavera: cómo quitar polen, heces de pájaros e insectos de escaparates y ventanas. Guía profesional para negocios en Madrid.',
     content: `
       <h2>La primavera y sus retos para los cristales de tu negocio</h2>
       <p>Con la llegada de la primavera, los comercios, oficinas y comunidades de vecinos de Madrid se enfrentan a uno de los períodos más exigentes del año en cuanto a la <strong>limpieza de ventanas y cristales</strong>. El <strong>aumento del polen en el ambiente</strong>, el mayor movimiento de aves en las ciudades y la aparición masiva de insectos convierten los escaparates y ventanas en superficies que requieren atención constante.</p>
@@ -235,7 +235,7 @@ export const articles = [
     image: imgInvierno,
     color: '#1d4ed8',
     colorPale: '#eff6ff',
-    metaDescription: 'Cómo limpiar cristales en invierno sin dejar marcas. Consejos contra la humedad, condensación y bajas temperaturas. Empresa de limpieza de cristales en Madrid.',
+    metaDescription: 'Cómo limpiar cristales en invierno sin dejar marcas: consejos contra la humedad, la condensación y el frío. Limpieza profesional de cristales en Madrid.',
     content: `
       <p>Los meses de invierno presentan desafíos especiales para mantener los cristales limpios. La lluvia, la cal, la humedad, la condensación y las bajas temperaturas pueden provocar manchas y dificultar una limpieza eficaz.</p>
 
@@ -275,7 +275,7 @@ export const articles = [
     image: imgVerano,
     color: '#b45309',
     colorPale: '#fffbeb',
-    metaDescription: 'Cómo mantener los cristales limpios en verano. Elimina polvo, insectos y marcas de los escaparates. Limpieza profesional de cristales para comercios y empresas en Madrid.',
+    metaDescription: 'Cómo mantener los cristales limpios en verano: quita polvo, insectos y marcas de los escaparates. Limpieza profesional para comercios en Madrid.',
     content: `
       <p>El verano es una de las épocas más exigentes para el mantenimiento de cristales y escaparates. El aumento del polvo, el polen, los insectos y las altas temperaturas provoca que las superficies acristaladas se ensucien con mayor rapidez, afectando a la imagen de negocios, oficinas y establecimientos comerciales.</p>
 
@@ -308,7 +308,7 @@ export const articles = [
       <p>Un escaparate limpio transmite profesionalidad, mejora la percepción de los clientes y ayuda a destacar productos y promociones. Durante el verano, cuando aumenta el tránsito de personas en muchas ciudades, mantener una buena imagen exterior resulta especialmente importante.</p>
 
       <h2>¿Con qué frecuencia se deben limpiar los escaparates en verano?</h2>
-      <p>La frecuencia dependerá de la ubicación del negocio y del volumen de tránsito. En zonas comerciales o turísticas, muchas empresas optan por limpiezas semanales o incluso varias veces por semana para mantener una imagen impecable.</p>
+      <p>La frecuencia dependerá de la ubicación del negocio y del volumen de tránsito. En zonas comerciales o turísticas, lo más habitual es una limpieza cada 15 días o una vez al mes para mantener una imagen impecable.</p>
 
       <h2>Conclusión</h2>
       <p>Mantener los cristales limpios durante el verano no solo mejora la estética del negocio, sino que también contribuye a atraer clientes y proyectar una imagen profesional. Un plan de mantenimiento adecuado permite conservar escaparates y fachadas en perfectas condiciones durante toda la temporada.</p>
@@ -325,7 +325,7 @@ export const articles = [
     image: imgPrimavera,
     color: '#15803d',
     colorPale: '#f0fdf4',
-    metaDescription: 'Cómo limpiar cristales después del invierno y eliminar el polen de escaparates. Guía de limpieza profesional de cristales en primavera para negocios y comercios en Madrid.',
+    metaDescription: 'Cómo limpiar cristales después del invierno y quitar el polen de los escaparates. Guía profesional de primavera para negocios y comercios en Madrid.',
     content: `
       <p>Tras los meses de invierno, los cristales y escaparates suelen acumular suciedad, restos de lluvia, polvo y otras partículas que afectan a su apariencia. La llegada de la primavera es el momento ideal para realizar una limpieza a fondo y recuperar la transparencia y el brillo de las superficies acristaladas.</p>
 
@@ -379,7 +379,7 @@ export const articles = [
     image: imgOtono,
     color: '#c2410c',
     colorPale: '#fff7ed',
-    metaDescription: 'Limpieza de cristales en otoño: elimina manchas de lluvia, hojas y humedad de escaparates y fachadas. Prepara tu negocio para Black Friday e invierno. Empresa en Madrid.',
+    metaDescription: 'Limpieza de cristales en otoño: quita manchas de lluvia, hojas y humedad de escaparates y fachadas. Prepara tu negocio para Black Friday en Madrid.',
     content: `
       <p>La llegada del otoño trae consigo cambios meteorológicos que pueden afectar directamente al estado de los cristales y escaparates. Las lluvias frecuentes, la humedad, el viento y la acumulación de hojas provocan que las superficies acristaladas se ensucien con mayor rapidez.</p>
       <p>Por ello, esta estación es un momento clave para establecer un plan de mantenimiento que garantice una imagen profesional y cuidada del negocio.</p>

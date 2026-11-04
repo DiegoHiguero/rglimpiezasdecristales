@@ -7,6 +7,7 @@
     "site": "royal-clean-services",
     "public": "dist",
     "cleanUrls": true,
+    "trailingSlash": false,
     "ignore": [
       "firebase.json",
       "**/.*",
@@ -71,7 +72,11 @@
     ],
     "rewrites": [
       {
-        "source": "**",
+        "source": "/@(login|Register|registro|misClientes|misFacturas|dashboard|gastos|hoja-de-ruta|firmas|pagos-pendientes|nueva-factura|evolucion-ingresos|mapa-clientes|portal)",
+        "destination": "/index.html"
+      },
+      {
+        "source": "/@(admin|portal|sheet)/**",
         "destination": "/index.html"
       }
     ]

@@ -88,6 +88,8 @@ const redirigeAdminAlPanel = async (to, from, next) => {
     }
 };
 
+// La marca solo cabe si el título no pasa de ~60 caracteres (Google corta el resto)
+const conMarca = (t) => (`${t} | Royall Clean`.length <= 60 ? `${t} | Royall Clean` : t);
 const BASE_TITLE = 'Limpieza de Cristales en Madrid | Royall Clean';
 const BASE_DESC  = 'Limpieza de cristales y ventanas en Madrid para hogares, comunidades y locales. Más de 13 años de experiencia. ¡Presupuesto gratis en 24 h! ☎ 625 950 506';
 
@@ -151,8 +153,8 @@ const routes = [
         path: '/sobre-mi',
         component: SobreMi,
         meta: {
-            title: 'Sobre mí: Roys Abreu, Limpiacristales en Madrid | Royall Clean',
-            description: 'Limpio cristales en Madrid desde 2013 y me especializo en los trabajos difíciles que otros no quieren hacer. Trato directo, sin prisas y con el cliente contento.',
+            title: 'Roys Abreu, limpiacristales en Madrid | Royall Clean',
+            description: 'Limpio cristales en Madrid desde 2013 y me especializo en los trabajos difíciles que otros no quieren hacer. Trato directo y cliente contento.',
         },
     },
     { path: '/servicios', redirect: '/' },
@@ -173,6 +175,12 @@ const routes = [
     { path: '/limpieza-cristales-las-rozas', component: ServicioDetalle, meta: { zona: 'limpieza-cristales-las-rozas' } },
     { path: '/limpieza-cristales-grinon', component: ServicioDetalle, meta: { zona: 'limpieza-cristales-grinon' } },
     { path: '/limpieza-cristales-madrid-centro', component: ServicioDetalle, meta: { zona: 'limpieza-cristales-madrid-centro' } },
+    { path: '/limpieza-cristales-leganes', component: ServicioDetalle, meta: { zona: 'limpieza-cristales-leganes' } },
+    { path: '/limpieza-cristales-alcorcon', component: ServicioDetalle, meta: { zona: 'limpieza-cristales-alcorcon' } },
+    { path: '/limpieza-cristales-mostoles', component: ServicioDetalle, meta: { zona: 'limpieza-cristales-mostoles' } },
+    { path: '/limpieza-cristales-fuenlabrada', component: ServicioDetalle, meta: { zona: 'limpieza-cristales-fuenlabrada' } },
+    { path: '/limpieza-cristales-majadahonda', component: ServicioDetalle, meta: { zona: 'limpieza-cristales-majadahonda' } },
+    { path: '/limpieza-cristales-barrio-salamanca', component: ServicioDetalle, meta: { zona: 'limpieza-cristales-barrio-salamanca' } },
     {
         path: '/politica-privacidad',
         component: Confidentialite,
@@ -265,12 +273,12 @@ router.afterEach((to) => {
     let image = 'https://royallclean.es/og-image.webp';
 
     if (article) {
-        title = `${article.title} | Royall Clean`;
+        title = conMarca(article.title);
         desc  = article.metaDescription;
         keywords = article.keywords || '';
         image = article.image ? window.location.origin + article.image : image;
     } else if (servicio) {
-        title = `${servicio.metaTitle} | Royall Clean`;
+        title = conMarca(servicio.metaTitle);
         desc  = servicio.metaDescription;
         keywords = servicio.keywords || '';
         const img = servicio.image || imagenesZona[to.meta?.zona]?.src;

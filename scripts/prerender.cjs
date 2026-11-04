@@ -67,6 +67,8 @@ function startServer() {
       // Misma resolución que Firebase Hosting en producción: /ruta -> ruta.html
       filePath = path.join(distDir, `${urlPath}.html`);
     }
+    // Rutas sin .html (la de 404.html): servimos la app para que el router pinte NotFound
+    if (!path.extname(urlPath) && !fs.existsSync(filePath)) filePath = path.join(distDir, 'index.html');
     fs.readFile(filePath, (err, data) => {
       if (err) {
         res.writeHead(404);
@@ -131,6 +133,39 @@ async function main() {
       ok++;
     } catch (err) {
       failed.push({ route, error: err.message });
+    } finally {
+      await page.close();
+    }
+  }
+
+  // 404.html: Firebase lo sirve con estado 404 a cualquier URL que no exista
+  // (antes el rewrite "**" devolvía la portada con 200 = soft 404 para Google).
+  // Partimos del <head> de la portada, pero sin canonical, hreflang ni schema,
+  // y con noindex.
+  {
+    const page = await browser.newPage();
+    try {
+      const indexHtml = fs.readFileSync(path.join(distDir, 'index.html'), 'utf-8');
+      const htmlOpenTag = indexHtml.match(/<html[^>]*>/)[0];
+      const headBlock = indexHtml.match(/<head>[\s\S]*?<\/head>/)[0]
+        .replace(/<title>[\s\S]*?<\/title>/, '<title>Página no encontrada | Royall Clean</title>')
+        .replace(/<meta name="description"[^>]*>/, '<meta name="description" content="La página que buscas no existe. Vuelve al inicio de Royall Clean, limpieza de cristales en Madrid.">')
+        .replace(/<meta name="robots"[^>]*>/, '<meta name="robots" content="noindex, follow">')
+        .replace(/<link rel="(canonical|alternate)"[^>]*>\s*/g, '')
+        .replace(/<script>[^<]*rel="canonical"[^<]*<\/script>\s*/g, '')
+        .replace(/<meta property="og:url"[^>]*>\s*/g, '')
+        .replace(/<script type="application\/ld\+json"[^>]*>[\s\S]*?<\/script>\s*/g, '');
+      await page.goto(`http://localhost:${PORT}/pagina-que-no-existe`, { waitUntil: 'domcontentloaded', timeout: 30000 });
+      await page.waitForFunction(
+        () => document.querySelector('#app') && document.querySelector('#app').children.length > 0,
+        { timeout: 15000 }
+      );
+      await new Promise((r) => setTimeout(r, 250));
+      const bodyOuterHtml = await page.evaluate(() => document.body.outerHTML);
+      fs.writeFileSync(path.join(distDir, '404.html'), `<!DOCTYPE html>\n${htmlOpenTag}\n${headBlock}\n${bodyOuterHtml}\n</html>`);
+      console.log('[prerender] 404.html generado');
+    } catch (err) {
+      failed.push({ route: '404.html', error: err.message });
     } finally {
       await page.close();
     }

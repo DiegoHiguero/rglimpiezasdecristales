@@ -20,7 +20,7 @@
       </button>
       <button :class="['gl-tab', { active: tab === 'videos' }]" @click="tab = 'videos'">
         <font-awesome-icon :icon="['fas', 'video']" />
-        Vídeos <span class="gl-tab-count">2</span>
+        Vídeos <span class="gl-tab-count">{{ videos.length }}</span>
       </button>
     </div>
 
@@ -51,18 +51,11 @@
 
     <!-- ── Vídeos ── -->
     <div v-if="tab === 'videos'" class="video-grid">
-      <div class="video-item">
-        <video ref="videoA" src="../../assets/img/videoplayback.mp4" muted loop playsinline></video>
+      <div v-for="(v, i) in videos" :key="v.src" class="video-item">
+        <video :ref="(el) => (videoEls[i] = el)" :src="v.src" muted loop playsinline preload="metadata"></video>
         <div class="video-overlay">
           <span class="gl-play-badge"><font-awesome-icon :icon="['fas', 'play']" /></span>
-          <span class="gallery-tag">En acción</span>
-        </div>
-      </div>
-      <div class="video-item">
-        <video ref="videoB" src="../../assets/img/VID-20251022-WA0013.mp4" muted loop playsinline></video>
-        <div class="video-overlay">
-          <span class="gl-play-badge"><font-awesome-icon :icon="['fas', 'play']" /></span>
-          <span class="gallery-tag">Octubre 2025</span>
+          <span class="gallery-tag">{{ v.label }}</span>
         </div>
       </div>
     </div>
@@ -160,6 +153,12 @@ import imgPlacasSolares from '../../assets/img/placas-solares-collage.webp';
 import imgCristalera   from '../../assets/img/cristalera-terraza.webp';
 import imgPertiga2026  from '../../assets/img/20261006-pertiga-fachada.webp';
 import imgFachada2026  from '../../assets/img/20261006-fachada-acristalada.webp';
+import vidCristalera from '../../assets/img/video-cristalera-web.mp4';
+import vidVentana    from '../../assets/img/video-ventana-web.mp4';
+import vidFinObra    from '../../assets/img/video-fin-de-obra-web.mp4';
+import vidPadel      from '../../assets/img/video-padel-web.mp4';
+import vidAccion     from '../../assets/img/videoplayback.mp4';
+import vidOct2025    from '../../assets/img/VID-20251022-WA0013.mp4';
 import img2024Feb     from '../../assets/img/2024-02-19.webp';
 import img2023Sep     from '../../assets/img/IMG-20230901-WA0000.webp';
 import img2025Sep     from '../../assets/img/20250917_131013.webp';
@@ -180,11 +179,19 @@ const props = defineProps({ completa: { type: Boolean, default: false } });
 const tab = ref(props.completa ? 'fotos' : 'ba');
 const PHOTOS_PREVIEW_COUNT = 12;
 const showAllPhotos = ref(props.completa);
-const videoA = ref(null);
-const videoB = ref(null);
+// Vídeos de trabajos reales (verticales, grabados con el móvil), del más reciente al más antiguo
+const videos = [
+  { src: vidCristalera, label: 'Cristalera con pértiga · Nov 2026' },
+  { src: vidVentana, label: 'Ventanas por dentro · Nov 2026' },
+  { src: vidFinObra, label: 'Fin de obra en tienda · Oct 2026' },
+  { src: vidPadel, label: 'Pista de pádel' },
+  { src: vidAccion, label: 'En acción' },
+  { src: vidOct2025, label: 'Octubre 2025' },
+];
+const videoEls = [];
 
 const playVideos = () => {
-  [videoA.value, videoB.value].forEach(v => {
+  videoEls.forEach(v => {
     if (!v) return;
     v.muted = true;
     v.play().catch(() => {});
@@ -381,14 +388,14 @@ onUnmounted(() => {
 /* ── Video grid ── */
 .video-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 16px;
 }
 .video-item {
   position: relative;
   border-radius: var(--r-md);
   overflow: hidden;
-  aspect-ratio: 16 / 9;
+  aspect-ratio: 3 / 4;
   background: var(--slate);
 }
 .video-item video {
@@ -559,7 +566,9 @@ onUnmounted(() => {
   .galeria-wrap { margin: 10px 10px; padding: 32px 12px 24px; }
   .gallery-grid { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 160px; }
   .gallery-item--featured { grid-column: span 2; grid-row: span 1; }
-  .video-grid { grid-template-columns: 1fr; }
+  .video-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .video-overlay { padding: 12px; }
+  .gl-play-badge { top: 10px; right: 10px; width: 32px; height: 32px; }
   .ba-grid { grid-template-columns: 1fr; }
   .gl-footer { flex-direction: column; align-items: flex-start; }
   .gl-footer-btn { width: 100%; justify-content: center; }

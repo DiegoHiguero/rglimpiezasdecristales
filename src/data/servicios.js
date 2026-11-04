@@ -6,6 +6,9 @@ import imgPresion  from '../assets/img/presion.webp';
 import imgAguaPura from '../assets/img/20261006-pertiga-fachada.webp';
 import imgPlacas   from '../assets/img/limpieza-panel-thumb.webp';
 import imgObras    from '../assets/img/20260323_184851.webp';
+import imgObrasFregadora from '../assets/img/fin-de-obra-fregadora.webp';
+import videoObras  from '../assets/img/video-fin-de-obra-web.mp4';
+import posterObras from '../assets/img/video-fin-de-obra-poster.webp';
 import imgGrafitis from '../assets/img/grafitis.webp';
 import imgVinilos  from '../assets/img/vinilo.webp';
 
@@ -16,7 +19,7 @@ export const servicios = [
     title: 'Limpieza de cristales en altura: pértiga y agua pura',
     excerpt: 'Ventanas y fachadas en altura sin andamios: con pértiga telescópica hasta 4 plantas y con nuestro sistema exclusivo de agua pura Unger HydroPower hasta 10 metros.',
     metaTitle: 'Limpieza de Cristales en Altura en Madrid',
-    metaDescription: 'Limpieza de cristales y fachadas en altura en Madrid: pértiga hasta 4 plantas y agua pura Unger HydroPower hasta 10 m, sin andamios. Presupuesto gratis en 24 h.',
+    metaDescription: 'Limpieza de cristales y fachadas en altura en Madrid: pértiga hasta 4 plantas y agua pura hasta 10 m, sin andamios. Presupuesto gratis en 24 h.',
     keywords: 'limpieza cristales en altura madrid, limpieza fachadas acristaladas, limpieza ventanas altura sin andamios, pertiga telescopica limpieza cristales, limpieza cristales agua pura madrid, sistema unger hydropower',
     icon: ['fas', 'droplet'],
     image: imgAguaPura,
@@ -211,7 +214,7 @@ export const servicios = [
     title: 'Limpieza de cristales para locales comerciales y escaparates en Madrid',
     excerpt: 'Escaparates impecables sin cerrar el negocio: limpieza profesional para tiendas, bares, cafeterías y locales a pie de calle en Madrid.',
     metaTitle: 'Limpieza de Cristales para Locales Comerciales en Madrid',
-    metaDescription: 'Limpieza de escaparates y cristales para negocios en Madrid. Horarios fuera de apertura, factura para empresas. Presupuesto gratis en 24 h.',
+    metaDescription: 'Limpieza de escaparates y cristales para negocios en Madrid, el día y la hora que acordemos. Factura para empresas. Presupuesto gratis en 24 h.',
     keywords: 'limpieza cristales locales comerciales madrid, limpieza escaparates madrid, limpiacristales negocios madrid, limpieza lunas tiendas',
     icon: ['fas', 'store'],
     image: imgLocales,
@@ -232,7 +235,7 @@ export const servicios = [
       </ul>
 
       <h2>Trabajamos sin interrumpir tu actividad</h2>
-      <p>Sabemos que cada hora de apertura cuenta. Por eso adaptamos los horarios del servicio antes de la apertura, después del cierre, o en franjas de menor afluencia, según lo que mejor te venga. El objetivo es que tu negocio esté impecable cuando llegan los primeros clientes, sin que la limpieza interfiera en tu jornada.</p>
+      <p>Sabemos que cada hora de apertura cuenta. Por eso acordamos contigo el día y la hora de cada visita, en la franja que mejor te venga. El objetivo es que tu negocio esté impecable cuando llegan los primeros clientes, sin que la limpieza interfiera en tu jornada.</p>
 
       <h2>Frecuencia recomendada</h2>
       <p>Para escaparates y locales comerciales en Madrid recomendamos una <strong>limpieza quincenal</strong>, especialmente en calles con mucho tráfico peatonal o rodado, donde el polvo y la contaminación se acumulan más rápido. En zonas más tranquilas, una limpieza mensual puede ser suficiente. También ofrecemos servicios puntuales para antes de una inauguración, campaña comercial o cambio de escaparate.</p>
@@ -244,8 +247,8 @@ export const servicios = [
       <p>Damos servicio a comercios, oficinas y locales en Madrid capital y en Getafe, Leganés, Alcorcón, Fuenlabrada, Móstoles, Alcobendas, Pozuelo de Alarcón, Las Rozas, Torrejón de Ardoz, Coslada y el resto de la Comunidad de Madrid.</p>
 
       <h2>Preguntas frecuentes sobre limpieza de locales comerciales</h2>
-      <h3>¿Podéis limpiar fuera del horario de apertura?</h3>
-      <p>Sí, es lo habitual: trabajamos antes de que abras o después del cierre para no afectar a tu actividad ni a tus clientes.</p>
+      <h3>¿Podéis limpiar sin afectar a mi negocio?</h3>
+      <p>Sí: acordamos contigo el día y la hora de la visita para no afectar a tu actividad ni a tus clientes.</p>
       <h3>¿Hacéis contratos de mantenimiento para varios locales?</h3>
       <p>Sí, si gestionas varias tiendas u oficinas en Madrid podemos coordinar un calendario único con condiciones especiales por volumen.</p>
       <h3>¿Retiráis vinilos antiguos del escaparate?</h3>
@@ -253,8 +256,8 @@ export const servicios = [
     `,
     faqs: [
       {
-        q: '¿Podéis limpiar fuera del horario de apertura?',
-        a: 'Sí, es lo habitual: trabajamos antes de que abras o después del cierre para no afectar a tu actividad ni a tus clientes.',
+        q: '¿Podéis limpiar sin afectar a mi negocio?',
+        a: 'Sí: acordamos contigo el día y la hora de la visita para no afectar a tu actividad ni a tus clientes.',
       },
       {
         q: '¿Hacéis contratos de mantenimiento para varios locales?',
@@ -293,7 +296,7 @@ export const servicios = [
       </ul>
 
       <h2>Horarios que no interrumpen el trabajo</h2>
-      <p>Planificamos cada visita con tu empresa: a primera hora, a última hora o en las franjas con menos actividad, para que la limpieza no moleste a tu equipo ni a tus visitas. Si el edificio tiene control de acceso o normas de seguridad propias, nos adaptamos a ellas.</p>
+      <p>Planificamos cada visita con tu empresa: acordamos el día y la hora que menos molesten a tu equipo y a tus visitas. Si el edificio tiene control de acceso o normas de seguridad propias, nos adaptamos a ellas.</p>
 
       <h2>Contrato de mantenimiento con calendario fijo</h2>
       <p>Lo más cómodo para una empresa es olvidarse de los cristales. Con un contrato de mantenimiento fijamos un calendario de visitas (mensual, bimestral o trimestral según la zona y el tipo de edificio) y un único interlocutor. Emitimos <strong>factura a nombre de la empresa</strong> en cada servicio, y trabajamos con seguro de responsabilidad civil.</p>
@@ -333,7 +336,7 @@ export const servicios = [
     title: 'Limpieza con agua a presión en Madrid: patios, fachadas y toldos',
     excerpt: 'Patios, terrazas, fachadas, toldos y suelos exteriores como nuevos: limpieza con agua a presión, con la presión justa para cada superficie.',
     metaTitle: 'Limpieza con Agua a Presión en Madrid',
-    metaDescription: 'Limpieza con agua a presión en Madrid: patios, terrazas, fachadas, toldos y suelos exteriores, con la presión justa para cada superficie. Presupuesto gratis en 24 h.',
+    metaDescription: 'Limpieza con agua a presión en Madrid: patios, terrazas, fachadas, toldos y suelos, con la presión justa para cada superficie. Presupuesto en 24 h.',
     keywords: 'limpieza agua a presion madrid, hidrolimpieza patios madrid, limpieza fachadas agua a presion, limpieza toldos madrid, limpieza terrazas agua a presion',
     icon: ['fas', 'shower'],
     image: imgPresion,
@@ -431,6 +434,10 @@ export const servicios = [
     keywords: 'limpieza fin de obra madrid, limpieza tras reforma, limpieza de obras precio, limpieza post obra cristales',
     icon: ['fas', 'broom'],
     image: imgObras,
+    galeria: [
+      { tipo: 'img', src: imgObrasFregadora, pie: 'Fregadora en el fin de obra de una tienda nueva' },
+      { tipo: 'video', src: videoObras, poster: posterObras, pie: 'La misma tienda, lista para abrir' },
+    ],
     color: '#0e7490',
     colorPale: '#ecfeff',
     tag: 'Fin de obra',

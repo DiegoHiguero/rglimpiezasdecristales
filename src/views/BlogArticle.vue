@@ -159,7 +159,7 @@ function injectSchema(a) {
         datePublished: a.date,
         dateModified: a.date,
         image: window.location.origin + a.image,
-        author: { '@type': 'Organization', name: 'Royall Clean' },
+        author: { '@type': 'Person', name: 'Roys Abreu', url: 'https://royallclean.es/sobre-mi' },
         publisher: { '@type': 'Organization', name: 'Royall Clean', url: 'https://royallclean.es' },
         url: 'https://royallclean.es/blog/' + a.slug,
       },

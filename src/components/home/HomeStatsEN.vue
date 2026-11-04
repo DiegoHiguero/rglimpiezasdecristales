@@ -119,6 +119,10 @@ onMounted(() => {
 :root:not([data-theme="dark"]) .stat-item,
 :root:not([data-theme="dark"]) .perk { border-color: rgba(0,0,0,0.1); }
 
+/* Tableta: las 5 piezas en una sola fila, con menos aire entre ellas */
+@media (min-width: 769px) and (max-width: 1099.98px) {
+  .stat-item, .perk { padding: 4px 12px; }
+}
 @media (max-width: 768px) {
   .section3 { padding: 10px 4px; row-gap: 8px; }
   .stat-item {

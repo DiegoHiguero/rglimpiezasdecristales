@@ -5,7 +5,7 @@
 
 export const preciosMeta = {
   title: 'Precios de Limpieza de Cristales en Madrid | Royall Clean',
-  description: 'Tarifas de limpieza de cristales en Madrid: locales desde 20 €, pisos desde 55 €, chalets desde 95 €. Qué incluye y cómo se calcula. Presupuesto gratis en 24 h.',
+  description: 'Tarifas de limpieza de cristales en Madrid: locales desde 20 €, pisos desde 55 €, chalets desde 95 €. Qué incluye y cómo se calcula el precio.',
   keywords: 'precio limpieza cristales madrid, cuanto cuesta limpiar cristales, tarifas limpiacristales madrid, precio limpieza ventanas, presupuesto limpieza cristales',
 };
 

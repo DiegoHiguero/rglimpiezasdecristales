@@ -27,6 +27,17 @@
 
       <div class="article-content" v-html="purify(servicio.content)"></div>
 
+      <section class="article-galeria" v-if="servicio.galeria?.length">
+        <h2 class="galeria-title">Trabajos reales</h2>
+        <div class="galeria-grid">
+          <figure v-for="m in servicio.galeria" :key="m.src" class="galeria-item">
+            <img v-if="m.tipo === 'img'" :src="m.src" :alt="m.pie" loading="lazy" />
+            <video v-else :src="m.src" :poster="m.poster" muted loop playsinline autoplay preload="metadata" :aria-label="m.pie"></video>
+            <figcaption>{{ m.pie }}</figcaption>
+          </figure>
+        </div>
+      </section>
+
       <div class="article-cta">
         <div class="article-cta-inner">
           <h2 class="article-cta-title">{{ esZona ? `¿Necesitas limpiar tus cristales en ${servicio.breadcrumbLabel}?` : '¿Necesitas este servicio?' }}</h2>
@@ -293,6 +304,39 @@ onUnmounted(() => { document.querySelectorAll('script[data-dynamic-schema]').for
 }
 :deep(.article-content ul li strong) { color: var(--text); }
 
+/* Fotos y vídeos de trabajos reales del servicio, en vertical y lado a lado */
+.article-galeria { padding: 0 40px 36px; }
+.galeria-title {
+  font-family: 'Anton', sans-serif;
+  font-size: 1.5rem;
+  color: var(--text);
+  margin: 0 0 18px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid var(--border);
+}
+.galeria-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+.galeria-item { margin: 0; }
+.galeria-item img,
+.galeria-item video {
+  width: 100%;
+  aspect-ratio: 9 / 14;
+  object-fit: cover;
+  display: block;
+  border-radius: 10px;
+  background: var(--border);
+}
+.galeria-item figcaption {
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-align: center;
+  margin-top: 8px;
+}
+
 .article-cta {
   margin: 0;
   background: var(--blue-pale);
@@ -374,6 +418,8 @@ onUnmounted(() => { document.querySelectorAll('script[data-dynamic-schema]').for
   .article-header { padding: 24px 20px 0; }
   .article-title { font-size: 1.65rem; }
   .article-content { padding: 28px 20px; }
+  .article-galeria { padding: 0 20px 28px; }
+  .galeria-grid { gap: 10px; }
   .article-cta { padding: 24px 20px; }
   .article-related { padding: 24px 20px 28px; }
   .article-btn { flex: 1; justify-content: center; }

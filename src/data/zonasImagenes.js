@@ -5,6 +5,8 @@ import imgGrinon   from '../assets/img/20260528_141113.webp';
 import imgLasRozas from '../assets/img/20260324_122426.webp';
 import imgMadrid   from '../assets/img/IMG-20230901-WA0000.webp';
 import imgPozuelo  from '../assets/img/casamadera.webp';
+import imgLeganes  from '../assets/img/leganes-cerramiento-terraza.webp';
+import imgSalamanca from '../assets/img/barrio-salamanca-escaparate.webp';
 
 export const imagenesZona = {
   'limpieza-cristales-getafe': {
@@ -26,5 +28,13 @@ export const imagenesZona = {
   'limpieza-cristales-las-rozas': {
     src: imgLasRozas,
     pie: 'Techo de cristal de una terraza que limpiamos en Las Rozas',
+  },
+  'limpieza-cristales-leganes': {
+    src: imgLeganes,
+    pie: 'Techo de cristal de un cerramiento de terraza que limpiamos en Leganés',
+  },
+  'limpieza-cristales-barrio-salamanca': {
+    src: imgSalamanca,
+    pie: 'Escaparate de un local que limpiamos en el barrio de Salamanca',
   },
 };

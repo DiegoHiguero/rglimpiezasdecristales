@@ -121,6 +121,12 @@ const zonas = [
   { to: '/limpieza-cristales-pozuelo-de-alarcon', nombre: 'Pozuelo de Alarcón' },
   { to: '/limpieza-cristales-las-rozas', nombre: 'Las Rozas' },
   { to: '/limpieza-cristales-grinon', nombre: 'Griñón' },
+  { to: '/limpieza-cristales-leganes', nombre: 'Leganés' },
+  { to: '/limpieza-cristales-alcorcon', nombre: 'Alcorcón' },
+  { to: '/limpieza-cristales-mostoles', nombre: 'Móstoles' },
+  { to: '/limpieza-cristales-fuenlabrada', nombre: 'Fuenlabrada' },
+  { to: '/limpieza-cristales-majadahonda', nombre: 'Majadahonda' },
+  { to: '/limpieza-cristales-barrio-salamanca', nombre: 'Barrio de Salamanca' },
 ];
 </script>
 

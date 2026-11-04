@@ -7,6 +7,9 @@ import { zonas } from './src/data/zonas.js'
 
 const SITE = 'https://royallclean.es'
 
+// La marca solo cabe si el título no pasa de ~60 caracteres (Google corta el resto)
+const conMarca = (t) => (`${t} | Royall Clean`.length <= 60 ? `${t} | Royall Clean` : t)
+
 const blogRoutes = [
   {
     slug: 'limpieza-paneles-solares-otono-guia-paso-a-paso',
@@ -25,35 +28,35 @@ const blogRoutes = [
   {
     slug: 'limpieza-cristales-primavera-polen-pajaros-insectos',
     title: 'Limpieza de cristales en primavera: polen, pájaros e insectos',
-    description: 'Limpieza de cristales en primavera: cómo eliminar el polen, heces de pájaros e insectos de escaparates y ventanas. Guía profesional para negocios en Madrid.',
+    description: 'Limpieza de cristales en primavera: cómo quitar polen, heces de pájaros e insectos de escaparates y ventanas. Guía profesional para negocios en Madrid.',
     keywords: 'limpieza cristales primavera, eliminar polen cristales, limpiar heces pajaros cristal, escaparates primavera madrid',
     date: '2026-06-05',
   },
   {
     slug: 'como-limpiar-cristales-en-invierno',
     title: 'Cómo limpiar cristales en invierno sin dejar marcas',
-    description: 'Cómo limpiar cristales en invierno sin dejar marcas. Consejos contra la humedad, condensación y bajas temperaturas. Empresa de limpieza de cristales en Madrid.',
+    description: 'Cómo limpiar cristales en invierno sin dejar marcas: consejos contra la humedad, la condensación y el frío. Limpieza profesional de cristales en Madrid.',
     keywords: 'limpiar cristales invierno, condensacion cristales, limpieza cristales frio madrid, cristales sin marcas invierno',
     date: '2025-12-10',
   },
   {
     slug: 'como-mantener-cristales-limpios-verano',
     title: 'Cómo mantener los cristales limpios durante el verano',
-    description: 'Cómo mantener los cristales limpios en verano. Elimina polvo, insectos y marcas de los escaparates. Limpieza profesional de cristales para comercios y empresas en Madrid.',
+    description: 'Cómo mantener los cristales limpios en verano: quita polvo, insectos y marcas de los escaparates. Limpieza profesional para comercios en Madrid.',
     keywords: 'cristales limpios verano, limpiar escaparates verano, polvo cristales verano madrid, limpieza cristales calor',
     date: '2025-06-15',
   },
   {
     slug: 'como-limpiar-cristales-despues-del-invierno',
     title: 'Cómo limpiar cristales después del invierno: guía para negocios y comercios',
-    description: 'Cómo limpiar cristales después del invierno y eliminar el polen de escaparates. Guía de limpieza profesional de cristales en primavera para negocios y comercios en Madrid.',
+    description: 'Cómo limpiar cristales después del invierno y quitar el polen de los escaparates. Guía profesional de primavera para negocios y comercios en Madrid.',
     keywords: 'limpiar cristales despues invierno, limpieza escaparates primavera, cristales negocios madrid, eliminar suciedad invierno cristal',
     date: '2026-03-20',
   },
   {
     slug: 'como-preparar-cristales-para-el-otono',
     title: 'Cómo preparar los cristales y escaparates para el otoño',
-    description: 'Limpieza de cristales en otoño: elimina manchas de lluvia, hojas y humedad de escaparates y fachadas. Prepara tu negocio para Black Friday e invierno. Empresa en Madrid.',
+    description: 'Limpieza de cristales en otoño: quita manchas de lluvia, hojas y humedad de escaparates y fachadas. Prepara tu negocio para Black Friday en Madrid.',
     keywords: 'limpieza cristales otono, escaparates otono madrid, limpiar cristales lluvia, preparar negocio otono cristales',
     date: '2025-09-10',
   },
@@ -64,7 +67,7 @@ const serviceRoutes = [
     slug: 'agua-pura-altura',
     name: 'Limpieza de cristales en altura con pértiga y agua pura en Madrid',
     title: 'Limpieza de Cristales en Altura en Madrid',
-    description: 'Limpieza de cristales y fachadas en altura en Madrid: pértiga hasta 4 plantas y agua pura Unger HydroPower hasta 10 m, sin andamios. Presupuesto gratis en 24 h.',
+    description: 'Limpieza de cristales y fachadas en altura en Madrid: pértiga hasta 4 plantas y agua pura hasta 10 m, sin andamios. Presupuesto gratis en 24 h.',
     keywords: 'limpieza cristales en altura madrid, limpieza fachadas acristaladas, limpieza ventanas altura sin andamios, pertiga telescopica limpieza cristales, limpieza cristales agua pura madrid, sistema unger hydropower',
     breadcrumbLabel: 'Limpieza en altura',
     image: `${SITE}/og-image-agua-pura.webp`,
@@ -105,11 +108,11 @@ const serviceRoutes = [
     slug: 'limpieza-cristales-locales-comerciales',
     name: 'Limpieza de cristales para locales comerciales y escaparates en Madrid',
     title: 'Limpieza de Cristales para Locales Comerciales en Madrid',
-    description: 'Limpieza de escaparates y cristales para negocios en Madrid. Horarios fuera de apertura, factura para empresas. Presupuesto gratis en 24 h.',
+    description: 'Limpieza de escaparates y cristales para negocios en Madrid, el día y la hora que acordemos. Factura para empresas. Presupuesto gratis en 24 h.',
     keywords: 'limpieza cristales locales comerciales madrid, limpieza escaparates madrid, limpiacristales negocios madrid, limpieza lunas tiendas',
     breadcrumbLabel: 'Locales comerciales',
     faqs: [
-      { q: '¿Podéis limpiar fuera del horario de apertura?', a: 'Sí, es lo habitual: trabajamos antes de que abras o después del cierre para no afectar a tu actividad ni a tus clientes.' },
+      { q: '¿Podéis limpiar sin afectar a mi negocio?', a: 'Sí: acordamos contigo el día y la hora de la visita para no afectar a tu actividad ni a tus clientes.' },
       { q: '¿Hacéis contratos de mantenimiento para varios locales?', a: 'Sí, si gestionas varias tiendas u oficinas en Madrid podemos coordinar un calendario único con condiciones especiales por volumen.' },
       { q: '¿Retiráis vinilos antiguos del escaparate?', a: 'Sí, retiramos vinilos y restos de adhesivo sin rayar el cristal, dejando la superficie lista para una nueva decoración o totalmente limpia.' },
     ],
@@ -131,7 +134,7 @@ const serviceRoutes = [
     slug: 'limpieza-agua-a-presion',
     name: 'Limpieza con agua a presión en Madrid',
     title: 'Limpieza con Agua a Presión en Madrid',
-    description: 'Limpieza con agua a presión en Madrid: patios, terrazas, fachadas, toldos y suelos exteriores, con la presión justa para cada superficie. Presupuesto gratis en 24 h.',
+    description: 'Limpieza con agua a presión en Madrid: patios, terrazas, fachadas, toldos y suelos, con la presión justa para cada superficie. Presupuesto en 24 h.',
     keywords: 'limpieza agua a presion madrid, hidrolimpieza patios madrid, limpieza fachadas agua a presion, limpieza toldos madrid, limpieza terrazas agua a presion',
     breadcrumbLabel: 'Agua a presión',
     faqs: [
@@ -230,8 +233,8 @@ const staticPages = [
   },
   {
     route: 'sobre-mi',
-    title: 'Sobre mí: Roys Abreu, Limpiacristales en Madrid | Royall Clean',
-    description: 'Limpio cristales en Madrid desde 2013 y me especializo en los trabajos difíciles que otros no quieren hacer. Trato directo, sin prisas y con el cliente contento.',
+    title: 'Roys Abreu, limpiacristales en Madrid | Royall Clean',
+    description: 'Limpio cristales en Madrid desde 2013 y me especializo en los trabajos difíciles que otros no quieren hacer. Trato directo y cliente contento.',
     keywords: 'roys abreu limpiacristales, limpiacristales madrid autonomo, limpieza cristales trabajos dificiles, royall clean',
     breadcrumbLabel: 'Sobre mí',
   },
@@ -386,7 +389,7 @@ function injectBlogHtmlPlugin() {
       // Service pages
       for (const service of [...serviceRoutes, ...zonaRoutes]) {
         const serviceUrl = `${SITE}/${service.slug}`
-        const fullTitle = `${service.title} | Royall Clean`
+        const fullTitle = conMarca(service.title)
 
         const serviceLd = JSON.stringify({
           '@context': 'https://schema.org',
@@ -446,7 +449,7 @@ function injectBlogHtmlPlugin() {
       // Each article
       for (const article of blogRoutes) {
         const articleUrl = `${SITE}/blog/${article.slug}`
-        const fullTitle = `${article.title} | Royall Clean`
+        const fullTitle = conMarca(article.title)
 
         const blogPostingLd = JSON.stringify({
           '@context': 'https://schema.org',
@@ -466,18 +469,18 @@ function injectBlogHtmlPlugin() {
             'height': 630,
           },
           'author': {
-            '@type': 'Organization',
-            'name': 'Royall Clean',
-            'url': SITE,
+            '@type': 'Person',
+            'name': 'Roys Abreu',
+            'url': `${SITE}/sobre-mi`,
           },
           'publisher': {
             '@type': 'Organization',
             'name': 'Royall Clean',
             'logo': {
               '@type': 'ImageObject',
-              'url': `${SITE}/ROYAL_CLEAN_2025_BLANCO.png`,
+              'url': `${SITE}/logo-royall-clean.png`,
               'width': 400,
-              'height': 200,
+              'height': 244,
             },
           },
           'isPartOf': {

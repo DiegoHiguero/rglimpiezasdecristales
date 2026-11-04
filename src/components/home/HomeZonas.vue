@@ -56,6 +56,12 @@ const paginasZona = {
   'Griñón': '/limpieza-cristales-grinon',
   'Las Rozas': '/limpieza-cristales-las-rozas',
   'Pozuelo de Alarcón': '/limpieza-cristales-pozuelo-de-alarcon',
+  'Leganés': '/limpieza-cristales-leganes',
+  'Alcorcón': '/limpieza-cristales-alcorcon',
+  'Móstoles': '/limpieza-cristales-mostoles',
+  'Fuenlabrada': '/limpieza-cristales-fuenlabrada',
+  'Majadahonda': '/limpieza-cristales-majadahonda',
+  'Salamanca': '/limpieza-cristales-barrio-salamanca',
 };
 
 const zonas = [

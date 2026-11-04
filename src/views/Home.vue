@@ -4,7 +4,7 @@
     <!-- â”€â”€ HERO â”€â”€ -->
     <div class="row d-flex justify-content-center ms-3 mx-3 bg-image principal mt-3 bg-body-tertiary rounded-4 align-items-md-stretch">
 
-      <div class="col-md-6 col-lg-8 d-flex align-items-stretch py-4">
+      <div class="col-lg-8 d-flex align-items-stretch py-4">
         <!-- Panel de cristal: titular, prueba social y botones a la izquierda;
              el vídeo en el móvil a la derecha, a toda la altura del bloque -->
         <div class="hero-panel w-100">
@@ -27,22 +27,25 @@
           </div>
 
           <div class="phone-mockup" aria-hidden="true">
+            <!-- Dos vídeos superpuestos que se turnan: mientras uno se ve, el otro
+                 tiene cargado el clip siguiente para el fundido cruzado -->
             <video
+              v-for="(clipIdx, i) in heroSlots"
+              :key="i"
+              :ref="(el) => (heroVideos[i] = el)"
               class="phone-mockup-video"
-              :class="{ 'phone-mockup-video--fading': heroFading }"
-              :src="heroVideoSrc"
-              muted loop playsinline autoplay
-              @loadedmetadata="onHeroVideoLoaded"
-              @timeupdate="onHeroVideoTimeUpdate"
+              :class="{ 'phone-mockup-video--on': heroActivo === i }"
+              :src="HERO_CLIPS[clipIdx].src"
+              muted loop playsinline preload="auto"
+              @loadedmetadata="onHeroVideoLoaded(i, $event)"
+              @timeupdate="onHeroVideoTimeUpdate(i, $event)"
             ></video>
             <img src="../assets/img/phone-mockup-azul.webp" alt="" class="phone-mockup-frame" />
-            <!-- Precargan los dos clips para que el cambio de vídeo sea instantáneo -->
-            <video v-for="clip in HERO_CLIPS" :key="clip.src" :src="clip.src" preload="auto" muted playsinline class="phone-mockup-preload"></video>
           </div>
         </div>
       </div>
 
-      <div class="col-md-6 col-lg-4 d-flex align-items-stretch justify-content-center py-4" style="z-index:2;">
+      <div class="col-lg-4 d-flex align-items-stretch justify-content-center py-4" style="z-index:2;">
         <div class="formulario w-100">
 
           <div class="fh">
@@ -180,7 +183,7 @@
 
 <script setup lang="ts">
 import { useUserStore } from "../stores/user";
-import { onMounted, onUnmounted, ref, computed } from "vue";
+import { onMounted, onUnmounted, ref } from "vue";
 import { useContactForm } from '../composables/useContactForm';
 import HomeStats      from '../components/home/HomeStats.vue';
 import HomeServicios  from '../components/home/HomeServicios.vue';
@@ -195,6 +198,8 @@ import HomeCtaFinal   from '../components/home/HomeCtaFinal.vue';
 import heroVideoA from '../assets/img/videoplayback.mp4';
 import heroVideoB from '../assets/img/VID-20251022-WA0013.mp4';
 import heroVideoC from '../assets/img/video-padel-web.mp4';
+import heroVideoD from '../assets/img/video-cristalera-web.mp4';
+import heroVideoE from '../assets/img/video-ventana-web.mp4';
 
 const {
   prenom, email, phone, message,
@@ -204,28 +209,39 @@ const {
 } = useContactForm('es', { emailOptional: true });
 const showEmail = ref(false);
 
-// Vídeo del hero: los dos vídeos reales de la galería, uno detrás del otro
-// (cada uno con su tramo bueno), con un fundido al cambiar.
+// Vídeo del hero: vídeos reales de trabajos, uno detrás del otro
+// (cada uno con su tramo bueno), con un fundido cruzado al cambiar.
 const HERO_CLIPS = [
   { src: heroVideoA, start: 1.5, end: 7 },
   { src: heroVideoB, start: 0.2, end: 3.4 },
   { src: heroVideoC, start: 0.3, end: 8.4 },
+  { src: heroVideoD, start: 0, end: 7.9 },
+  { src: heroVideoE, start: 0, end: 7.9 },
 ];
-const heroVideoIndex = ref(0);
-const heroVideoSrc = computed(() => HERO_CLIPS[heroVideoIndex.value].src);
-const heroFading = ref(false);
+const HERO_FADE = 0.8;            // segundos que dura el fundido cruzado
+const heroSlots = ref([0, 1]);     // clip cargado en cada uno de los dos <video>
+const heroActivo = ref(0);         // qué <video> se ve
+const heroVideos = [];
+let heroCambiando = false;
 
-const onHeroVideoLoaded = (e) => {
-  e.target.currentTime = HERO_CLIPS[heroVideoIndex.value].start;
-  e.target.play().catch(() => {});
-  heroFading.value = false;
+const onHeroVideoLoaded = (slot, e) => {
+  e.target.currentTime = HERO_CLIPS[heroSlots.value[slot]].start;
+  if (slot === heroActivo.value) e.target.play().catch(() => {});
 };
-const onHeroVideoTimeUpdate = (e) => {
-  const clip = HERO_CLIPS[heroVideoIndex.value];
-  if (e.target.currentTime >= clip.end) {
-    heroFading.value = true;
-    heroVideoIndex.value = (heroVideoIndex.value + 1) % HERO_CLIPS.length;
-  }
+// Antes de que acabe el tramo, el clip siguiente arranca debajo y el actual se
+// desvanece encima; al terminar, el vídeo que se ha ocultado carga el próximo.
+const onHeroVideoTimeUpdate = (slot, e) => {
+  if (slot !== heroActivo.value || heroCambiando) return;
+  if (e.target.currentTime < HERO_CLIPS[heroSlots.value[slot]].end - HERO_FADE) return;
+  heroCambiando = true;
+  const otro = 1 - slot;
+  heroVideos[otro]?.play().catch(() => {});
+  heroActivo.value = otro;
+  setTimeout(() => {
+    heroVideos[slot]?.pause();
+    heroSlots.value[slot] = (heroSlots.value[otro] + 1) % HERO_CLIPS.length;
+    heroCambiando = false;
+  }, HERO_FADE * 1000 + 100);
 };
 
 const userStore = useUserStore();
@@ -397,6 +413,17 @@ function getCookie(cname: string): string {
   aspect-ratio: 394 / 783;
   flex-shrink: 0;
 }
+/* Pantalla negra detrás del vídeo, por si el clip siguiente aún no ha cargado */
+.phone-mockup::before {
+  content: '';
+  position: absolute;
+  left: 7.1%;
+  top: 3.1%;
+  width: 86.3%;
+  height: 94%;
+  border-radius: 10.5% / 5%;
+  background: #000;
+}
 .phone-mockup-video {
   position: absolute;
   left: 7.1%;
@@ -407,10 +434,11 @@ function getCookie(cname: string): string {
   border-radius: 10.5% / 5%;
   display: block;
   background: #000;
-  transition: opacity 0.25s ease;
-  z-index: 1;
+  opacity: 0;
+  z-index: 2;
+  transition: opacity 0.8s ease;
 }
-.phone-mockup-video--fading { opacity: 0; }
+.phone-mockup-video--on { opacity: 1; z-index: 1; transition: none; }
 .phone-mockup-frame {
   position: absolute;
   inset: 0;
@@ -423,13 +451,6 @@ function getCookie(cname: string): string {
      también al vídeo, cada fundido la recalculaba y Chrome pintaba una línea
      oscura en el formulario (backdrop-filter) de al lado */
   filter: drop-shadow(0 12px 24px rgba(0,0,0,0.45));
-}
-.phone-mockup-preload {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  opacity: 0;
-  pointer-events: none;
 }
 .hero-title {
   font-family: 'Anton', sans-serif;
@@ -600,8 +621,10 @@ function getCookie(cname: string): string {
     margin-left: calc(10px - var(--bs-gutter-x, 1.5rem) * .5) !important;
     margin-right: calc(10px - var(--bs-gutter-x, 1.5rem) * .5) !important;
   }
-  /* Columnas apiladas: 24px entre tarjetas, como en escritorio */
-  :root:not([data-theme="dark"]) .principal > .py-4 + .py-4 { padding-top: 0 !important; }
+}
+/* Columnas apiladas (hasta 992px): 24px entre tarjetas, como en escritorio */
+@media (max-width: 991.98px) {
+  .principal > .py-4 + .py-4 { padding-top: 0 !important; }
 }
 :root:not([data-theme="dark"]) .hero-panel {
   background: rgba(255, 255, 255, 0.94);
@@ -742,22 +765,19 @@ function getCookie(cname: string): string {
 @keyframes spin { to { transform: rotate(360deg); } }
 
 /* â”€â”€ RESPONSIVE â”€â”€ */
-/* Tableta: el panel ocupa la mitad; título a lo ancho, móvil menor y botones apilados */
+/* Tableta: el panel va a todo el ancho (formulario debajo), mismo diseño que
+   escritorio con el móvil algo menor */
 @media (min-width: 769px) and (max-width: 991.98px) {
-  .hero-panel {
-    grid-template-areas:
-      "title title"
-      "sub   phone"
-      "proof phone"
-      "ctas  phone";
-    grid-template-rows: auto auto 1fr auto;
-    column-gap: 20px;
-    padding: 24px 20px;
-  }
-  .hero-panel .hero-title { font-size: 2.1rem; }
-  .hero-panel .hero-sub { font-size: 0.95rem; }
-  .hero-panel .hero-proof { font-size: 0.85rem; }
-  .hero-panel .phone-mockup { width: 130px; align-self: start; }
+  .hero-panel { column-gap: 32px; padding: 28px 32px; }
+  .hero-panel .hero-title { font-size: 2.6rem; }
+  .hero-panel .phone-mockup { width: 190px; }
+}
+/* Portátil pequeño: el panel comparte fila con el formulario; móvil menor y
+   botones apilados para que el título quepa en 2 líneas y el teléfono no se parta */
+@media (min-width: 992px) and (max-width: 1199.98px) {
+  .hero-panel { column-gap: 24px; padding: 28px 24px; }
+  .hero-panel .hero-title { font-size: 2.3rem; }
+  .hero-panel .phone-mockup { width: 170px; }
   .hero-panel .hero-ctas { flex-direction: column; gap: 8px; }
   .hero-panel .hero-ctas .btn { max-width: none; width: 100%; }
 }
@@ -770,10 +790,12 @@ function getCookie(cname: string): string {
     grid-template-columns: 1fr auto;
     grid-template-areas:
       "title title"
+      ".     phone"
       "sub   phone"
       "proof phone"
-      "ctas  phone";
-    grid-template-rows: auto auto 1fr auto;
+      "ctas  phone"
+      ".     phone";
+    grid-template-rows: auto 1fr auto auto auto 1fr;
     column-gap: 16px;
     padding: 20px 16px;
   }
@@ -784,10 +806,32 @@ function getCookie(cname: string): string {
   .hero-panel .hero-proof { font-size: clamp(0.7rem, 3.3vw, 0.8rem); margin: 10px 0; }
   .hero-panel .hero-proof-item { white-space: nowrap; }
   .hero-panel .hero-proof-stars { letter-spacing: 0; }
-  .hero-panel .phone-mockup { width: clamp(110px, 31vw, 150px); margin: 0; }
+  .hero-panel .phone-mockup { width: clamp(92px, 29vw, 150px); margin: 0; }
   /* Botones apilados en la columna del texto */
   .hero-panel .hero-ctas { flex-direction: column; gap: 8px; margin-top: 14px; }
   .hero-panel .hero-ctas .btn { flex: none; width: 100%; justify-content: center; display: inline-flex; align-items: center; white-space: nowrap; font-size: 0.9rem; padding: 9px 10px !important; }
+}
+/* Móvil grande y tableta pequeña: hay sitio para el diseño de escritorio a escala
+   (título y texto a la izquierda, centrados en vertical, y el móvil a la derecha) */
+@media (min-width: 576px) and (max-width: 768px) {
+  .hero-panel {
+    grid-template-areas:
+      ".     phone"
+      "title phone"
+      "sub   phone"
+      "proof phone"
+      "ctas  phone"
+      ".     phone";
+    grid-template-rows: 1fr auto auto auto auto 1fr;
+    column-gap: 28px;
+    padding: 28px;
+  }
+  .hero-panel .hero-title { font-size: clamp(2rem, 5.4vw, 2.6rem); white-space: normal; margin-bottom: 18px; }
+  .hero-panel .hero-sub { font-size: 0.95rem; }
+  .hero-panel .hero-proof { font-size: 0.85rem; margin: 14px 0 0; }
+  .hero-panel .phone-mockup { width: clamp(150px, 26vw, 190px); }
+  .hero-panel .hero-ctas { flex-direction: row; margin-top: 18px; }
+  .hero-panel .hero-ctas .btn { flex: 1; width: auto; max-width: 230px; }
 }
 @media (max-width: 480px) {
   .ff-row { grid-template-columns: 1fr; }
